@@ -1,0 +1,13 @@
+export const metrics = ['goals','shots','target','corners','yellow','red'] as const;
+export type Metric = typeof metrics[number];
+export type Stats = Record<Metric,number>;
+export type Team = {id:string;name:string;color:string};
+export type Match = {id:string;home:string;away:string;date:string;competition:string;first:[Stats,Stats];second:[Stats,Stats]};
+export type Data = {teams:Team[];matches:Match[]};
+export const labels:Record<Metric,string>={goals:'Gols',shots:'Finalizações',target:'No alvo',corners:'Escanteios',yellow:'Cartões amarelos',red:'Cartões vermelhos'};
+export const empty=():Stats=>({goals:0,shots:0,target:0,corners:0,yellow:0,red:0});
+export function stats(m:Match,side:number,period:'first'|'full'):Stats{return Object.fromEntries(metrics.map(k=>[k,m.first[side][k]+(period==='full'?m.second[side][k]:0)])) as Stats;}
+export function average(matches:Match[],team:string,period:'first'|'full') {const games=matches.filter(m=>m.home===team||m.away===team);return {count:games.length,values:Object.fromEntries(metrics.map(k=>[k,games.length?games.reduce((sum,m)=>sum+stats(m,m.home===team?0:1,period)[k],0)/games.length:0])) as Stats};}
+export function validateMatch(m:Match):string {if(!m.home||!m.away||m.home===m.away)return 'Selecione duas equipes diferentes.';if(typeof m.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(m.date)||Number.isNaN(Date.parse(m.date))||new Date(m.date).toISOString().slice(0,10)!==m.date)return 'Informe a data da partida.';for(const s of [...m.first,...m.second]){if(metrics.some(k=>!Number.isSafeInteger(s[k])||s[k]<0))return 'Use números inteiros maiores ou iguais a zero.';if(s.target>s.shots)return 'Finalizações no alvo não podem superar as finalizações.';if(s.goals>s.target)return 'Gols não podem superar as finalizações no alvo.';}return '';}
+export function validData(value:unknown):value is Data {if(!value||typeof value!=='object')return false;const d=value as Data;if(!Array.isArray(d.teams)||!Array.isArray(d.matches))return false;const ids=new Set<string>();for(const t of d.teams){if(!t||typeof t.id!=='string'||ids.has(t.id)||typeof t.name!=='string'||!t.name.trim()||typeof t.color!=='string'||!/^#[0-9a-f]{6}$/i.test(t.color))return false;ids.add(t.id);}const matchIds=new Set();return d.matches.every(m=>{if(!m||typeof m.id!=='string'||matchIds.has(m.id)||!ids.has(m.home)||!ids.has(m.away)||typeof m.competition!=='string'||!Array.isArray(m.first)||m.first.length!==2||!Array.isArray(m.second)||m.second.length!==2||[...m.first,...m.second].some(s=>!s||typeof s!=='object'))return false;matchIds.add(m.id);return !validateMatch(m);});}
+export const STORAGE='futstats:v1';

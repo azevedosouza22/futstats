@@ -1,0 +1,35 @@
+# Publicar o FutStats com HTTPS
+
+## Vercel (recomendado)
+
+1. Garanta que o código desta entrega esteja na branch `main` de `azevedosouza22/futstats`. Se houver um pull request de preparação, revise e use **Merge pull request**.
+2. Entre em https://vercel.com com sua conta GitHub e selecione **Add New → Project**.
+3. Em **Import Git Repository**, autorize o acesso ao repositório `azevedosouza22/futstats` e clique em **Import**.
+4. Use a branch de produção `main`, **Root Directory** na raiz do repositório, **Framework Preset: Vite**, **Build Command: npm run build**, **Output Directory: dist**, **Install Command: npm ci** e **Node.js 22.x**. Não são necessárias variáveis de ambiente.
+5. Escolha o plano Hobby se você for elegível para seus termos e limites. Clique em **Deploy**.
+6. Espere o estado **Ready**. Abra a URL HTTPS real exibida no painel. O domínio é atribuído pela Vercel; não presuma que um nome específico esteja disponível.
+7. Confirme que as quatro telas abrem, cadastre duas equipes e uma partida e recarregue para confirmar a persistência.
+
+`vercel.json` já declara framework, comandos e diretório de publicação. Os próximos pushes para a branch de produção gerarão novas versões automaticamente.
+
+## Netlify (alternativa)
+
+1. Entre em https://app.netlify.com com GitHub.
+2. Selecione **Add new project → Import an existing project → GitHub** (o texto pode variar).
+3. Autorize e selecione `azevedosouza22/futstats`, branch `main`.
+4. Deixe **Base directory** na raiz; configure **Build command: npm run build** e **Publish directory: dist**. `netlify.toml` configura Node 22 e esses valores.
+5. Escolha o plano gratuito se disponível para a sua conta e dentro dos limites atuais. Publique e aguarde o deploy concluir. Abra a URL HTTPS atribuída no painel.
+
+Sem GitHub: execute `npm ci` e `npm run build` em seu computador; envie a pasta `dist` em https://app.netlify.com/drop. Esta opção não configura deploy automático por Git.
+
+## Computador e Android
+
+Abra a URL HTTPS confirmada no provedor. No Android, use Chrome → menu → **Instalar aplicativo** ou **Adicionar à tela inicial**. Visite o app online uma vez e aguarde o cache; depois teste sem conexão. A PWA é gerada somente no build de produção.
+
+Dados locais pertencem ao navegador e à origem. O endereço de produção começa com uma base própria; exporte e importe backups para migrar entre endereços e dispositivos. Não existe sincronização automática.
+
+## Estado desta preparação
+
+Nenhuma URL pública deve ser considerada publicada até que o provedor conclua o deploy e o endereço seja aberto e verificado. Esta entrega não exige backend, banco de dados, cartão de pagamento ou domínio personalizado por parte do aplicativo; o provedor pode impor requisitos próprios. Ainda é necessário vincular a conta GitHub à hospedagem e executar o primeiro deploy.
+
+O endpoint `sw.js` recebe `Cache-Control: no-cache` para permitir atualizações da PWA. Publique o aplicativo na raiz de um domínio, sem prefixo de subdiretório.
