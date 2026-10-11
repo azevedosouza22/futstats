@@ -1,6 +1,6 @@
 # FutStats
 
-Primeira versão de um aplicativo de estatísticas de futebol em React 19, TypeScript e Vite. Interface responsiva em português brasileiro, armazenamento local e instalação como PWA no Android.
+Versão 2.0 de um aplicativo de estatísticas de futebol em React 19, TypeScript e Vite. Interface responsiva em português brasileiro, armazenamento local e instalação como PWA no Android.
 
 ## Iniciar
 
@@ -63,3 +63,31 @@ As análises são descritivas, baseadas exclusivamente nos dados cadastrados, se
 ## Validação desta entrega
 
 Dependências instaladas; `npm test` passou com 4 testes; `npm run build` passou, incluindo TypeScript e geração da PWA. O servidor de produção respondeu ao HTML e manifest via HTTP. Não houve verificação visual em navegador, instalação em Android real ou teste offline em dispositivo. A publicação não foi realizada porque os helpers de Sites não estavam disponíveis no ambiente.
+
+## FutStats 2.0 — TheSportsDB V1 experimental
+
+A aba **Importar** busca equipes e partidas de futebol. As consultas só ocorrem ao clicar em Buscar; resultados não são uma agenda completa. A [documentação oficial](https://www.thesportsdb.com/documentation) informa chave pública `123`, limite gratuito de 30 pedidos/minuto, busca de equipes restrita ao Arsenal e resultados reduzidos para eventos. Exemplos: equipe `Arsenal`, partida `Arsenal_vs_Chelsea`. Não se promete cobertura de equipes brasileiras ou métricas avançadas neste plano.
+
+A aplicação usa um proxy de servidor em `/api/thesportsdb`; a chave opcional `THESPORTSDB_API_KEY` nunca deve usar prefixo `VITE_`, aparecer no código cliente, em backups ou no Git. No desenvolvimento, copie `.env.example` para `.env` e configure a chave se necessário; a chave pública gratuita é o padrão. Vercel utiliza `api/thesportsdb.js`; Netlify utiliza `netlify/functions/thesportsdb.mjs` e o redirect já configurado. Cadastre a variável somente no ambiente de servidor da hospedagem. Não é necessário adquirir chave paga para testar a integração limitada.
+
+O build estático e a PWA continuam funcionando para cadastros locais, mas busca online requer a função de servidor. `npm run dev` inclui o proxy; `npm run preview` e hospedagens que recebem somente `dist/` não incluem essa função. Não há publicação automática nesta alteração.
+
+### Dados, períodos e integridade
+
+- Importações registram IDs externos, origem, data de importação e status do evento; equipes guardam o ID externo. Equipes de mesmo nome exato já cadastradas são vinculadas, preservando seu ID, nome e cor. Isso não resolve nomes alternativos automaticamente.
+- Gols só são aceitos para status explícitos `FT` ou `Match Finished` sem campos de placar extra. Outros status, dados ao vivo, prorrogação e pênaltis ficam sem gols elegíveis para as médias. O placar final nunca é repartido entre os tempos.
+- Primeiro tempo, segundo tempo, finalizações, escanteios e cartões não disponíveis nesta busca são armazenados como `null` e exibidos como **N/D (Não disponível)**. Zero só representa um valor explicitamente recebido ou registrado manualmente. Datas, equipes e estatísticas inválidas não são importadas.
+- Médias excluem valores ausentes por métrica e período. A comparação mostra as duas amostras; ranking e cartões de equipes mostram cobertura. O dashboard usa apenas jogos com dados de ambas as equipes para cada média por partida. Não há média quando a amostra é vazia.
+- Importar o mesmo ID de evento novamente é bloqueado. Também se bloqueia um jogo com o mesmo mandante, visitante e data, inclusive manual, para revisão do usuário. Essa regra conservadora pode bloquear jogos legítimos repetidos no mesmo dia.
+- Jogos importados são somente leitura para preservar origem e períodos. A exclusão permanece disponível. O cadastro e a edição manuais continuam funcionando; não há conversão automática de importação em registro manual.
+- Backups antigos permanecem válidos na mesma chave `futstats:v1`. Backups novos incluem os dados importados e valores nulos; não devem ser restaurados na versão 1.0 antiga. A importação não substitui registros existentes nem altera o armazenamento antes de validar todos os dados.
+
+### Limites e falhas
+
+O proxy aceita apenas duas rotas upstream fixas, valida consultas de 3 a 80 caracteres, filtra futebol e retorna no máximo 30 resultados. Usa cache em memória de cinco minutos (até 100 buscas), deduplica pedidos simultâneos iguais, limita a 15 consultas upstream por minuto por instância, aplica timeout de oito segundos e pausa pedidos por um minuto após HTTP 429. Não há retries automáticos. O cliente também espaça cliques de busca em quatro segundos e impede buscas concorrentes.
+
+Cache e limitador são por instância: não garantem um limite compartilhado entre múltiplas funções serverless ou outros usuários da chave pública. Antes de ampliar o experimento, configure cache/limitador distribuído e monitore quotas do provedor. Não faça polling, importação em massa ou aumente concorrência para contornar limites. Erros HTTP, resposta inválida, timeout e falta de internet são apresentados sem expor a chave.
+
+### Testes
+
+Os testes originais foram mantidos. Novos testes cobrem parsing de placar, ausências por período, status de jogo, duplicatas, integridade de backups, amostras das médias, cache, limite, HTTP 429, erros, respostas inválidas e deduplicação de consultas. Nenhum teste usa a API externa real. Execute `npm test` e `npm run build`.
