@@ -84,10 +84,42 @@ O build estático e a PWA continuam funcionando para cadastros locais, mas busca
 
 ### Limites e falhas
 
-O proxy aceita apenas duas rotas upstream fixas, valida consultas de 3 a 80 caracteres, filtra futebol e retorna no máximo 30 resultados. Usa cache em memória de cinco minutos (até 100 buscas), deduplica pedidos simultâneos iguais, limita a 15 consultas upstream por minuto por instância, aplica timeout de oito segundos e pausa pedidos por um minuto após HTTP 429. Não há retries automáticos. O cliente também espaça cliques de busca em quatro segundos e impede buscas concorrentes.
+O proxy aceita apenas rotas upstream fixas, valida consultas de 3 a 80 caracteres, filtra futebol e retorna no máximo 30 resultados. Usa cache em memória de cinco minutos para buscas e 30 segundos para consultas pontuais (até 100 consultas), deduplica pedidos simultâneos iguais, limita a 15 consultas upstream por minuto por instância, aplica timeout de oito segundos e pausa pedidos por um minuto após HTTP 429. Não há retries automáticos. O cliente também espaça cliques de busca em quatro segundos e impede buscas concorrentes.
 
 Cache e limitador são por instância: não garantem um limite compartilhado entre múltiplas funções serverless ou outros usuários da chave pública. Antes de ampliar o experimento, configure cache/limitador distribuído e monitore quotas do provedor. Não faça polling, importação em massa ou aumente concorrência para contornar limites. Erros HTTP, resposta inválida, timeout e falta de internet são apresentados sem expor a chave.
 
 ### Testes
 
 Os testes originais foram mantidos. Novos testes cobrem parsing de placar, ausências por período, status de jogo, duplicatas, integridade de backups, amostras das médias, cache, limite, HTTP 429, erros, respostas inválidas e deduplicação de consultas. Nenhum teste usa a API externa real. Execute `npm test` e `npm run build`.
+
+
+## Pré-jogo e Ao vivo
+
+### Pré-jogo
+
+Selecione uma ou duas equipes, a data do confronto e o período (primeiro tempo ou jogo completo). As janelas de **5 e 10 jogos** aparecem simultaneamente, com a amostra disponível para cada métrica. Os jogos são ordenados por data decrescente e incluem mandante e visitante. Ausências são excluídas da média sem buscar partidas mais antigas fora da janela para preencher estatísticas.
+
+A análise é exclusivamente da base local; não busca automaticamente dez jogos na API. Importações precisam ter status FT ou Match Finished; registros manuais são tratados como concluídos. Excluem-se o dia do confronto e datas posteriores, e também hoje e datas futuras, porque os registros locais só têm precisão de dia e não permitem determinar a ordem dos jogos do mesmo dia. A base pode estar incompleta. N/D não é zero. Cada cartão oferece a lista de jogos utilizados e suas fontes. Demonstrações já cadastradas são explicitamente identificadas como fictícias; não são apresentadas como dados de provedor.
+
+### Ao vivo
+
+A área oferece **consulta pontual sob demanda**, pelo ID de um evento real ou por uma partida já importada. O botão Atualizar agora consulta placar/status e estatísticas de evento separadamente. Não existe polling, relógio que estima minuto, fallback com dados inventados nem scraping do Flashscore.
+
+A TheSportsDB V1 gratuita não é um feed ao vivo garantido. O adaptador declara essas limitações em suas capacidades: minuto indisponível, estatísticas parciais e nenhuma divisão por tempo. Jogos encerrados e agendados também podem ser consultados; seu status vem da fonte. O minuto permanece N/D. Estatísticas não retornadas aparecem como N/D, inclusive quando um evento existe mas não possui métricas. Agregados da fonte não são atribuídos ao primeiro/segundo tempo, nem tratados como exclusivamente 90 minutos, pois podem incluir prorrogação.
+
+Um resultado contém a fonte, ID, horário de consulta do placar, horário da consulta das estatísticas e horário de atualização declarado pelo provedor (N/D nesta integração). Horário de consulta não significa horário em que o provedor atualizou seus dados. As consultas têm cache de 30 segundos. O cliente espaça atualizações em dez segundos e bloqueia concorrência; cada atualização pode consumir dois pedidos upstream, ambos sujeitos ao limitador compartilhado da instância de 15 pedidos/minuto. Não há retentativa automática.
+
+Se as estatísticas falharem, o placar novo pode ser mostrado com aviso e métricas N/D, sem reutilizar estatísticas antigas. Se a consulta do evento falhar, a última resposta bem-sucedida da mesma partida permanece com aviso explícito de possível desatualização; trocar o ID remove o resultado anterior. Partida não encontrada é um erro identificado, não um placar 0–0.
+
+Snapshots ao vivo ficam apenas na memória da tela e **não alteram o histórico, as médias ou os backups**. Cadastros manuais e importações persistidas conservam seu comportamento.
+
+### Arquitetura para provedores autorizados
+
+- `src/providers.ts`: contrato DataProvider, capacidades, registro explícito de adaptadores e normalização de LiveSnapshot. Valores ausentes são null; dados de fontes diferentes ou períodos desconhecidos nunca são misturados.
+- `server/thesportsdb.js`: rotas JSON upstream fixas para busca, lookupevent e lookupeventstats. Não aceita URL arbitrária. Credenciais ficam no servidor. Vercel e Netlify reutilizam o mesmo serviço, com os handlers já existentes.
+- `src/pregame.ts`: seleção das janelas e cálculo independente da interface.
+- `src/PreGame.tsx` e `src/Live.tsx`: interfaces responsivas para análise e consulta manual.
+
+Adicionar um provedor exige implementar e registrar um adaptador revisado, com endpoint de servidor dedicado, credenciais exclusivas de servidor e autorização/licença de acesso apropriada. O adaptador deve declarar capacidades reais, mapear períodos explicitamente e preservar ausências, identidade e timestamps. Não há adaptadores fictícios cadastrados nem integração com Flashscore.
+
+Os testes automatizados usam fixtures controladas apenas nos testes, identificadas como QA, para validar falhas e cálculos. Elas nunca são carregadas pela aplicação como dados reais. Uma validação em navegador com fixtures não certifica frescor da API, instalação em Android real ou cobertura de estatísticas por liga. As restrições de publicação da branch de revisão permanecem; esta entrega não publica nem faz merge.
