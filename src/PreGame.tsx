@@ -1,0 +1,28 @@
+import {useState} from 'react';
+import {labels, metrics, type Data} from './model';
+import {localDate, pregameAverage, type Period} from './pregame';
+const format = (value: number | null) => value === null ? 'N/D' : value.toLocaleString('pt-BR', {maximumFractionDigits: 2});
+
+export default function PreGame({data}: {data: Data}) {
+  const [ids, setIds] = useState<[string, string]>(['', '']);
+  const [period, setPeriod] = useState<Period>('full');
+  const [date, setDate] = useState(localDate());
+  const selected = [ids[0] || data.teams[0]?.id || '', ids[1] || data.teams[1]?.id || ''];
+  // Future confrontation dates must not include future manual records.
+  const cutoff = date && date < localDate() ? date : localDate();
+  return <section className="panel"><div className="panel-head"><div><h2>Pré-jogo · últimos 5 e 10 jogos</h2><p>Médias da sua base local, sem previsão de resultados</p></div></div><div className="analysis-content">
+    <p className="muted">Usamos apenas partidas anteriores à data do confronto e a hoje. Registros manuais são tratados como jogos concluídos e podem incluir dados fictícios se você carregou a demonstração. Importações precisam ter status final. Não há busca automática de históricos.</p>
+    <div className="analysis-controls">{[0, 1].map(i => <label key={i}>Equipe {i + 1}<select aria-label={`Equipe ${i + 1} pré-jogo`} value={selected[i]} onChange={e => setIds(i === 0 ? [e.target.value, selected[1]] : [selected[0], e.target.value])}><option value="">Selecione</option>{data.teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label>)}<label>Data do confronto<input type="date" value={date} onChange={e => setDate(e.target.value)}/></label></div>
+    <div className="segment analysis-period"><button className={period === 'first' ? 'selected' : ''} onClick={() => setPeriod('first')}>1º tempo</button><button className={period === 'full' ? 'selected' : ''} onClick={() => setPeriod('full')}>Jogo completo</button></div>
+    {!data.teams.length && <p className="empty">Cadastre equipes e partidas para montar sua análise.</p>}
+    {selected[0] && selected[0] === selected[1] && <p role="alert" className="alert">Selecione equipes diferentes para a análise lado a lado.</p>}
+    {date && selected[0] !== selected[1] && <div className="pregame-grid">{selected.filter(Boolean).map(id => {
+      const five = pregameAverage(data.matches, id, 5, period, cutoff), ten = pregameAverage(data.matches, id, 10, period, cutoff);
+      return <article className="pregame-card" key={id}><h3>{data.teams.find(t => t.id === id)?.name}</h3><p className="muted">{period === 'first' ? 'Primeiro tempo' : 'Jogo completo'} · {five.count}/5 e {ten.count}/10 partidas na base</p>
+        <table className="analysis-table"><caption>Médias por métrica · amostras disponíveis</caption><thead><tr><th>Estatística</th><th>Últimos 5</th><th>Últimos 10</th></tr></thead><tbody>{metrics.map(k => <tr key={k}><th>{labels[k]}</th><td><b>{format(five.values[k])}</b><small>{five.samples[k]}/{five.count} jogos</small></td><td><b>{format(ten.values[k])}</b><small>{ten.samples[k]}/{ten.count} jogos</small></td></tr>)}</tbody></table>
+        <details><summary>Partidas utilizadas ({ten.count})</summary>{ten.selected.length ? <ul className="source-list">{ten.selected.map(m => <li key={m.id}>{m.date} · {data.teams.find(t => t.id === m.home)?.name} × {data.teams.find(t => t.id === m.away)?.name}<small>Fonte: {m.external ? `TheSportsDB · ID ${m.external.id}` : m.competition === 'Dados de demonstração' ? 'Demonstração fictícia cadastrada' : 'Cadastro manual local'}</small></li>)}</ul> : <p className="muted">Nenhum jogo elegível. Todas as médias são N/D.</p>}</details></article>;
+    })}</div>}
+    {!date && <p className="alert">Informe a data do confronto.</p>}
+    <p className="muted">N/D = Não disponível. Cada janela contém os últimos jogos elegíveis, sem substituir uma partida sem estatísticas por outra mais antiga. Ausências são excluídas de cada média; a amostra pode ser menor que 5 ou 10. A base pode estar incompleta.</p>
+  </div></section>;
+}

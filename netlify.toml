@@ -1,4 +1,5 @@
 [build]
+  ignore = "node ./scripts/ignore-review-deploy.cjs"
   command = "npm run build"
   publish = "dist"
 
@@ -14,3 +15,8 @@
   for = "/manifest.webmanifest"
   [headers.values]
     Cache-Control = "no-cache"
+
+[[redirects]]
+  from = "/api/thesportsdb"
+  to = "/.netlify/functions/thesportsdb"
+  status = 200
