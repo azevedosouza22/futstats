@@ -88,6 +88,7 @@ describe('Cabeçalho e SUMÁRIO — importação assistida',()=>{
  it('intervalo lido como O e evento sem identidade ficam N/D, nunca zero automático',()=>{
   const r=mergeDrafts([draftFromText('a','Levante 3 - 3 Sevilla\nEncerrado\nSUMÁRIO\nIntervalo: O - 1')]);expect(r.review.first.values[0].goals).toBeNull();expect(r.review.second.values[0].goals).toBeNull();
   const s=readSummary("SUMÁRIO\n20' Gol Jogador Everton",'Hull','Everton');expect(s.events).toHaveLength(0);
+  const missing=mergeDrafts([draftFromText('a','SUMÁRIO\nIntervalo: 0 - 1\n5I Visitante Cartão amarelo Jogador A')],{first:true,second:true});expect(missing.review.second.values[1].yellow).toBeNull();
  });
  it('backup preserva metadados e contagens sem imagens, nomes de jogadores ou texto OCR; duplicata não sobrescreve',()=>{
   const d=draftFromText('a',levante),r=mergeDrafts([d],{first:true,second:true}).review;

@@ -17,7 +17,8 @@ export function readSummary(text:string,home:string,away:string,force=false):Sum
   const interval=normalized.match(/^(?:intervalo|ht|(?:placar (?:do )?)?1\s*[º°o]?\s*tempo)\s*:?\s*\(?(\d+)\s*[×x:–-]\s*(\d+)\)?$/);
   if(interval){intervals.push([Number(interval[1]),Number(interval[2])]);evidence=true;continue;}
   if(/^(?:intervalo|ht)\s*:/i.test(normalized)&&/[-–:]/.test(normalized)){result.warnings.push('Intervalo ilegível: mantido N/D. Não convertemos letras em gols.');continue;}
-  const time=normalized.match(/^(\d{1,3})(?:\s*\+\s*(\d{1,2}))?\s*['’]?\s+(.+)$/);if(!time)continue;
+  const time=normalized.match(/^(\d{1,3})(?:\s*\+\s*(\d{1,2}))?\s*['’]?\s+(.+)$/);
+  if(!time){if(/\bmandante\b|\bvisitante\b|\bhome\b|\baway\b/.test(normalized)&&/\bgol\b|\bgoal\b|cartao|card|tarjeta/.test(normalized))result.warnings.push('Minuto de evento não reconhecido. Contagens mantidas N/D.');continue;}
   const description=time[3];
   if(/anulado|cancelado|revisao|perdido|defendido|substituicao/.test(description))continue;
   if(/treinador|comissao|banco|coach|staff/.test(description)){result.warnings.push('Evento de banco/comissão: definição ambígua para totais da equipe. Confira manualmente.');continue;}
