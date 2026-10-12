@@ -1,6 +1,6 @@
 # FutStats
 
-Versão 2.0 de um aplicativo de estatísticas de futebol em React 19, TypeScript e Vite. Interface responsiva em português brasileiro, armazenamento local e instalação como PWA no Android.
+Versão 3.0 de um aplicativo de estatísticas de futebol em React 19, TypeScript e Vite. Interface responsiva em português brasileiro, armazenamento local e instalação como PWA no Android.
 
 ## Iniciar
 
@@ -123,3 +123,8 @@ Snapshots ao vivo ficam apenas na memória da tela e **não alteram o histórico
 Adicionar um provedor exige implementar e registrar um adaptador revisado, com endpoint de servidor dedicado, credenciais exclusivas de servidor e autorização/licença de acesso apropriada. O adaptador deve declarar capacidades reais, mapear períodos explicitamente e preservar ausências, identidade e timestamps. Não há adaptadores fictícios cadastrados nem integração com Flashscore.
 
 Os testes automatizados usam fixtures controladas apenas nos testes, identificadas como QA, para validar falhas e cálculos. Elas nunca são carregadas pela aplicação como dados reais. Uma validação em navegador com fixtures não certifica frescor da API, instalação em Android real ou cobertura de estatísticas por liga. As restrições de publicação da branch de revisão permanecem; esta entrega não publica nem faz merge.
+
+
+## FutStats 3.0 — Importar por imagem
+
+OCR local gratuito, até três imagens, revisão obrigatória, períodos explícitos, N/D, origem dos valores e integração à base existente. Consulte [OCR.md](OCR.md) para uso, requisitos de download/cache offline, regras de cálculo, compatibilidade e limitações. Não houve validação em prints reais; testes de OCR usam imagens sintéticas identificadas. Não há scraping ou upload de imagens para serviços.

@@ -1,5 +1,62 @@
 # Publicar o FutStats com HTTPS
 
+## Prévia do PR nº 3 — sem merge ou alteração da produção
+
+Para testar o FutStats 3.0, **não siga a instrução de merge abaixo**. Use a branch
+`feature/futstats-3-image-ocr`, que agora permite deploy Git na Vercel.
+O bloqueio da branch 2.0 e da Netlify permanece.
+
+1. Entre em https://vercel.com/dashboard e abra o projeto FutStats existente.
+2. Em **Settings → Git**, confirme a conexão com `azevedosouza22/futstats`.
+   Caso não exista, conecte o repositório e autorize o aplicativo Vercel no GitHub.
+3. Em **Settings → Environments → Production → Branch Tracking**, confirme que
+   a branch de produção continua `main`. Nunca escolha a branch do PR para produção.
+4. Confira os ajustes de build: raiz do repositório, Vite, Node.js 22.x,
+   instalação `npm ci`, build `npm run build`, saída `dist`.
+5. Em **Deployments → Create Deployment**, informe
+   `feature/futstats-3-image-ocr`. A implantação deve ser **Preview**.
+   Não use **Promote to Production**, não associe o domínio de produção à prévia.
+6. Aguarde **Ready**, abra **Visit** e copie a URL HTTPS realmente gerada.
+   Um check/comentário Vercel também pode disponibilizar essa URL no PR.
+   A ausência da mensagem de deployment no GitHub, sozinha, não comprova falha de build.
+
+Se não houver projeto Vercel, use **Add New → Project**, autorize o repositório
+e importe-o com a branch de produção `main`; esse primeiro fluxo pode implantar
+`main`. Para evitar qualquer implantação de produção, prefira a alternativa CLI
+abaixo, criando um projeto separado `futstats-preview` e sem domínio de produção.
+Faça isso no seu computador autenticado, na branch do PR:
+
+```sh
+git clone --branch feature/futstats-3-image-ocr https://github.com/azevedosouza22/futstats.git futstats-preview
+cd futstats-preview
+npx vercel login
+npx vercel
+```
+
+No assistente escolha sua conta, um **novo** projeto `futstats-preview` e a raiz
+`./`; confirme Vite/comandos acima. `vercel` sem `--prod` gera Preview.
+Não execute `vercel --prod`. Não copie credenciais para o chat ou para arquivos Git.
+
+Se a Vercel indicar falta de acesso do autor do commit, conecte o GitHub
+`azevedosouza22` à sua conta Vercel em **Account Settings → Login Connections**,
+confira o acesso do aplicativo ao repositório e tente novamente. Consulte o erro
+real em **Deployments → Build Logs** antes de mudar configurações.
+
+No computador e no Chrome Android abra a mesma URL HTTPS. Se a proteção da prévia
+pedir autenticação, entre com a conta Vercel autorizada também no Android.
+Em **Importar → Importar por imagem**, escolha seus prints, reconheça, confira
+os períodos e todos os valores, e só então confirme o salvamento. A primeira
+leitura precisa de conexão para baixar os arquivos OCR da própria prévia.
+
+A prévia tem armazenamento local separado do domínio de produção e de cada
+dispositivo. Não migra nem modifica os dados existentes do FutStats 2.0.
+Não importe backups para produção durante o teste; backups 3.0 não devem ser
+restaurados no 2.0. Não houve teste com prints reais do Flashscore neste ambiente.
+
+Referências oficiais: https://vercel.com/docs/git e
+https://vercel.com/docs/cli/deploy. Uma URL só deve ser tratada como funcionando
+depois de abrir o aplicativo nela; habilitar a branch não comprova implantação.
+
 ## Vercel (recomendado)
 
 1. Garanta que o código desta entrega esteja na branch `main` de `azevedosouza22/futstats`. Se houver um pull request de preparação, revise e use **Merge pull request**.
