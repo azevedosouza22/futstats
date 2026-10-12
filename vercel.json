@@ -27,7 +27,7 @@
   "git": {
     "deploymentEnabled": {
       "feature/futstats-2-thesportsdb": false,
-      "feature/futstats-3-image-ocr": false
+      "feature/futstats-3-image-ocr": true
     }
   }
 }
