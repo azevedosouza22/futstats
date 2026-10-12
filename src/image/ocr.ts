@@ -1,3 +1,4 @@
+import {enhancePixels} from './preprocess';
 export const allowedTypes=['image/jpeg','image/png','image/webp'];
 export function checkImage(file:File):void {
   if((file.type&&!allowedTypes.includes(file.type))||!(/\.(jpe?g|png|webp)$/i.test(file.name)))throw Error('Use um arquivo JPG, JPEG, PNG ou WebP.');
@@ -17,6 +18,8 @@ export async function prepareImage(file:File):Promise<Blob> {
     canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
     const context=canvas.getContext('2d');if(!context)throw Error('Seu navegador não conseguiu preparar a imagem.');
     context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);context.drawImage(bitmap,0,0,canvas.width,canvas.height);
+    const pixels=context.getImageData(0,0,canvas.width,canvas.height);
+    enhancePixels(pixels.data);context.putImageData(pixels,0,0);
     return await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Falha ao preparar a imagem.')),'image/png'));
   }finally{bitmap.close();canvas.width=1;canvas.height=1;}
 }
