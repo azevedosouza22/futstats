@@ -79,9 +79,9 @@ export function validateMatch(m: Match): string {
         if (pair[side][k]!=null&&!originValues.includes(provenance??'')) return 'Valor sem proveniência.';
         if (pair[side][k]==null&&provenance!=null) return 'Proveniência sem valor.';
         if (provenance==='calculated') {
-          if (!additiveMetrics.includes(k)||p==='first') return 'Cálculo em métrica ou período inválido.';
+          if (!additiveMetrics.includes(k)) return 'Cálculo em métrica ou período inválido.';
           const a=m.first[side][k],b=m.second[side][k],c=i.full[side][k];
-          if (a==null||(p==='second'?(c==null||c<a||b!==c-a):(b==null||c!==a+b))) return 'Valor calculado incompatível.';
+          if (p==='first' ? (b==null||c==null||c<b||a!==c-b) : p==='second' ? (a==null||c==null||c<a||b!==c-a) : (a==null||b==null||c!==a+b)) return 'Valor calculado incompatível.';
         }
       }
     }

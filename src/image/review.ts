@@ -4,13 +4,20 @@ export type ImageDraft = {id:string; period:Period|null; original:Extraction; va
 export type PeriodData = {values:[ResolvedStats,ResolvedStats]; origins:Record<Metric,[FieldOrigin|null,FieldOrigin|null]>};
 export type Review = Record<Period,PeriodData>;
 export const blankPeriod = ():PeriodData=>({values:[unavailable(),unavailable()],origins:Object.fromEntries(metrics.map(k=>[k,[null,null]])) as PeriodData['origins']});
-export function draftFromText(id:string,text:string,confidence=0):ImageDraft {
-  const original=extract(text);const period=blankPeriod();period.values=structuredClone(original.values);
+export function draftFromText(id:string,text:string,confidence=0,periodEvidence:Period|null=null):ImageDraft {
+  const original=extract(text,periodEvidence);const period=blankPeriod();period.values=structuredClone(original.values);
   for(const k of metrics)for(const side of [0,1])if(period.values[side][k]!==null)period.origins[k][side]='recognized';
   return {id,period:original.period,original,...period,confidence};
 }
 export function correctField(draft:ImageDraft,k:Metric,side:number,value:number|null):ImageDraft {
   const next=structuredClone(draft);next.values[side][k]=value;next.origins[k][side]=value===null?null:'corrected';return next;
+}
+export function changePeriod(draft:ImageDraft,period:Period|null):ImageDraft {
+  const next=structuredClone(draft);next.period=period;
+  if(period!=='full'&&next.original.goalsFromFinalHeader)for(const side of [0,1]){
+    if(next.origins.goals[side]==='recognized'){next.values[side].goals=null;next.origins.goals[side]=null;}
+  }
+  return next;
 }
 export function mergeDrafts(drafts:ImageDraft[]) {
   const review:Review={first:blankPeriod(),second:blankPeriod(),full:blankPeriod()};const errors:string[]=[];
@@ -35,14 +42,15 @@ export function inconsistencies(review:Review):string[] {
     const a=review.first.values[side][k],b=review.second.values[side][k],c=review.full.values[side][k];
     if(a!==null&&b!==null&&c!==null&&a+b!==c)errors.push(`${labels[k]}: 1º tempo (${a}) + 2º tempo (${b}) ≠ completo (${c}), ${side?'visitante':'mandante'}.`);
     if(a!==null&&c!==null&&c<a)errors.push(`${labels[k]}: completo menor que 1º tempo, ${side?'visitante':'mandante'}. Não é possível calcular diferença negativa.`);
+    if(b!==null&&c!==null&&c<b)errors.push(`${labels[k]}: completo menor que 2º tempo, ${side?'visitante':'mandante'}. Não é possível calcular diferença negativa.`);
   }
   return [...new Set(errors)];
 }
-export function calculateDifferences(input:Review):Review {
+export function calculateDifferences(input:Review,target:'first'|'second'='second'):Review {
   const next=structuredClone(input);
   for(const k of additiveMetrics)for(const side of [0,1]){
-    const first=next.first.values[side][k],full=next.full.values[side][k];
-    if(next.second.values[side][k]===null&&first!==null&&full!==null&&full>=first){next.second.values[side][k]=full-first;next.second.origins[k][side]='calculated';}
+    const other=next[target==='second'?'first':'second'].values[side][k],full=next.full.values[side][k];
+    if(next[target].values[side][k]===null&&other!==null&&full!==null&&full>=other){next[target].values[side][k]=full-other;next[target].origins[k][side]='calculated';}
   }
   return next;
 }

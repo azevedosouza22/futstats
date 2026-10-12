@@ -2,7 +2,7 @@ import {useEffect,useRef,useState,type ChangeEvent} from 'react';
 import {metrics,labels,type Data,type FieldOrigin,type Metric,type Period,type ResolvedStats} from '../model';
 import {clean} from './parser';
 import {LocalOcr,checkImage,prepareImage} from './ocr';
-import {blankPeriod,calculateDifferences,calculateTotals,correctField,draftFromText,inconsistencies,mergeDrafts,possibleDuplicates,saveImageMatch,type ImageDraft,type MatchInfo,type Review} from './review';
+import {blankPeriod,changePeriod,calculateDifferences,calculateTotals,correctField,draftFromText,inconsistencies,mergeDrafts,possibleDuplicates,saveImageMatch,type ImageDraft,type MatchInfo,type Review} from './review';
 const periodNames:Record<Period,string>={first:'1º tempo',second:'2º tempo',full:'Jogo completo'};
 const originNames:Record<FieldOrigin,string>={recognized:'Reconhecido — conferir',corrected:'Corrigido pelo usuário',calculated:'Calculado — conferir'};
 type Selection={id:string;file:File;url:string};
@@ -49,9 +49,16 @@ export default function ImageImport({data,save}:{data:Data;save:(d:Data)=>boolea
           const result=await engine.read(blob,selection.id,(p,s)=>{
             if(token!==run.current||!mounted.current)return;
             if(s==='recognizing text'){setProgress(Math.round((index+Math.min(1,Math.max(0,p)))/images.length*100));setStatus(`Lendo imagem ${index+1}/${images.length}…`);}
+            else if(s==='retrying row')setStatus(`Imagem ${index+1}/${images.length}: relendo linha com valores ausentes…`);
             else setStatus(`Imagem ${index+1}/${images.length}: carregando mecanismo/idioma local…`);
           });
-          results.push(draftFromText(selection.id,result.text,result.confidence));
+          const draft=draftFromText(selection.id,result.text,result.confidence,result.period);
+          if(result.period){
+            draft.period=result.period;
+            draft.original.warnings=draft.original.warnings.filter(w=>!w.startsWith('Período não determinado'));
+            draft.original.warnings.push('Período sugerido por sublinhado vermelho alinhado à aba reconhecida. Confira antes de salvar.');
+          }
+          draft.original.warnings.push(...result.warnings);results.push(draft);
         }catch(e){
           if(token!==run.current)return;
           results.push(draftFromText(selection.id,'',0));warnings.push(`Imagem ${index+1}: ${e instanceof Error?e.message:'falha de reconhecimento'}`);
@@ -76,9 +83,9 @@ export default function ImageImport({data,save}:{data:Data;save:(d:Data)=>boolea
   function changed(){setConfirmed(false);setNotice('');}
   function editDraft(id:string,k:Metric,side:number,v:number|null){setDrafts(old=>old.map(d=>d.id===id?correctField(d,k,side,v):d));setOverride(null);changed();}
   function editResult(p:Period,k:Metric,side:number,v:number|null){const next=structuredClone(review);next[p].values[side][k]=v;next[p].origins[k][side]=v===null?null:'corrected';setOverride(next);if(p==='full'&&k==='goals'){setUseFinal(false);}changed();}
-  function calculate(kind:'difference'|'total'){
+  function calculate(kind:'difference'|'first'|'total'){
     if(!window.confirm('Confirme que os tempos e totais usam a mesma definição da fonte e não incluem prorrogação. Apenas campos aditivos N/D serão calculados, sem sobrescrever valores. Continuar?'))return;
-    const next=kind==='difference'?calculateDifferences(review):calculateTotals(review);setOverride(next);setUseFinal(false);changed();setNotice('Campos preenchidos por cálculo estão identificados. Revise e confirme novamente antes de salvar.');
+    const next=kind==='total'?calculateTotals(review):calculateDifferences(review,kind==='first'?'first':'second');setOverride(next);setUseFinal(false);changed();setNotice('Campos preenchidos por cálculo estão identificados. Revise e confirme novamente antes de salvar.');
   }
   function finish(){
     setError('');try {
@@ -102,14 +109,14 @@ export default function ImageImport({data,save}:{data:Data;save:(d:Data)=>boolea
     {reviewing&&!busy&&<div className="ocr-review"><h3>Conferir a partida</h3><p className="muted">Confira a ordem das equipes: valores à esquerda pertencem ao mandante. O OCR pode errar nomes, números e abas ativas. Campos vazios são N/D.</p>
       <div className="ocr-info">{(Object.keys(emptyInfo) as (keyof MatchInfo)[]).map(k=><label key={k}>{({home:'Mandante',away:'Visitante',date:'Data da partida',competition:'Competição (opcional)'})[k]}<input className={!info[k]?'needs-review':''} type={k==='date'?'date':'text'} maxLength={k==='competition'?100:80} value={info[k]} onChange={e=>{setInfo({...info,[k]:e.target.value});changed();}}/></label>)}</div>
       {identityWarnings.length>0&&<div className="alert" role="status"><ul>{identityWarnings.map(w=><li key={w}>{w}</li>)}</ul></div>}<div className="final-score-review"><label><input type="checkbox" checked={useFinal} onChange={e=>{setUseFinal(e.target.checked);changed();}}/> Confirmo que este é o placar final e quero usá-lo somente no jogo completo</label><div>{[0,1].map(side=><input key={side} aria-label={`Placar final ${side?'visitante':'mandante'}`} type="number" min="0" step="1" placeholder="N/D" value={finalScore[side]??''} onChange={e=>{const next=[...finalScore] as [number|null,number|null];next[side]=value(e.target.value);setFinalScore(next);changed();}}/>)}</div></div>
-      {drafts.map((draft,i)=><article className="ocr-draft" key={draft.id}><h4>Imagem {i+1} · confiança OCR: {Math.round(draft.confidence)}%</h4><label>Período desta imagem — confirmar<select className={!draft.period?'needs-review':''} aria-label={`Período imagem ${i+1}`} value={draft.period??''} onChange={e=>{setDrafts(old=>old.map(d=>d.id===draft.id?{...d,period:e.target.value as Period||null}:d));setOverride(null);changed();}}><option value="">Selecione o período</option><option value="first">1º tempo (somente este tempo)</option><option value="second">2º tempo (somente este tempo, não acumulado)</option><option value="full">Jogo completo</option></select></label>
+      {drafts.map((draft,i)=><article className="ocr-draft" key={draft.id}><h4>Imagem {i+1} · confiança OCR: {Math.round(draft.confidence)}%</h4><label>Período desta imagem — confirmar<select className={!draft.period?'needs-review':''} aria-label={`Período imagem ${i+1}`} value={draft.period??''} onChange={e=>{setDrafts(old=>old.map(d=>d.id===draft.id?changePeriod(d,e.target.value as Period||null):d));setOverride(null);changed();}}><option value="">Selecione o período</option><option value="first">1º tempo (somente este tempo)</option><option value="second">2º tempo (somente este tempo, não acumulado)</option><option value="full">Jogo completo</option></select></label>
         {draft.confidence<65&&<p className="alert">Leitura com baixa confiança. Confira números, vírgulas e rótulos na imagem.</p>}{draft.original.warnings.map((w,j)=><p className={draft.original.suspect.length?'alert':'muted'} key={j}>{w}</p>)}<details><summary>Ver e corrigir os valores lidos desta imagem</summary>{statsTable(draft.values,(k,side,n)=>editDraft(draft.id,k,side,n),draft.origins)}</details>
       </article>)}
       {problems.length>0&&<div className="alert" role="alert"><div><b>Revisão necessária</b><ul>{[...new Set(problems)].map(p=><li key={p}>{p}</li>)}</ul><small>Não alteramos valores automaticamente. Se as definições ou os períodos da fonte diferem, corrija a classificação ou remova os campos incomparáveis.</small></div></div>}
       {duplicates.length>0&&<p role="alert" className="alert">Possível duplicata dessas equipes nesta data. Confira o histórico antes de continuar. Nenhuma partida será sobrescrita.</p>}
       <h3>Resultado que será salvo</h3><p className="muted">Edite os campos abaixo para corrigir a consolidação. Alterar períodos ou corrigir a leitura de uma imagem reinicia os cálculos desta consolidação.</p>
       <div className="ocr-result">{(['first','second','full'] as const).map(p=><details key={p} open><summary>{periodNames[p]}</summary>{statsTable(review[p].values,(k,side,n)=>editResult(p,k,side,n),review[p].origins)}</details>)}</div>
-      <div className="ocr-actions"><button className="text-button" onClick={()=>calculate('difference')}>Calcular 2º tempo por diferença</button><button className="text-button" onClick={()=>calculate('total')}>Calcular totais dos dois tempos</button></div><p className="muted">Cálculos são opcionais e somente para métricas aditivas ausentes. Não calculamos posse de bola, percentuais ou xG por soma/diferença, nem diferenças negativas.</p>
+      <div className="ocr-actions"><button className="text-button" onClick={()=>calculate('first')}>Calcular 1º tempo por diferença</button><button className="text-button" onClick={()=>calculate('difference')}>Calcular 2º tempo por diferença</button><button className="text-button" onClick={()=>calculate('total')}>Calcular totais dos dois tempos</button></div><p className="muted">Cálculos são opcionais e somente para métricas aditivas ausentes. Não calculamos posse de bola, percentuais ou xG por soma/diferença, nem diferenças negativas.</p>
       <label className="review-confirm"><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/> Revisei equipes, data, períodos e todos os valores. Confirmo que as imagens são da mesma partida, as definições comparáveis da fonte e que este registro representa uma partida concluída.</label>
       <button className="primary" disabled={!confirmed||!!problems.length||!!duplicates.length||!info.home.trim()||!info.away.trim()||!info.date} onClick={finish}>Salvar partida</button>
     </div>}

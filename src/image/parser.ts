@@ -2,7 +2,7 @@ import {metrics, labels, unavailable, type Metric, type Period, type ResolvedSta
 export type Extraction = {
   period: Period | null; values: [ResolvedStats, ResolvedStats]; recognized: Metric[];
   home: string; away: string; date: string; competition: string;
-  headerScore: [number, number] | null; warnings: string[]; suspect: Metric[];
+  headerScore: [number, number] | null; warnings: string[]; suspect: Metric[]; goalsFromFinalHeader?:boolean;
 };
 export const clean = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 const aliases: Record<Metric,string[]> = {
@@ -14,7 +14,7 @@ const aliases: Record<Metric,string[]> = {
 // Only repair spacing around a visible decimal separator; never insert one.
 export const normalizeNumbers=(line:string)=>line.replace(/(\d)\s*([.,])\s*(?=\d)/g,'$1$2').replace(/(\d)\s+%/g,'$1%');
 const numbers = (line:string) => [...normalizeNumbers(line).matchAll(/(?<![\w.,+-])\d+(?:[.,]\d+)?%?(?![\w.,])/g)].map(m=>Number(m[0].replace('%','').replace(',','.')));
-function metric(line:string):Metric|null {
+export function metricFromLine(line:string):Metric|null {
   const label=clean(normalizeNumbers(line).replace(/\b(?:n\/d|nd|O)\b|[?]/gi,'').replace(/\d+(?:[.,]\d+)?%?/g,'').replace(/[():–—-]/g,' '));
   return metrics.find(k=>aliases[k].some(a=>label===a))??null;
 }
@@ -34,16 +34,16 @@ export function identifyPeriod(text:string):Period|null {
   if (text.split(/\n/).some(line=>/^(?:jogo|jogo completo|partida completa|full time|match)$/i.test(clean(line)))) candidates.add('full');
   return candidates.size===1?[...candidates][0]:null;
 }
-export function extract(text:string):Extraction {
+export function extract(text:string,periodEvidence:Period|null=null):Extraction {
   const rawLines=text.split(/\n/).map(s=>s.trim()).filter(Boolean);
   const lines:string[]=[];
   for(let i=0;i<rawLines.length;i++){
     const joined=`${rawLines[i]} ${rawLines[i+1]??''}`;
     // Join only an exact known label split over two lines, never two statistics.
-    if(!metric(rawLines[i])&&/[a-zÀ-ÿ]/i.test(rawLines[i])&&i+1<rawLines.length&&metric(joined)){lines.push(joined);i++;}
+    if(!metricFromLine(rawLines[i])&&/[a-zÀ-ÿ]/i.test(rawLines[i])&&i+1<rawLines.length&&metricFromLine(joined)){lines.push(joined);i++;}
     else lines.push(rawLines[i]);
   }
-  const result:Extraction={period:identifyPeriod(text),values:[unavailable(),unavailable()],recognized:[],home:'',away:'',date:'',competition:'',headerScore:null,warnings:[],suspect:[]};
+  const result:Extraction={period:periodEvidence??identifyPeriod(text),values:[unavailable(),unavailable()],recognized:[],home:'',away:'',date:'',competition:'',headerScore:null,warnings:[],suspect:[]};
   if (!result.period) result.warnings.push('Período não determinado: selecione manualmente. Abas visíveis não indicam qual está ativa.');
   const date=text.match(/\b(\d{2})[/.](\d{2})[/.](\d{4})\b/);
   if (date) result.date=`${date[3]}-${date[2]}-${date[1]}`;
@@ -59,9 +59,9 @@ export function extract(text:string):Extraction {
     const score=line.match(/^(?:(?:placar final|resultado final)\s*:?\s*)?(\d+)\s*[×x:–-]\s*(\d+)$/i);
     if(score)result.headerScore=[Number(score[1]),Number(score[2])];
     // Period scores require an explicit label on the same row, never the final header.
-    const periodScore=line.match(/^(?:placar|gols|resultado)\s+(?:do\s+)?((?:1|2)\s*[º°o]?\s*tempo|primeiro tempo|segundo tempo)\s*:?\s*(\d+)\s*[×x:–-]\s*(\d+)$/i);
+    const periodScore=line.match(/^(?:(?:placar|gols|resultado)\s+(?:do\s+)?)?((?:1|2)\s*[º°o]?\s*tempo|primeiro tempo|segundo tempo)\s*:?\s*\(?(\d+)\s*[×x:–-]\s*(\d+)\)?$/i);
     if(periodScore&&identifyPeriod(periodScore[1])===result.period){result.values[0].goals=Number(periodScore[2]);result.values[1].goals=Number(periodScore[3]);if(!result.recognized.includes('goals'))result.recognized.push('goals');}
-    const k=metric(line);if(!k)continue;
+    const k=metricFromLine(line);if(!k)continue;
     let pair:(number|null)[]=columnValues(line,k)??numbers(line);
     // Conservative support for a wrapped row: bare number / label / bare number.
     if((pair.length===0||pair.every(n=>n===null))&&/^\d+(?:[.,]\d+)?%?$/.test(normalizeNumbers(lines[i-1]??''))&&/^\d+(?:[.,]\d+)?%?$/.test(normalizeNumbers(lines[i+1]??'')))pair=[...numbers(lines[i-1]),...numbers(lines[i+1])];
@@ -79,6 +79,7 @@ export function extract(text:string):Extraction {
   if(result.values.every(s=>s.possession!==null)&&Math.abs(result.values[0].possession!+result.values[1].possession!-100)>1){result.suspect.push('possession');result.warnings.push('Posse de bola não soma aproximadamente 100%. Confira os valores e a definição da fonte.');}
   if(result.headerScore&&result.period==='full'&&/\b(?:encerrado|finalizado|terminado|placar final|resultado final|ft)\b/i.test(text)&&!result.recognized.includes('goals')) {
     result.values[0].goals=result.headerScore[0];result.values[1].goals=result.headerScore[1];result.recognized.push('goals');
+    result.goalsFromFinalHeader=true;
   }
   if(!result.recognized.length)result.warnings.push('Nenhuma linha estatística reconhecida. Preencha somente o que conseguir confirmar na imagem.');
   return result;
