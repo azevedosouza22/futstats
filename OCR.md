@@ -78,3 +78,96 @@ Em um ambiente que já disponha de Chromium, pode-se selecionar o executável co
 - Essas imagens não entram automaticamente na base do usuário e não comprovam precisão em capturas reais. Os testes não foram executados em um aparelho Android físico.
 
 Fontes técnicas: [Tesseract.js](https://github.com/naptha/tesseract.js), [instalação local](https://github.com/naptha/tesseract.js/blob/master/docs/local-installation.md), [modelo português](https://www.npmjs.com/package/@tesseract.js-data/por).
+# Ajustes de precisão após relatos de testes reais
+
+Os relatos indicaram finalizações ausentes, decimais sem separador e períodos
+ambíguos. O código anterior só redimensionava a imagem, aceitava `171` em xG
+e exigia rótulos inteiros em uma linha. Esta melhoria não modifica modelo,
+armazenamento, histórico, médias, pré-jogo ou formato de backups.
+
+- A imagem limitada a 4 MP recebe escala de cinza, expansão de contraste e
+  inversão quando o fundo é predominantemente escuro. Tons intermediários são
+  preservados: não há limiar binário ou erosão que apague vírgulas/pontos.
+  O buffer é reutilizado; processamento continua local e uma imagem por vez.
+- Rótulos conhecidos quebrados em duas linhas e variações como “Chutes a gol”
+  e “Finalizações certas” são reconhecidos. Coluna explicitamente ilegível
+  (`O`, `?`, `N/D`) não vira zero nem desloca o valor da outra equipe.
+- `1,71`, `1.71`, `1 , 71` e `1 . 71` são interpretados como 1.71. Sem
+  separador visível, não se presume centésimos. Leituras de xG >= 10 ficam N/D
+  com o número bruto no aviso para correção manual. Esse limite é uma heurística
+  de suspeita, não um limite esportivo: valores legítimos podem ser preenchidos
+  manualmente e confirmados na revisão obrigatória.
+- Gols por período só são extraídos de linha “Gols” ou de placar explicitamente
+  vinculado ao período (“Placar do 1º tempo: 1 - 0”). O cabeçalho final nunca
+  define gols dos tempos. “Resultado final”/“Terminado” ajudam identificar o
+  placar do jogo completo. Abas simultâneas continuam exigindo escolha manual;
+  não há detecção confiável de aba ativa baseada somente no texto.
+- Posse cuja soma difere de 100% por mais de 1 ponto, alvo superior ao total,
+  xG suspeito e baixa confiança OCR têm destaque para conferência. Avisos da
+  leitura original permanecem como referência após correções; os destaques do
+  resultado acompanham os valores editados. A soma de posse é apenas aviso,
+  respeitando possíveis definições diferentes da fonte.
+
+Testes de texto verificam os erros relatados, sem reproduzir resultados de OCR
+de prints reais. O navegador usa imagens PNG geradas (claras e escuras), com
+Tesseract real, em desktop e viewport móvel. Não foram fornecidos novos prints
+reais para esta entrega; precisão no Flashscore e Android físico ainda exigem
+validação. Tema misto, texto cortado/pequeno, barra sobreposta e perda de
+pontuação continuam sujeitos a correção. Mudar para segmentação esparsa/automática
+causou regressão nos testes existentes; foi mantido o bloco único validado.
+
+Esta melhoria usa branch `feature/ocr-precision`, com deploy Git Vercel e Netlify
+bloqueados. Não libera ou altera a prévia existente do PR nº 3 automaticamente.
+
+## Regressão Hull × Everton e evidência visual
+
+A referência Hull 2×2 Everton (11/10/2026) está exclusivamente nos testes, nunca
+na aplicação ou na base inicial. As sete métricas fornecidas são verificadas
+por período em textos e imagens PNG equivalentes geradas pelo Playwright.
+Não havia prints originais no repositório: não se afirma validação em capturas
+reais do Flashscore ou Android físico.
+
+O preparo captura pequenos segmentos horizontais vermelhos antes da escala de
+cinza. Eles são comparados às caixas das palavras OCR: pelo menos duas abas
+reconhecidas na mesma linha, confiança mínima de 70, tamanho/alinhamento e
+proximidade compatíveis, uma única marca ativa. Há tolerância pequena quando o
+OCR inclui o sublinhado na caixa da palavra. A sugestão de período aparece na
+revisão e continua editável. Ausência de sublinhado, duas marcas, baixa confiança,
+outro estilo/cor, abas em linhas separadas ou indicador distante exigem escolha
+manual. Este detector não conhece o layout de qualquer versão do Flashscore.
+
+Linhas com rótulo conhecido e valores ausentes podem ser relidas com recorte
+horizontal e segmentação de linha única: até quatro releituras por imagem,
+sequenciais, usando o mesmo worker. Exige confiança mínima de 60, dois valores
+válidos e concordância com qualquer coluna já reconhecida; divergências geram
+aviso. Não transforma letras em números, não consulta serviços externos e não
+faz uma segunda leitura global. O limite de tempo/cancelamento continua ativo.
+A posição horizontal determina mandante/visitante, sem ordenar por valor.
+
+No PNG sintético, o zero da linha de gols foi lido como “o” e permaneceu N/D mesmo
+após releitura. O teste usa a ação explícita de cálculo para obter 0×0 no primeiro
+tempo, a partir de 2×2 reconhecido no segundo e no completo, com proveniência
+“calculado”. As demais métricas são reconhecidas. Isso documenta a limitação,
+sem confundir cálculo com acerto do OCR. Placar do período pode ser reconhecido
+quando explicitamente rotulado (por exemplo “1º TEMPO: (0 - 0)”). Cabeçalho final
+não determina gols dos tempos; ao reclassificar uma imagem para um tempo,
+gols reconhecidos apenas desse cabeçalho são descartados. Correções manuais
+continuam sob responsabilidade da conferência do usuário.
+
+Agora há três ações: completo − segundo → primeiro; completo − primeiro →
+segundo; primeiro + segundo → completo. Preenchem somente métricas aditivas N/D
+(gols, finalizações, no alvo, escanteios, cartões, chances claras), sem substituir
+extrações/correções, gerar negativos ou agir sem dois operandos conhecidos.
+É obrigatória a confirmação de definições comparáveis e ausência de prorrogação.
+Posse e xG continuam fora do cálculo: percentuais não são subtraídos e xG depende
+de definição/arredondamento da fonte. Todos os valores calculados precisam da
+confirmação final e são identificados no histórico e no backup.
+
+Sem migração de dados, segunda base ou mudança no formato do backup. A validação
+agora também aceita primeiro tempo com proveniência calculada se a fórmula for
+correta; backups anteriores continuam aceitos. Backup novo com esse cálculo
+precisa desta versão ou posterior para restauração; leitores antigos podem
+rejeitá-lo. Dados locais e telas existentes não são modificados automaticamente.
+
+A branch feature/ocr-hull-regression bloqueia autodeploy Vercel e Netlify.
+Nenhuma atualização da prévia ou produção é feita nesta entrega.

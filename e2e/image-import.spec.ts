@@ -1,12 +1,12 @@
 import {test,expect,type Page} from '@playwright/test';
 // Generated high-contrast images for OCR plumbing tests, NOT real Flashscore screenshots.
-async function synthetic(page:Page,period:string,rows:[string,number,number][]) {
- const data=await page.evaluate(({period,rows})=>{
-  const canvas=document.createElement('canvas');canvas.width=1100;canvas.height=900;const c=canvas.getContext('2d')!;c.fillStyle='#fff';c.fillRect(0,0,1100,900);c.fillStyle='#111';c.font='32px Arial';
+async function synthetic(page:Page,period:string,rows:[string,number|string,number|string][],dark=false) {
+ const data=await page.evaluate(({period,rows,dark})=>{
+  const canvas=document.createElement('canvas');canvas.width=1100;canvas.height=900;const c=canvas.getContext('2d')!;c.fillStyle=dark?'#171b20':'#fff';c.fillRect(0,0,1100,900);c.fillStyle=dark?'#eee':'#111';c.font='32px Arial';
   const header=['Mandante: Hull City','Visitante: Everton','Data: 11/10/2026',period];header.forEach((text,i)=>c.fillText(text,60,70+i*70));
   rows.forEach(([label,home,away],i)=>{const y=400+i*100;c.fillText(String(home),60,y);c.fillText(label,280,y);c.fillText(String(away),980,y);});
   return canvas.toDataURL('image/png').split(',')[1];
- },{period,rows});
+ },{period,rows,dark});
  return Buffer.from(data,'base64');
 }
 async function start(page:Page){await page.goto('/');await page.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise<void>(r=>navigator.serviceWorker.addEventListener('controllerchange',()=>r(),{once:true}));});await page.getByRole('button',{name:'Importar',exact:true}).click();}
@@ -44,4 +44,54 @@ test('OCR local real em imagens sintéticas, revisão, persistência, backup, c�
 test('formatos inválidos, cancelamento e limpeza do fluxo',async({page})=>{
  await start(page);await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'x.gif',mimeType:'image/gif',buffer:Buffer.from('bad')});await expect(page.getByRole('alert')).toContainText('JPG');
  const file=await synthetic(page,'JOGO',[['Total de finalizações',9,15]]);await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'cancel.png',mimeType:'image/png',buffer:file});await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();await page.getByRole('button',{name:'Cancelar leitura',exact:true}).click();await expect(page.getByText(/Leitura cancelada. Você pode tentar novamente/)).toBeVisible();await page.getByRole('button',{name:'Remover imagem 1',exact:true}).click();await expect(page.locator('.image-preview')).toHaveCount(0);await expect(page.getByRole('button',{name:'Reconhecer imagens',exact:true})).toBeDisabled();
+});
+
+test('imagem sintética escura: OCR decimal e revisão de valor suspeito',async({page})=>{
+ await start(page);
+ const image=await synthetic(page,'JOGO',[['Gols esperados (xG)','1,71','0.85'],['Posse de bola','61%','39%'],['Total de finalizações',13,24]],true);
+ await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'dark-synthetic.png',mimeType:'image/png',buffer:image});
+ await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ const total=page.locator('.ocr-result details').nth(2);
+ await expect(total.getByLabel('Gols esperados (xG) mandante',{exact:true})).toHaveValue('1.71');
+ await expect(total.getByLabel('Gols esperados (xG) visitante',{exact:true})).toHaveValue('0.85');
+ await expect(total.getByLabel('Finalizações mandante',{exact:true})).toHaveValue('13');
+ await total.getByLabel('Gols esperados (xG) mandante',{exact:true}).fill('171');
+ await expect(total.getByText('Valor suspeito — confira a imagem',{exact:true})).toBeVisible();
+ await total.getByLabel('Gols esperados (xG) mandante',{exact:true}).fill('1.71');
+ await expect(total.getByText('Valor suspeito — confira a imagem',{exact:true})).toHaveCount(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+});
+
+test('Hull: imagens sintéticas, aba ativa e gols ausentes calculados por diferença',async({page})=>{
+ await start(page);
+ // Equivalent user reference, generated here; NOT Flashscore screenshots.
+ const values=[[[0,0],[5,10],[3,3],[5,5],[43,57],['0,55','0,85'],[1,4]],[[2,2],[4,5],[2,4],[2,1],[28,72],['0,78','0,86'],[1,4]],[[2,2],[9,15],[5,7],[7,6],[35,65],['1,33','1,71'],[2,8]]];
+ const labels=['Gols','Finalizações','Finalizações no alvo','Escanteios','Posse de bola','Gols esperados (xG)','Chances claras'];
+ const buffers=[];
+ for(let index=0;index<3;index++){
+  const base64=await page.evaluate(({index,values,labels})=>{
+   const canvas=document.createElement('canvas');canvas.width=1100;canvas.height=1200;const c=canvas.getContext('2d')!;
+   c.fillStyle='#fff';c.fillRect(0,0,1100,1200);c.fillStyle='#111';c.font='32px Arial';
+   ['Mandante: Hull','Visitante: Everton','Data: 11/10/2026'].forEach((text,i)=>c.fillText(text,60,70+i*70));
+   const tabs=['JOGO','1º TEMPO','2º TEMPO'],xs=[70,400,760],active=[1,2,0][index];
+   tabs.forEach((text,i)=>c.fillText(text,xs[i],300));c.fillStyle='#e5233e';c.fillRect(xs[active],310,c.measureText(tabs[active]).width,4);c.fillStyle='#111';
+   values[index].forEach(([home,away],i)=>{const y=420+i*100;c.fillText(String(home)+(i===4?'%':''),60,y);c.fillText(labels[i],280,y);c.fillText(String(away)+(i===4?'%':''),980,y);});
+   return canvas.toDataURL('image/png').split(',')[1];
+  },{index,values,labels});buffers.push({name:`hull-synthetic-${index}.png`,mimeType:'image/png',buffer:Buffer.from(base64,'base64')});
+ }
+ await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles(buffers);await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ for(const [i,p] of ['first','second','full'].entries())await expect(page.getByLabel(`Período imagem ${i+1}`)).toHaveValue(p);
+ // The font's zero is read as 'o': it must remain N/D until the explicit calculation.
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols mandante',{exact:true})).toHaveValue('');
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols visitante',{exact:true})).toHaveValue('');
+ page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'Calcular 1º tempo por diferença',exact:true}).click();
+ const inputLabels=['Gols','Finalizações','No alvo','Escanteios','Posse de bola (%)','Gols esperados (xG)','Chances claras'];
+ for(let period=0;period<3;period++)for(let metric=0;metric<7;metric++)for(let side=0;side<2;side++){
+  await expect(page.locator('.ocr-result details').nth(period).getByLabel(`${inputLabels[metric]} ${side?'visitante':'mandante'}`,{exact:true})).toHaveValue(String(values[period][metric][side]).replace(',','.'));
+ }
+ await page.getByLabel(/Revisei equipes/).check();await page.getByRole('button',{name:'Salvar partida',exact:true}).click();await expect(page.getByText(/Partida salva na sua base local/)).toBeVisible();
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('futstats:v1')!).matches[0]);expect(saved.image.fields.first.goals).toEqual(['calculated','calculated']);expect(saved.image.fields.second.shots).toEqual(['recognized','recognized']);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });
