@@ -26,6 +26,7 @@
   ],
   "git": {
     "deploymentEnabled": {
+      "feature/ocr-summary-assistant": false,
       "feature/ocr-hull-regression": false,
       "feature/ocr-precision": false,
       "feature/futstats-2-thesportsdb": false,

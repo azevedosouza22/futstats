@@ -127,4 +127,4 @@ Os testes automatizados usam fixtures controladas apenas nos testes, identificad
 
 ## FutStats 3.0 — Importar por imagem
 
-OCR local gratuito, até três imagens, revisão obrigatória, períodos explícitos, N/D, origem dos valores e integração à base existente. Consulte [OCR.md](OCR.md) para uso, requisitos de download/cache offline, regras de cálculo, compatibilidade e limitações. Não houve validação em prints reais; testes de OCR usam imagens sintéticas identificadas. Não há scraping ou upload de imagens para serviços.
+OCR local gratuito, até cinco imagens com SUMÁRIO opcional, revisão obrigatória, períodos explícitos, N/D, origem dos valores e integração à base existente. Consulte [OCR.md](OCR.md) para uso, requisitos de download/cache offline, regras de cálculo, compatibilidade e limitações. Não houve validação em prints reais; testes de OCR usam imagens sintéticas identificadas. Não há scraping ou upload de imagens para serviços.

@@ -22,7 +22,7 @@ test('OCR local real em imagens sintéticas, revisão, persistência, backup, c�
  // Replacement and removal are reversible and release the previous preview.
  await page.locator('.image-preview').nth(2).getByLabel('Substituir').setInputFiles({name:'synthetic-full-replaced.png',mimeType:'image/png',buffer:full});
  await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});await page.getByLabel('Mostrar todos os campos para conferência ou correção').check();
  await expect(page.getByLabel('Período imagem 1')).toHaveValue('first');await expect(page.getByLabel('Período imagem 2')).toHaveValue('second');await expect(page.getByLabel('Período imagem 3')).toHaveValue('full');
  const result=page.locator('.ocr-result');const total=result.locator('details').nth(2);
  await expect(total.getByLabel('Finalizações mandante',{exact:true})).toHaveValue('9');await expect(total.getByLabel('Finalizações visitante',{exact:true})).toHaveValue('15');
@@ -36,7 +36,7 @@ test('OCR local real em imagens sintéticas, revisão, persistência, backup, c�
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('futstats:v1')!));expect(stored.matches).toHaveLength(1);expect(stored.matches[0].image.fields.full.goals[0]).toBe('corrected');expect(stored.matches[0].first.goals).toBeUndefined();expect(stored.matches[0].first[0].goals).toBeNull();expect(JSON.stringify(stored)).not.toContain('data:image');
  for(const name of ['Visão geral','Equipes','Comparação','Histórico','Importar','Pré-jogo','Ao vivo']){await page.getByRole('button',{name,exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);}
  // Offline OCR uses this device's warmed service worker cache and IndexedDB language data.
- await context.setOffline(true);await page.reload();await page.getByRole('button',{name:'Importar',exact:true}).click();await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'offline-synthetic.png',mimeType:'image/png',buffer:full});await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});await expect(page.locator('.ocr-result').locator('details').nth(2).getByLabel('Finalizações mandante',{exact:true})).toHaveValue('9');
+ await context.setOffline(true);await page.reload();await page.getByRole('button',{name:'Importar',exact:true}).click();await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'offline-synthetic.png',mimeType:'image/png',buffer:full});await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});await page.getByLabel('Mostrar todos os campos para conferência ou correção').check();await expect(page.locator('.ocr-result').locator('details').nth(2).getByLabel('Finalizações mandante',{exact:true})).toHaveValue('9');
  await page.getByLabel(/Revisei equipes/).check();await expect(page.getByRole('button',{name:'Salvar partida',exact:true})).toBeDisabled();await expect(page.getByText(/Possível duplicata dessas equipes nesta data/)).toBeVisible();
  expect(external).toEqual([]);expect(errors).toEqual([]);
 });
@@ -51,7 +51,7 @@ test('imagem sintética escura: OCR decimal e revisão de valor suspeito',async(
  const image=await synthetic(page,'JOGO',[['Gols esperados (xG)','1,71','0.85'],['Posse de bola','61%','39%'],['Total de finalizações',13,24]],true);
  await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles({name:'dark-synthetic.png',mimeType:'image/png',buffer:image});
  await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});await page.getByLabel('Mostrar todos os campos para conferência ou correção').check();
  const total=page.locator('.ocr-result details').nth(2);
  await expect(total.getByLabel('Gols esperados (xG) mandante',{exact:true})).toHaveValue('1.71');
  await expect(total.getByLabel('Gols esperados (xG) visitante',{exact:true})).toHaveValue('0.85');
@@ -81,7 +81,7 @@ test('Hull: imagens sintéticas, aba ativa e gols ausentes calculados por difere
   },{index,values,labels});buffers.push({name:`hull-synthetic-${index}.png`,mimeType:'image/png',buffer:Buffer.from(base64,'base64')});
  }
  await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles(buffers);await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});await page.getByLabel('Mostrar todos os campos para conferência ou correção').check();
  for(const [i,p] of ['first','second','full'].entries())await expect(page.getByLabel(`Período imagem ${i+1}`)).toHaveValue(p);
  // The font's zero is read as 'o': it must remain N/D until the explicit calculation.
  await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols mandante',{exact:true})).toHaveValue('');
@@ -93,5 +93,45 @@ test('Hull: imagens sintéticas, aba ativa e gols ausentes calculados por difere
  }
  await page.getByLabel(/Revisei equipes/).check();await page.getByRole('button',{name:'Salvar partida',exact:true}).click();await expect(page.getByText(/Partida salva na sua base local/)).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('futstats:v1')!).matches[0]);expect(saved.image.fields.first.goals).toEqual(['calculated','calculated']);expect(saved.image.fields.second.shots).toEqual(['recognized','recognized']);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+});
+
+test('cinco imagens: cabeçalho espacial, SUMÁRIO, revisão de dúvidas e backup',async({page})=>{
+ await start(page);
+ // Synthetic equivalent: user-provided Levante scores/cards; other statistics are deliberately absent.
+ const firstEvents=['15 Mandante Gol anulado X','15 Visitante Gol Jogador A','35 Mandante Cartão amarelo Jogador B'];
+ const secondEvents=['49 Mandante Gol Jogador C','60 Mandante Gol Jogador D','70 Mandante Gol Jogador E','65 Visitante Gol Jogador F','80 Visitante Gol Jogador G'];
+ const cards=['35 Mandante Cartão amarelo Jogador B','50 Mandante Cartão amarelo Jogador H',...['I','J','K','L','M','N'].map((p,i)=>`${51+i} Visitante Cartão amarelo Jogador ${p}`),'70 Visitante Cartão vermelho Jogador O'];
+ const files=[];
+ for(let index=0;index<5;index++){
+  const base64=await page.evaluate(({index,firstEvents,secondEvents,cards})=>{
+   const canvas=document.createElement('canvas');canvas.width=1100;canvas.height=1300;const c=canvas.getContext('2d')!;c.fillStyle='#fff';c.fillRect(0,0,1100,1300);c.fillStyle='#111';c.font='30px Arial';
+   c.fillText('ESPANHA: Competição de teste - Rodada 9',60,60);c.fillText('12.10.2026',450,120);c.font='36px Arial';c.fillText('3 - 3',490,190);c.font='32px Arial';c.fillText('Levante',60,235);c.fillText('Sevilla',850,235);c.fillText('Encerrado',460,280);
+   if(index<3){c.fillText(['1º TEMPO','2º TEMPO','JOGO'][index],60,420);}
+   else{
+    c.fillText('SUMÁRIO',70,350);c.fillText('ESTATÍSTICAS',400,350);const width=c.measureText('SUMÁRIO').width;c.fillStyle='#e5233e';c.fillRect(70,360,width,4);c.fillStyle='#111';c.fillText('Intervalo: 0 - 1',60,440);c.font='28px Arial';
+    (index===3?[...firstEvents,...secondEvents]:cards).forEach((text,i)=>c.fillText(text,60,520+i*75));
+   }
+   return canvas.toDataURL('image/png').split(',')[1];
+  },{index,firstEvents,secondEvents,cards});files.push({name:`assistant-synthetic-${index}.png`,mimeType:'image/png',buffer:Buffer.from(base64,'base64')});
+ }
+ await page.getByLabel('Selecionar imagens',{exact:true}).setInputFiles(files);await expect(page.locator('.image-preview')).toHaveCount(5);
+ await page.getByRole('button',{name:'Reconhecer imagens',exact:true}).click();await expect(page.getByRole('heading',{name:'Conferir a partida'})).toBeVisible({timeout:120000});
+ await expect(page.getByLabel('Mandante',{exact:true})).toHaveValue('Levante');await expect(page.getByLabel('Visitante',{exact:true})).toHaveValue('Sevilla');await expect(page.getByLabel('Data da partida',{exact:true})).toHaveValue('2026-10-12');await expect(page.getByLabel('País (opcional)')).toHaveValue('ESPANHA');await expect(page.getByLabel('Rodada (opcional)')).toHaveValue('9');
+ await expect(page.getByLabel('Período imagem 4')).toHaveValue('summary');await expect(page.getByLabel('Período imagem 5')).toHaveValue('summary');
+ // Arial's zero was read as O. No substitution: first/second goals remain N/D until coverage is confirmed.
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols visitante',{exact:true})).toHaveValue('');
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols visitante',{exact:true})).toBeVisible();
+ await page.getByLabel(/As imagens mostram todos os eventos do 1º tempo/).check();
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols visitante',{exact:true})).toHaveValue('1');
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Gols visitante',{exact:true})).not.toBeVisible();
+ await page.getByLabel('Mostrar todos os campos para conferência ou correção').check();
+ await expect(page.locator('.ocr-result details').nth(1).getByLabel('Gols mandante',{exact:true})).toHaveValue('3');await expect(page.locator('.ocr-result details').nth(1).getByLabel('Gols visitante',{exact:true})).toHaveValue('2');
+ await expect(page.locator('.ocr-result details').nth(0).getByLabel('Cartões amarelos mandante',{exact:true})).toHaveValue('1');
+ await page.getByLabel(/As imagens mostram todos os eventos do 1º tempo/).check();await page.getByLabel(/As imagens mostram todos os eventos do 2º tempo/).check();
+ await expect(page.locator('.ocr-result details').nth(2).getByLabel('Cartões amarelos visitante',{exact:true})).toHaveValue('6');await expect(page.locator('.ocr-result details').nth(2).getByLabel('Cartões vermelhos visitante',{exact:true})).toHaveValue('1');
+ await page.getByLabel(/Revisei equipes/).check();await page.getByRole('button',{name:'Salvar partida',exact:true}).click();await expect(page.getByText(/Partida salva na sua base local/)).toBeVisible();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('futstats:v1')!));expect(stored.matches).toHaveLength(1);expect(stored.matches[0].country).toBe('ESPANHA');expect(stored.matches[0].image.fields.full.yellow).toEqual(['calculated','calculated']);expect(JSON.stringify(stored)).not.toContain('Jogador');
+ await page.getByRole('button',{name:'Histórico',exact:true}).click();await page.locator('.match-row').click();await expect(page.getByRole('dialog')).toContainText('Rodada 9');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });
