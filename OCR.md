@@ -78,3 +78,43 @@ Em um ambiente que já disponha de Chromium, pode-se selecionar o executável co
 - Essas imagens não entram automaticamente na base do usuário e não comprovam precisão em capturas reais. Os testes não foram executados em um aparelho Android físico.
 
 Fontes técnicas: [Tesseract.js](https://github.com/naptha/tesseract.js), [instalação local](https://github.com/naptha/tesseract.js/blob/master/docs/local-installation.md), [modelo português](https://www.npmjs.com/package/@tesseract.js-data/por).
+# Ajustes de precisão após relatos de testes reais
+
+Os relatos indicaram finalizações ausentes, decimais sem separador e períodos
+ambíguos. O código anterior só redimensionava a imagem, aceitava `171` em xG
+e exigia rótulos inteiros em uma linha. Esta melhoria não modifica modelo,
+armazenamento, histórico, médias, pré-jogo ou formato de backups.
+
+- A imagem limitada a 4 MP recebe escala de cinza, expansão de contraste e
+  inversão quando o fundo é predominantemente escuro. Tons intermediários são
+  preservados: não há limiar binário ou erosão que apague vírgulas/pontos.
+  O buffer é reutilizado; processamento continua local e uma imagem por vez.
+- Rótulos conhecidos quebrados em duas linhas e variações como “Chutes a gol”
+  e “Finalizações certas” são reconhecidos. Coluna explicitamente ilegível
+  (`O`, `?`, `N/D`) não vira zero nem desloca o valor da outra equipe.
+- `1,71`, `1.71`, `1 , 71` e `1 . 71` são interpretados como 1.71. Sem
+  separador visível, não se presume centésimos. Leituras de xG >= 10 ficam N/D
+  com o número bruto no aviso para correção manual. Esse limite é uma heurística
+  de suspeita, não um limite esportivo: valores legítimos podem ser preenchidos
+  manualmente e confirmados na revisão obrigatória.
+- Gols por período só são extraídos de linha “Gols” ou de placar explicitamente
+  vinculado ao período (“Placar do 1º tempo: 1 - 0”). O cabeçalho final nunca
+  define gols dos tempos. “Resultado final”/“Terminado” ajudam identificar o
+  placar do jogo completo. Abas simultâneas continuam exigindo escolha manual;
+  não há detecção confiável de aba ativa baseada somente no texto.
+- Posse cuja soma difere de 100% por mais de 1 ponto, alvo superior ao total,
+  xG suspeito e baixa confiança OCR têm destaque para conferência. Avisos da
+  leitura original permanecem como referência após correções; os destaques do
+  resultado acompanham os valores editados. A soma de posse é apenas aviso,
+  respeitando possíveis definições diferentes da fonte.
+
+Testes de texto verificam os erros relatados, sem reproduzir resultados de OCR
+de prints reais. O navegador usa imagens PNG geradas (claras e escuras), com
+Tesseract real, em desktop e viewport móvel. Não foram fornecidos novos prints
+reais para esta entrega; precisão no Flashscore e Android físico ainda exigem
+validação. Tema misto, texto cortado/pequeno, barra sobreposta e perda de
+pontuação continuam sujeitos a correção. Mudar para segmentação esparsa/automática
+causou regressão nos testes existentes; foi mantido o bloco único validado.
+
+Esta melhoria usa branch `feature/ocr-precision`, com deploy Git Vercel e Netlify
+bloqueados. Não libera ou altera a prévia existente do PR nº 3 automaticamente.

@@ -9,7 +9,7 @@ function rowsFromPage(page: Page): string {
   const rows:{y:number;words:typeof words}[]=[];
   for(const word of [...words].sort((a,b)=>(a.bbox.y0+a.bbox.y1)-(b.bbox.y0+b.bbox.y1))){
     const y=(word.bbox.y0+word.bbox.y1)/2;const row=rows.find(r=>Math.abs(r.y-y)<threshold);
-    if(row)row.words.push(word);else rows.push({y,words:[word]});
+    if(row){row.y=(row.y*row.words.length+y)/(row.words.length+1);row.words.push(word);}else rows.push({y,words:[word]});
   }
   return rows.map(r=>r.words.sort((a,b)=>a.bbox.x0-b.bbox.x0).map(w=>w.text).join(' ')).join('\n');
 }
