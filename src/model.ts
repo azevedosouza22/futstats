@@ -13,11 +13,11 @@ export type ImageOrigin = {
   importedAt: string; confirmed: true; periods: Period[];
   full: [Stats, Stats];
   fields: Partial<Record<Period, Partial<Record<Metric, [FieldOrigin | null, FieldOrigin | null]>>>>;
-  matchFields: Record<'home' | 'away' | 'date' | 'competition', FieldOrigin | null>;
+  matchFields: Record<'home' | 'away' | 'date' | 'competition', FieldOrigin | null> & Partial<Record<'country'|'round',FieldOrigin|null>>;
 };
 export type Team = {id: string; name: string; color: string; externalId?: string};
 export type Match = {
-  id: string; home: string; away: string; date: string; competition: string;
+  id: string; home: string; away: string; date: string; competition: string;country?:string;round?:string;
   first: [Stats, Stats]; second: [Stats, Stats]; image?: ImageOrigin;
   external?: {provider: 'thesportsdb'; id: string; importedAt: string; status: string; full: [Stats, Stats]};
 };
@@ -59,6 +59,7 @@ const originValues=['recognized','corrected','calculated'];
 export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
   if (!validDate(m.date)) return 'Informe a data da partida.';
+  if(['country','round'].some(k=>m[k as 'country'|'round']!==undefined&&(typeof m[k as 'country'|'round']!=='string'||m[k as 'country'|'round']!.length>100)))return 'País ou rodada inválidos.';
   if (!validPair(m.first,!!m.external||!!m.image)||!validPair(m.second,!!m.external||!!m.image)) return 'Períodos ou valores inválidos.';
   if (m.external&&m.image) return 'Origens incompatíveis.';
   if (m.external) {
@@ -86,6 +87,7 @@ export function validateMatch(m: Match): string {
       }
     }
     if (['home','away','date','competition'].some(k=>i.matchFields[k as keyof typeof i.matchFields]!==null&&!originValues.includes(i.matchFields[k as keyof typeof i.matchFields]??''))) return 'Origem dos dados da partida inválida.';
+    if(['country','round'].some(k=>!!m[k as 'country'|'round']&&!originValues.includes(i.matchFields[k as 'country'|'round']??'')))return 'Origem do país ou rodada inválida.';
     for (const k of additiveMetrics) for (const side of [0,1]) {const a=m.first[side][k],b=m.second[side][k],c=i.full[side][k];if(a!=null&&c!=null&&(c<a||(b!=null&&a+b!==c)))return 'Estatísticas incompatíveis entre períodos.';}
   }
   for (const s of [...m.first,...m.second,...(m.image?.full??[])]) {

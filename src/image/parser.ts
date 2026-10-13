@@ -1,14 +1,15 @@
 import {metrics, labels, unavailable, type Metric, type Period, type ResolvedStats} from '../model';
+import {readHeaderText} from './header';
 export type Extraction = {
   period: Period | null; values: [ResolvedStats, ResolvedStats]; recognized: Metric[];
-  home: string; away: string; date: string; competition: string;
+  home: string; away: string; date: string; competition: string; country:string; round:string; finalScore:[number,number]|null;
   headerScore: [number, number] | null; warnings: string[]; suspect: Metric[]; goalsFromFinalHeader?:boolean;
 };
 export const clean = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 const aliases: Record<Metric,string[]> = {
   goals:['gols','golos','goals'], shots:['total de finalizacoes','total finalizacoes','finalizacoes totais','finalizacoes','total de remates','remates','total shots','total de chutes','chutes totais'],
   target:['finalizacoes no alvo','finalizacoes certas','chutes a gol','remates no alvo','finalizacoes a baliza','remates a baliza','remates enquadrados','shots on target','shots on goal','no alvo','chutes no alvo'],
-  corners:['escanteios','cantos','corner kicks','corners'],yellow:['cartoes amarelos','yellow cards'],red:['cartoes vermelhos','red cards'],
+  corners:['escanteios','cantos','corner kicks','corners'],yellow:['cartoes amarelos','cartao amarelo','yellow cards','tarjetas amarillas'],red:['cartoes vermelhos','cartao vermelho','red cards','tarjetas rojas'],
   possession:['posse de bola','posse','ball possession','possession'],xg:['gols esperados xg','golos esperados xg','gols esperados','golos esperados','expected goals xg','expected goals','xg'],chances:['chances claras','grandes chances','big chances','oportunidades claras']
 };
 // Only repair spacing around a visible decimal separator; never insert one.
@@ -43,7 +44,8 @@ export function extract(text:string,periodEvidence:Period|null=null):Extraction 
     if(!metricFromLine(rawLines[i])&&/[a-zÀ-ÿ]/i.test(rawLines[i])&&i+1<rawLines.length&&metricFromLine(joined)){lines.push(joined);i++;}
     else lines.push(rawLines[i]);
   }
-  const result:Extraction={period:periodEvidence??identifyPeriod(text),values:[unavailable(),unavailable()],recognized:[],home:'',away:'',date:'',competition:'',headerScore:null,warnings:[],suspect:[]};
+  const header=readHeaderText(text);
+  const result:Extraction={period:periodEvidence??identifyPeriod(text),values:[unavailable(),unavailable()],recognized:[],home:'',away:'',date:'',competition:'',country:header.country,round:header.round,finalScore:header.finalScore,headerScore:null,warnings:[...header.warnings],suspect:[]};
   if (!result.period) result.warnings.push('Período não determinado: selecione manualmente. Abas visíveis não indicam qual está ativa.');
   const date=text.match(/\b(\d{2})[/.](\d{2})[/.](\d{4})\b/);
   if (date) result.date=`${date[3]}-${date[2]}-${date[1]}`;
@@ -76,9 +78,10 @@ export function extract(text:string,periodEvidence:Period|null=null):Extraction 
     }
   }
   for(const side of [0,1])if(result.values[side].target!==null&&result.values[side].shots!==null&&result.values[side].target!>result.values[side].shots!){result.suspect.push('shots','target');result.warnings.push('Finalizações no alvo superam o total: confira as duas linhas.');}
+  result.home=header.home||result.home;result.away=header.away||result.away;result.competition=header.competition||result.competition;
   if(result.values.every(s=>s.possession!==null)&&Math.abs(result.values[0].possession!+result.values[1].possession!-100)>1){result.suspect.push('possession');result.warnings.push('Posse de bola não soma aproximadamente 100%. Confira os valores e a definição da fonte.');}
-  if(result.headerScore&&result.period==='full'&&/\b(?:encerrado|finalizado|terminado|placar final|resultado final|ft)\b/i.test(text)&&!result.recognized.includes('goals')) {
-    result.values[0].goals=result.headerScore[0];result.values[1].goals=result.headerScore[1];result.recognized.push('goals');
+  if(result.finalScore&&result.period==='full'&&!result.recognized.includes('goals')) {
+    result.values[0].goals=result.finalScore[0];result.values[1].goals=result.finalScore[1];result.recognized.push('goals');
     result.goalsFromFinalHeader=true;
   }
   if(!result.recognized.length)result.warnings.push('Nenhuma linha estatística reconhecida. Preencha somente o que conseguir confirmar na imagem.');

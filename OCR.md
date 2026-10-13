@@ -2,7 +2,7 @@
 
 ## Fluxo
 
-Em **Importar → Importar por imagem**, selecione de uma a três capturas JPG/JPEG, PNG ou WebP da mesma partida (até 15 MB por arquivo). As prévias podem ser substituídas ou removidas. Clique em **Reconhecer imagens**, acompanhe o progresso e cancele quando necessário. Repetir a leitura substitui as correções somente após confirmação.
+Em **Importar → Importar por imagem**, selecione de uma a cinco capturas JPG/JPEG, PNG ou WebP da mesma partida (até 15 MB por arquivo). As prévias podem ser substituídas ou removidas. Clique em **Reconhecer imagens**, acompanhe o progresso e cancele quando necessário. Repetir a leitura substitui as correções somente após confirmação.
 
 Na revisão, confira mandante, visitante, data, competição opcional, o período de cada imagem e a ordem das colunas. Abra os detalhes de uma imagem para corrigir sua leitura; os campos consolidados também são editáveis. Campos vazios representam **N/D**, nunca zero. O OCR mostra sua confiança estimada, que não é garantia de acerto.
 
@@ -171,3 +171,74 @@ rejeitá-lo. Dados locais e telas existentes não são modificados automaticamen
 
 A branch feature/ocr-hull-regression bloqueia autodeploy Vercel e Netlify.
 Nenhuma atualização da prévia ou produção é feita nesta entrega.
+
+## Importação assistida por cabeçalho e SUMÁRIO
+
+O fluxo aceita cinco arquivos, por exemplo três períodos e dois recortes do
+SUMÁRIO. Campos reconhecidos com evidência são preenchidos e a visualização
+padrão mostra dúvidas (N/D, baixa confiança ou inconsistências). Use **Mostrar
+todos os campos** para conferir/corrigir qualquer valor. Períodos identificados
+não exigem nova seleção; uma única confirmação final continua obrigatória.
+
+O cabeçalho reconhece rótulos, nomes junto ao placar e, quando há uma linha
+pareada legível antes da navegação, nomes à esquerda/direita do placar central.
+Normaliza espaços e Unicode, sem catálogo de equipes, tradução, expansão de abreviações ou
+suposição de adversários. Cabeçalhos de país são validados localmente com Intl/nomes conhecidos ou rótulo País; não traduzimos o valor lido. Competição/rodada usam texto explícito; data exige
+ano. País e rodada são campos opcionais no registro, histórico e backup; nenhum
+registro anterior é migrado ou substituído. Dados conflitantes, nomes em várias
+linhas, ausência de estado de encerramento e layouts diferentes exigem correção.
+
+SUMÁRIO pode ser sugerido pelo indicador visual ou texto/eventos inequívocos e
+é selecionável manualmente. Um placar final com marcador de encerramento e um
+intervalo legível preenchem automaticamente gols completos/primeiro tempo e
+calculam somente os gols ausentes do segundo (final − intervalo). Valores
+extraídos ou corrigidos não são substituídos; corrigir um operando atualiza os
+gols derivados. Indícios de prorrogação/disputa de pênaltis bloqueiam esse cálculo.
+
+Eventos exigem minuto legível e equipe explícita (Mandante/Visitante, rótulo
+`Equipe:` ou `[Equipe]`). Placar visível de um evento pode identificar o gol
+quando há incremento unitário inequívoco em relação ao placar anterior/intervalo;
+sem baseline suficiente, não se atribui a equipe. Acréscimos de 45 pertencem ao
+primeiro tempo; de 90, ao segundo. Gol contra explícito usa o adversário, salvo
+se o próprio incremento do placar já identifica a equipe creditada. Eventos
+anulados, substituições e perdas de pênalti não são gols; banco/comissão,
+segundo amarelo e minutos fora dos 90 são tratados como dúvidas.
+
+Detecção de ícones de cartões é experimental: retângulos amarelos/vermelhos de
+forma compatível, próximos a um único minuto OCR confiável, com lado claro.
+Texto ambíguo, ícone central, outra cor, orientação/tamanho diferente ou legenda
+não permitem identificação segura. Cores sozinhas não geram totais. Esta
+heurística não foi validada em prints reais e pode exigir correção.
+
+**Recortes não comprovam ausência de eventos.** A lista permanece parcial até
+marcar **As imagens mostram todos os eventos** para cada tempo, juntando os
+recortes e verificando equipes/definições. Essa confirmação permite contar gols
+/cartões, inclusive zero em uma lista completa. Eventos sem identidade,
+releituras conflitantes ou potenciais duplicatas impedem uso automático das
+contagens; corrija os campos do resultado ou selecione recortes mais claros.
+Repetições exatas são deduplicadas; eventos semelhantes no mesmo minuto/lado
+precisam de conferência. Dados que não forem comprovados permanecem N/D.
+
+Contagens de lista completa são identificadas como OCR (eventos); diferença de
+gols e soma de cartões dos dois tempos são **Cálculo**; edição é **Corrigido pelo
+usuário**. Somente metadados e estatísticas revisados entram na base. Eventos,
+nomes de jogadores, texto OCR e imagens não são armazenados no backup. Posse e
+xG continuam sem soma/subtração; xG vem diretamente da leitura/correção.
+
+Regressões: Hull 2×2 (11/10/2026), Torino 2×1 (12/10/2026) e Levante 3×3
+(12/10/2026). Os gols e cartões Levante seguem a referência do usuário. Minutos,
+nomes genéricos dos eventos e competição/rodada de teste são fixtures sintéticas,
+não detalhes verificados dessas partidas. Torino não tem intervalo fornecido:
+os testes exigem que permaneça N/D. Não havia capturas originais, só ícones PWA.
+
+No teste de navegador com cinco PNGs sintéticos, o intervalo Arial `0 - 1` foi
+lido como `O - 1` mesmo após releitura; permaneceu N/D. Cabeçalho/equipes/data foram
+preenchidos e os eventos legíveis produziram os gols e cartões após confirmação
+de cobertura, sem digitação estatística. Esse caso mostra a recuperação segura,
+não um acerto inventado do zero. Android físico e prints reais ainda precisam
+ser validados. Recomenda-se fornecer cabeçalho e eventos completos em boa resolução.
+
+Limites existentes (15 MB/arquivo, preparo a 4 MP, OCR serial, cancelamento,
+timeout e cache offline) continuam. Prévias usam decodificação assíncrona e
+carregamento sob demanda; arquivos grandes ainda podem consumir memória no
+Android. Branch feature/ocr-summary-assistant tem autodeploy Vercel/Netlify bloqueado.
