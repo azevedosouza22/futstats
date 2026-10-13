@@ -23,7 +23,8 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
   if(kind==='config')return {status:200,body:{source:'API-Football',dates,fixtures}};
   const date=params.get('date'),id=params.get('fixture'),half=params.get('half')??'false';
   if(kind==='fixtures'&&!dates.includes(date)||kind==='statistics'&&(!fixtures.includes(id)||!['true','false'].includes(half))||!['fixtures','statistics'].includes(kind))return fail(400,'QUERY','Data ou partida fora das consultas autorizadas desta PoC.');
-  const query=kind==='fixtures'?`/fixtures?date=${date}&timezone=America%2FSao_Paulo`:`/fixtures/statistics?fixture=${id}&half=${half}`;
+  // Match the date-only query validated in the provider dashboard. No implicit timezone.
+  const query=kind==='fixtures'?`/fixtures?date=${date}`:`/fixtures/statistics?fixture=${id}&half=${half}`;
   const hit=cache.get(query);if(hit&&hit.expires>now())return hit.failure??{status:200,body:{...hit.body,cached:true}};
   if(pending.has(query))return pending.get(query);
   if(now()<blockedUntil)return fail(429,'DAILY_LIMIT','Limite diário da API atingido. Aguarde a reposição da cota.');
@@ -38,12 +39,17 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
     const remaining=response.headers.get('x-ratelimit-requests-remaining');
     if(remaining!==null&&/^\d+$/.test(remaining)&&Number(remaining)===0)blockedUntil=now()+86400000;
     if(response.status===429){blockedUntil=now()+86400000;return fail(429,'DAILY_LIMIT','A API limitou as consultas. Aguarde a reposição da cota.');}
-    if(response.status===401||response.status===403)return fail(502,'PROVIDER_ACCESS','A API recusou o acesso. Confira chave, plano e temporada no servidor.');
+    if(response.status===401||response.status===403)return fail(502,'PROVIDER_ACCESS','A API recusou a autenticação ou o acesso. Confira a credencial de servidor desta implantação.');
     if(!response.ok&&response.status!==204)return fail(502,'PROVIDER','Provedor indisponível. Tente mais tarde.');
     const raw=response.status===204?{response:[],errors:[]}:await response.json();
     if(raw.errors&&Object.keys(raw.errors).length){
      if(Object.keys(raw.errors).some(k=>/requests|rateLimit/i.test(k))){blockedUntil=now()+86400000;return fail(429,'DAILY_LIMIT','Limite de consultas informado pelo provedor.');}
-     return fail(502,'PROVIDER_ERROR','A API não disponibilizou a consulta. Confira plano, temporada e cobertura.');
+     // Classify known error field names, never forward provider text (it may echo secrets).
+     const fields=Object.keys(raw.errors).map(k=>k.toLowerCase());
+     if(fields.some(k=>['token','key','authentication','authorization','access'].includes(k)))return fail(502,'PROVIDER_ACCESS','A API recusou a autenticação ou o acesso. Confira a credencial de servidor desta implantação.');
+     const parameter=fields.find(k=>['date','timezone','fixture','half'].includes(k));
+     if(parameter)return fail(502,'PROVIDER_PARAMETER',`A API rejeitou o parâmetro ${parameter}. A consulta precisa ser revisada no servidor.`);
+     return fail(502,'PROVIDER_ERROR','A API retornou um erro nesta consulta. A causa não foi identificada; não é possível concluir que seja uma restrição de plano.');
     }
     if(!Array.isArray(raw.response))return fail(502,'PAYLOAD','Resposta inesperada do provedor.');
     if(kind==='statistics'&&raw.parameters?.fixture!=null&&String(raw.parameters.fixture)!==id)return fail(502,'PAYLOAD','Resposta de outra partida rejeitada.');

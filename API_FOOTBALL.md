@@ -34,7 +34,7 @@ Vercel executa `api/api-football.js` como função; um hospedador apenas de arqu
 Endpoint privado GET `/api/api-football`, com `Authorization: Bearer <código privado>`:
 
 - `?kind=config`: lista datas e IDs autorizados, sem consumir cota do provedor.
-- `?kind=fixtures&date=2026-10-13`: chama `/fixtures` com fuso `America/Sao_Paulo`.
+- `?kind=fixtures&date=2026-10-13`: chama exatamente `/fixtures?date=2026-10-13`, sem acrescentar fuso; a seleção de data usa o padrão do provedor. Horários na tela são convertidos para o fuso do dispositivo.
 - `?kind=statistics&fixture=1492402&half=false`: chama `/fixtures/statistics`.
 - `?kind=statistics&fixture=1492402&half=true`: consulta adicional, explicitamente solicitada pelo usuário.
 
@@ -66,8 +66,16 @@ Em máquina autorizada com Node 22 e `.env.local` configurado, execute `node --e
 
 ## Validação automatizada
 
-- `npm test`: 95 testes unitários, incluindo respostas simuladas com nulos, zero, decimais, equipes fora de ordem, ausência de tempos, erros, timeout, limite diário, autenticação, allowlist, cache e deduplicação.
+- `npm test`: 97 testes unitários, incluindo respostas simuladas com nulos, zero, decimais, equipes fora de ordem, ausência de tempos, erros, timeout, limite diário, autenticação, allowlist, cache e deduplicação. Regressão da URL exata por data, 293 partidas simuladas e classificação segura de erros por parâmetro/autenticação.
 - `npm run test:e2e`: 14 testes Playwright em desktop e viewport móvel 390 × 844. API simulada, fluxo privado, N/D, erro de cota sem repetição, armazenamento local preservado e regressões de OCR/backups/offline. Não equivale a testar um aparelho Android físico.
 - `npm run build`: TypeScript, Vite e geração de service worker/manifest da PWA aprovados. As respostas privadas da API não são incluídas no precache.
 
 Fontes oficiais: [documentação V3](https://api-sports.io/documentation/football/v3), [planos](https://www.api-football.com/pricing/), [orientação sobre cota](https://www.api-football.com/news/post/how-to-optimize-api-sports-calls-and-quota-usage).
+
+## Correção da consulta por data após teste do Preview
+
+O usuário confirmou no painel oficial 293 partidas sem erros para `GET /fixtures?date=2026-10-13`. A versão inicial enviava também `timezone=America/Sao_Paulo`, portanto não reproduzia a mesma consulta. Esse parâmetro adicional foi removido; não foi demonstrado que um fuso válido seja rejeitado pelo provedor.
+
+A mensagem anterior sobre plano/temporada era gerada para qualquer `errors` não vazio, exceto cota. Esse tratamento apagava a diferença entre erros de parâmetros, autenticação e outras causas; não comprovava limitação de plano. Agora erros com campos conhecidos retornam `PROVIDER_PARAMETER` (nome de parâmetro autorizado, sem conteúdo do provedor), `PROVIDER_ACCESS` ou `DAILY_LIMIT`. Erros desconhecidos continuam sanitizados como `PROVIDER_ERROR`, sem diagnóstico de plano. A URL fixa, o cabeçalho `x-apisports-key` no servidor, o código privado separado e a restrição de datas permanecem.
+
+A correção foi testada com respostas simuladas, não com a chave real do Preview. Para validar, após Ready do novo commit, consulte a data uma vez. Se falhar, registre somente o código e a mensagem sanitizada retornados por `/api/api-football` (sem cabeçalhos, tokens, screenshots ou HAR com credenciais). Não realizar retentativas automáticas nem ampliar consultas; falhas têm cache de um minuto. A causa exata da resposta original do provedor permanece não confirmada sem evidência adicional do Preview.

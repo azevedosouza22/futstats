@@ -23,6 +23,25 @@ describe('API-Football server-only PoC',()=>{
   await Promise.all([s(query(),auth),s(query(),auth)]);expect(f).toHaveBeenCalledTimes(1);expect((await s(query(),auth)).body.cached).toBe(true);
   expect((await s(query('true'),auth)).body.halfRequested).toBe(true);expect(f.mock.calls[1][0]).toContain('half=true');clock+=3600001;await s(query(),auth);expect(f).toHaveBeenCalledTimes(3);
  });
+ it('uses exactly the validated date-only endpoint, server key only, and preserves 293 simulated fixtures',async()=>{
+  const items=Array.from({length:293},(_,i)=>({fixture:{id:1500000+i,date:'2026-10-13T18:00:00+00:00',status:{short:'NS'}},teams:{home:{id:1,name:'Equipe simulada A'},away:{id:2,name:'Equipe simulada B'}},goals:{home:null,away:null}}));
+  const f=vi.fn().mockImplementation(async()=>response({errors:[],parameters:{date:'2026-10-13'},response:items}));
+  const s=createFootballService({fetcher:f,env}),p=new URLSearchParams({kind:'fixtures',date:'2026-10-13'});
+  const result=await s(p,auth);
+  expect(f.mock.calls[0][0]).toBe('https://v3.football.api-sports.io/fixtures?date=2026-10-13');
+  expect(f.mock.calls[0][1].headers).toEqual({'x-apisports-key':'not-a-real-key',Accept:'application/json'});
+  expect(result.status).toBe(200);expect(result.body.items).toHaveLength(293);expect(result.body.items[0].goals).toEqual([null,null]);
+  expect(JSON.stringify(result)).not.toContain('not-a-real-key');expect(JSON.stringify(result)).not.toContain('private-test-token-123');
+  await s(p,auth);expect(f).toHaveBeenCalledTimes(1);
+ });
+ it('distinguishes provider parameter and authentication errors without exposing raw messages or blaming plans',async()=>{
+  for(const [field,code] of [['timezone','PROVIDER_PARAMETER'],['date','PROVIDER_PARAMETER'],['half','PROVIDER_PARAMETER'],['token','PROVIDER_ACCESS'],['other','PROVIDER_ERROR']]){
+   const f=vi.fn().mockImplementation(async()=>response({errors:{[field]:'not-a-real-key private-test-token-123'},response:[]}));
+   const s=createFootballService({fetcher:f,env}),result=await s(new URLSearchParams({kind:'fixtures',date:'2026-10-13'}),auth);
+   expect(result.status).toBe(502);expect(result.body.code).toBe(code);expect(JSON.stringify(result)).not.toContain('not-a-real-key');expect(JSON.stringify(result)).not.toContain('private-test-token-123');
+   expect(result.body.error).not.toContain('Confira plano');await s(new URLSearchParams({kind:'fixtures',date:'2026-10-13'}),auth);expect(f).toHaveBeenCalledTimes(1);
+  }
+ });
  it('handles quota inside HTTP 200, HTTP 429 and local rolling budget; caches failures',async()=>{
   for(const fixtureResponse of [response({errors:{requests:'private error not for client'},response:[]}),response({},429)]){
    const f=vi.fn().mockResolvedValue(fixtureResponse),s=createFootballService({fetcher:f,env});expect((await s(query(),auth)).status).toBe(429);expect((await s(query('true'),auth)).status).toBe(429);expect(f).toHaveBeenCalledTimes(1);
