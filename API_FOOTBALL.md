@@ -4,7 +4,7 @@ A área **Partidas automáticas** consulta a API-Football no servidor e exibe pa
 
 ## Configuração de servidor na Vercel
 
-Após aprovação da revisão e de uma implantação de Preview, configure em Settings → Environment Variables, no ambiente **Preview**:
+Para a implantação de **Preview** autorizada desta branch, configure em Settings → Environment Variables, no ambiente **Preview**:
 
 | Variável | Conteúdo |
 | --- | --- |
@@ -13,7 +13,19 @@ Após aprovação da revisão e de uma implantação de Preview, configure em Se
 | `API_SPORTS_ALLOWED_DATES` | Datas autorizadas separadas por vírgula; padrão `2026-10-13`, máximo 7 |
 | `API_SPORTS_ALLOWED_FIXTURES` | IDs autorizados separados por vírgula; padrão `1492402`, máximo 20 |
 
-Não use prefixo `VITE_`, não coloque segredos no Git ou no navegador e não forneça a chave da API no campo de acesso. Compartilhe apenas o código privado com quem fará o teste. Após alterar variáveis, uma nova implantação autorizada será necessária. Nesta branch, a implantação Git automática está desativada na Vercel e o commit usa `[skip netlify]`. Nenhuma implantação foi solicitada.
+Não use prefixo `VITE_`, não coloque segredos no Git ou no navegador e não forneça a chave da API no campo de acesso. Compartilhe apenas o código privado com quem fará o teste. Após alterar variáveis, uma nova implantação será necessária. Nesta branch, a implantação Git de Preview foi habilitada na Vercel a pedido do usuário; a Netlify permanece bloqueada. A branch de produção deve continuar `main`; não faça merge nem promova a prévia para produção.
+
+## Prévia do PR nº 7
+
+O bloqueio original era `git.deploymentEnabled["feature/api-football-poc"] = false` em `vercel.json`. A configuração agora é `true` somente para essa branch. O novo push pode criar automaticamente uma prévia se a integração Git do projeto estiver ativa. Não havia status nem comentário de implantação no GitHub antes da correção. O painel da Vercel e as variáveis cadastradas nele não são acessíveis a partir deste ambiente.
+
+1. Na Vercel, abra o projeto FutStats → Settings → Git e confirme o repositório `azevedosouza22/futstats`, com permissão do aplicativo Vercel para esse repositório. Em Production/Branch Tracking, mantenha `main` como branch de produção.
+2. Confirme as duas variáveis de servidor no ambiente Preview. Se houver restrição por branch, inclua `feature/api-football-poc`. O código privado precisa ter pelo menos 16 caracteres e ser diferente da chave. Não envie os valores por chat ou comentários do PR.
+3. Em Deployments, procure a implantação do commit mais recente de `feature/api-football-poc`. Se não houver, use Create Deployment com essa branch e ambiente **Preview**. Se aparecer Skipped/Canceled, confira o Ignored Build Step: ele não deve bloquear essa branch nem executar `scripts/ignore-review-deploy.cjs` (esse script é exclusivo da Netlify e continua bloqueando a branch lá).
+4. Confira Vite, raiz do projeto na raiz do repositório, Node 22.x, instalação `npm ci`, build `npm run build`, saída `dist`. Se houver pedido de aprovação do autor/integração Git, um administrador deve aprovar no painel. Falhas de build precisam ser verificadas nos logs da implantação, sem compartilhar segredos.
+5. Aguarde **Ready** e use **Visit**. Essa é a URL HTTPS a compartilhar no computador e no Chrome Android. Não use Promote to Production ou o domínio da produção. Se Deployment Protection estiver ativa, autorize o acesso do testador na Vercel; isso é independente do código privado da PoC.
+
+Nenhuma URL é considerada funcionando até que seja aberta e verificada. A build não consulta a API. Abrir a página e clicar Acessar consultas chama apenas `kind=config`, sem cota upstream. Para o teste mínimo, escolha `2026-10-13`, consulte partidas (uma chamada), selecione o ID `1492402` (uma chamada) e, só se necessário, consulte dados por tempo (uma chamada adicional). As listas padrão já restringem essa data e ID; não amplie as permissões para esse teste. Cache de uma hora evita repetir consultas na mesma instância; cold starts e outras instâncias podem consumir novamente. Não abra repetidamente várias prévias/abas para o mesmo teste.
 
 Vercel executa `api/api-football.js` como função; um hospedador apenas de arquivos `dist/` não executará os endpoints. `npm run dev` inclui o mesmo handler para desenvolvimento, com variáveis em `.env.local` (ignorado pelo Git). `npm run preview` serve somente o build estático. Para iniciar: `npm ci` e `npm run dev`.
 
