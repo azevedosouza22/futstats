@@ -1,5 +1,9 @@
 # Publicar o FutStats com HTTPS
 
+## PoC API-Football — revisão sem implantação
+
+A branch `feature/api-football-poc` desativa implantação Git automática. Não faça merge ou publique esta PoC sem autorização. As variáveis de servidor, a futura configuração de Preview e a validação real pendente estão em [API_FOOTBALL.md](API_FOOTBALL.md). Hospedar somente `dist/` não executa os endpoints; é necessário o runtime serverless da Vercel.
+
 ## Prévia do PR nº 3 — sem merge ou alteração da produção
 
 Para testar o FutStats 3.0, **não siga a instrução de merge abaixo**. Use a branch
