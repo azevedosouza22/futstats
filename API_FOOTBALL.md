@@ -67,7 +67,7 @@ Em máquina autorizada com Node 22 e `.env.local` configurado, execute `node --e
 ## Validação automatizada
 
 - `npm test`: 97 testes unitários, incluindo respostas simuladas com nulos, zero, decimais, equipes fora de ordem, ausência de tempos, erros, timeout, limite diário, autenticação, allowlist, cache e deduplicação. Regressão da URL exata por data, 293 partidas simuladas e classificação segura de erros por parâmetro/autenticação.
-- `npm run test:e2e`: 14 testes Playwright em desktop e viewport móvel 390 × 844. API simulada, fluxo privado, N/D, erro de cota sem repetição, armazenamento local preservado e regressões de OCR/backups/offline. Não equivale a testar um aparelho Android físico.
+- `npm run test:e2e`: 16 testes Playwright em desktop e viewport móvel 390 × 844. API simulada, fluxo privado, N/D, erro de cota sem repetição, armazenamento local preservado e regressões de OCR/backups/offline. Inclui lista longa, detalhes imediatos, foco de teclado, volta à lista e troca de períodos sem novas consultas. Não equivale a testar um aparelho Android físico.
 - `npm run build`: TypeScript, Vite e geração de service worker/manifest da PWA aprovados. As respostas privadas da API não são incluídas no precache.
 
 Fontes oficiais: [documentação V3](https://api-sports.io/documentation/football/v3), [planos](https://www.api-football.com/pricing/), [orientação sobre cota](https://www.api-football.com/news/post/how-to-optimize-api-sports-calls-and-quota-usage).
@@ -79,3 +79,11 @@ O usuário confirmou no painel oficial 293 partidas sem erros para `GET /fixture
 A mensagem anterior sobre plano/temporada era gerada para qualquer `errors` não vazio, exceto cota. Esse tratamento apagava a diferença entre erros de parâmetros, autenticação e outras causas; não comprovava limitação de plano. Agora erros com campos conhecidos retornam `PROVIDER_PARAMETER` (nome de parâmetro autorizado, sem conteúdo do provedor), `PROVIDER_ACCESS` ou `DAILY_LIMIT`. Erros desconhecidos continuam sanitizados como `PROVIDER_ERROR`, sem diagnóstico de plano. A URL fixa, o cabeçalho `x-apisports-key` no servidor, o código privado separado e a restrição de datas permanecem.
 
 A correção foi testada com respostas simuladas, não com a chave real do Preview. Para validar, após Ready do novo commit, consulte a data uma vez. Se falhar, registre somente o código e a mensagem sanitizada retornados por `/api/api-football` (sem cabeçalhos, tokens, screenshots ou HAR com credenciais). Não realizar retentativas automáticas nem ampliar consultas; falhas têm cache de um minuto. A causa exata da resposta original do provedor permanece não confirmada sem evidência adicional do Preview.
+
+## FutStats Intelligence: evolução visual experimental
+
+Tema escuro aplicado somente a Partidas automáticas e à navegação enquanto essa área estiver aberta. Verde destaca ações/mandante, azul identifica fonte/visitante, roxo identifica o caráter experimental e amarelo sinaliza alertas com texto. Não foi adicionada IA, previsão ou recomendação de apostas. As outras páginas preservam seu tema anterior.
+
+Ao escolher uma partida, a lista dá lugar aos detalhes, com foco no título, placar/status da fonte e botão Voltar às partidas que restaura a lista e o foco. Estatísticas aparecem em cartões com números e nomes de equipes. Barras decorativas representam a proporção relativa ao maior valor de cada métrica, sem transformar números em probabilidades; dados ausentes continuam N/D, sem barras de comparação. Valores zero são exibidos como zero.
+
+O acumulado é consultado como antes; dados por tempo requerem o botão manual existente. Depois da consulta, mudar entre primeiro tempo, segundo tempo e acumulado apenas troca a visualização em memória. A lista não é consultada novamente ao voltar. Carregamento tem indicação textual, erros usam alertas e tempos ausentes têm mensagem explícita. Navegação por teclado, foco visível, botões para toque e redução de animação conforme preferência do sistema. Os testes de interface usam exclusivamente dados identificados como simulados; a tela real não contém exemplos inseridos.
