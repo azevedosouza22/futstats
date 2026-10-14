@@ -72,13 +72,21 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
   try{const result=await task;if(result.status!==200)cache.set(query,{failure:result,expires:now()+60000});return result;}finally{pending.delete(query);}
  };
 }
+// Text fallback also supports browsers still running an older PWA bundle.
+export function publicFootballBody(result){
+ if(result.status<400)return result.body;
+ const code=typeof result.body.code==='string'&&/^[A-Z_]{1,40}$/.test(result.body.code)?result.body.code:'UNKNOWN';
+ const api=Number.isInteger(result.body.upstreamStatus)&&result.body.upstreamStatus>=100&&result.body.upstreamStatus<=599?result.body.upstreamStatus:'N/D';
+ return {...result.body,error:`${result.body.error} [Diagnóstico: ${code}; HTTP servidor ${result.status}; HTTP API ${api}]`};
+}
 const service=createFootballService();
 export async function handleFootball(req,res){
+ res.setHeader('X-FutStats-Commit',/^[a-f0-9]{40}$/i.test(process.env.VERCEL_GIT_COMMIT_SHA??'')?process.env.VERCEL_GIT_COMMIT_SHA:'unknown');
  res.setHeader('Cache-Control','private, no-store');res.setHeader('Content-Type','application/json; charset=utf-8');
  if(req.method!=='GET'){res.statusCode=405;res.setHeader('Allow','GET');res.end(JSON.stringify({error:'Método não permitido.'}));return;}
  const params=new URL(req.url,'http://internal').searchParams;
  const result=await service(params,typeof req.headers.authorization==='string'?req.headers.authorization:'');
  // Fixed fields only: never headers, URLs, provider text, tokens or env values.
  if(result.body.availability==='unavailable'||['PROVIDER_UNAUTHORIZED','PROVIDER_FORBIDDEN','PROVIDER_AUTH_RESPONSE','PROVIDER_PARAMETER','PROVIDER_ERROR','PROVIDER_LIMIT','DAILY_LIMIT','RATE_LIMIT'].includes(result.body.code))console.warn(JSON.stringify({event:'api-football-result',code:result.body.availability==='unavailable'?'PERIOD_UNAVAILABLE':result.body.code,status:result.status,upstreamStatus:result.body.upstreamStatus??null,halfRequested:params.get('half')==='true'}));
- res.statusCode=result.status;if(result.status===429)res.setHeader('Retry-After',result.body.code==='RATE_LIMIT'?'60':'3600');res.end(JSON.stringify(result.body));
+ res.statusCode=result.status;if(result.status===429)res.setHeader('Retry-After',result.body.code==='RATE_LIMIT'?'60':'3600');res.end(JSON.stringify(publicFootballBody(result)));
 }

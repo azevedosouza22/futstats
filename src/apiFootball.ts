@@ -1,3 +1,4 @@
+import {safeBuild} from './build';
 import {unavailable,type ResolvedStats,type Metric} from './model';
 export type AutoFixture={id:number;date:string|null;status:string|null;statusLabel:string|null;minute:number|null;league:string|null;country:string|null;home:{id:number;name:string|null};away:{id:number;name:string|null};goals:[number|null,number|null]};
 export type StatRow={type:string;value:number|string|null};
@@ -18,9 +19,19 @@ export function periodStats(rows:StatTeam[],fixture:AutoFixture,field:'statistic
  }
  return {values,extra,available};
 }
+export class FootballRequestError extends Error{
+ readonly code:string;readonly serverStatus:number;readonly upstreamStatus:number|null;readonly serverBuild:string;
+ constructor(message:string,body:unknown,status:number,build:string){
+  const b=body&&typeof body==='object'?body as Record<string,unknown>:{};
+  super(message.replace(/ \[Diagnóstico: [A-Z_]{1,40}; HTTP servidor \d{3}; HTTP API (?:\d{3}|N\/D)\]$/,''));
+  this.name='FootballRequestError';this.code=typeof b.code==='string'&&/^[A-Z_]{1,40}$/.test(b.code)?b.code:'UNKNOWN';this.serverStatus=status;
+  this.upstreamStatus=typeof b.upstreamStatus==='number'&&Number.isInteger(b.upstreamStatus)&&b.upstreamStatus>=100&&b.upstreamStatus<=599?b.upstreamStatus:null;this.serverBuild=safeBuild(build);
+ }
+}
 export async function footballRequest(kind:'config'|'fixtures'|'statistics',token:string,params:Record<string,string>={},signal?:AbortSignal){
  const response=await fetch(`/api/api-football?${new URLSearchParams({kind,...params})}`,{headers:{Authorization:`Bearer ${token}`},signal,cache:'no-store'});
- let body;try{body=await response.json();}catch{throw Error('Integração de servidor indisponível nesta hospedagem.');}
- if(!response.ok){const code=typeof body.code==='string'&&/^[A-Z_]{1,40}$/.test(body.code)?body.code:null;const status=Number.isInteger(body.upstreamStatus)&&body.upstreamStatus>=100&&body.upstreamStatus<=599?` · HTTP ${body.upstreamStatus}`:'';throw Error((typeof body.error==='string'?body.error:'Falha na consulta.')+(code?` [${code}${status}]`:''));}
- return body;
+ const serverBuild=safeBuild(response.headers.get('X-FutStats-Commit'));
+ let body;try{body=await response.json();}catch{throw new FootballRequestError('Integração de servidor indisponível nesta hospedagem.',{code:'SERVER_RESPONSE'},response.status,serverBuild);}
+ if(!response.ok)throw new FootballRequestError(typeof body?.error==='string'?body.error:'Falha na consulta.',body,response.status,serverBuild);
+ return {...body,serverBuild};
 }
