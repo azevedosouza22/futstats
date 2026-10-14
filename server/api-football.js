@@ -10,7 +10,7 @@ const rows=value=>Array.isArray(value)?value.slice(0,50).filter(r=>r&&typeof r.t
 export function sanitizeFixtures(raw){return raw.filter(r=>Number.isSafeInteger(r?.fixture?.id)&&Number.isSafeInteger(r?.teams?.home?.id)&&Number.isSafeInteger(r?.teams?.away?.id)&&r.teams.home.id!==r.teams.away.id).slice(0,500).map(r=>({id:r.fixture.id,date:text(r.fixture.date),status:text(r.fixture.status?.short),statusLabel:text(r.fixture.status?.long),minute:num(r.fixture.status?.elapsed),league:text(r.league?.name),country:text(r.league?.country),home:{id:r.teams.home.id,name:text(r.teams.home.name)},away:{id:r.teams.away.id,name:text(r.teams.away.name)},goals:[num(r.goals?.home),num(r.goals?.away)]}));}
 export function sanitizeStatistics(raw){return raw.filter(r=>Number.isSafeInteger(r?.team?.id)).slice(0,2).map(r=>({team:{id:r.team.id,name:text(r.team.name)},statistics:rows(r.statistics),statistics_1h:rows(r.statistics_1h),statistics_2h:rows(r.statistics_2h)}));}
 export function createFootballService({fetcher=fetch,now=Date.now,env=()=>process.env,budget=80}={}){
- const cache=new Map(),pending=new Map();let calls=0,start=0,minuteStart=0,minuteCalls=0,blockedUntil=0;
+ const cache=new Map(),pending=new Map();let calls=0,start=0,minuteStart=0,minuteCalls=0,blockedUntil=0,blockedCode='DAILY_LIMIT';
  return async function service(params,authorization=''){
   const config=env(),token=config.API_SPORTS_POC_TOKEN;
   const fail=(status,code,error)=>({status,body:{code,error}});
@@ -27,7 +27,7 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
   const query=kind==='fixtures'?`/fixtures?date=${date}`:`/fixtures/statistics?fixture=${id}&half=${half}`;
   const hit=cache.get(query);if(hit&&hit.expires>now())return hit.failure??{status:200,body:{...hit.body,cached:true}};
   if(pending.has(query))return pending.get(query);
-  if(now()<blockedUntil)return fail(429,'DAILY_LIMIT','Limite diário da API atingido. Aguarde a reposição da cota.');
+  if(now()<blockedUntil)return fail(429,blockedCode,blockedCode==='DAILY_LIMIT'?'Limite diário da API atingido. Aguarde a reposição da cota.':'O provedor limitou as consultas. Aguarde antes de tentar novamente.');
   if(now()-start>=86400000){start=now();calls=0;}
   if(calls>=budget)return fail(429,'LOCAL_BUDGET','Orçamento de consultas desta instância atingido. Tente mais tarde.');
   if(now()-minuteStart>=60000){minuteStart=now();minuteCalls=0;}
@@ -37,16 +37,26 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
    try{
     const response=await fetcher(BASE+query,{headers:{'x-apisports-key':config.API_SPORTS_KEY,Accept:'application/json'},signal:AbortSignal.timeout(10000),redirect:'error'});
     const remaining=response.headers.get('x-ratelimit-requests-remaining');
-    if(remaining!==null&&/^\d+$/.test(remaining)&&Number(remaining)===0)blockedUntil=now()+86400000;
-    if(response.status===429){blockedUntil=now()+86400000;return fail(429,'DAILY_LIMIT','A API limitou as consultas. Aguarde a reposição da cota.');}
-    if(response.status===401||response.status===403)return fail(502,'PROVIDER_ACCESS','A API recusou a autenticação ou o acesso. Confira a credencial de servidor desta implantação.');
+    if(remaining!==null&&/^\d+$/.test(remaining)&&Number(remaining)===0){blockedUntil=now()+86400000;blockedCode='DAILY_LIMIT';}
+    if(response.status===429){blockedUntil=now()+86400000;blockedCode=remaining==='0'?'DAILY_LIMIT':'PROVIDER_LIMIT';return {status:429,body:{code:blockedCode,upstreamStatus:429,error:'A API-Football retornou HTTP 429: limite de consultas. Isso não é um erro de autenticação.'}};}
+    if(response.status===401)return {status:502,body:{code:'PROVIDER_UNAUTHORIZED',upstreamStatus:401,error:'A API-Football retornou HTTP 401: autenticação de servidor recusada. Confira a credencial desta implantação.'}};
+    let raw;try{raw=response.status===204?{response:[],errors:[]}:await response.json();}catch{raw=null;}
+    // Only explicit evidence of a half-specific restriction becomes unavailable data.
+    // Provider messages are examined locally, never logged or returned.
+    const errorText=raw?.errors&&typeof raw.errors==='object'?Object.values(raw.errors).filter(v=>typeof v==='string').join(' ').slice(0,4000):'';
+    if(raw?.errors&&Object.keys(raw.errors).some(k=>/requests|rateLimit/i.test(k))){const daily=remaining==='0'||Object.keys(raw.errors).some(k=>/requests/i.test(k));blockedCode=daily?'DAILY_LIMIT':'RATE_LIMIT';blockedUntil=now()+(daily?86400000:60000);return fail(429,blockedCode,'O provedor informou um limite de consultas. Aguarde antes de tentar novamente.');}
+    const halfUnavailable=kind==='statistics'&&half==='true'&&/\b(?:half|halves|halftime)\b/i.test(errorText)&&/not (?:available|supported|allowed)|do not have access|does not have access|no access|only available|not included|not cover/i.test(errorText);
+    if((response.ok||response.status===403)&&halfUnavailable){
+     const body={source:'API-Football',kind,fixtureId:Number(id),halfRequested:true,items:[],availability:'unavailable',upstreamStatus:response.status,notice:'O provedor informou que os dados por tempo não estão disponíveis para esta consulta. Os tempos permanecem N/D.',fetchedAt:new Date(now()).toISOString(),cached:false};
+     cache.set(query,{body,expires:now()+3600000});return {status:200,body};
+    }
+    if(response.status===403)return {status:502,body:{code:'PROVIDER_FORBIDDEN',upstreamStatus:403,error:'A API-Football retornou HTTP 403: esta consulta foi proibida. Isso não comprova que a chave esteja inválida. Confira a permissão da consulta por tempo no provedor.'}};
     if(!response.ok&&response.status!==204)return fail(502,'PROVIDER','Provedor indisponível. Tente mais tarde.');
-    const raw=response.status===204?{response:[],errors:[]}:await response.json();
+    if(!raw||typeof raw!=='object')return fail(502,'PAYLOAD','Resposta inesperada do provedor.');
     if(raw.errors&&Object.keys(raw.errors).length){
-     if(Object.keys(raw.errors).some(k=>/requests|rateLimit/i.test(k))){blockedUntil=now()+86400000;return fail(429,'DAILY_LIMIT','Limite de consultas informado pelo provedor.');}
      // Classify known error field names, never forward provider text (it may echo secrets).
      const fields=Object.keys(raw.errors).map(k=>k.toLowerCase());
-     if(fields.some(k=>['token','key','authentication','authorization','access'].includes(k)))return fail(502,'PROVIDER_ACCESS','A API recusou a autenticação ou o acesso. Confira a credencial de servidor desta implantação.');
+     if(fields.some(k=>['token','key','authentication','authorization','access'].includes(k)))return {status:502,body:{code:'PROVIDER_AUTH_RESPONSE',upstreamStatus:response.status,error:'O provedor retornou um erro de acesso nesta consulta. Isso não confirma que a chave esteja inválida; confira a autorização da consulta no provedor.'}};
      const parameter=fields.find(k=>['date','timezone','fixture','half'].includes(k));
      if(parameter)return fail(502,'PROVIDER_PARAMETER',`A API rejeitou o parâmetro ${parameter}. A consulta precisa ser revisada no servidor.`);
      return fail(502,'PROVIDER_ERROR','A API retornou um erro nesta consulta. A causa não foi identificada; não é possível concluir que seja uma restrição de plano.');
@@ -66,6 +76,9 @@ const service=createFootballService();
 export async function handleFootball(req,res){
  res.setHeader('Cache-Control','private, no-store');res.setHeader('Content-Type','application/json; charset=utf-8');
  if(req.method!=='GET'){res.statusCode=405;res.setHeader('Allow','GET');res.end(JSON.stringify({error:'Método não permitido.'}));return;}
- const result=await service(new URL(req.url,'http://internal').searchParams,typeof req.headers.authorization==='string'?req.headers.authorization:'');
+ const params=new URL(req.url,'http://internal').searchParams;
+ const result=await service(params,typeof req.headers.authorization==='string'?req.headers.authorization:'');
+ // Fixed fields only: never headers, URLs, provider text, tokens or env values.
+ if(result.body.availability==='unavailable'||['PROVIDER_UNAUTHORIZED','PROVIDER_FORBIDDEN','PROVIDER_AUTH_RESPONSE','PROVIDER_PARAMETER','PROVIDER_ERROR','PROVIDER_LIMIT','DAILY_LIMIT','RATE_LIMIT'].includes(result.body.code))console.warn(JSON.stringify({event:'api-football-result',code:result.body.availability==='unavailable'?'PERIOD_UNAVAILABLE':result.body.code,status:result.status,upstreamStatus:result.body.upstreamStatus??null,halfRequested:params.get('half')==='true'}));
  res.statusCode=result.status;if(result.status===429)res.setHeader('Retry-After',result.body.code==='RATE_LIMIT'?'60':'3600');res.end(JSON.stringify(result.body));
 }

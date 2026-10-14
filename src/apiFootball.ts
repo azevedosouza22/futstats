@@ -21,6 +21,6 @@ export function periodStats(rows:StatTeam[],fixture:AutoFixture,field:'statistic
 export async function footballRequest(kind:'config'|'fixtures'|'statistics',token:string,params:Record<string,string>={},signal?:AbortSignal){
  const response=await fetch(`/api/api-football?${new URLSearchParams({kind,...params})}`,{headers:{Authorization:`Bearer ${token}`},signal,cache:'no-store'});
  let body;try{body=await response.json();}catch{throw Error('Integração de servidor indisponível nesta hospedagem.');}
- if(!response.ok)throw Error(typeof body.error==='string'?body.error:'Falha na consulta.');
+ if(!response.ok){const code=typeof body.code==='string'&&/^[A-Z_]{1,40}$/.test(body.code)?body.code:null;const status=Number.isInteger(body.upstreamStatus)&&body.upstreamStatus>=100&&body.upstreamStatus<=599?` · HTTP ${body.upstreamStatus}`:'';throw Error((typeof body.error==='string'?body.error:'Falha na consulta.')+(code?` [${code}${status}]`:''));}
  return body;
 }

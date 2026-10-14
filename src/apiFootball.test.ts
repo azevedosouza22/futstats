@@ -35,7 +35,7 @@ describe('API-Football server-only PoC',()=>{
   await s(p,auth);expect(f).toHaveBeenCalledTimes(1);
  });
  it('distinguishes provider parameter and authentication errors without exposing raw messages or blaming plans',async()=>{
-  for(const [field,code] of [['timezone','PROVIDER_PARAMETER'],['date','PROVIDER_PARAMETER'],['half','PROVIDER_PARAMETER'],['token','PROVIDER_ACCESS'],['other','PROVIDER_ERROR']]){
+  for(const [field,code] of [['timezone','PROVIDER_PARAMETER'],['date','PROVIDER_PARAMETER'],['half','PROVIDER_PARAMETER'],['token','PROVIDER_AUTH_RESPONSE'],['other','PROVIDER_ERROR']]){
    const f=vi.fn().mockImplementation(async()=>response({errors:{[field]:'not-a-real-key private-test-token-123'},response:[]}));
    const s=createFootballService({fetcher:f,env}),result=await s(new URLSearchParams({kind:'fixtures',date:'2026-10-13'}),auth);
    expect(result.status).toBe(502);expect(result.body.code).toBe(code);expect(JSON.stringify(result)).not.toContain('not-a-real-key');expect(JSON.stringify(result)).not.toContain('private-test-token-123');
@@ -70,5 +70,25 @@ describe('Normalização sem dados inventados',()=>{
  it('never treats accumulated totals as half stats; accepts only explicit supported arrays and matching teams',()=>{
   const rows=[{team:{id:1,name:'A'},statistics:[{type:'Total Shots',value:9}],statistics_1h:[{type:'Total Shots',value:5}],statistics_2h:[{type:'Total Shots',value:4}]}];
   expect(periodStats(rows,fixture,'statistics_1h').values[0].shots).toBe(5);expect(periodStats(rows,fixture,'statistics_2h').values[0].shots).toBe(4);expect(periodStats([...rows,rows[0]],fixture,'statistics').values[0].shots).toBeNull();expect(periodStats([{...rows[0],team:{id:9,name:'Other'}}],fixture,'statistics').available).toBe(false);
+ });
+});
+describe('Diagnóstico seguro de estatísticas por tempo',()=>{
+ it('distinguishes private PoC rejection, provider 401, provider 403 and HTTP 200 auth field',async()=>{
+  const f=vi.fn().mockImplementation(async()=>response(raw));const s=createFootballService({env,fetcher:f});expect((await s(query('true'),'invalid')).body.code).toBe('ACCESS');expect(f).not.toHaveBeenCalled();
+  for(const [status,body,code] of [[401,{},'PROVIDER_UNAUTHORIZED'],[403,{},'PROVIDER_FORBIDDEN'],[200,{errors:{token:'credential or permission not-a-real-key private-test-token-123'},response:[]},'PROVIDER_AUTH_RESPONSE']] as const){
+   const r=await createFootballService({env,fetcher:vi.fn().mockImplementation(async()=>response(body,status))})(query('true'),auth);expect(r.status).toBe(502);expect(r.body.code).toBe(code);expect(r.body.upstreamStatus).toBe(status);expect(JSON.stringify(r)).not.toContain('not-a-real-key');expect(JSON.stringify(r)).not.toContain('private-test-token-123');
+  }
+ });
+ it('only explicit half restriction becomes N/D, without retries or deriving totals',async()=>{
+  for(const status of [200,403]){
+   const f=vi.fn().mockImplementation(async(url:string)=>response(url.includes('half=true')?{errors:{token:'You do not have access to halves statistics not-a-real-key'},response:[]}:raw,url.includes('half=true')?status:200));
+   const s=createFootballService({env,fetcher:f});expect((await s(query(),auth)).body.items).toHaveLength(1);const r=await s(query('true'),auth);expect(r.status).toBe(200);expect(r.body).toMatchObject({halfRequested:true,fixtureId:1492402,items:[],availability:'unavailable'});expect(JSON.stringify(r)).not.toContain('not-a-real-key');await s(query('true'),auth);expect(f).toHaveBeenCalledTimes(2);expect((await s(query(),auth)).body.items).toHaveLength(1);
+  }
+  const r=await createFootballService({env,fetcher:vi.fn().mockImplementation(async()=>response({response:[],errors:[]}))})(query('true'),auth);expect(r.status).toBe(200);expect(r.body.items).toEqual([]);expect(r.body.availability).toBeUndefined();
+ });
+ it('prioritizes quota over period restriction and does not mislabel 429 as bad credentials',async()=>{
+  for(const [status,body,headers,code] of [[429,{}, {},'PROVIDER_LIMIT'],[429,{}, {'x-ratelimit-requests-remaining':'0'},'DAILY_LIMIT'],[200,{errors:{rateLimit:'limit',token:'You do not have access to half statistics'},response:[]},{},'RATE_LIMIT']] as const){
+   const f=vi.fn().mockImplementation(async()=>response(body,status,headers)),s=createFootballService({env,fetcher:f});const r=await s(query('true'),auth);expect(r.status).toBe(429);expect(r.body.code).toBe(code);await s(query(),auth);expect(f).toHaveBeenCalledTimes(1);
+  }
  });
 });
