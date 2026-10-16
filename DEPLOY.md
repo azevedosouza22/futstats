@@ -1,5 +1,9 @@
 # Publicar o FutStats com HTTPS
 
+## PoC API-Football — prévia autorizada, produção preservada
+
+A branch `feature/api-football-poc` permite implantação Git de **Preview** na Vercel, após autorização do usuário para testar o PR nº 7. A produção deve continuar em `main`: não faça merge nem promova a prévia. A Netlify permanece bloqueada para essa branch. O diagnóstico do bloqueio anterior, as variáveis de servidor, os passos no painel e o teste mínimo de cota estão em [API_FOOTBALL.md](API_FOOTBALL.md). Hospedar somente `dist/` não executa os endpoints; é necessário o runtime serverless da Vercel.
+
 ## Prévia do PR nº 3 — sem merge ou alteração da produção
 
 Para testar o FutStats 3.0, **não siga a instrução de merge abaixo**. Use a branch

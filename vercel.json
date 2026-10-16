@@ -30,7 +30,8 @@
       "feature/ocr-hull-regression": false,
       "feature/ocr-precision": false,
       "feature/futstats-2-thesportsdb": false,
-      "feature/futstats-3-image-ocr": true
+      "feature/futstats-3-image-ocr": true,
+      "feature/api-football-poc": true
     }
   }
 }
