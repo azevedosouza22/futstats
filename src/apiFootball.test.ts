@@ -35,7 +35,7 @@ describe('API-Football server-only PoC',()=>{
   await s(p,auth);expect(f).toHaveBeenCalledTimes(1);
  });
  it('distinguishes provider parameter and authentication errors without exposing raw messages or blaming plans',async()=>{
-  for(const [field,code] of [['timezone','PROVIDER_PARAMETER'],['date','PROVIDER_PARAMETER'],['half','PROVIDER_PARAMETER'],['token','PROVIDER_AUTH_RESPONSE'],['other','PROVIDER_ERROR']]){
+  for(const [field,code] of [['timezone','PROVIDER_PARAMETER'],['date','PROVIDER_PARAMETER'],['half','PROVIDER_PARAMETER'],['token','PROVIDER_AUTH_RESPONSE'],['other','PROVIDER_ERRORS_OBJECT']]){
    const f=vi.fn().mockImplementation(async()=>response({errors:{[field]:'not-a-real-key private-test-token-123'},response:[]}));
    const s=createFootballService({fetcher:f,env}),result=await s(new URLSearchParams({kind:'fixtures',date:'2026-10-13'}),auth);
    expect(result.status).toBe(502);expect(result.body.code).toBe(code);expect(JSON.stringify(result)).not.toContain('not-a-real-key');expect(JSON.stringify(result)).not.toContain('private-test-token-123');

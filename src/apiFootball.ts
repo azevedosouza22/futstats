@@ -20,12 +20,12 @@ export function periodStats(rows:StatTeam[],fixture:AutoFixture,field:'statistic
  return {values,extra,available};
 }
 export class FootballRequestError extends Error{
- readonly code:string;readonly serverStatus:number;readonly upstreamStatus:number|null;readonly serverBuild:string;
+ readonly code:string;readonly serverStatus:number;readonly upstreamStatus:number|null;readonly serverBuild:string;readonly errorShape:string|null;
  constructor(message:string,body:unknown,status:number,build:string){
   const b=body&&typeof body==='object'?body as Record<string,unknown>:{};
   super(message.replace(/ \[Diagnóstico: [A-Z_]{1,40}; HTTP servidor \d{3}; HTTP API (?:\d{3}|N\/D)\]$/,''));
   this.name='FootballRequestError';this.code=typeof b.code==='string'&&/^[A-Z_]{1,40}$/.test(b.code)?b.code:'UNKNOWN';this.serverStatus=status;
-  this.upstreamStatus=typeof b.upstreamStatus==='number'&&Number.isInteger(b.upstreamStatus)&&b.upstreamStatus>=100&&b.upstreamStatus<=599?b.upstreamStatus:null;this.serverBuild=safeBuild(build);
+  this.upstreamStatus=typeof b.upstreamStatus==='number'&&Number.isInteger(b.upstreamStatus)&&b.upstreamStatus>=100&&b.upstreamStatus<=599?b.upstreamStatus:null;this.serverBuild=safeBuild(build);this.errorShape=typeof b.errorShape==='string'&&['object','array','string','invalid'].includes(b.errorShape)?b.errorShape:null;
  }
 }
 export async function footballRequest(kind:'config'|'fixtures'|'statistics',token:string,params:Record<string,string>={},signal?:AbortSignal){
