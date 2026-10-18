@@ -46,23 +46,27 @@ export function createFootballService({fetcher=fetch,now=Date.now,env=()=>proces
     if(response.status===401)return {status:502,body:{code:'PROVIDER_UNAUTHORIZED',upstreamStatus:401,error:'A API-Football retornou HTTP 401: autenticação de servidor recusada. Confira a credencial desta implantação.'}};
     let raw;try{raw=response.status===204?{response:[],errors:[]}:await response.json();}catch{raw=null;}
     const analysis=inspectFootballErrors(raw?.errors,[config.API_SPORTS_KEY,token]);
-    const details=analysis.present?{errorShape:analysis.shape}:{};
+    const details=analysis.present?{errorShape:analysis.shape,errorCategory:analysis.category,knownProperties:analysis.knownProperties,unknownPropertyCount:analysis.unknownPropertyCount,inspectionLimited:analysis.inspectionLimited}:{};
     if(analysis.present&&['daily_limit','rate_limit'].includes(analysis.category)){
      const daily=remaining==='0'||analysis.category==='daily_limit';blockedCode=daily?'DAILY_LIMIT':'RATE_LIMIT';blockedUntil=now()+(daily?86400000:60000);
      return providerFail(429,blockedCode,'O provedor informou um limite de consultas. Aguarde antes de tentar novamente.',details);
     }
     // Unavailable periods require explicit provider evidence, never a guessed split.
     if((response.ok||response.status===403)&&kind==='statistics'&&half==='true'&&analysis.halfUnavailable){
-     const body={source:'API-Football',kind,fixtureId:Number(id),halfRequested:true,items:[],availability:'unavailable',upstreamStatus,errorShape:analysis.shape,notice:'O provedor informou que os dados por tempo não estão disponíveis para esta consulta. Os tempos permanecem N/D.',fetchedAt:new Date(now()).toISOString(),cached:false};
+     const body={source:'API-Football',kind,fixtureId:Number(id),halfRequested:true,items:[],availability:'unavailable',upstreamStatus,...details,notice:'O provedor informou que os dados por tempo não estão disponíveis para esta consulta. Os tempos permanecem N/D.',fetchedAt:new Date(now()).toISOString(),cached:false};
      cache.set(query,{body,expires:now()+3600000});return {status:200,body};
     }
     if(response.status===403)return {status:502,body:{code:'PROVIDER_FORBIDDEN',upstreamStatus:403,...details,error:'A API-Football retornou HTTP 403: esta consulta foi proibida. Isso não comprova que a chave esteja inválida. Confira a permissão da consulta por tempo no provedor.'}};
     if(!response.ok&&response.status!==204)return providerFail(502,'PROVIDER','Provedor indisponível. Tente mais tarde.');
     if(!raw||typeof raw!=='object')return providerFail(502,'PAYLOAD','Resposta inesperada do provedor.');
     if(analysis.present){
+     if(analysis.category==='permission')return providerFail(502,'PROVIDER_PERMISSION','O provedor informou um erro de permissão nesta consulta. Isso não comprova que a credencial esteja inválida.',details);
+     if(analysis.category==='routing')return providerFail(502,'PROVIDER_ENDPOINT','O provedor informou um erro referente ao endpoint ou método desta consulta.',details);
+     if(analysis.category==='timeout')return providerFail(502,'PROVIDER_TIMEOUT','O provedor informou tempo de resposta esgotado. Não haverá repetição automática.',details);
+     if(analysis.category==='provider')return providerFail(502,'PROVIDER_REPORTED_ERROR','O provedor informou outro erro. Os nomes de propriedades reconhecidas estão no diagnóstico seguro.',details);
      if(analysis.category==='restriction')return providerFail(502,'PROVIDER_RESTRICTION','O provedor informou uma restrição de acesso ou cobertura nesta consulta. Isso não comprova uma credencial inválida.',details);
      if(analysis.category==='authentication')return providerFail(502,'PROVIDER_AUTH_RESPONSE','O provedor retornou um erro de acesso nesta consulta. Isso não confirma que a chave esteja inválida; confira a autorização da consulta no provedor.',details);
-     if(analysis.category==='parameter')return providerFail(502,'PROVIDER_PARAMETER',`A API rejeitou o parâmetro ${analysis.parameter}. A consulta precisa ser revisada no servidor.`,details);
+     if(analysis.category==='parameter')return providerFail(502,'PROVIDER_PARAMETER',analysis.parameter?`A API rejeitou o parâmetro ${analysis.parameter}. A consulta precisa ser revisada no servidor.`:'O provedor informou um erro de validação de parâmetros nesta consulta.',details);
      const code=analysis.category==='malformed'?'PROVIDER_ERRORS_FORMAT':{object:'PROVIDER_ERRORS_OBJECT',array:'PROVIDER_ERRORS_ARRAY',string:'PROVIDER_ERRORS_STRING'}[analysis.shape]??'PROVIDER_ERRORS_FORMAT';
      return providerFail(502,code,'A API retornou erros não classificados. O diagnóstico identifica o formato sem divulgar o conteúdo do provedor.',details);
     }
@@ -92,6 +96,6 @@ export async function handleFootball(req,res){
  const params=new URL(req.url,'http://internal').searchParams;
  const result=await service(params,typeof req.headers.authorization==='string'?req.headers.authorization:'');
  // Fixed fields only: never headers, URLs, provider text, tokens or env values.
- if(result.body.availability==='unavailable'||(result.body.code?.startsWith('PROVIDER')||['DAILY_LIMIT','RATE_LIMIT','PAYLOAD','CONNECTION'].includes(result.body.code)))console.warn(JSON.stringify({event:'api-football-result',code:result.body.availability==='unavailable'?'PERIOD_UNAVAILABLE':result.body.code,status:result.status,upstreamStatus:result.body.upstreamStatus??null,errorShape:result.body.errorShape??null,halfRequested:params.get('half')==='true'}));
+ if(result.body.availability==='unavailable'||(result.body.code?.startsWith('PROVIDER')||['DAILY_LIMIT','RATE_LIMIT','PAYLOAD','CONNECTION'].includes(result.body.code)))console.warn(JSON.stringify({event:'api-football-result',code:result.body.availability==='unavailable'?'PERIOD_UNAVAILABLE':result.body.code,status:result.status,upstreamStatus:result.body.upstreamStatus??null,errorShape:result.body.errorShape??null,errorCategory:result.body.errorCategory??null,knownProperties:result.body.knownProperties??[],unknownPropertyCount:result.body.unknownPropertyCount??0,inspectionLimited:result.body.inspectionLimited??false,halfRequested:params.get('half')==='true'}));
  res.statusCode=result.status;if(result.status===429)res.setHeader('Retry-After',result.body.code==='RATE_LIMIT'?'60':'3600');res.end(JSON.stringify(publicFootballBody(result)));
 }

@@ -23,3 +23,8 @@ describe('Diagnóstico visível e seguro',()=>{
   expect(f.mock.calls.map(c=>c[0])).toEqual(['https://v3.football.api-sports.io/fixtures/statistics?fixture=1492402&half=false','https://v3.football.api-sports.io/fixtures/statistics?fixture=1492402&half=true']);expect(f.mock.calls.every(c=>c[1].headers['x-apisports-key']==='dummy-provider-key')).toBe(true);
  });
 });
+it('client filters unexpected names/categories and keeps only the public vocabulary',()=>{
+ const e=new FootballRequestError('Erro.',{code:'PROVIDER_ERRORS_OBJECT',errorCategory:'unclassified',knownProperties:['message','dummy-secret-key','message','unknown_private_name'],unknownPropertyCount:2,inspectionLimited:true},502,'local');
+ expect(e.errorCategory).toBe('Não identificada');expect(e.knownProperties).toEqual(['message']);expect(e.unknownPropertyCount).toBe(2);expect(e.inspectionLimited).toBe(true);
+ const bad=new FootballRequestError('Erro.',{errorCategory:'secret',knownProperties:['secret'],unknownPropertyCount:'2'},502,'local');expect(bad.errorCategory).toBeNull();expect(bad.knownProperties).toEqual([]);expect(bad.unknownPropertyCount).toBeNull();
+});

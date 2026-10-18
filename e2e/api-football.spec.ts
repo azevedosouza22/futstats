@@ -65,7 +65,7 @@ test('erro de acesso HTTP 200 mostra código, dois status e versão sem credenci
 });
 test('errors em objeto/array no HTTP 200 preservam status e diagnóstico do servidor na consulta de partidas',async({page})=>{
  const {createFootballService,publicFootballBody}=await import('../server/api-football.js');
- const upstream=async()=>new Response(JSON.stringify({errors:[{message:'opaque dummy-provider-key dummy-private-token'}],response:[]}),{status:200});
+ const upstream=async()=>new Response(JSON.stringify({errors:{message:'opaque dummy-provider-key dummy-private-token',private_unknown_property:'dummy-private-token'},response:[]}),{status:200});
  let upstreamCalls=0;
  const service=createFootballService({env:()=>({API_SPORTS_KEY:'dummy-provider-key',API_SPORTS_POC_TOKEN:'dummy-private-token'}),fetcher:async()=>{upstreamCalls++;return upstream();}});
  await page.route('**/api/api-football?*',async route=>{
@@ -73,6 +73,6 @@ test('errors em objeto/array no HTTP 200 preservam status e diagnóstico do serv
   await route.fulfill({status:result.status,json:publicFootballBody(result),headers:{'X-FutStats-Commit':'c'.repeat(40)}});
  });
  await page.goto('/');await page.getByRole('button',{name:'Partidas automáticas',exact:true}).click();await page.getByLabel('Código de acesso privado').fill('dummy-private-token');await page.getByRole('button',{name:'Acessar consultas'}).click();await page.getByRole('button',{name:'Consultar partidas'}).click();
- await expect(page.locator('.auto-diagnostics dd')).toHaveText(['PROVIDER_ERRORS_ARRAY','502','200','ccccccc','array']);await expect(page.getByRole('alert')).not.toContainText('dummy-provider-key');await expect(page.getByRole('alert')).not.toContainText('dummy-private-token');expect(upstreamCalls).toBe(1);
- await page.getByRole('button',{name:'Consultar partidas'}).click();await expect(page.locator('.auto-diagnostics dd')).toHaveText(['PROVIDER_ERRORS_ARRAY','502','200','ccccccc','array']);expect(upstreamCalls).toBe(1);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+ await expect(page.locator('.auto-diagnostics dd')).toHaveText(['PROVIDER_ERRORS_OBJECT','502','200','ccccccc','object','Não identificada','message','1']);await expect(page.getByRole('alert')).not.toContainText('dummy-provider-key');await expect(page.getByRole('alert')).not.toContainText('dummy-private-token');await expect(page.getByRole('alert')).not.toContainText('private_unknown_property');expect(upstreamCalls).toBe(1);
+ await page.getByRole('button',{name:'Consultar partidas'}).click();await expect(page.locator('.auto-diagnostics dd')).toHaveText(['PROVIDER_ERRORS_OBJECT','502','200','ccccccc','object','Não identificada','message','1']);expect(upstreamCalls).toBe(1);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });

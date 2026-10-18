@@ -1,3 +1,4 @@
+import {diagnosticProperties,diagnosticCategories} from '../shared/football-diagnostics.js';
 import {safeBuild} from './build';
 import {unavailable,type ResolvedStats,type Metric} from './model';
 export type AutoFixture={id:number;date:string|null;status:string|null;statusLabel:string|null;minute:number|null;league:string|null;country:string|null;home:{id:number;name:string|null};away:{id:number;name:string|null};goals:[number|null,number|null]};
@@ -20,12 +21,12 @@ export function periodStats(rows:StatTeam[],fixture:AutoFixture,field:'statistic
  return {values,extra,available};
 }
 export class FootballRequestError extends Error{
- readonly code:string;readonly serverStatus:number;readonly upstreamStatus:number|null;readonly serverBuild:string;readonly errorShape:string|null;
+ readonly code:string;readonly serverStatus:number;readonly upstreamStatus:number|null;readonly serverBuild:string;readonly errorShape:string|null;readonly errorCategory:string|null;readonly knownProperties:string[];readonly unknownPropertyCount:number|null;readonly inspectionLimited:boolean;
  constructor(message:string,body:unknown,status:number,build:string){
   const b=body&&typeof body==='object'?body as Record<string,unknown>:{};
   super(message.replace(/ \[Diagnóstico: [A-Z_]{1,40}; HTTP servidor \d{3}; HTTP API (?:\d{3}|N\/D)\]$/,''));
   this.name='FootballRequestError';this.code=typeof b.code==='string'&&/^[A-Z_]{1,40}$/.test(b.code)?b.code:'UNKNOWN';this.serverStatus=status;
-  this.upstreamStatus=typeof b.upstreamStatus==='number'&&Number.isInteger(b.upstreamStatus)&&b.upstreamStatus>=100&&b.upstreamStatus<=599?b.upstreamStatus:null;this.serverBuild=safeBuild(build);this.errorShape=typeof b.errorShape==='string'&&['object','array','string','invalid'].includes(b.errorShape)?b.errorShape:null;
+  this.upstreamStatus=typeof b.upstreamStatus==='number'&&Number.isInteger(b.upstreamStatus)&&b.upstreamStatus>=100&&b.upstreamStatus<=599?b.upstreamStatus:null;this.serverBuild=safeBuild(build);this.errorCategory=typeof b.errorCategory==='string'&&Object.hasOwn(diagnosticCategories,b.errorCategory)?diagnosticCategories[b.errorCategory as keyof typeof diagnosticCategories]:null;this.knownProperties=Array.isArray(b.knownProperties)?[...new Set(b.knownProperties.filter((v):v is string=>typeof v==='string'&&diagnosticProperties.includes(v)))].slice(0,24):[];this.unknownPropertyCount=typeof b.unknownPropertyCount==='number'&&Number.isInteger(b.unknownPropertyCount)&&b.unknownPropertyCount>=0&&b.unknownPropertyCount<=999?b.unknownPropertyCount:null;this.inspectionLimited=b.inspectionLimited===true;this.errorShape=typeof b.errorShape==='string'&&['object','array','string','invalid'].includes(b.errorShape)?b.errorShape:null;
  }
 }
 export async function footballRequest(kind:'config'|'fixtures'|'statistics',token:string,params:Record<string,string>={},signal?:AbortSignal){

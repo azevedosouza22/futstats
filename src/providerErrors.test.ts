@@ -55,3 +55,29 @@ describe('Status original, cache e mensagens sanitizadas',()=>{
   }
  });
 });
+describe('Nomes seguros de propriedades e categorias',()=>{
+ it('returns only canonical allowlisted names, with counts for unknown/secret names',()=>{
+  const value={api_key:'private value',rate_limit:'private value',unknown_personal_name:'private value','dummy-secret-key':'private value',message:'opaque'};
+  const a=inspectFootballErrors(value,['dummy-secret-key']);expect(a.knownProperties).toEqual(['apiKey','message','rateLimit']);expect(a.unknownPropertyCount).toBe(2);expect(a.category).toBe('rate_limit');
+  expect(JSON.stringify(a)).not.toContain('unknown_personal_name');expect(JSON.stringify(a)).not.toContain('dummy-secret-key');expect(JSON.stringify(a)).not.toContain('private value');
+ });
+ it('separates explicit permission, authentication, validation and other named errors',()=>{
+  const cases:[unknown,string,string][]=[
+   [{permissions:'opaque'},'permission','permissions'],[{message:'Permission denied'},'permission','message'],[{message:'Missing API key'},'authentication','message'],[{token:'Free plans do not allow access to this endpoint'},'restriction','token'],[{token:'You do not have access to this endpoint'},'permission','token'],
+   [{token:'Invalid token'},'authentication','token'],[{validation:'opaque'},'parameter','validation'],
+   [{endpoint:'opaque'},'routing','endpoint'],[{time:'Request timed out'},'timeout','time'],
+   [{date:'Not supported'},'parameter','date'],[{time:'Service not available'},'provider','time'],[{time:'opaque'},'provider','time'],[{bug:'opaque'},'provider','bug'],[{report:'opaque'},'provider','report'],
+   [{message:'opaque'},'unclassified','message'],
+  ];
+  for(const [value,category,property] of cases){const a=inspectFootballErrors(value);expect(a.category).toBe(category);expect(a.knownProperties).toContain(property);}
+ });
+ it('keeps empty fields inactive and reports bounded inspection without exposing source paths',()=>{
+  const a=inspectFootballErrors({permissions:{message:''},token:{error:null},requests:[{}],date:{},message:'opaque'});expect(a.category).toBe('unclassified');expect(a.knownProperties).toEqual(['message']);
+  let deep:unknown='opaque';for(let i=0;i<10;i++)deep={private_path:deep};const b=inspectFootballErrors(deep);expect(b.inspectionLimited).toBe(true);expect(b.category).toBe('malformed');expect(JSON.stringify(b)).not.toContain('private_path');
+ });
+ it('preserves HTTP 200, safe metadata and cache for each expanded category',async()=>{
+  for(const [property,message,code] of [['permissions','opaque','PROVIDER_PERMISSION'],['validation','opaque','PROVIDER_PARAMETER'],['endpoint','opaque','PROVIDER_ENDPOINT'],['time','Request timeout','PROVIDER_TIMEOUT'],['report','opaque','PROVIDER_REPORTED_ERROR']] as const){
+   const {s,fetcher}=service({errors:{[property]:message,private_unknown_field:'dummy-secret-key'},response:[]});const r=await s(params(),auth);expect(r.body).toMatchObject({code,upstreamStatus:200,knownProperties:[property],unknownPropertyCount:1});expect(JSON.stringify(publicFootballBody(r))).not.toContain('dummy-secret-key');expect(JSON.stringify(publicFootballBody(r))).not.toContain('private_unknown_field');await s(params(),auth);expect(fetcher).toHaveBeenCalledTimes(1);
+  }
+ });
+});
