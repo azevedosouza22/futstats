@@ -2,6 +2,8 @@
 
 Versão 3.0 de um aplicativo de estatísticas de futebol em React 19, TypeScript e Vite. Interface responsiva em português brasileiro, armazenamento local e instalação como PWA no Android.
 
+A área experimental **Partidas automáticas** consulta a API-Football por funções de servidor, sem modificar os dados locais. Consulte [configuração, proteção de cota e limitações da PoC](API_FOOTBALL.md). A chave é exclusiva do servidor; respostas reais e dados por tempo ainda precisam de validação com uma conta autorizada.
+
 ## Iniciar
 
 Requer Node.js 20.19+ ou 22.12+ e npm.
