@@ -16,5 +16,5 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - run: npm test -- --run src/workCsv.test.ts
+      - run: npm test
       - run: npm run build
