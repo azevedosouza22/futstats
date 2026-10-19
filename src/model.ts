@@ -115,7 +115,7 @@ export function validateMatch(m: Match): string {
     if(['country','round'].some(k=>!!m[k as 'country'|'round']&&!originValues.includes(i.matchFields[k as 'country'|'round']??'')))return 'Origem do país ou rodada inválida.';
     for (const k of additiveMetrics) for (const side of [0,1]) {const a=m.first[side][k],b=m.second[side][k],c=i.full[side][k];if(a!=null&&c!=null&&(c<a||(b!=null&&a+b!==c)))return 'Estatísticas incompatíveis entre períodos.';}
   }
-  for (const s of [...m.first,...m.second,...(m.image?.full??[]),...(m.research?.full??[])]) {
+  for (const s of [...m.first,...m.second,...(m.image?.full??[])]) {
     if (s.target!=null&&s.shots!=null&&s.target>s.shots) return 'Finalizações no alvo não podem superar as finalizações.';
     // Keep the existing manual convention; imported images may include own goals.
     if (!m.image&&!m.research&&s.goals!=null&&s.target!=null&&s.goals>s.target) return 'Gols não podem superar as finalizações no alvo.';
