@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import type {Data} from './model';
-import {localDate} from './pregame';
+import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
+import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming, type RadarMarketResult} from './radar';
 
 type Saved = {
@@ -23,7 +24,7 @@ const percentage=(v:number|null)=>v===null?'N/D':(v*100).toLocaleString('pt-BR',
 
 export default function UpcomingRadar({data}:{data:Data}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
-  const [date,setDate]=useState(localDate());
+  const [date,setDate]=useState(brasiliaDate().date);
   const [time,setTime]=useState('20:00');
   const [league,setLeague]=useState('');
   const [saved,setSaved]=useState(readSaved);
@@ -38,7 +39,8 @@ export default function UpcomingRadar({data}:{data:Data}) {
   function saveSnapshot(){
     if(!eligible||!comparison||!home||!away)return;
     const matchAt=date+'T'+time+':00';
-    if(new Date(matchAt).getTime()<=Date.now()){
+    const nowBR=brasiliaDate();
+    if(date<nowBR.date||(date===nowBR.date&&time<=nowBR.time)){
       setMessage('O horário informado já passou. Para um novo registro prospectivo, selecione um jogo futuro.');return;
     }
     if(comparison.homeHistory.length===0||comparison.awayHistory.length===0){
@@ -64,8 +66,9 @@ export default function UpcomingRadar({data}:{data:Data}) {
     URL.revokeObjectURL(url);
   }
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
+    <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
     <h3>Radar · Novo confronto futuro</h3>
-    <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. O horário é o do seu dispositivo.</p>
+    <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
     <div className="analysis-controls">
       <label>Mandante<select aria-label="Mandante futuro" value={ids[0]} onChange={e=>setIds([e.target.value,ids[1]])}>
         <option value="">Selecione</option>{teams.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
@@ -77,7 +80,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
         <option value="">Selecione</option>{leagues.map(c=><option key={c} value={c}>{c}</option>)}
       </select></label>
       <label>Data<input aria-label="Data futura" type="date" value={date} onChange={e=>setDate(e.target.value)}/></label>
-      <label>Hora local<input aria-label="Hora futura" type="time" value={time} onChange={e=>setTime(e.target.value)}/></label>
+      <label>Hora de Brasília<input aria-label="Hora futura" type="time" value={time} onChange={e=>setTime(e.target.value)}/></label>
     </div>
     {comparison&&<div className="radar-future-results">
       <p><b>Histórico disponível:</b> {comparison.homeHistory.length}/5 do mandante e {comparison.awayHistory.length}/5 do visitante; {comparison.distinctHistoryCount} partidas únicas.</p>
@@ -102,6 +105,6 @@ export default function UpcomingRadar({data}:{data:Data}) {
         </li>)}
       </ul>}
     </div>
-    <p className="muted">Os registros prospectivos ficam separados da base de partidas e do backup principal. Para protegê-los, use “Exportar registros JSON”. O FutStats ainda não importa calendário automaticamente.</p>
+    <p className="muted">Os registros prospectivos ficam separados da base de partidas e do backup principal. Para protegê-los, use “Exportar registros JSON”. A agenda aceita CSV verificado, mas ainda não consulta sites automaticamente.</p>
   </section>;
 }
