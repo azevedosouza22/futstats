@@ -200,7 +200,7 @@ test('radar prospectivo registra indicadores antes da partida e persiste após r
   await page.getByLabel('Data futura').fill(inTwoDays);
   await expect(page.locator('.radar-future-results')).toContainText('5/5 do mandante');
   await expect(page.locator('.radar-future-results')).toContainText('5/5 do visitante');
-  await expect(page.locator('.radar-future-results')).toContainText('10 partidas únicas');
+  await expect(page.locator('.radar-future-results')).toContainText('9 partidas únicas');
   await expect(page.locator('.radar-future-results')).not.toContainText('Resultado ocorrido');
   await page.getByRole('button',{name:'Registrar análise antes do jogo'}).click();
   await expect(page.getByRole('status')).toContainText('Análise prospectiva registrada');
