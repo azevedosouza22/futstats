@@ -211,3 +211,34 @@ test('radar prospectivo registra indicadores antes da partida e persiste após r
   await expect(page.locator('.radar-saved')).toContainText('RB Bragantino × Cruzeiro');
   await expect(page.getByRole('button',{name:'Exportar registros JSON'})).toBeVisible();
 });
+
+
+test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles(upload);
+  page.on('dialog',d=>d.accept());
+  await page.getByRole('button',{name:'Confirmar 11 partidas novas'}).click();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  const dt=new Date(Date.now()+4*86400000).toISOString().slice(0,10);
+  const head='data,horario_brasilia,competicao,mandante,visitante,url_fonte';
+  const entry=dt+',21:00,Brasileirão Série A,RB Bragantino,Cruzeiro,https://www.cbf.com.br/calendario';
+  const file={name:'agenda-ficticia.csv',mimeType:'text/csv',buffer:Buffer.from(head+'\n'+entry)};
+  await page.getByLabel('Importar calendário CSV').setInputFiles(file);
+  await expect(page.getByRole('status')).toContainText('Agenda: 1 novos jogos');
+  await page.getByRole('button',{name:'7 dias'}).click();
+  await expect(page.locator('.calendar-fixture')).toHaveCount(1);
+  await page.getByRole('button',{name:'Analisar jogo'}).click();
+  await expect(page.getByRole('combobox',{name:'Mandante futuro'})).toHaveValue(/.+/);
+  await expect(page.getByRole('combobox',{name:'Visitante futuro'})).toHaveValue(/.+/);
+  await expect(page.getByRole('combobox',{name:'Competição futura'})).toHaveValue('Brasileirão Série A');
+  await expect(page.getByLabel('Data futura')).toHaveValue(dt);
+  await expect(page.getByLabel('Hora futura')).toHaveValue('21:00');
+  await expect(page.locator('.radar-future-results')).toContainText('Histórico disponível');
+  await page.getByLabel('Importar calendário CSV').setInputFiles(file);
+  await expect(page.getByRole('status')).toContainText('0 novos jogos; 1 duplicatas');
+  await page.reload();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await page.getByRole('button',{name:'7 dias'}).click();
+  await expect(page.locator('.calendar-fixture')).toHaveCount(1);
+});
