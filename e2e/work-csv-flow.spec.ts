@@ -236,7 +236,7 @@ test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page}
   await expect(page.getByLabel('Hora futura')).toHaveValue('21:00');
   await expect(page.locator('.radar-future-results')).toContainText('Histórico disponível');
   await page.getByLabel('Importar calendário CSV').setInputFiles(file);
-  await expect(page.getByRole('status')).toContainText('0 novos jogos; 1 duplicatas');
+  await expect(page.locator('.calendar-agenda').getByRole('status')).toContainText('0 novos jogos; 1 duplicatas');
   await page.reload();
   await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
   await page.getByRole('button',{name:'7 dias'}).click();
