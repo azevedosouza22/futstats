@@ -29,6 +29,13 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const [league,setLeague]=useState('');
   const [saved,setSaved]=useState(readSaved);
   const [message,setMessage]=useState('');
+  function useCalendarFixture(f:ScheduledFixture){
+    const h=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.home));
+    const a=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
+    if(!h||!a||!f.time)return;
+    setIds([h.id,a.id]);setLeague(f.competition);setDate(f.date);setTime(f.time);
+    setMessage('Confronto da agenda selecionado. Confira as amostras antes de registrar.');
+  }
   const teams=data.teams;
   const leagues=[...new Set(data.matches.map(m=>m.competition.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const home=teams.find(t=>t.id===ids[0]);
