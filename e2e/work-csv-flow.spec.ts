@@ -155,3 +155,32 @@ test('identifica cinco ligas e filtra pré-jogo por competição e mando',async(
   await expect(bayern).toContainText('0/5');
   await expect(bayern.getByRole('row',{name:/Finalizações/}).getByRole('cell').first()).toContainText('N/D');
 });
+
+test('radar retrospectivo usa somente históricos anteriores e esconde resultados até revelar',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles(upload);
+  page.on('dialog',d=>d.accept());
+  await page.getByRole('button',{name:'Confirmar 11 partidas novas'}).click();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Radar · Validação retrospectiva'})).toBeVisible();
+  await page.getByRole('combobox',{name:'Liga do radar'}).selectOption({label:'Brasileirão Série A'});
+  const fixture=page.getByRole('combobox',{name:'Partida do radar'});
+  await fixture.selectOption({label:/2026-10-12 · RB Bragantino × Cruzeiro/});
+  await expect(page.locator('.radar-context')).toContainText('5/5 jogos de RB Bragantino');
+  await expect(page.locator('.radar-context')).toContainText('5/5 de Cruzeiro');
+  await expect(page.locator('.radar-context')).toContainText('10 partidas únicas');
+  await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toHaveCount(0);
+  await page.getByRole('button',{name:'Revelar resultados para comparar'}).click();
+  await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toBeVisible();
+  await expect(page.locator('.radar-market-table')).toContainText('6 · Over');
+  await page.getByRole('button',{name:'Ocultar resultados ocorridos'}).click();
+  await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toHaveCount(0);
+});
+
+test('radar sem CSV não cria partida nem sugere entrada',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await expect(page.locator('.radar-panel')).toContainText('Importe pesquisas CSV');
+  await expect(page.locator('.radar-panel')).not.toContainText('Revelar resultados');
+});
