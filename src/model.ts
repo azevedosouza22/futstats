@@ -65,7 +65,7 @@ export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
   if (!validDate(m.date)) return 'Informe a data da partida.';
   if(['country','round'].some(k=>m[k as 'country'|'round']!==undefined&&(typeof m[k as 'country'|'round']!=='string'||m[k as 'country'|'round']!.length>100)))return 'País ou rodada inválidos.';
-  if (!validPair(m.first,!!m.external||!!m.image||!!m.research)||!validPair(m.second,!!m.external||!!m.image)) return 'Períodos ou valores inválidos.';
+  if (!validPair(m.first,!!m.external||!!m.image||!!m.research)||!validPair(m.second,!!m.external||!!m.image||!!m.research)) return 'Períodos ou valores inválidos.';
   if (Number(!!m.external)+Number(!!m.image)+Number(!!m.research)>1) return 'Origens incompatíveis.';
   if (m.research) {
     const r=m.research;
