@@ -142,7 +142,7 @@ export function workCsvPreview(data: Data, rows: WorkResearchRow[]) {
 }
 
 export function mergeWorkCsv(data: Data, rows: WorkResearchRow[]): {data: Data; added: number; skipped: number} {
-  const next: Data = {teams: [...data.teams], matches: [...data.matches]};
+  const next: Data = {...data, teams: [...data.teams], matches: [...data.matches]};
   let added = 0, skipped = 0;
   for (const row of workCsvPreview(data, rows)) {
     if (row.duplicate) {skipped++; continue;}
