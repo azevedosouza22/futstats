@@ -108,3 +108,50 @@ test('ignora arquivo com totais divergentes sem salvar partidas',async({page})=>
   await page.getByRole('button',{name:'Histórico',exact:true}).click();
   await expect(page.locator('.match-row')).toHaveCount(0);
 });
+
+test('identifica cinco ligas e filtra pré-jogo por competição e mando',async({page})=>{
+  // Fictitious cross-league fixture used only to test the CSV structure, not match results.
+  const raw=fixtureCsv().split('\n');
+  const lines=raw.slice(1).map((line,i)=>{
+    const cols=line.split(',');
+    const aliases=[
+      ['Bundesliga','Bayern München','Borussia Dortmund'],
+      ['Serie A italiana','Inter','AC Milan'],
+      ['Ligue 1','PSG','Marseille'],
+      ['La Liga','Real Madrid','Barcelona'],
+      ['Brasileirão Série A','Palmeiras','Flamengo'],
+    ];
+    const [league,home,away]=aliases[i%5];
+    cols[3]='2026-08-'+String(10+i).padStart(2,'0');
+    cols[4]=cols[3];
+    cols[5]=home;
+    cols[6]=away;
+    cols[7]=league;
+    return cols.join(',');
+  });
+  const csv=[raw[0],...lines].join('\n');
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles({name:'ligas-de-teste.csv',mimeType:'text/csv',buffer:Buffer.from(csv,'utf8')});
+  await expect(page.locator('.research-preview')).toContainText('11 partidas · 11 novas · 0 duplicadas');
+  page.on('dialog',d=>d.accept());
+  await page.getByRole('button',{name:'Confirmar 11 partidas novas'}).click();
+  await expect(page.getByRole('status')).toContainText('11 partidas importadas');
+  await page.getByRole('button',{name:'Pré-jogo',exact:true}).click();
+  const filter=page.getByRole('combobox',{name:'Filtrar competição pré-jogo'});
+  for(const name of ['Brasileirão Série A','Bundesliga','Serie A italiana','Ligue 1','La Liga']){
+    await expect(filter.locator('option',{hasText:name})).toHaveCount(1);
+  }
+  await page.getByRole('combobox',{name:'Equipe 1 pré-jogo'}).selectOption({label:'Bayern München'});
+  await page.getByRole('combobox',{name:'Equipe 2 pré-jogo'}).selectOption({label:'Borussia Dortmund'});
+  await page.getByLabel('Data do confronto').fill('2026-10-15');
+  await filter.selectOption('Bundesliga');
+  const bayern=page.locator('.pregame-card').filter({has:page.getByRole('heading',{name:'Bayern München',exact:true})});
+  await expect(bayern).toContainText('3/5');
+  await page.getByRole('combobox',{name:'Recorte mandante visitante'}).selectOption('match');
+  await expect(bayern).toContainText('mandante');
+  await expect(bayern).toContainText('3/5');
+  await filter.selectOption('Ligue 1');
+  await expect(bayern).toContainText('0/5');
+  await expect(bayern.getByRole('row',{name:/Finalizações/}).getByRole('cell').first()).toContainText('N/D');
+});
