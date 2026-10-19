@@ -25,7 +25,17 @@ export type Match = {
   first: [Stats, Stats]; second: [Stats, Stats]; image?: ImageOrigin; research?: ResearchOrigin;
   external?: {provider: 'thesportsdb'; id: string; importedAt: string; status: string; full: [Stats, Stats]};
 };
-export type Data = {teams: Team[]; matches: Match[]};
+export type RadarSavedMarket = {
+  id: string; label: string; metric: Metric; period: Period; line: number;
+  observed: number; overs: number; historyRate: number | null; historicalMean: number | null;
+};
+export type RadarSaved = {
+  id: string; capturedAt: string; kickoff: string; date: string;
+  home: string; away: string; homeName: string; awayName: string; competition: string;
+  homeHistoryCount: number; awayHistoryCount: number; uniqueHistoryCount: number;
+  markets: RadarSavedMarket[];
+};
+export type Data = {teams: Team[]; matches: Match[]; radarSnapshots?: RadarSaved[]};
 export const labels: Record<Metric, string> = {goals:'Gols',shots:'Finalizações',target:'No alvo',corners:'Escanteios',yellow:'Cartões amarelos',red:'Cartões vermelhos',possession:'Posse de bola (%)',xg:'Gols esperados (xG)',chances:'Chances claras'};
 export const additiveMetrics: Metric[] = [...coreMetrics, 'chances'];
 export const unavailable = (): ResolvedStats => Object.fromEntries(metrics.map(k=>[k,null])) as ResolvedStats;
@@ -130,6 +140,39 @@ export function validData(value: unknown): value is Data {
   for (const t of d.teams) {
     if (!t||typeof t.id!=='string'||ids.has(t.id)||typeof t.name!=='string'||!t.name.trim()||typeof t.color!=='string'||!/^#[0-9a-f]{6}$/i.test(t.color)||t.externalId!==undefined&&(typeof t.externalId!=='string'||!/^\d+$/.test(t.externalId)||externalTeams.has(t.externalId))) return false;
     ids.add(t.id); if(t.externalId) externalTeams.add(t.externalId);
+  }
+  if (d.radarSnapshots !== undefined) {
+    if (!Array.isArray(d.radarSnapshots) || d.radarSnapshots.length > 500) return false;
+    const seenRadar = new Set<string>();
+    for (const snapshot of d.radarSnapshots) {
+      if (!snapshot || typeof snapshot.id !== 'string' || !snapshot.id || seenRadar.has(snapshot.id) ||
+        !isoDate(snapshot.capturedAt) || !isoDate(snapshot.kickoff) || !validDate(snapshot.date) ||
+        typeof snapshot.home !== 'string' || typeof snapshot.away !== 'string' ||
+        snapshot.home === snapshot.away || !ids.has(snapshot.home) || !ids.has(snapshot.away) ||
+        typeof snapshot.homeName !== 'string' || !snapshot.homeName.trim() || snapshot.homeName.length > 100 ||
+        typeof snapshot.awayName !== 'string' || !snapshot.awayName.trim() || snapshot.awayName.length > 100 ||
+        typeof snapshot.competition !== 'string' || !snapshot.competition.trim() || snapshot.competition.length > 150 ||
+        ![snapshot.homeHistoryCount,snapshot.awayHistoryCount,snapshot.uniqueHistoryCount].every(x=>Number.isSafeInteger(x)&&x>=0&&x<=10) ||
+        !Array.isArray(snapshot.markets) || !snapshot.markets.length || snapshot.markets.length > 20) return false;
+      seenRadar.add(snapshot.id);
+      const seenMarkets = new Set<string>();
+      for (const market of snapshot.markets) {
+        if (!market || typeof market.id !== 'string' || !market.id || seenMarkets.has(market.id) ||
+          typeof market.label !== 'string' || !market.label.trim() ||
+          !metrics.includes(market.metric) || !['first','second','full'].includes(market.period) ||
+          typeof market.line !== 'number' || !Number.isFinite(market.line) || market.line < 0 ||
+          !Number.isSafeInteger(market.observed) || market.observed < 0 || market.observed > 10 ||
+          !Number.isSafeInteger(market.overs) || market.overs < 0 || market.overs > market.observed ||
+          (market.historyRate !== null && (typeof market.historyRate !== 'number' ||
+            !Number.isFinite(market.historyRate) || Math.abs(market.historyRate-(market.overs/market.observed))>1e-9)) ||
+          (market.observed === 0 && market.historyRate !== null) ||
+          (market.observed > 0 && market.historyRate === null) ||
+          (market.historicalMean !== null && (typeof market.historicalMean !== 'number' || !Number.isFinite(market.historicalMean) || market.historicalMean < 0)) ||
+          (market.observed === 0 && market.historicalMean !== null) ||
+          (market.observed > 0 && market.historicalMean === null)) return false;
+        seenMarkets.add(market.id);
+      }
+    }
   }
   const matchIds=new Set(),externalMatches=new Set(),researchMatches=new Set();
   return d.matches.every(m=> {
