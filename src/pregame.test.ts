@@ -17,6 +17,20 @@ describe('Pré-jogo', () => {
   it('não utiliza jogos no dia do confronto ou posteriores', () => {
     expect(recentMatches(games, 'a', 5, '2026-09-04').map(m => m.id)).toEqual(['2','1','0']);
   });
+  it('não inclui no pré-jogo uma partida CSV cuja data do título é o dia da análise', () => {
+    const ambiguous: Match = {
+      ...games[0], id: 'csv-date-mismatch', date: '2026-10-12',
+      research: {
+        provider: 'work-csv', source: 'Flashscore', sourceId: 'vXrY11bl',
+        sourceUrl: 'https://www.flashscore.com.br/?mid=vXrY11bl',
+        importedAt: '2026-10-19T00:00:00.000Z',
+        titleDate: '2026-10-13', dateDiscrepancy: true,
+        full: [empty(), empty()],
+      },
+    };
+    expect(recentMatches([...games, ambiguous], 'a', 5, '2026-10-13').some(m => m.id === ambiguous.id)).toBe(false);
+    expect(recentMatches([...games, ambiguous], 'a', 5, '2026-10-14')[0].id).toBe(ambiguous.id);
+  });
   it('amostra vazia não vira média zero', () => {
     const result = pregameAverage([], 'a', 10, 'first', '2026-10-01');
     expect(result.values.goals).toBeNull(); expect(result.count).toBe(0); expect(result.samples.shots).toBe(0);
