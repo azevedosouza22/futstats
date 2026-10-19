@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {radarRetrospective} from './radar';
+import UpcomingRadar from './UpcomingRadar';
 import type {Data} from './model';
 
 const number = (n: number | null) =>
@@ -31,7 +32,10 @@ export default function Radar({data}: {data: Data}) {
       <p>Veja o que os números anteriores a uma partida indicavam, sem utilizar o resultado dela nos cálculos.</p>
     </div></div>
     <div className="radar-inner">
-      <p className="muted">Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro nesta versão.</p>
+      <UpcomingRadar data={data}/>
+      <hr/>
+      <h3>Comparar partidas já concluídas</h3>
+      <p className="muted">Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
       {!researchMatches.length ? <div className="empty">
         Importe pesquisas CSV para habilitar a validação retrospectiva. O Radar não cria partidas fictícias na sua base.
       </div> : <>
