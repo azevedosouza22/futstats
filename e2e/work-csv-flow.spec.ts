@@ -166,7 +166,7 @@ test('radar retrospectivo usa somente históricos anteriores e esconde resultado
   await expect(page.getByRole('heading',{name:'Radar · Validação retrospectiva'})).toBeVisible();
   await page.getByRole('combobox',{name:'Liga do radar'}).selectOption({label:'Brasileirão Série A'});
   const fixture=page.getByRole('combobox',{name:'Partida do radar'});
-  await fixture.selectOption({label:/2026-10-12 · RB Bragantino × Cruzeiro/});
+  await fixture.selectOption({label:'2026-10-12 · RB Bragantino × Cruzeiro'});
   await expect(page.locator('.radar-context')).toContainText('5/5 jogos de RB Bragantino');
   await expect(page.locator('.radar-context')).toContainText('5/5 de Cruzeiro');
   await expect(page.locator('.radar-context')).toContainText('10 partidas únicas');
