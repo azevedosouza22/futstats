@@ -18,7 +18,7 @@ export const radarMarkets: readonly Market[] = [
   {id: 'corners-full-8.5', label: 'Escanteios · partida completa', metric: 'corners', period: 'full', line: 8.5},
 ];
 
-function matchTotal(match: Match, metric: Metric, period: Period): number | null {
+export function matchTotal(match: Match, metric: Metric, period: Period): number | null {
   const a = stats(match, 0, period)[metric];
   const b = stats(match, 1, period)[metric];
   return a === null || b === null ? null : a + b;
@@ -44,7 +44,9 @@ export type RadarMarketResult = Market & {
   didOver: boolean | null;
 };
 
-export function radarRetrospective(data: Data, fixture: Match) {
+export type RadarFixture = Pick<Match, 'home' | 'away' | 'date' | 'competition'>;
+
+function calculateRadar(data: Data, fixture: RadarFixture, result?: Match) {
   // Do not use the selected fixture, same-day matches, or any matches from later dates.
   // Restrict both teams to their own last five matches in this competition.
   const homeHistory = recentMatches(data.matches, fixture.home, 5, fixture.date, {competition: fixture.competition});
@@ -57,7 +59,7 @@ export function radarRetrospective(data: Data, fixture: Match) {
     const values = unique
       .map(m => matchTotal(m, market.metric, market.period))
       .filter((v): v is number => v !== null);
-    const actual = matchTotal(fixture, market.metric, market.period);
+    const actual = result ? matchTotal(result, market.metric, market.period) : null;
     return {
       ...market,
       observed: values.length,
@@ -87,4 +89,14 @@ export function radarRetrospective(data: Data, fixture: Match) {
     },
     markets,
   };
+}
+
+// Upcoming fixtures calculate indicators only; no actual outcome is available.
+export function radarUpcoming(data: Data, fixture: RadarFixture) {
+  return calculateRadar(data, fixture);
+}
+
+// For backtests, actual outcomes are attached only after historic indicators were computed.
+export function radarRetrospective(data: Data, fixture: Match) {
+  return calculateRadar(data, fixture, fixture);
 }
