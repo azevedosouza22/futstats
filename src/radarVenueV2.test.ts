@@ -19,7 +19,7 @@ const market=venueV2Markets.find(m=>m.id==='shots-full-24.5')!;
 describe('Radar V2 por mando',()=>{
  it('não usa a partida avaliada nem dados posteriores',()=>{
   const history:Match[]=[
-   ...Array.from({length:4},(_,i)=>game('home'+i,'2026-09-0'+(i+1),'a','h'+i,20)),
+   ...Array.from({length:4},(_,i)=>game('home'+i,'2026-09-0'+(i+1),'a','h'+i,18)),
    ...Array.from({length:4},(_,i)=>game('away'+i,'2026-09-0'+(i+1),'v'+i,'b',10)),
   ];
   const future=game('future','2026-09-12','a','b',300);
@@ -27,10 +27,10 @@ describe('Radar V2 por mando',()=>{
   const prediction=predictVenueV2(input,future,market);
   expect(prediction.homeAtHomeValid).toBe(4);
   expect(prediction.awayAtAwayValid).toBe(4);
-  expect(prediction.projectedTotal).toBe(21);
+  expect(prediction.projectedTotal).toBe(20);
   expect(prediction.decision).toBe('Under');
   const changed={...future,date:'2026-09-18'};
-  expect(predictVenueV2(data([...history,changed]),future,market).projectedTotal).toBe(21);
+  expect(predictVenueV2(data([...history,changed]),future,market).projectedTotal).toBe(20);
  });
  it('retorna sem sinal quando falta mando, sem inventar 0',()=>{
   const history=Array.from({length:5},(_,i)=>game('home'+i,'2026-09-0'+(i+1),'a','v'+i,20));
@@ -55,7 +55,7 @@ describe('Radar V2 por mando',()=>{
   const matches:Match[]=[];
   for(let i=1;i<=12;i++){
    const date='2026-09-'+String(i).padStart(2,'0');
-   matches.push(game('a'+i,date,'a','x'+i,18));
+   matches.push(game('a'+i,date,'a','x'+i,10));
    matches.push(game('b'+i,date,'y'+i,'b',12));
   }
   const inHoldout=game('target','2026-09-13','a','b',20);
