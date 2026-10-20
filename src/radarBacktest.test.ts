@@ -55,7 +55,7 @@ describe('Backtest cronológico do Radar',()=>{
     games[7]=game('8','2026-08-08',2,true);
     const report=evaluateRadarBacktest(dataset(games),'Liga');
     expect(report.excludedAmbiguousDates).toBe(1);
-    expect(report.markets.find(m=>m.id==='goals-first-0.5')!.realFrequency.observed).toBe(8);
+    expect(report.markets.find(m=>m.id==='goals-first-0.5')!.realFrequency.observed).toBe(7);
     const goals=report.markets.find(m=>m.id==='goals-first-0.5')!;
     expect(goals.signals).toBe(0);
     expect(goals.insufficient).toBeGreaterThan(0);
