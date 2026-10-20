@@ -44,3 +44,32 @@
 .calendar-fixture small{font-size:11px;opacity:.85;overflow-wrap:anywhere}
 .calendar-fixture button{max-width:215px;text-align:center}
 @media(max-width:580px){.calendar-agenda{padding:12px}.calendar-fixture{align-items:stretch;flex-direction:column}.calendar-fixture button{max-width:100%;align-self:flex-start}}
+
+/* Backtest and compact, readable retrospective markets. */
+.radar-backtest{border:1px solid #b9d2c1;border-radius:12px;padding:20px;min-width:0;background:#f7fbf8}
+.radar-backtest h3{margin:0 0 12px;font-size:19px;color:#204d35}
+.radar-backtest-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.radar-backtest-card,.radar-market-card{border:1px solid #d6e5da;border-radius:10px;background:#fff;padding:15px;min-width:0}
+.radar-backtest-card h4,.radar-market-card h4{margin:0 0 10px;line-height:1.5;font-size:14px;color:#274c37}
+.radar-backtest-card h4 small{display:block;color:#6e8273;font-size:11px;font-weight:400}
+.radar-backtest-stat{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.radar-backtest-stat strong{font-size:26px;color:#23573b}
+.radar-backtest-stat span{font-size:11px;color:#6a7b6e}
+.radar-backtest-card dl,.radar-market-card dl{margin:0}
+.radar-backtest-card dl>div,.radar-market-card dl>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-top:1px solid #e9f0ea;padding:9px 0;font-size:12px}
+.radar-backtest-card dt,.radar-market-card dt{color:#5c7061}
+.radar-backtest-card dd,.radar-market-card dd{margin:0;font-weight:700;text-align:right;color:#244c33}
+.radar-backtest-card details{border-top:1px solid #dfe9e1;padding-top:10px;font-size:11px;line-height:1.7}
+.radar-backtest-card summary{cursor:pointer;color:#256a45;font-weight:700}
+.radar-backtest-card details p{margin:7px 0}
+.radar-market-cards{display:none}
+.radar-market-card>p{font-size:11px;color:#738276}
+.radar-market-card .radar-actual{background:#edf6ee;border-radius:6px;padding:10px 8px;margin-top:5px}
+@media(max-width:700px){
+ .radar-backtest{padding:12px}
+ .radar-backtest-grid{grid-template-columns:1fr}
+ .radar-market-table{display:none}
+ .radar-market-cards{display:grid;gap:10px}
+ .radar-market-card{padding:14px}
+ .radar-inner .primary{white-space:normal;text-align:center}
+}
