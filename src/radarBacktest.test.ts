@@ -41,6 +41,12 @@ describe('Backtest cronológico do Radar',()=>{
     expect(result.correct).toBe(0);
     expect(result.incorrect).toBe(1);
     expect(result.sample['8–10'].signals).toBe(1);
+    expect(result.overSignals.signals).toBe(1);
+    expect(result.alwaysOverSameMatches.signals).toBe(1);
+    expect(result.alwaysOverSameMatches.correct).toBe(0);
+    expect(result.realFrequency.observed).toBe(9);
+    expect(result.realFrequency.over).toBe(8);
+    expect(result.periods.map(p=>p.radar.signals).reduce((a,b)=>a+b,0)).toBe(1);
   });
   it('exclui resultados com data ambígua e não preenche N/D como zero',()=>{
     const games=Array.from({length:8},(_,i)=>game(String(i+1),'2026-08-'+String(i+1).padStart(2,'0'),2));
@@ -49,6 +55,7 @@ describe('Backtest cronológico do Radar',()=>{
     games[7]=game('8','2026-08-08',2,true);
     const report=evaluateRadarBacktest(dataset(games),'Liga');
     expect(report.excludedAmbiguousDates).toBe(1);
+    expect(report.markets.find(m=>m.id==='goals-first-0.5')!.realFrequency.observed).toBe(8);
     const goals=report.markets.find(m=>m.id==='goals-first-0.5')!;
     expect(goals.signals).toBe(0);
     expect(goals.insufficient).toBeGreaterThan(0);
@@ -60,4 +67,31 @@ describe('Backtest cronológico do Radar',()=>{
     expect(report.fixtures).toBe(7);
     expect(report.markets.find(m=>m.id==='goals-first-0.5')!.eligible).toBe(0);
   });
+  it('separa sinais Under e compara sempre Over nas mesmas partidas',()=>{
+    const history:Match[]=[
+      ...Array.from({length:4},(_,i)=>({...game('a'+i,'2026-08-'+String(i+1).padStart(2,'0'),0),away:'c'+i})),
+      ...Array.from({length:4},(_,i)=>({...game('b'+i,'2026-08-'+String(i+1).padStart(2,'0'),0),home:'d'+i})),
+    ];
+    const last=game('final','2026-08-12',0);
+    const report=evaluateRadarBacktest(dataset([...history,last]),'Liga');
+    const m=report.markets.find(m=>m.id==='goals-first-0.5')!;
+    expect(m.signals).toBe(1);
+    expect(m.underSignals.signals).toBe(1);
+    expect(m.underSignals.correct).toBe(1);
+    expect(m.overSignals.signals).toBe(0);
+    expect(m.alwaysOverSameMatches.correct).toBe(0);
+    expect(m.realFrequency.over).toBe(0);
+    expect(m.periods.reduce((sum,p)=>sum+p.underSignals.signals,0)).toBe(1);
+  });
+  it('mantém todas as partidas da mesma data no mesmo período',()=>{
+    const games=Array.from({length:9},(_,i)=>game(String(i+1),'2026-08-'+String(Math.floor(i/3)+1).padStart(2,'0'),0));
+    const report=evaluateRadarBacktest(dataset(games),'Liga');
+    const p=report.markets[0].periods;
+    expect(p.map(x=>[x.start,x.end])).toEqual([
+      ['2026-08-01','2026-08-01'],
+      ['2026-08-02','2026-08-02'],
+      ['2026-08-03','2026-08-03'],
+    ]);
+  });
+
 });
