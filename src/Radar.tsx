@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {radarRetrospective} from './radar';
 import UpcomingRadar from './UpcomingRadar';
 import RadarBacktest from './RadarBacktest';
+import RadarVenueV2 from './RadarVenueV2';
 import type {Data} from './model';
 
 const number = (n: number | null) =>
@@ -56,6 +57,7 @@ export default function Radar({data}: {data: Data}) {
         </div>
         {fixture && snapshot && <>
           <RadarBacktest data={data} competition={competition}/>
+          <RadarVenueV2 data={data} competition={competition}/>
         <div className="radar-context">
             <h3>{homeName} × {awayName}</h3>
             <p>{fixture.date} · {fixture.competition}</p>
