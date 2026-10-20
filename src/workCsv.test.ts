@@ -45,6 +45,41 @@ describe('Work CSV research import',()=>{
     const csv=source();
     expect(()=>parseWorkResearchCsv(csv+'\n'+csv.split('\n')[1])).toThrow('duplicada');
   });
+  it('enriches missing half-time metrics without replacing verified values',()=>{
+    const old=parseWorkResearchCsv(source({
+      gols_mandante_jogo:'4',gols_visitante_jogo:'2',gols_total_jogo:'6',
+      finalizacoes_mandante_jogo:'20',finalizacoes_visitante_jogo:'25',finalizacoes_total_jogo:'45',
+    }));
+    const first=mergeWorkCsv({teams:[],matches:[]},old);
+    const originalId=first.data.matches[0].id;
+    const enhanced=parseWorkResearchCsv(source({
+      gols_mandante_jogo:'4',gols_visitante_jogo:'2',gols_total_jogo:'6',
+      finalizacoes_mandante_jogo:'20',finalizacoes_visitante_jogo:'25',finalizacoes_total_jogo:'45',
+      gols_mandante_1t:'2',gols_visitante_1t:'1',gols_total_1t:'3',
+      gols_mandante_2t:'2',gols_visitante_2t:'1',gols_total_2t:'3',
+      finalizacoes_mandante_1t:'11',finalizacoes_visitante_1t:'12',finalizacoes_total_1t:'23',
+      finalizacoes_mandante_2t:'9',finalizacoes_visitante_2t:'13',finalizacoes_total_2t:'22',
+    }));
+    expect(workCsvPreview(first.data,enhanced)[0].enrichable).toBe(true);
+    const merged=mergeWorkCsv(first.data,enhanced);
+    expect(merged.added).toBe(0);
+    expect(merged.updated).toBe(1);
+    expect(merged.filledFields).toBe(8);
+    expect(merged.data.matches).toHaveLength(1);
+    expect(merged.data.matches[0].id).toBe(originalId);
+    expect(stats(merged.data.matches[0],0,'first').shots).toBe(11);
+    expect(stats(first.data.matches[0],0,'first').shots).toBeNull();
+    expect(validData(merged.data)).toBe(true);
+  });
+  it('blocks conflicting published numbers and reused source IDs',()=>{
+    const old=parseWorkResearchCsv(source({gols_mandante_jogo:'4',gols_visitante_jogo:'2',gols_total_jogo:'6'}));
+    const first=mergeWorkCsv({teams:[],matches:[]},old);
+    const altered=parseWorkResearchCsv(source({gols_mandante_jogo:'3',gols_visitante_jogo:'2',gols_total_jogo:'5'}));
+    expect(()=>mergeWorkCsv(first.data,altered)).toThrow('Conflito de estatísticas');
+    const wrongTeam=parseWorkResearchCsv(source({mandante:'Red Bull Bragantino'}));
+    expect(()=>mergeWorkCsv(first.data,wrongTeam)).toThrow('Conflito de identidade');
+    expect(stats(first.data.matches[0],0,'full').goals).toBe(4);
+  });
   it('does not erase local data and skips repeated imports',()=>{
     const row=parseWorkResearchCsv(source());
     const original:Data={teams:[],matches:[]};
