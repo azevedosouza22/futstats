@@ -98,3 +98,17 @@
 .radar-benchmark-row{padding:12px}
 .radar-benchmark-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 }
+
+/* Venue-aware experimental backtest. */
+.radar-v2-panel{margin-top:16px}
+.radar-v2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.radar-v2-card{border:1px solid #d6e5da;border-radius:10px;padding:14px;min-width:0;background:#fff}
+.radar-v2-card h4{margin:0 0 12px;font-size:15px;line-height:1.5;color:#23573b}
+.radar-v2-card h4 small{display:block;font-size:11px;font-weight:400}
+.radar-v2-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.radar-v2-comparison div{display:flex;flex-direction:column;gap:6px}
+.radar-v2-comparison span{font-size:11px;line-height:1.5;color:#6b7f72}
+.radar-v2-comparison strong{font-size:24px;font-variant-numeric:tabular-nums;color:#23573b}
+.radar-v2-comparison small{font-size:10px;line-height:1.6;color:#6b7f72}
+.radar-v2-verdict{font-size:12px;line-height:1.6;font-weight:650;color:#285c3b}
+@media(max-width:700px){.radar-v2-grid{grid-template-columns:1fr}}
