@@ -20,9 +20,17 @@ export default function RadarVenueV3({data,competition}:{data:Data;competition:s
       <div><span>Radar V3 · Teste posterior</span><strong>{rate(m.v3.correct,m.v3.signals)}</strong><small>{m.v3.correct}/{m.v3.signals} acertos/sinais</small></div>
       <div><span>Regra constante · mesmos jogos</span><strong>{rate(m.constant.correct,m.constant.signals)}</strong><small>{m.baseline?'Sempre '+m.baseline:'N/D'}</small></div>
      </div>
-     <p className="muted">V2 nos mesmos jogos selecionados pelo V3: {rate(m.v2.correct,m.v2.signals)} ({m.v2.correct}/{m.v2.signals}). São {m.v3.over} sinais Over e {m.v3.under} Under.</p>
+     <p className="muted">V2, todos os sinais no teste posterior: {rate(m.v2All.correct,m.v2All.signals)} ({m.v2All.correct}/{m.v2All.signals}).</p>
+     <p className="muted">V3 manteve {m.v3.signals} sinais do V2 ({rate(m.v3.signals,m.v2All.signals)} de cobertura dos sinais V2). V2 nos jogos mantidos: {rate(m.v2.correct,m.v2.signals)} ({m.v2.correct}/{m.v2.signals}).</p>
+     <p className="muted">V2 nos jogos descartados pelo V3: {rate(m.v2Rejected.correct,m.v2Rejected.signals)} ({m.v2Rejected.correct}/{m.v2Rejected.signals}). Se os rejeitados acertam tanto quanto os mantidos, o filtro não demonstrou melhora.</p>
+     <p className="muted">O V3 manteve {m.v3.over} sinais Over e {m.v3.under} Under.</p>
      <p className="muted">Cobertura: {m.v3.signals}/{m.eligibleValidation} jogos com resultado conhecido. Sem histórico: {m.insufficient}; V2 neutro: {m.v2Neutral}; tendências divergentes: {m.disagreement}.</p>
      <p className="radar-v2-verdict">{!comparable?'Amostra insuficiente para concluir (mínimo de 20 sinais).':edge?'Acima da referência nesta amostra posterior, ainda sem validação prospectiva.':'Não superou a referência nesta amostra posterior.'}</p>
+     <p className="muted">{m.v2Rejected.signals>0 && m.v3.signals>0
+       ? m.v3.correct/m.v3.signals>m.v2Rejected.correct/m.v2Rejected.signals
+         ? 'A seleção do V3 teve taxa maior que os sinais que descartou. Resultado exploratório.'
+         : 'O filtro V3 não elevou a taxa em relação aos sinais descartados.'
+       : 'Ainda não é possível avaliar o ganho da seleção por falta de sinais nos dois grupos.'}</p>
     </article>;
    })}
   </div>
