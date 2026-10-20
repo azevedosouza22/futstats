@@ -46,7 +46,7 @@ export default function WorkCsvImport({data,save}:{data:Data;save:(next:Data)=>b
       {notice&&<p className="notice" role="status">{notice}</p>}
       {!!rows.length&&<div className="research-preview">
         <h3>Prévia: {filename}</h3>
-        <p>{rows.length} partidas · {newCount} novas · {updatedCount} a complementar ({additionalFields} valores) · {duplicateCount} duplicadas · {rows.filter(r=>r.dateDiscrepancy).length} com divergência entre datas.</p>
+        <p>{rows.length} partidas · {newCount} novas · {updatedCount>0?`${updatedCount} a complementar (${additionalFields} valores) · `:''}{duplicateCount} duplicadas · {rows.filter(r=>r.dateDiscrepancy).length} com divergência entre datas.</p>
         <div className="research-table-wrap"><table className="analysis-table">
           <thead><tr><th>Data</th><th>Partida</th><th>Competição</th><th>Origem</th><th>Situação</th></tr></thead>
           <tbody>{preview.map(r=><tr key={r.sourceId}>
