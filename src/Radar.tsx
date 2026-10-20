@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {radarRetrospective} from './radar';
 import UpcomingRadar from './UpcomingRadar';
+import RadarBacktest from './RadarBacktest';
 import type {Data} from './model';
 
 const number = (n: number | null) =>
@@ -54,7 +55,8 @@ export default function Radar({data}: {data: Data}) {
           </label>
         </div>
         {fixture && snapshot && <>
-          <div className="radar-context">
+          <RadarBacktest data={data} competition={competition}/>
+        <div className="radar-context">
             <h3>{homeName} × {awayName}</h3>
             <p>{fixture.date} · {fixture.competition}</p>
             <p>Histórico considerado: {snapshot.homeHistory.length}/5 jogos de {homeName} e {snapshot.awayHistory.length}/5 de {awayName}; {snapshot.distinctHistoryCount} partidas únicas após eliminar duplicatas.</p>
@@ -86,6 +88,19 @@ export default function Radar({data}: {data: Data}) {
                 {showResults&&<td>{m.actual === null ? 'N/D' : number(m.actual) + ' · ' + (m.didOver ? 'Over' : 'Under')}</td>}
               </tr>)}</tbody>
             </table>
+          </div>
+          <div className="radar-market-cards" aria-label="Mercados por cartão">
+            <p className="muted">Mercados ilustrativos · últimos cinco jogos de cada equipe</p>
+            {snapshot.markets.map(m => <article className="radar-market-card" key={m.id}>
+              <h4>{m.label}</h4>
+              <p>Linha ilustrativa: {number(m.line)} · {m.observed} partidas únicas</p>
+              <dl>
+                <div><dt>Over histórico</dt><dd>{percent(m.historyRate)} <small>({m.overs}/{m.observed})</small></dd></div>
+                <div><dt>Under histórico</dt><dd>{percent(m.historyRate===null?null:1-m.historyRate)}</dd></div>
+                <div><dt>Média do total</dt><dd>{number(m.historicalMean)}</dd></div>
+                {showResults&&<div className="radar-actual"><dt>Resultado ocorrido</dt><dd>{m.actual===null?'N/D':number(m.actual)+' · '+(m.didOver?'Over':'Under')}</dd></div>}
+              </dl>
+            </article>)}
           </div>
           <p className="muted">As amostras são pequenas e podem compartilhar partidas entre os dois históricos. A taxa Over/Under é apenas a frequência observada nesses registros, não a chance calculada de acertar uma aposta. As linhas são exemplos, não odds nem mercados confirmados de casas de apostas.</p>
           <button type="button" className="primary" onClick={()=>setShowResults(v=>!v)}>
