@@ -258,6 +258,11 @@ test('backtest automático apresenta sinais e mercados em cartões legíveis no 
   await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Validação automática da temporada'})).toBeVisible();
   await expect(page.locator('.radar-backtest-card')).toHaveCount(6);
+  await page.locator('.radar-backtest-card').filter({hasText:'Gols · 2º tempo'}).getByText('Ver amostras, mando e comparação').click();
+  const secondHalf=page.locator('.radar-backtest-card').filter({hasText:'Gols · 2º tempo'});
+  await expect(secondHalf).toContainText('Regra "sempre Over"');
+  await expect(secondHalf).toContainText('Frequência real de Over na base');
+  await expect(secondHalf.locator('.radar-period-row')).toHaveCount(3);
   await expect(page.locator('.radar-market-table')).toBeHidden();
   await expect(page.locator('.radar-market-card')).toHaveCount(6);
   await expect(page.locator('.radar-market-card').first()).not.toContainText('Resultado ocorrido');
