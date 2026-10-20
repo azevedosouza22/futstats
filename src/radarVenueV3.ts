@@ -10,6 +10,9 @@ export const VENUE_V3_OVER_FREQUENCY=0.6;
 export const VENUE_V3_UNDER_FREQUENCY=0.4;
 export const VENUE_V3_VENUE_MEAN_MARGIN=0.05;
 
+export const VENUE_V3_CHECKS = ['homeMean','awayMean','homeFrequency','awayFrequency'] as const;
+export type VenueV3Check = typeof VENUE_V3_CHECKS[number];
+
 export type VenueV3Prediction={
   marketId:string;decision:VenueV2Decision;
   v2Decision:VenueV2Decision;
@@ -18,6 +21,7 @@ export type VenueV3Prediction={
   homeMean:number|null;awayMean:number|null;
   projectedTotal:number|null;
   reason:'insufficient_venue_history'|'v2_neutral'|'venue_disagreement'|'confirmed';
+  failedChecks: VenueV3Check[];
 };
 
 function summarize(history:Data['matches'], market:(typeof venueV2Markets)[number]){
@@ -44,26 +48,26 @@ export function predictVenueV3(
     homeMean:home.mean,awayMean:away.mean};
   if(home.count<VENUE_V3_MIN_GAMES||away.count<VENUE_V3_MIN_GAMES||
     v2.reason==='insufficient_venue_history'){
-    return {...info,decision:'Sem sinal',reason:'insufficient_venue_history'};
+    return {...info,decision:'Sem sinal',reason:'insufficient_venue_history',failedChecks:[]};
   }
   if(v2.decision==='Sem sinal'){
-    return {...info,decision:'Sem sinal',reason:'v2_neutral'};
+    return {...info,decision:'Sem sinal',reason:'v2_neutral',failedChecks:[]};
   }
-  // Both independently observed venue histories must agree in mean and frequency.
-  // This rejects matches in which one team's venue trend contradicts the other.
-  const over=v2.decision==='Over'
-    && home.mean!==null&&away.mean!==null
-    && home.mean>market.line*(1+VENUE_V3_VENUE_MEAN_MARGIN)
-    && away.mean>market.line*(1+VENUE_V3_VENUE_MEAN_MARGIN)
-    && home.overRate!==null&&away.overRate!==null
-    && home.overRate>=VENUE_V3_OVER_FREQUENCY&&away.overRate>=VENUE_V3_OVER_FREQUENCY;
-  const under=v2.decision==='Under'
-    && home.mean!==null&&away.mean!==null
-    && home.mean<market.line*(1-VENUE_V3_VENUE_MEAN_MARGIN)
-    && away.mean<market.line*(1-VENUE_V3_VENUE_MEAN_MARGIN)
-    && home.overRate!==null&&away.overRate!==null
-    && home.overRate<=VENUE_V3_UNDER_FREQUENCY&&away.overRate<=VENUE_V3_UNDER_FREQUENCY;
-  return (over||under)
-    ? {...info,decision:v2.decision,reason:'confirmed'}
-    : {...info,decision:'Sem sinal',reason:'venue_disagreement'};
+  // Record each violated condition separately; one rejected V2 prediction can
+  // violate multiple conditions. These diagnostics do NOT change model decisions.
+  const over=v2.decision==='Over';
+  const meanLimit=market.line*(over?1+VENUE_V3_VENUE_MEAN_MARGIN:1-VENUE_V3_VENUE_MEAN_MARGIN);
+  const frequencyLimit=over?VENUE_V3_OVER_FREQUENCY:VENUE_V3_UNDER_FREQUENCY;
+  const failedChecks:VenueV3Check[]=[];
+  if(home.mean===null||(over?home.mean<=meanLimit:home.mean>=meanLimit))
+    failedChecks.push('homeMean');
+  if(away.mean===null||(over?away.mean<=meanLimit:away.mean>=meanLimit))
+    failedChecks.push('awayMean');
+  if(home.overRate===null||(over?home.overRate<frequencyLimit:home.overRate>frequencyLimit))
+    failedChecks.push('homeFrequency');
+  if(away.overRate===null||(over?away.overRate<frequencyLimit:away.overRate>frequencyLimit))
+    failedChecks.push('awayFrequency');
+  return failedChecks.length===0
+    ? {...info,decision:v2.decision,reason:'confirmed',failedChecks}
+    : {...info,decision:'Sem sinal',reason:'venue_disagreement',failedChecks};
 }
