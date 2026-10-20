@@ -130,22 +130,76 @@ export function parseWorkResearchCsv(text: string): WorkResearchRow[] {
 }
 
 const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, ' ').toLowerCase();
-export function workCsvPreview(data: Data, rows: WorkResearchRow[]) {
-  const existing = new Set(data.matches.flatMap(m => m.research ? [m.research.sourceId] : []));
-  return rows.map(row => ({
-    ...row,
-    duplicate: existing.has(row.sourceId) || data.matches.some(m =>
-      [row.date, row.titleDate].filter(Boolean).includes(m.date) &&
-      norm(data.teams.find(t => t.id === m.home)?.name ?? '') === norm(row.home) &&
-      norm(data.teams.find(t => t.id === m.away)?.name ?? '') === norm(row.away)),
-  }));
+const researchMatchById = (data: Data, id: string) =>
+  data.matches.find(m => m.research?.sourceId === id);
+
+function reconcileResearchMatch(data: Data, existing: Match, row: WorkResearchRow):
+{match: Match; filled: number} {
+  const label = row.home + ' × ' + row.away;
+  const homeName = data.teams.find(t => t.id === existing.home)?.name ?? '';
+  const awayName = data.teams.find(t => t.id === existing.away)?.name ?? '';
+  // A reused source identifier must never silently change the identity of a match.
+  if (existing.date !== row.date || norm(existing.competition) !== norm(row.competition) ||
+      norm(homeName) !== norm(row.home) || norm(awayName) !== norm(row.away) || !existing.research)
+    throw Error('Conflito de identidade no registro ' + row.sourceId + ' (' + label + '). Confira os nomes das equipes e as datas.');
+
+  let filled = 0;
+  const combine = (oldPair: Pair, newPair: Pair, period: string): Pair => {
+    const pair: Pair = [{...oldPair[0]}, {...oldPair[1]}];
+    for (const [metric] of metricColumns) for (const side of [0,1] as const) {
+      const previous = oldPair[side][metric] ?? null;
+      const incoming = newPair[side][metric] ?? null;
+      if (incoming === null) continue;
+      if (previous !== null && previous !== incoming)
+        throw Error('Conflito de estatísticas em ' + row.sourceId + ' (' + label + '), ' + metric + ' no ' + period + '. Não substituímos valores existentes.');
+      if (previous === null) {pair[side][metric] = incoming; filled++;}
+    }
+    return pair;
+  };
+  const first=combine(existing.first,row.first,'1º tempo');
+  const second=combine(existing.second,row.second,'2º tempo');
+  const full=combine(existing.research.full,row.full,'jogo completo');
+  return {
+    match: filled > 0 ? {
+      ...existing,first,second,research:{...existing.research,full}
+    } : existing,
+    filled,
+  };
 }
 
-export function mergeWorkCsv(data: Data, rows: WorkResearchRow[]): {data: Data; added: number; skipped: number} {
+export function workCsvPreview(data: Data, rows: WorkResearchRow[]) {
+  const existing = new Set(data.matches.flatMap(m => m.research ? [m.research.sourceId] : []));
+  return rows.map(row => {
+    const stored = researchMatchById(data,row.sourceId);
+    const filled = stored ? reconcileResearchMatch(data,stored,row).filled : 0;
+    return {
+      ...row,
+      duplicate: existing.has(row.sourceId) || data.matches.some(m =>
+        [row.date, row.titleDate].filter(Boolean).includes(m.date) &&
+        norm(data.teams.find(t => t.id === m.home)?.name ?? '') === norm(row.home) &&
+        norm(data.teams.find(t => t.id === m.away)?.name ?? '') === norm(row.away)),
+      enrichable: filled > 0,
+      newFields: filled,
+    };
+  });
+}
+
+export function mergeWorkCsv(data: Data, rows: WorkResearchRow[]):
+{data: Data; added: number; skipped: number; updated: number; filledFields: number} {
   const next: Data = {...data, teams: [...data.teams], matches: [...data.matches]};
-  let added = 0, skipped = 0;
+  let added = 0, skipped = 0, updated = 0, filledFields = 0;
+  // Import first calculates and validates all changes in a copy. The user saves only after confirmation.
   for (const row of workCsvPreview(data, rows)) {
-    if (row.duplicate) {skipped++; continue;}
+    if (row.duplicate) {
+      const existingIndex=next.matches.findIndex(m=>m.research?.sourceId===row.sourceId);
+      if (existingIndex < 0) {skipped++; continue;}
+      const merged=reconcileResearchMatch(next,next.matches[existingIndex],row);
+      if (merged.filled===0) {skipped++; continue;}
+      next.matches[existingIndex]=merged.match;
+      updated++;
+      filledFields+=merged.filled;
+      continue;
+    }
     const getTeamId = (name: string) => {
       const existing = next.teams.find(t => norm(t.name) === norm(name));
       if (existing) return existing.id;
@@ -167,5 +221,5 @@ export function mergeWorkCsv(data: Data, rows: WorkResearchRow[]): {data: Data; 
     added++;
   }
   if (!validData(next)) throw Error('Os registros não passaram pela validação. Nenhuma partida foi importada.');
-  return {data: next, added, skipped};
+  return {data: next, added, skipped, updated, filledFields};
 }
