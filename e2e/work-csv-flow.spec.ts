@@ -260,7 +260,7 @@ test('backtest automático apresenta sinais e mercados em cartões legíveis no 
   await expect(page.locator('.radar-backtest-card')).toHaveCount(6);
   await expect(page.locator('.radar-benchmark-row')).toHaveCount(6);
   await expect(page.getByRole('heading',{name:'Radar V2 · Teste por mando de campo'})).toBeVisible();
-  await expect(page.locator('.radar-v2-card')).toHaveCount(3);
+  await expect(page.locator('.radar-v2-panel .radar-v2-card')).toHaveCount(3);
   await expect(page.getByRole('heading',{name:'Radar V3 · Filtro de concordância'})).toBeVisible();
   await expect(page.locator('.radar-v3-panel .radar-v2-card')).toHaveCount(3);
   await expect(page.locator('.radar-v2-card').first()).toContainText('Teste posterior');
