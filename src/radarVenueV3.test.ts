@@ -32,7 +32,7 @@ describe('Radar V3 filtro por concordância',()=>{
  });
  it('recusa divergência entre casa e fora mesmo com projeção V2 de Over',()=>{
   const matches=[
-   ...Array.from({length:4},(_,i)=>game('h'+i,'2026-09-0'+(i+1),'a','x'+i,34,6)),
+   ...Array.from({length:4},(_,i)=>game('h'+i,'2026-09-0'+(i+1),'a','x'+i,40,6)),
    ...Array.from({length:4},(_,i)=>game('v'+i,'2026-09-0'+(i+1),'y'+i,'b',8,7)),
   ];
   const target=game('target','2026-09-15','a','b',15,15);
@@ -58,7 +58,7 @@ describe('Radar V3 filtro por concordância',()=>{
    const day='2026-09-'+String(i).padStart(2,'0');
    matches.push(game('a'+i,day,'a','x'+i,24,8));
    matches.push(game('b'+i,day,'y'+i,'b',8,24));
-   matches.push(game('z'+i,day,'c'+i,'d'+i,14,10));
+   matches.push(game('z'+i,day,i===15?'a':'c'+i,i===15?'b':'d'+i,14,10));
   }
   const report=evaluateVenueV3(data(matches),'Liga');
   const shots=report.markets.find(m=>m.id==='shots-full-24.5')!;
