@@ -66,6 +66,9 @@ describe('Radar V3 filtro por concordância',()=>{
   expect(shots.baseline).toBe('Over');
   expect(shots.v3.signals).toBeGreaterThan(0);
   expect(shots.v3.signals).toBe(shots.v2.signals);
+  expect(shots.v2All.signals).toBe(shots.v3.signals+shots.v2Rejected.signals);
+  expect(shots.v2All.correct).toBe(shots.v2.correct+shots.v2Rejected.correct);
+  expect(shots.v2All.incorrect).toBe(shots.v2.incorrect+shots.v2Rejected.incorrect);
   expect(shots.v3.signals).toBe(shots.constant.signals);
   expect(shots.v3.correct+shots.v3.incorrect).toBe(shots.v3.signals);
  });
