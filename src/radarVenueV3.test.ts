@@ -40,6 +40,9 @@ describe('Radar V3 filtro por concordância',()=>{
   expect(r.v2Decision).toBe('Over');
   expect(r.decision).toBe('Sem sinal');
   expect(r.reason).toBe('venue_disagreement');
+  expect(r.failedChecks).toContain('awayMean');
+  expect(r.failedChecks).toContain('awayFrequency');
+  expect(r.failedChecks).not.toContain('homeMean');
  });
  it('não transforma N/D em zero nem consulta jogos no mesmo dia ou posteriores',()=>{
   const matches=history(35);
@@ -70,6 +73,10 @@ describe('Radar V3 filtro por concordância',()=>{
   expect(shots.v2All.correct).toBe(shots.v2.correct+shots.v2Rejected.correct);
   expect(shots.v2All.incorrect).toBe(shots.v2.incorrect+shots.v2Rejected.incorrect);
   expect(shots.v3.signals).toBe(shots.constant.signals);
+  for (const d of Object.values(shots.failedChecks)){
+   expect(d.v2Correct+d.v2Incorrect).toBe(d.rejections);
+   expect(d.rejections).toBeLessThanOrEqual(shots.v2Rejected.signals);
+  }
   expect(shots.v3.correct+shots.v3.incorrect).toBe(shots.v3.signals);
  });
 });
