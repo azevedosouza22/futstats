@@ -80,3 +80,21 @@
 .radar-period-row b{font-size:12px}
 .radar-period-row small{font-size:10px;color:#697f70}
 .radar-period-row span{line-height:1.5}
+
+/* Short all-markets comparison: comfortable in narrow Android screens. */
+.radar-benchmark-summary{border:1px solid #b9d2c1;border-radius:12px;padding:16px;background:#fff;min-width:0}
+.radar-benchmark-summary h4{font-size:16px;margin:0 0 10px;color:#224c34}
+.radar-benchmark-list{display:grid;gap:10px}
+.radar-benchmark-row{border:1px solid #e0ebe2;border-radius:10px;padding:13px;min-width:0}
+.radar-benchmark-row h5{font-size:14px;margin:0 0 12px;color:#244e37;line-height:1.5}
+.radar-benchmark-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.radar-benchmark-metrics>div{min-width:0}
+.radar-benchmark-metrics span{display:block;color:#627a69;font-size:10px;line-height:1.5}
+.radar-benchmark-metrics strong{display:block;font-size:16px;color:#224c34;font-variant-numeric:tabular-nums}
+.radar-benchmark-holdout{border-top:1px solid #e2ebe3;padding-top:10px;font-size:11px;line-height:1.6}
+.radar-benchmark-holdout p{margin:5px 0}
+@media(max-width:580px){
+.radar-benchmark-summary{padding:10px}
+.radar-benchmark-row{padding:12px}
+.radar-benchmark-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
