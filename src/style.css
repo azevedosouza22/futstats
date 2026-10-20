@@ -73,3 +73,10 @@
  .radar-market-card{padding:14px}
  .radar-inner .primary{white-space:normal;text-align:center}
 }
+
+/* Period breakdown displayed inside retrospective backtest details. */
+.radar-backtest-card details h5{font-size:12px;margin:15px 0 8px;color:#244c33}
+.radar-period-row{display:grid;gap:4px;padding:10px 0;border-top:1px solid #e9f0ea;font-size:11px}
+.radar-period-row b{font-size:12px}
+.radar-period-row small{font-size:10px;color:#697f70}
+.radar-period-row span{line-height:1.5}
