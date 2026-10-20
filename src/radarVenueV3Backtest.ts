@@ -1,6 +1,6 @@
-import type {Data,Match} from './model';
+import type {Data} from './model';
 import {matchTotal} from './radar';
-import {predictVenueV2,venueV2Markets} from './radarVenueV2';
+import {venueV2Markets} from './radarVenueV2';
 import {predictVenueV3} from './radarVenueV3';
 import type {VenueV2Score} from './radarVenueV2Backtest';
 
@@ -9,6 +9,7 @@ export type VenueV3MarketReport={
  trainingObserved:number;trainingOver:number;
  eligibleValidation:number;
  v2:VenueV2Score;v3:VenueV2Score;constant:VenueV2Score;
+ v2All:VenueV2Score;v2Rejected:VenueV2Score;
  insufficient:number;v2Neutral:number;disagreement:number;
 };
 export type VenueV3Report={fixtures:number;trainingEnd:string|null;validationStart:string|null;
@@ -28,7 +29,7 @@ export function evaluateVenueV3(data:Data,competition:string):VenueV3Report {
  const trainingEnd=dates[boundary-1]??null;
  const markets:VenueV3MarketReport[]=venueV2Markets.map(m=>({id:m.id,label:m.label,line:m.line,
   baseline:null,trainingObserved:0,trainingOver:0,eligibleValidation:0,
-  v2:empty(),v3:empty(),constant:empty(),
+  v2:empty(),v3:empty(),constant:empty(),v2All:empty(),v2Rejected:empty(),
   insufficient:0,v2Neutral:0,disagreement:0}));
  let excludedAmbiguousDates=0;
  // Baseline direction uses development data only, not validation outcomes.
@@ -46,8 +47,10 @@ export function evaluateVenueV3(data:Data,competition:string):VenueV3Report {
  for(const m of markets)if(m.trainingObserved){
   m.baseline=m.trainingOver*2>=m.trainingObserved?'Over':'Under';
  }
- // Both V2 and constant comparator are scored on EXACTLY the V3-signal subset.
- // This compares precision, and the separate coverage count reports selectivity.
+ // V2 overall vs. V3 retained vs. V2 rejected measures whether the
+ // *filter* improves selection, not merely whether V3 agrees with V2
+ // on fixtures V3 kept (which is true by construction).
+ // The constant comparator is scored only on V3-retained fixtures.
  for(const match of fixtures){
   if(match.research?.dateDiscrepancy||validationStart===null||match.date<validationStart)continue;
   for(let i=0;i<markets.length;i++){
@@ -56,16 +59,17 @@ export function evaluateVenueV3(data:Data,competition:string):VenueV3Report {
    if(actual===null) {report.insufficient++;continue;}
    report.eligibleValidation++;
    const v3=predictVenueV3(data,match,market);
+   const over=actual>market.line;
+   if(v3.v2Decision!=='Sem sinal')record(report.v2All,v3.v2Decision,over);
    if(v3.decision==='Sem sinal'){
+    if(v3.v2Decision!=='Sem sinal')record(report.v2Rejected,v3.v2Decision,over);
     if(v3.reason==='insufficient_venue_history')report.insufficient++;
     else if(v3.reason==='v2_neutral')report.v2Neutral++;
     else report.disagreement++;
     continue;
    }
-   const over=actual>market.line;
    record(report.v3,v3.decision,over);
-   const v2=predictVenueV2(data,match,market);
-   if(v2.decision!=='Sem sinal')record(report.v2,v2.decision,over);
+   if(v3.v2Decision!=='Sem sinal')record(report.v2,v3.v2Decision,over);
    if(report.baseline!==null)record(report.constant,report.baseline,over);
   }
  }
