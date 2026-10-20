@@ -25,6 +25,22 @@ export default function RadarVenueV3({data,competition}:{data:Data;competition:s
      <p className="muted">V2 nos jogos descartados pelo V3: {rate(m.v2Rejected.correct,m.v2Rejected.signals)} ({m.v2Rejected.correct}/{m.v2Rejected.signals}). Se os rejeitados acertam tanto quanto os mantidos, o filtro não demonstrou melhora.</p>
      <p className="muted">O V3 manteve {m.v3.over} sinais Over e {m.v3.under} Under.</p>
      <p className="muted">Cobertura: {m.v3.signals}/{m.eligibleValidation} jogos com resultado conhecido. Sem histórico: {m.insufficient}; V2 neutro: {m.v2Neutral}; tendências divergentes: {m.disagreement}.</p>
+     <details className="radar-v3-diagnostics">
+      <summary>Por que o V3 descartou sinais?</summary>
+      <p className="muted">Cada condição é contada separadamente. Um jogo pode falhar em mais de uma condição: não some as linhas como se fossem partidas distintas. Acertos e erros abaixo são do V2 nos jogos descartados.</p>
+      <div className="radar-v3-diagnostic-list">
+       {([
+        ['homeMean','Média do mandante em casa'],
+        ['awayMean','Média do visitante fora'],
+        ['homeFrequency','Frequência do mandante em casa'],
+        ['awayFrequency','Frequência do visitante fora'],
+       ] as const).map(([key,label])=><div className="radar-v3-diagnostic-row" key={key}>
+        <b>{label}</b>
+        <span>{m.failedChecks[key].rejections} rejeições</span>
+        <span>V2 acertaria {m.failedChecks[key].v2Correct} e erraria {m.failedChecks[key].v2Incorrect}</span>
+       </div>)}
+      </div>
+     </details>
      <p className="radar-v2-verdict">{!comparable?'Amostra insuficiente para concluir (mínimo de 20 sinais).':edge?'Acima da referência nesta amostra posterior, ainda sem validação prospectiva.':'Não superou a referência nesta amostra posterior.'}</p>
      <p className="muted">{m.v2Rejected.signals>0 && m.v3.signals>0
        ? m.v3.correct/m.v3.signals>m.v2Rejected.correct/m.v2Rejected.signals
@@ -34,6 +50,7 @@ export default function RadarVenueV3({data,competition}:{data:Data;competition:s
     </article>;
    })}
   </div>
+  <p className="muted">Diagnóstico de filtros somente: não recalcula as regras nem seleciona novos limites pelo desempenho conhecido. A avaliação permanece exploratória.</p>
   <p className="muted">Não é uma previsão de lucro ou recomendação de aposta. Mesmo um filtro seletivo pode parecer forte por acaso em amostras pequenas. Os limites são fixos, sem ajustes usando os resultados do período posterior.</p>
  </section>;
 }
