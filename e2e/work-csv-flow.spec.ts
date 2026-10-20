@@ -242,3 +242,20 @@ test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page}
   await page.getByRole('button',{name:'7 dias'}).click();
   await expect(page.locator('.calendar-fixture')).toHaveCount(1);
 });
+
+test('backtest automático apresenta sinais e mercados em cartões legíveis no celular',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles(upload);
+  page.on('dialog',dialog=>dialog.accept());
+  await page.getByRole('button',{name:'Confirmar 11 partidas novas'}).click();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Validação automática da temporada'})).toBeVisible();
+  await expect(page.locator('.radar-backtest-card')).toHaveCount(6);
+  await expect(page.locator('.radar-market-table')).toBeHidden();
+  await expect(page.locator('.radar-market-card')).toHaveCount(6);
+  await expect(page.locator('.radar-market-card').first()).not.toContainText('Resultado ocorrido');
+  await page.getByRole('button',{name:'Revelar resultados para comparar'}).click();
+  await expect(page.locator('.radar-market-card').first()).toContainText('Resultado ocorrido');
+});
