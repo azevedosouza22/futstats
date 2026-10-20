@@ -40,6 +40,22 @@ export default function RadarVenueV3({data,competition}:{data:Data;competition:s
         <span>V2 acertaria {m.failedChecks[key].v2Correct} e erraria {m.failedChecks[key].v2Incorrect}</span>
        </div>)}
       </div>
+      <h5>Quando apenas uma condição falhou</h5>
+      <p className="muted">Aqui as rejeições são exclusivas: cada jogo aparece em uma única linha. Assim vemos qual exigência, sozinha, impediu um acerto ou erro do V2.</p>
+      <div className="radar-v3-diagnostic-list">
+       {([
+        ['homeMean','Média do mandante em casa'],
+        ['awayMean','Média do visitante fora'],
+        ['homeFrequency','Frequência do mandante em casa'],
+        ['awayFrequency','Frequência do visitante fora'],
+       ] as const).map(([key,label])=><div className="radar-v3-diagnostic-row" key={key}>
+        <b>{label}</b>
+        <span>{m.isolatedChecks[key].rejections} rejeições isoladas</span>
+        <span>V2 acertaria {m.isolatedChecks[key].v2Correct} e erraria {m.isolatedChecks[key].v2Incorrect}</span>
+       </div>)}
+      </div>
+      <p className="muted">Várias condições falharam no mesmo jogo: {m.multipleChecks.rejections} rejeições (V2 acertaria {m.multipleChecks.v2Correct} e erraria {m.multipleChecks.v2Incorrect}). Sem condição detalhada: {m.unspecifiedChecks.rejections}.</p>
+      <p className="muted">Rejeições isoladas + múltiplas + sem condição detalhada = {m.v2Rejected.signals} sinais V2 descartados. Isto é diagnóstico, não autorização para alterar filtros usando os resultados do teste.</p>
      </details>
      <p className="radar-v2-verdict">{!comparable?'Amostra insuficiente para concluir (mínimo de 20 sinais).':edge?'Acima da referência nesta amostra posterior, ainda sem validação prospectiva.':'Não superou a referência nesta amostra posterior.'}</p>
      <p className="muted">{m.v2Rejected.signals>0 && m.v3.signals>0

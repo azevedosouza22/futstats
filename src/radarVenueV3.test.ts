@@ -79,4 +79,34 @@ describe('Radar V3 filtro por concordância',()=>{
   }
   expect(shots.v3.correct+shots.v3.incorrect).toBe(shots.v3.signals);
  });
+ it('separa rejeição isolada correta de sobreposições no diagnóstico',()=>{
+  const makeReport=(homeTotal:number,awayTotal:number,targetTotal:number)=>{
+   const previous=[
+    ...Array.from({length:4},(_,i)=>game('h'+i,'2026-09-0'+(i+1),'a','x'+i,homeTotal-6,6)),
+    ...Array.from({length:4},(_,i)=>game('v'+i,'2026-09-0'+(i+1),'y'+i,'b',6,awayTotal-6)),
+   ].map(m=>({...m,research:undefined}));
+   const target=game('target','2026-09-12','a','b',targetTotal-6,6);
+   const matches=[...previous,
+    game('train1','2026-09-10','t','u',12,12),
+    game('train2','2026-09-11','t','u',12,12),target];
+   return evaluateVenueV3(data(matches),'Liga').markets.find(m=>m.id===market.id)!;
+  };
+  const one=makeReport(40,25,35);
+  expect(one.v2Rejected.signals).toBe(1);
+  expect(one.v2Rejected.correct).toBe(1);
+  expect(one.isolatedChecks.awayMean.v2Correct).toBe(1);
+  expect(one.isolatedChecks.awayFrequency.rejections).toBe(0);
+  expect(one.multipleChecks.rejections).toBe(0);
+  expect(one.unspecifiedChecks.rejections).toBe(0);
+
+  const many=makeReport(50,15,20);
+  expect(many.v2Rejected.signals).toBe(1);
+  expect(many.v2Rejected.incorrect).toBe(1);
+  expect(many.failedChecks.awayMean.rejections).toBe(1);
+  expect(many.failedChecks.awayFrequency.rejections).toBe(1);
+  expect(many.multipleChecks.v2Incorrect).toBe(1);
+  expect(Object.values(many.isolatedChecks).reduce((n,b)=>n+b.rejections,0)).toBe(0);
+  expect(many.multipleChecks.rejections+many.unspecifiedChecks.rejections+
+   Object.values(many.isolatedChecks).reduce((n,b)=>n+b.rejections,0)).toBe(many.v2Rejected.signals);
+ });
 });

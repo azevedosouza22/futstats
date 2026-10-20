@@ -267,6 +267,8 @@ test('backtest automático apresenta sinais e mercados em cartões legíveis no 
   await v3Card.getByText('Por que o V3 descartou sinais?').click();
   await expect(v3Card).toContainText('Média do mandante em casa');
   await expect(v3Card).toContainText('Frequência do visitante fora');
+  await expect(v3Card).toContainText('Quando apenas uma condição falhou');
+  await expect(v3Card).toContainText('rejeições isoladas');
   await expect(page.locator('.radar-v2-card').first()).toContainText('Teste posterior');
   await expect(page.locator('.radar-v2-card').first()).toContainText('Regra simples');
   const benchmark=page.locator('.radar-benchmark-row').filter({hasText:'Gols · 2º tempo'});
