@@ -20,17 +20,19 @@ export default function WorkCsvImport({data,save}:{data:Data;save:(next:Data)=>b
   }
   const preview=workCsvPreview(data,rows);
   const newCount=preview.filter(r=>!r.duplicate).length;
-  const duplicateCount=preview.length-newCount;
+  const updatedCount=preview.filter(r=>r.enrichable).length;
+  const duplicateCount=preview.length-newCount-updatedCount;
+  const additionalFields=preview.reduce((total,r)=>total+r.newFields,0);
   function confirmImport() {
     setError('');setNotice('');
     if(!rows.length)return;
     try{
       const result=mergeWorkCsv(data,rows);
-      if(result.added===0){setNotice('Nenhuma partida nova: todas já estão cadastradas.');return;}
-      if(!window.confirm(`Adicionar ${result.added} partidas novas à base local? Nada será excluído ou substituído. Faça backup antes de continuar.`))return;
+      if(result.added===0&&result.updated===0){setNotice('Nenhuma partida nova ou complemento: os registros já estão cadastrados.');return;}
+      if(!window.confirm(`Adicionar ${result.added} partidas novas e completar ${result.filledFields} valores ausentes em ${result.updated} partidas existentes? Nada será excluído ou substituído. Faça backup antes de continuar.`))return;
       if(save(result.data)){
         setRows([]);setFilename('');
-        setNotice(`${result.added} partidas importadas. ${result.skipped} duplicatas ignoradas. Dados preservados no navegador.`);
+        setNotice(`${result.added} partidas importadas. ${result.updated} partidas complementadas (${result.filledFields} valores). ${result.skipped} duplicatas ignoradas. Dados preservados no navegador.`);
       }
     }catch(e){setError(e instanceof Error?e.message:'Falha na validação.');}
   }
@@ -44,18 +46,18 @@ export default function WorkCsvImport({data,save}:{data:Data;save:(next:Data)=>b
       {notice&&<p className="notice" role="status">{notice}</p>}
       {!!rows.length&&<div className="research-preview">
         <h3>Prévia: {filename}</h3>
-        <p>{rows.length} partidas · {newCount} novas · {duplicateCount} duplicadas · {rows.filter(r=>r.dateDiscrepancy).length} com divergência entre datas.</p>
+        <p>{rows.length} partidas · {newCount} novas · {updatedCount} a complementar ({additionalFields} valores) · {duplicateCount} duplicadas · {rows.filter(r=>r.dateDiscrepancy).length} com divergência entre datas.</p>
         <div className="research-table-wrap"><table className="analysis-table">
           <thead><tr><th>Data</th><th>Partida</th><th>Competição</th><th>Origem</th><th>Situação</th></tr></thead>
           <tbody>{preview.map(r=><tr key={r.sourceId}>
             <td>{r.date}{r.dateDiscrepancy&&<small>Data do título: {r.titleDate}</small>}</td>
             <td>{r.home} × {r.away}</td><td>{r.competition||'N/D'}</td>
             <td><a href={r.sourceUrl} target="_blank" rel="noopener noreferrer">Flashscore · conferir</a></td>
-            <td>{r.duplicate?'Duplicada — ignorar':r.dateDiscrepancy?'Revisar data':'Nova'}</td>
+            <td>{r.enrichable?`Complementar ${r.newFields} valores ausentes`:r.duplicate?'Duplicada — ignorar':r.dateDiscrepancy?'Revisar data':'Nova'}</td>
           </tr>)}</tbody>
         </table></div>
         <p className="muted">Importamos partidas concluídas e estatísticas verificadas no CSV. O aviso de data mantém os valores originais; confirme a data antes de usar análises pré-jogo.</p>
-        <button className="primary" disabled={newCount===0} onClick={confirmImport}>Confirmar {newCount} partidas novas</button>
+        <button className="primary" disabled={newCount===0&&updatedCount===0} onClick={confirmImport}>Confirmar {newCount} partidas novas{updatedCount>0?` e ${updatedCount} complementos`:''}</button>
         <button className="text-button" onClick={()=>{setRows([]);setFilename('');}}>Cancelar prévia</button>
       </div>}
     </div>
