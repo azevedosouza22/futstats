@@ -20,19 +20,27 @@ describe('Backtest cronológico do Radar',()=>{
     expect(backtestDecision(.7,6)).toBe('Over');
     expect(backtestDecision(.3,6)).toBe('Under');
   });
-  it('conta acertos, erros e falta de histórico somente após reunir partidas anteriores',()=>{
-    const games=Array.from({length:9},(_,i)=>game(String(i+1),'2026-08-'+String(i+1).padStart(2,'0'),i===8?0:2));
+  it('não cria seis partidas únicas artificialmente a partir de confrontos repetidos',()=>{
+    const games=Array.from({length:9},(_,i)=>game(String(i+1),'2026-08-'+String(i+1).padStart(2,'0'),2));
     const report=evaluateRadarBacktest(dataset(games),'Liga');
-    const first=report.markets.find(m=>m.id==='goals-first-0.5')!;
-    // First six games have under 6 previous unique fixtures; the last three qualify.
+    const market=report.markets.find(m=>m.id==='goals-first-0.5')!;
     expect(report.fixtures).toBe(9);
-    expect(first.eligible).toBe(3);
-    expect(first.insufficient).toBe(6);
-    expect(first.signals).toBe(3);
-    expect(first.correct).toBe(2);
-    expect(first.incorrect).toBe(1);
-    expect(first.sample['6–7'].signals).toBe(2);
-    expect(first.sample['8–10'].signals).toBe(1);
+    expect(market.signals).toBe(0);
+    expect(market.insufficient).toBe(9);
+  });
+  it('avalia um confronto somente após seis partidas independentes anteriores',()=>{
+    const history:Match[]=[
+      ...Array.from({length:4},(_,i)=>({...game('a'+i,'2026-08-'+String(i+1).padStart(2,'0'),2),away:'c'+i})),
+      ...Array.from({length:4},(_,i)=>({...game('b'+i,'2026-08-'+String(i+1).padStart(2,'0'),2),home:'d'+i})),
+    ];
+    const last=game('final','2026-08-12',0);
+    const report=evaluateRadarBacktest(dataset([...history,last]),'Liga');
+    const result=report.markets.find(m=>m.id==='goals-first-0.5')!;
+    expect(result.eligible).toBe(1);
+    expect(result.signals).toBe(1);
+    expect(result.correct).toBe(0);
+    expect(result.incorrect).toBe(1);
+    expect(result.sample['8–10'].signals).toBe(1);
   });
   it('exclui resultados com data ambígua e não preenche N/D como zero',()=>{
     const games=Array.from({length:8},(_,i)=>game(String(i+1),'2026-08-'+String(i+1).padStart(2,'0'),2));
@@ -50,6 +58,6 @@ describe('Backtest cronológico do Radar',()=>{
     games[0].competition='Copa';
     const report=evaluateRadarBacktest(dataset(games),'Liga');
     expect(report.fixtures).toBe(7);
-    expect(report.markets.find(m=>m.id==='goals-first-0.5')!.eligible).toBe(1);
+    expect(report.markets.find(m=>m.id==='goals-first-0.5')!.eligible).toBe(0);
   });
 });
