@@ -44,6 +44,12 @@ describe('Backtest cronológico do Radar',()=>{
     expect(result.overSignals.signals).toBe(1);
     expect(result.alwaysOverSameMatches.signals).toBe(1);
     expect(result.alwaysOverSameMatches.correct).toBe(0);
+    expect(result.alwaysUnderSameMatches.correct).toBe(1);
+    expect(result.alwaysUnderSameMatches.signals).toBe(result.signals);
+    expect(result.holdout.baseline).toBe('Over');
+    expect(result.holdout.radar.signals).toBe(1);
+    expect(result.holdout.constant.signals).toBe(1);
+    expect(result.holdout.constant.correct).toBe(0);
     expect(result.realFrequency.observed).toBe(9);
     expect(result.realFrequency.over).toBe(8);
     expect(result.periods.map(p=>p.radar.signals).reduce((a,b)=>a+b,0)).toBe(1);
@@ -80,6 +86,10 @@ describe('Backtest cronológico do Radar',()=>{
     expect(m.underSignals.correct).toBe(1);
     expect(m.overSignals.signals).toBe(0);
     expect(m.alwaysOverSameMatches.correct).toBe(0);
+    expect(m.alwaysUnderSameMatches.correct).toBe(1);
+    expect(m.holdout.baseline).toBe('Under');
+    expect(m.holdout.radar.signals).toBe(1);
+    expect(m.holdout.constant.correct).toBe(1);
     expect(m.realFrequency.over).toBe(0);
     expect(m.periods.reduce((sum,p)=>sum+p.underSignals.signals,0)).toBe(1);
   });
