@@ -172,8 +172,13 @@ test('radar retrospectivo usa somente históricos anteriores e esconde resultado
   await expect(page.locator('.radar-context')).toContainText('10 partidas únicas');
   await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toHaveCount(0);
   await page.getByRole('button',{name:'Revelar resultados para comparar'}).click();
-  await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toBeVisible();
-  await expect(page.locator('.radar-market-table')).toContainText('6 · Over');
+  if ((page.viewportSize()?.width ?? 1000) <= 700) {
+    await expect(page.locator('.radar-market-card').first()).toContainText('Resultado ocorrido');
+    await expect(page.locator('.radar-market-cards')).toContainText('6 · Over');
+  } else {
+    await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toBeVisible();
+    await expect(page.locator('.radar-market-table')).toContainText('6 · Over');
+  }
   await page.getByRole('button',{name:'Ocultar resultados ocorridos'}).click();
   await expect(page.getByRole('columnheader',{name:'Resultado ocorrido'})).toHaveCount(0);
 });
