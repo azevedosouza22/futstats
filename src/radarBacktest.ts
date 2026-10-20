@@ -28,6 +28,13 @@ export type BacktestMarket = {
   overSignals: BacktestGroup;
   underSignals: BacktestGroup;
   alwaysOverSameMatches: BacktestGroup;
+  alwaysUnderSameMatches: BacktestGroup;
+  trainingPrevalence: BacktestPrevalence;
+  holdout: {
+    baseline: 'Over' | 'Under' | null;
+    radar: BacktestGroup;
+    constant: BacktestGroup;
+  };
   realFrequency: BacktestPrevalence;
   periods: BacktestPeriod[];
 };
@@ -75,6 +82,9 @@ export function evaluateRadarBacktest(data: Data, competition: string): Backtest
     venue: {'Mando suficiente': emptyGroup(), 'Mando limitado': emptyGroup()},
     overSignals: emptyGroup(), underSignals: emptyGroup(),
     alwaysOverSameMatches: emptyGroup(),
+    alwaysUnderSameMatches: emptyGroup(),
+    trainingPrevalence: {observed:0,over:0},
+    holdout: {baseline:null,radar:emptyGroup(),constant:emptyGroup()},
     realFrequency: {observed: 0, over: 0},
     periods: periods.map(p => ({...p,
       radar: emptyGroup(), alwaysOver: emptyGroup(),
@@ -97,11 +107,21 @@ export function evaluateRadarBacktest(data: Data, competition: string): Backtest
       excludedAmbiguousDates++;
       continue;
     }
+    const third = dateThird.get(fixture.date) ?? 0;
+    if (third < 2) {
+      // This determines the holdout's constant baseline using only earlier games.
+      for (let i=0;i<markets.length;i++){
+        const def = radarMarkets[i];
+        const actual = matchTotal(fixture,def.metric,def.period);
+        if (actual !== null) {
+          markets[i].trainingPrevalence.observed++;
+          if (actual > def.line) markets[i].trainingPrevalence.over++;
+        }
+      }
+    }
     const snapshot = radarRetrospective(data, fixture);
     const haveBothTeams = snapshot.homeHistory.length >= BACKTEST_MIN_TEAM_GAMES &&
       snapshot.awayHistory.length >= BACKTEST_MIN_TEAM_GAMES;
-    const third = dateThird.get(fixture.date) ?? 0;
-
     for (let i = 0; i < markets.length; i++) {
       const result = snapshot.markets[i];
       const aggregate = markets[i];
@@ -126,10 +146,30 @@ export function evaluateRadarBacktest(data: Data, competition: string): Backtest
       score(venue, correct);
       score(call === 'Over' ? aggregate.overSignals : aggregate.underSignals, correct);
       score(aggregate.alwaysOverSameMatches, baselineCorrect);
+      score(aggregate.alwaysUnderSameMatches, !baselineCorrect);
+      if (third === 2) score(aggregate.holdout.radar, correct);
       const period = aggregate.periods[third];
       score(period.radar, correct);
       score(period.alwaysOver, baselineCorrect);
       score(call === 'Over' ? period.overSignals : period.underSignals, correct);
+    }
+  }
+  // The constant direction for the final-third holdout is decided by the
+  // first two thirds only. Score it on the exact fixtures where Radar signaled.
+  for (const market of markets) {
+    if (market.trainingPrevalence.observed > 0) {
+      market.holdout.baseline = market.trainingPrevalence.over * 2 >=
+        market.trainingPrevalence.observed ? 'Over' : 'Under';
+    }
+    const lastThird = market.periods[2];
+    if (market.holdout.baseline === 'Over') {
+      market.holdout.constant = {...lastThird.alwaysOver};
+    } else if (market.holdout.baseline === 'Under') {
+      market.holdout.constant = {
+        signals:lastThird.alwaysOver.signals,
+        correct:lastThird.alwaysOver.incorrect,
+        incorrect:lastThird.alwaysOver.correct,
+      };
     }
   }
   return {fixtures: fixtures.length, excludedAmbiguousDates, markets};
