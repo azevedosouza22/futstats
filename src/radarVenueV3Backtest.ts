@@ -1,9 +1,10 @@
 import type {Data} from './model';
 import {matchTotal} from './radar';
 import {venueV2Markets} from './radarVenueV2';
-import {predictVenueV3} from './radarVenueV3';
+import {predictVenueV3, VENUE_V3_CHECKS, type VenueV3Check} from './radarVenueV3';
 import type {VenueV2Score} from './radarVenueV2Backtest';
 
+export type VenueV3FailedCheck = {rejections:number;v2Correct:number;v2Incorrect:number};
 export type VenueV3MarketReport={
  id:string;label:string;line:number;baseline:'Over'|'Under'|null;
  trainingObserved:number;trainingOver:number;
@@ -11,6 +12,7 @@ export type VenueV3MarketReport={
  v2:VenueV2Score;v3:VenueV2Score;constant:VenueV2Score;
  v2All:VenueV2Score;v2Rejected:VenueV2Score;
  insufficient:number;v2Neutral:number;disagreement:number;
+ failedChecks:Record<VenueV3Check,VenueV3FailedCheck>;
 };
 export type VenueV3Report={fixtures:number;trainingEnd:string|null;validationStart:string|null;
  excludedAmbiguousDates:number;markets:VenueV3MarketReport[]};
@@ -30,7 +32,8 @@ export function evaluateVenueV3(data:Data,competition:string):VenueV3Report {
  const markets:VenueV3MarketReport[]=venueV2Markets.map(m=>({id:m.id,label:m.label,line:m.line,
   baseline:null,trainingObserved:0,trainingOver:0,eligibleValidation:0,
   v2:empty(),v3:empty(),constant:empty(),v2All:empty(),v2Rejected:empty(),
-  insufficient:0,v2Neutral:0,disagreement:0}));
+  insufficient:0,v2Neutral:0,disagreement:0,
+  failedChecks:Object.fromEntries(VENUE_V3_CHECKS.map(k=>[k,{rejections:0,v2Correct:0,v2Incorrect:0}])) as Record<VenueV3Check,VenueV3FailedCheck>}));
  let excludedAmbiguousDates=0;
  // Baseline direction uses development data only, not validation outcomes.
  for(const match of fixtures){
@@ -62,7 +65,15 @@ export function evaluateVenueV3(data:Data,competition:string):VenueV3Report {
    const over=actual>market.line;
    if(v3.v2Decision!=='Sem sinal')record(report.v2All,v3.v2Decision,over);
    if(v3.decision==='Sem sinal'){
-    if(v3.v2Decision!=='Sem sinal')record(report.v2Rejected,v3.v2Decision,over);
+    if(v3.v2Decision!=='Sem sinal') {
+     record(report.v2Rejected,v3.v2Decision,over);
+     const v2WasCorrect=(v3.v2Decision==='Over')===over;
+     for(const check of v3.failedChecks){
+      const bucket=report.failedChecks[check];
+      bucket.rejections++;
+      if(v2WasCorrect)bucket.v2Correct++;else bucket.v2Incorrect++;
+     }
+    }
     if(v3.reason==='insufficient_venue_history')report.insufficient++;
     else if(v3.reason==='v2_neutral')report.v2Neutral++;
     else report.disagreement++;
