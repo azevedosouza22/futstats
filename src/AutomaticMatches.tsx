@@ -49,13 +49,14 @@ export default function AutomaticMatches({data,save}:{data:Data;save:(next:Data)
  }
  function confirmImport(){
    if(!candidate)return;
-   if(!window.confirm(
-     'Adicionar '+candidate.forecast.home+' × '+candidate.forecast.away+
-     ' ('+candidate.match.date+') à base do FutStats?\\n\n'+
-     'Fonte: API-Football, partida '+candidate.sourceId+'.\\n'+
-     'Competição da previsão: '+candidate.match.competition+'.\\n'+
-     'Competição da fonte: '+candidate.sourceLeague+'.\\n\n'+
-     'Não substituímos jogos nem previsões. Confira nomes, data, competição e placar.'))return;
+   const message=[
+     'Adicionar '+candidate.forecast.home+' × '+candidate.forecast.away+' ('+candidate.match.date+') à base do FutStats?',
+     'Fonte: API-Football, partida '+candidate.sourceId+'.',
+     'Competição da previsão: '+candidate.match.competition+'.',
+     'Competição da fonte: '+candidate.sourceLeague+'.',
+     'Não substituímos jogos nem previsões. Confira nomes, data, competição e placar.',
+   ].join(' | ');
+   if(!window.confirm(message))return;
    if(save(candidate.data)){
      setCandidate(null);
      setImportNotice('Partida incluída com segurança. As previsões V2/V3 permanecem congeladas. Confira a avaliação no Radar experimental.');
@@ -70,7 +71,7 @@ export default function AutomaticMatches({data,save}:{data:Data;save:(next:Data)
   </>;
  }
  return <section className="panel auto-panel"><div className="panel-head"><div><span className="auto-brand">FUTSTATS INTELLIGENCE</span><h2>Partidas automáticas</h2><p>Fonte: API-Football · Consulta experimental</p></div><span className="tag">POC PRIVADA</span></div><div className="analysis-content"><p className="auto-build"><span>Versão do cliente: <code title={clientBuild}>{shortBuild(clientBuild)}</code></span><span>Versão do servidor: <code title={serverBuild}>{shortBuild(serverBuild)}</code></span></p>{clientBuild!=='local'&&clientBuild!=='unknown'&&serverBuild!=='local'&&serverBuild!=='unknown'&&clientBuild!==serverBuild&&<p className="alert" role="status">Cliente e servidor estão em versões diferentes. Feche as abas e reabra a prévia atual, sem apagar os dados do aplicativo.</p>}
- {!selected&&<><p className="muted">Consultas pontuais com cache. Sem atualização contínua nem importação para sua base local. Horários exibidos no fuso do seu dispositivo.</p>{!config?<form onSubmit={e=>{e.preventDefault();void execute(configure);}}><label>Código de acesso privado<input type="password" autoComplete="off" value={token} onChange={e=>setToken(e.target.value)} required/><small>Use o código separado da PoC. Nunca informe sua chave API-Sports aqui.</small></label><button className="primary" disabled={busy}>Acessar consultas</button></form>:<div className="auto-controls"><label>Data da consulta<select aria-label="Data automática" disabled={busy} value={date} onChange={e=>{last.current=null;setDate(e.target.value);setFixtures([]);setQueried(false);reset();}}>{config.dates.map(d=><option key={d}>{d}</option>)}</select></label><button className="primary" disabled={busy||!date} onClick={()=>void execute(list)}>Consultar partidas</button><button className="text-button" disabled={busy} onClick={()=>{last.current=null;setConfig(null);setToken('');setFixtures([]);setQueried(false);reset();}}>Encerrar acesso</button></div>}</>}
+ {!selected&&<><p className="muted">Consultas pontuais com cache e importação revisada de partidas FT que correspondam a previsões salvas. Nada é adicionado sem confirmação. Horários exibidos no fuso do seu dispositivo.</p>{!config?<form onSubmit={e=>{e.preventDefault();void execute(configure);}}><label>Código de acesso privado<input type="password" autoComplete="off" value={token} onChange={e=>setToken(e.target.value)} required/><small>Use o código separado da PoC. Nunca informe sua chave API-Sports aqui.</small></label><button className="primary" disabled={busy}>Acessar consultas</button></form>:<div className="auto-controls"><label>Data da consulta<select aria-label="Data automática" disabled={busy} value={date} onChange={e=>{last.current=null;setDate(e.target.value);setFixtures([]);setQueried(false);reset();}}>{config.dates.map(d=><option key={d}>{d}</option>)}</select></label><button className="primary" disabled={busy||!date} onClick={()=>void execute(list)}>Consultar partidas</button><button className="text-button" disabled={busy} onClick={()=>{last.current=null;setConfig(null);setToken('');setFixtures([]);setQueried(false);reset();}}>Encerrar acesso</button></div>}</>}
  {selected&&<div className="auto-match"><button className="auto-back" onClick={back}>← Voltar às partidas</button><h3 ref={heading} tabIndex={-1}>{selected.home.name??'Mandante'} × {selected.away.name??'Visitante'}</h3><div className="auto-score" aria-label="Placar geral informado pela fonte">{fmt(selected.goals[0])} <span>×</span> {fmt(selected.goals[1])}</div><p>{selected.league??'Competição N/D'} · {selected.statusLabel??selected.status??'Status N/D'} · minuto {fmt(selected.minute)}</p><p className="auto-source">Placar geral · Fonte: API-Football · ID {selected.id}</p></div>}
  {busy&&<p className="auto-loading" role="status"><span aria-hidden="true"/>Consultando API-Football…</p>}{error&&<div className="auto-error" role="alert"><p>⚠ {error.message}</p>{error instanceof FootballRequestError&&<dl className="auto-diagnostics" aria-label="Diagnóstico seguro"><dt>Código</dt><dd>{error.code}</dd><dt>HTTP do servidor</dt><dd>{error.serverStatus}</dd><dt>HTTP da API-Football</dt><dd>{error.upstreamStatus??'Não informado'}</dd><dt>Servidor</dt><dd>{shortBuild(error.serverBuild)}</dd>{error.errorShape&&<><dt>Formato de errors</dt><dd>{error.errorShape}</dd></>}{error.errorCategory&&<><dt>Categoria</dt><dd>{error.errorCategory}</dd></>}{error.unknownPropertyCount!==null&&<><dt>Propriedades reconhecidas</dt><dd>{error.knownProperties.join(', ')||'Nenhuma'}</dd><dt>Propriedades não reconhecidas</dt><dd>{error.unknownPropertyCount}</dd></>}{error.inspectionLimited&&<><dt>Inspeção limitada</dt><dd>Sim</dd></>}</dl>}</div>}
  {importNotice&&<p className="notice" role="status">{importNotice}</p>}
