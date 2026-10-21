@@ -254,6 +254,55 @@ test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page}
   await expect(page.locator('.calendar-fixture').filter({hasText:'RB Bragantino × Cruzeiro'})).toHaveCount(1);
 });
 
+test('registra rodada em lote sem duplicar previsão já salva ou mudar base histórica',async({page})=>{
+  // Freeze the browser before the October 23 fixture; this is a deterministic
+  // fixture test, not an assertion that the October 2026 games are always future.
+  await page.clock.install({time:new Date('2026-10-20T17:00:00Z')});
+  const original=fixtureCsv().split('\n');
+  const more=Array.from({length:3},(_,i)=>{
+    const cells=original[1].split(',');
+    cells[0]='bulk-remo-'+i;
+    cells[2]='https://www.flashscore.com.br/jogo/futebol/teste/?mid=bulk-remo-'+i;
+    cells[3]='2026-10-0'+(i+1);
+    cells[4]=cells[3];
+    cells[5]='Vitória';
+    cells[6]='Remo';
+    return cells.join(',');
+  });
+  const localCsv=[...original,...more].join('\n');
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles({
+    name:'amostra-bulk.csv',mimeType:'text/csv',buffer:Buffer.from(localCsv,'utf8'),
+  });
+  page.on('dialog',d=>d.accept());
+  await page.getByRole('button',{name:'Confirmar 14 partidas novas'}).click();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await page.locator('.calendar-fixture').filter({hasText:'Cruzeiro × Remo'})
+    .getByRole('button',{name:'Analisar jogo'}).click();
+  await expect(page.getByRole('status').filter({hasText:'Jogo selecionado:'}))
+    .toContainText('Cruzeiro × Remo');
+  await page.getByRole('button',{name:'Registrar análise antes do jogo'}).click();
+  await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
+
+  const round=page.locator('.radar-bulk-round');
+  const register=round.getByRole('button',{name:/Registrar \d+ análises da rodada 32/});
+  const text=await register.textContent();
+  const n=Number(text?.match(/\d+/)?.[0]??0);
+  expect(n).toBeGreaterThan(0);
+  await round.getByText('Conferir previsões antes de registrar').click();
+  await expect(round).toContainText('V2');
+  await register.click();
+  await expect(page.locator('.radar-saved')).toContainText(`Registros pré-jogo salvos (${n+1})`);
+  await expect(page.locator('.radar-saved li').filter({hasText:'Cruzeiro × Remo'})).toHaveCount(1);
+  await expect(page.locator('.toolbar')).toContainText('14 partidas na sua base');
+  await page.reload();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await expect(page.locator('.radar-saved')).toContainText(`Registros pré-jogo salvos (${n+1})`);
+  await expect(page.locator('.radar-bulk-round')).toContainText('0 jogos novos disponíveis');
+  await expect(page.locator('.radar-bulk-round').getByRole('button',{name:'Registrar 0 análises da rodada 32'})).toBeDisabled();
+});
+
 test('backtest automático apresenta sinais e mercados em cartões legíveis no celular',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto('/');
