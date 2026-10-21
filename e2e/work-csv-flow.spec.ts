@@ -207,6 +207,8 @@ test('radar prospectivo registra indicadores antes da partida e persiste após r
   await expect(page.locator('.radar-future-results')).toContainText('5/5 do visitante');
   await expect(page.locator('.radar-future-results')).toContainText('9 partidas únicas');
   await expect(page.locator('.radar-future-results')).not.toContainText('Resultado ocorrido');
+  await expect(page.locator('.radar-venue-prospective')).toContainText('Previsões V2 × V3 antes da partida');
+  await expect(page.locator('.radar-venue-prospective')).toContainText('Finalizações');
   await page.getByRole('button',{name:'Registrar análise antes do jogo'}).click();
   await expect(page.getByRole('status')).toContainText('Análise prospectiva registrada');
   await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
@@ -214,6 +216,8 @@ test('radar prospectivo registra indicadores antes da partida e persiste após r
   await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
   await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
   await expect(page.locator('.radar-saved')).toContainText('RB Bragantino × Cruzeiro');
+  await expect(page.locator('.radar-saved')).toContainText('Teste com previsões registradas antes dos jogos');
+  await expect(page.locator('.radar-saved')).toContainText('Aguardando jogo');
   await expect(page.getByRole('button',{name:'Exportar registros JSON'})).toBeVisible();
 });
 

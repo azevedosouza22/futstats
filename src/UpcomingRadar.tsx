@@ -3,11 +3,13 @@ import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming, type RadarMarketResult} from './radar';
+import {captureVenuePredictions,settleVenuePredictions,scoreSettlements,type SavedVenuePrediction} from './radarProspective';
 
 type Saved = {
   key: string; savedAt: string; matchAt: string; competition: string;
   home: string; away: string; homeCount: number; awayCount: number;
   markets: Pick<RadarMarketResult,'id'|'label'|'line'|'historyRate'|'observed'|'overs'|'historicalMean'>[];
+  venue?: SavedVenuePrediction[]; // Older saved records remain readable.
 };
 const KEY='futstats-radar-previews-v1';
 function readSaved(): Saved[] {
@@ -42,6 +44,10 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const away=teams.find(t=>t.id===ids[1]);
   const eligible=!!home&&!!away&&home.id!==away.id&&!!league&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&/^\d{2}:\d{2}$/.test(time);
   const comparison=eligible?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
+  const prospective=eligible&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
+  const settlements=saved.map(v=>settleVenuePredictions(data,v));
+  const scores=scoreSettlements(settlements);
+  const scoreText=(v:{correct:number;signals:number})=>v.signals?`${v.correct}/${v.signals} (${(100*v.correct/v.signals).toLocaleString('pt-BR',{maximumFractionDigits:1})}%)`:'N/D';
 
   function saveSnapshot(){
     if(!eligible||!comparison||!home||!away)return;
@@ -53,10 +59,14 @@ export default function UpcomingRadar({data}:{data:Data}) {
     if(comparison.homeHistory.length===0||comparison.awayHistory.length===0){
       setMessage('Ainda não há históricos anteriores para as duas equipes. Importe dados antes de registrar a análise.');return;
     }
+    if(saved.some(s=>s.venue?.length&&s.matchAt.slice(0,10)===date&&s.competition===league&&normalizeTeam(s.home)===normalizeTeam(home.name)&&normalizeTeam(s.away)===normalizeTeam(away.name))){
+      setMessage('Este confronto já possui uma previsão V2/V3 registrada. Ela permanecerá sem alterações.');return;
+    }
     const record:Saved={
       key:crypto.randomUUID(),savedAt:new Date().toISOString(),matchAt,
       competition:league,home:home.name,away:away.name,
       homeCount:comparison.homeHistory.length,awayCount:comparison.awayHistory.length,
+      venue:prospective,
       markets:comparison.markets.map(m=>({
         id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
@@ -99,6 +109,11 @@ export default function UpcomingRadar({data}:{data:Data}) {
           <td>{format(m.historicalMean)}</td><td>{m.observed}</td>
         </tr>)}</tbody>
       </table></div>
+      <div className="radar-venue-prospective" aria-label="Previsões futuras V2 e V3">
+        <h4>Previsões V2 × V3 antes da partida</h4>
+        {prospective.map(m=><p key={m.marketId}><b>{m.label}:</b> V2 {m.v2} · V3 {m.v3} <small>(projeção {format(m.projectedTotal)})</small></p>)}
+      </div>
+      <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
       <button type="button" className="primary" onClick={saveSnapshot}>Registrar análise antes do jogo</button>
     </div>}
@@ -106,12 +121,27 @@ export default function UpcomingRadar({data}:{data:Data}) {
     <div className="radar-saved">
       <h4>Registros pré-jogo salvos ({saved.length})</h4>
       {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
+      <div className="radar-prospective-score" aria-label="Placares das previsões registradas">
+        <h5>Teste com previsões registradas antes dos jogos</h5>
+        <p>V2: {scoreText(scores.v2)} · referência sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV2)} · sempre Under: {scoreText(scores.alwaysUnderV2)}</p>
+        <p>V3: {scoreText(scores.v3)} · referência sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV3)} · sempre Under: {scoreText(scores.alwaysUnderV3)}</p>
+        <p className="muted">Só entram sinais registrados antes do início e resultados identificados com segurança. N/D significa sem amostra; indicadores de mercados diferentes não são jogos independentes.</p>
+      </div>
       {saved.length===0?<p className="muted">Nenhum registro salvo neste navegador.</p>:<ul>
-        {saved.slice(0,10).map(v=><li key={v.key}><b>{v.home} × {v.away}</b>
-          <small>{v.matchAt.replace('T',' ')} · {v.competition} · registrado {new Date(v.savedAt).toLocaleString('pt-BR')} · {v.homeCount}+{v.awayCount} jogos históricos</small>
-        </li>)}
+        {saved.slice(0,10).map((v,i)=>{
+          const settled=settlements[i];
+          const status={future:'Aguardando jogo',pending:'Aguardando resultado na base',ambiguous:'Resultado com data ou identidade ambígua',late:'Registro posterior ao início (não pontua)',legacy:'Registro antigo — sem V2/V3',complete:'Resultado disponível'}[settled.status];
+          return <li key={v.key}><b>{v.home} × {v.away}</b>
+            <small>{v.matchAt.replace('T',' ')} · {v.competition} · registrado {new Date(v.savedAt).toLocaleString('pt-BR')} · {v.homeCount}+{v.awayCount} jogos históricos</small>
+            <p>{status}</p>
+            {v.venue?.map(m=>{
+              const result=settled.markets.find(s=>s.marketId===m.marketId);
+              return <p key={m.marketId}><b>{m.label}:</b> V2 {m.v2}{result?' · '+result.v2:''} | V3 {m.v3}{result?' · '+result.v3:''}</p>;
+            })}
+          </li>;
+        })}
       </ul>}
     </div>
-    <p className="muted">Os registros prospectivos ficam separados da base de partidas e do backup principal. Para protegê-los, use “Exportar registros JSON”. A agenda aceita CSV verificado, mas ainda não consulta sites automaticamente.</p>
+    <p className="muted">Os registros V2/V3 ficam congelados no armazenamento deste navegador, separados da base de partidas e do backup principal. Exporte os registros para proteção; o resultado só é comparado após ser importado na base. A agenda ainda não consulta sites automaticamente.</p>
   </section>;
 }
