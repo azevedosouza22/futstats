@@ -232,7 +232,7 @@ test('restaura previsões exportadas sem sobrescrever dados existentes',async({p
   await expect(page.getByRole('status').filter({hasText:'previsões restauradas'})).toBeVisible();
   await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
   const restored=await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'));
-  expect(restored).toBe(original);
+  expect(JSON.parse(restored!)).toEqual(JSON.parse(original!));
   await page.getByLabel('Restaurar registros JSON').setInputFiles(file);
   await expect(page.getByRole('status').filter({hasText:'Nenhuma previsão nova'})).toBeVisible();
   await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
