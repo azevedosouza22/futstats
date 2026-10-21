@@ -350,3 +350,73 @@ html{scroll-behavior:smooth}
  .premium .round-state-pill{align-self:flex-start}
  .premium .radar-record-actions{align-items:stretch;flex-direction:column}
 }
+
+
+/* Radar mobile: prevent implicit grid widths from clipping saved forecasts. */
+.premium .radar-inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+.premium .radar-panel,
+.premium .radar-inner,
+.premium .radar-inner > *,
+.premium .radar-upcoming,
+.premium .radar-saved,
+.premium .radar-saved > ul,
+.premium .radar-saved > ul > li,
+.premium .radar-prospective-score,
+.premium .radar-record-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+.premium .radar-saved,
+.premium .radar-saved > ul > li,
+.premium .radar-prospective-score {
+  overflow-wrap: anywhere;
+}
+.premium .radar-saved li > small,
+.premium .radar-prospective-score h5,
+.premium .radar-prospective-score p {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.premium .radar-saved .saved-market,
+.premium .radar-saved .saved-market > b,
+.premium .radar-saved .saved-market > span {
+  min-width: 0;
+  max-width: 100%;
+}
+.premium .radar-record-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #926168;
+  border-radius: 8px;
+  background: #382b32;
+  color: #ffccd0;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: normal;
+  text-align: center;
+  max-width: 100%;
+}
+@media (max-width: 580px) {
+  .premium .radar-saved .saved-market {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
+  }
+  .premium .radar-saved .saved-market > span {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .premium .radar-record-delete {
+    width: 100%;
+    min-height: 44px;
+  }
+  .premium .radar-record-actions input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+  }
+}

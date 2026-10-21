@@ -124,6 +124,24 @@ export default function UpcomingRadar({data}:{data:Data}) {
     try{localStorage.setItem(KEY,JSON.stringify(next));setSaved(next);setMessage('Análise prospectiva registrada neste navegador. Exporte o arquivo para conservar uma cópia.');}
     catch{setMessage('Não foi possível salvar no navegador. Libere espaço e tente novamente.');}
   }
+  function removeSavedRecord(record:Saved){
+    if(!window.confirm(`Excluir somente este registro pré-jogo de ${record.home} × ${record.away} (${record.matchAt.slice(0,10)})?\n\nOs jogos da base e os demais registros serão preservados. A exclusão só poderá ser desfeita com uma cópia JSON anterior.`))return;
+    const latest=readSaved();
+    if(!latest.some(v=>v.key===record.key)){
+      setSaved(latest);
+      setMessage('Este registro não está mais salvo neste navegador. Os demais foram preservados.');
+      return;
+    }
+    const next=latest.filter(v=>v.key!==record.key);
+    try{
+      localStorage.setItem(KEY,JSON.stringify(next));
+      setSaved(next);
+      setMessage('Somente o registro selecionado foi excluído. As partidas e os demais registros foram preservados.');
+    }catch{
+      setMessage('Não foi possível excluir o registro. Nenhum dado foi alterado.');
+    }
+  }
+
   async function restoreSaved(file?:File){
     if(!file)return;
     setMessage('');
@@ -267,6 +285,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
               const result=settled.markets.find(s=>s.marketId===m.marketId);
               return <p className="saved-market" key={m.marketId}><b>{m.label}</b><span>V2 <Signal value={m.v2}/>{result?' · '+result.v2:''}</span><span>V3 <Signal value={m.v3}/>{result?' · '+result.v3:''}</span></p>;
             })}
+            <button type="button" className="radar-record-delete" aria-label={`Excluir apenas o registro pré-jogo ${v.home} × ${v.away} de ${v.matchAt.slice(0,10)}`} onClick={()=>removeSavedRecord(v)}>Excluir somente este registro</button>
           </li>;
         })}
       </ul>}
