@@ -232,7 +232,14 @@ export default function UpcomingRadar({data}:{data:Data}) {
       </button>
       <p className="muted">O botão grava apenas no navegador, sem apostas nem alterações nas 299 partidas. Ao importar os resultados futuramente, o Radar comparará as previsões salvas com os valores realizados.</p>
     </div>
-    <h3 ref={futureFormRef}>Radar · Novo confronto futuro</h3>
+    <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>
+     <p className="radar-form-help">Esta é a seção certa para nossos testes diários por campeonato. <strong>Selecione mandante, visitante, competição, data e hora.</strong> Os sinais V2 e V3 aparecerão abaixo; só serão salvos ao tocar no botão de confirmação.</p>
+     <p className="radar-form-help">A agenda acima contém apenas os confrontos já cadastrados. Para outra liga, como a Bundesliga, <strong>preencha os campos manualmente nesta seção</strong>.</p>
+     <details className="radar-v2v3-explain"><summary>O que significam V2, V3 e “Sem sinal”?</summary>
+       <p><b>V2:</b> faz uma projeção utilizando jogos anteriores das equipes, respeitando mando de campo e temporada, e exige uma margem em relação à linha do indicador.</p>
+       <p><b>V3:</b> verifica se o histórico de ambas as equipes confirma o sinal da V2. Se não confirmar, pode mostrar “Sem sinal”.</p>
+       <p><b>Sem sinal:</b> não há informação suficiente ou as regras não indicam Over/Under com clareza. Isso não significa previsão errada, nem recomendação para apostar.</p>
+     </details>
     {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>}
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
     <div className="analysis-controls">
@@ -259,16 +266,17 @@ export default function UpcomingRadar({data}:{data:Data}) {
         </tr>)}</tbody>
       </table></div>
       <div className="radar-venue-prospective" aria-label="Previsões futuras V2 e V3">
-        <h4>Previsões V2 × V3 antes da partida</h4>
+        <h4>Previsão deste jogo · V2 e V3 (ainda não salva)</h4>
         {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span><small>Projeção {format(m.projectedTotal)}</small></div></div>)}
       </div>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
-      <button type="button" className="primary" onClick={saveSnapshot}>Registrar análise antes do jogo</button>
+      <button type="button" className="primary" onClick={saveSnapshot}>Salvar previsão V2/V3 deste jogo</button>
     </div>}
     {message&&<p role="status" className="notice">{message}</p>}
-    <div className="radar-saved">
-      <h4>Registros pré-jogo salvos ({saved.length})</h4>
+    <div className="radar-saved" id="radar-saved-forecasts">
+      <h4>2 · Previsões salvas e acompanhamento ({saved.length})</h4>
+       <p className="muted">Aqui ficam os testes registrados antes das partidas. Para criar um novo, use o primeiro atalho do topo.</p>
       <div className="radar-record-actions">
         {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
         <label className="radar-record-import">Restaurar registros JSON
@@ -277,7 +285,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
         </label>
       </div>
       <section className="radar-followup" aria-label="Painel de acompanhamento das previsões">
-        <h5>Painel de acompanhamento · V2 × V3</h5>
+        <h5>Resultados dos testes registrados · V2 e V3</h5>
         <p className="muted">Acompanhe as previsões congeladas antes das partidas. Os acertos só aparecem após importar resultados reais e validados.</p>
         <div className="radar-followup-kpis">
           {[
