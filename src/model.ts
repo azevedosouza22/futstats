@@ -23,7 +23,7 @@ export type ResearchOrigin = {
 export type Match = {
   id: string; home: string; away: string; date: string; competition: string;country?:string;round?:string;
   first: [Stats, Stats]; second: [Stats, Stats]; image?: ImageOrigin; research?: ResearchOrigin;
-  external?: {provider: 'thesportsdb'; id: string; importedAt: string; status: string; full: [Stats, Stats]};
+  external?: {provider: 'thesportsdb' | 'api-football'; id: string; importedAt: string; status: string; full: [Stats, Stats]};
 };
 export type RadarSavedMarket = {
   id: string; label: string; metric: Metric; period: Period; line: number;
@@ -99,7 +99,24 @@ export function validateMatch(m: Match): string {
   }
   if (m.external) {
     const e=m.external;
-    if (e.provider!=='thesportsdb'||!/^\d+$/.test(e.id)||typeof e.status!=='string'||!isoDate(e.importedAt)||!validPair(e.full,true)||!e.full.every(s=>metrics.every(k=>k==='goals'||s[k]==null)&&(['FT','Match Finished'].includes(e.status)||s.goals===null))||[...m.first,...m.second].some(s=>metrics.some(k=>s[k]!=null))) return 'Importação inválida.';
+    if(!/^\d+$/.test(e.id)||!isoDate(e.importedAt)||!validPair(e.full,true))return 'Metadados de origem inválidos.';
+    if(e.provider==='api-football'){
+      if(e.status!=='FT')return 'Somente partidas FT são aceitas da API-Football.';
+      for(const side of [0,1] as const){
+        const full=e.full[side],first=m.first[side],second=m.second[side];
+        if(full.goals===null||!Number.isSafeInteger(full.goals))return 'Placar final não disponível.';
+        for(const pair of [first,second,full])
+          if(pair.shots!=null&&pair.target!=null&&pair.target>pair.shots)return 'Finalizações inconsistentes.';
+        for(const metric of additiveMetrics){
+          const f=full[metric],a=first[metric],b=second[metric];
+          if(f!=null&&((a!=null&&a>f)||(b!=null&&b>f)||(a!=null&&b!=null&&a+b!==f)))
+            return 'Estatísticas incompatíveis entre períodos.';
+        }
+      }
+      return '';
+    }
+    if(e.provider!=='thesportsdb'||!e.full.every(s=>metrics.every(k=>k==='goals'||s[k]==null)&&(['FT','Match Finished'].includes(e.status)||s.goals===null))||
+      [...m.first,...m.second].some(s=>metrics.some(k=>s[k]!=null)))return 'Importação inválida.';
     return '';
   }
   if (m.image) {
@@ -178,7 +195,7 @@ export function validData(value: unknown): value is Data {
   return d.matches.every(m=> {
     if (!m||typeof m.id!=='string'||matchIds.has(m.id)||!ids.has(m.home)||!ids.has(m.away)||typeof m.competition!=='string'||validateMatch(m)) return false;
     matchIds.add(m.id);
-    if (m.external) {if(externalMatches.has(m.external.id)) return false; externalMatches.add(m.external.id);}
+    if (m.external) {const key=m.external.provider+':'+m.external.id; if(externalMatches.has(key)) return false; externalMatches.add(key);}
     if (m.research) {if(researchMatches.has(m.research.sourceId)) return false; researchMatches.add(m.research.sourceId);}
     return true;
   });
