@@ -23,6 +23,7 @@ function readSaved(): Saved[] {
 }
 const format=(v:number|null)=>v===null?'N/D':v.toLocaleString('pt-BR',{maximumFractionDigits:2});
 const percentage=(v:number|null)=>v===null?'N/D':(v*100).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
+const Signal = ({value}:{value:'Over'|'Under'|'Sem sinal'})=><span className={'signal signal--'+(value==='Over'?'over':value==='Under'?'under':'neutral')}>{value}</span>;
 
 export default function UpcomingRadar({data}:{data:Data}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
@@ -133,16 +134,22 @@ export default function UpcomingRadar({data}:{data:Data}) {
     URL.revokeObjectURL(url);
   }
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
+    <div className="radar-hero">
+      <span className="radar-hero-eyebrow">RADAR EXPERIMENTAL · V2 + V3</span>
+      <h3>Antecipe. Registre. Compare.</h3>
+      <p>Confira a agenda, acompanhe os sinais e compare as previsões com os resultados quando os jogos terminarem.</p>
+      <div className="radar-hero-stats"><span><strong>{data.matches.length}</strong> partidas na base</span><span><strong>{saved.length}</strong> registros pré-jogo</span></div>
+    </div>
     <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
     <div className="radar-bulk-round" aria-label="Registro da rodada 32">
       <h3>Teste da rodada 32 · Registro em lote</h3>
       <p className="muted">Registre os jogos restantes de uma só vez, usando os mesmos cálculos V2/V3 já disponíveis no Radar. Os registros ficam congelados antes do início; confrontos já registrados não serão substituídos. A agenda é uma referência estática e deve ser conferida na fonte.</p>
-      <p><b>{bulkCount} jogos novos disponíveis para registrar</b> · limite de 50 previsões salvas neste navegador.</p>
+      <p className="round-count"><strong>{bulkCount}</strong> jogos novos disponíveis para registrar <small>Limite de 50 previsões no navegador</small></p>
       {bulkCount>0&&<details>
         <summary>Conferir previsões antes de registrar</summary>
         {roundPlans.slice(0,bulkCount).map(p=><div key={p.f.id}>
           <p><b>{p.f.home} × {p.f.away}</b> · {p.f.date} às {p.f.time} (Brasília)</p>
-          {p.venue.map(m=><p key={m.marketId}><small>{m.label}: V2 {m.v2} · V3 {m.v3}</small></p>)}
+          {p.venue.map(m=><p className="bulk-market" key={m.marketId}><small>{m.label}</small><span>V2 <Signal value={m.v2}/> V3 <Signal value={m.v3}/></span></p>)}
         </div>)}
       </details>}
       <button type="button" className="primary" disabled={bulkCount===0} onClick={registerRound}>
@@ -178,7 +185,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
       </table></div>
       <div className="radar-venue-prospective" aria-label="Previsões futuras V2 e V3">
         <h4>Previsões V2 × V3 antes da partida</h4>
-        {prospective.map(m=><p key={m.marketId}><b>{m.label}:</b> V2 {m.v2} · V3 {m.v3} <small>(projeção {format(m.projectedTotal)})</small></p>)}
+        {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span><small>Projeção {format(m.projectedTotal)}</small></div></div>)}
       </div>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
@@ -200,10 +207,10 @@ export default function UpcomingRadar({data}:{data:Data}) {
           const status={future:'Aguardando jogo',pending:'Aguardando resultado na base',ambiguous:'Resultado com data ou identidade ambígua',late:'Registro posterior ao início (não pontua)',legacy:'Registro antigo — sem V2/V3',complete:'Resultado disponível'}[settled.status];
           return <li key={v.key}><b>{v.home} × {v.away}</b>
             <small>{v.matchAt.replace('T',' ')} · {v.competition} · registrado {new Date(v.savedAt).toLocaleString('pt-BR')} · {v.homeCount}+{v.awayCount} jogos históricos</small>
-            <p>{status}</p>
+            <p className="record-status" data-state={settled.status}>{status}</p>
             {v.venue?.map(m=>{
               const result=settled.markets.find(s=>s.marketId===m.marketId);
-              return <p key={m.marketId}><b>{m.label}:</b> V2 {m.v2}{result?' · '+result.v2:''} | V3 {m.v3}{result?' · '+result.v3:''}</p>;
+              return <p className="saved-market" key={m.marketId}><b>{m.label}</b><span>V2 <Signal value={m.v2}/>{result?' · '+result.v2:''}</span><span>V3 <Signal value={m.v3}/>{result?' · '+result.v3:''}</span></p>;
             })}
           </li>;
         })}

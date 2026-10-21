@@ -191,6 +191,21 @@ test('radar sem CSV não cria partida nem sugere entrada',async({page})=>{
 });
 
 
+test('visual escuro premium e atalho principal para o Radar',async({page})=>{
+  await page.goto('/');
+  await expect(page.locator('.app')).toHaveClass(/premium/);
+  const ui=await page.evaluate(()=>{
+    const background=(selector:string)=>getComputedStyle(document.querySelector(selector)!).backgroundColor;
+    return {body:background('body'),card:background('.panel')};
+  });
+  const channels=(s:string)=>(s.match(/\d+/g)??[]).slice(0,3).map(Number);
+  expect(Math.max(...channels(ui.body))).toBeLessThan(50);
+  expect(Math.max(...channels(ui.card))).toBeLessThan(70);
+  await page.getByRole('button',{name:/Agenda e Radar/}).click();
+  await expect(page.getByRole('heading',{name:'Radar · Validação retrospectiva'})).toBeVisible();
+  await expect(page.getByText('Agenda de confrontos · rodada 32 disponível')).toBeVisible();
+});
+
 test('radar prospectivo registra indicadores antes da partida e persiste após recarregar',async({page})=>{
   await page.goto('/');
   await page.getByRole('button',{name:'Importar',exact:true}).click();

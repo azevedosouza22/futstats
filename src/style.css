@@ -112,3 +112,193 @@
 .radar-v2-comparison small{font-size:10px;line-height:1.6;color:#6b7f72}
 .radar-v2-verdict{font-size:12px;line-height:1.6;font-weight:650;color:#285c3b}
 @media(max-width:700px){.radar-v2-grid{grid-template-columns:1fr}}
+
+
+/* FUTSTATS • MIDNIGHT PITCH — experimental visual-only redesign. */
+:root{color:#edf4f8;background:#080c12;color-scheme:dark}
+html,body{background:#080c12}
+html{scroll-behavior:smooth}
+.app.premium{
+ --p-bg:#080c12;--p-panel:#141d28;--p-raised:#1a2733;
+ --p-border:#354655;--p-text:#eef5f9;--p-muted:#b7c6d0;
+ --p-green:#7af2b1;--p-blue:#83caff;--p-amber:#ffda88;
+ color:var(--p-text);background:radial-gradient(ellipse 70% 330px at 72% -50px,#16392f 0%,transparent 95%),var(--p-bg);
+ color-scheme:dark;min-height:100vh
+}
+.premium .main{min-width:0}
+.premium aside{background:linear-gradient(165deg,#12232c,#0d151f 65%,#0b1119);border-color:#2b3b47}
+.premium .brand,.premium h1,.premium h2,.premium h3,.premium h4,.premium h5{color:#f3f8fb}
+.premium .brand>span:last-child,.premium .eyebrow,.premium .quick-eyebrow{color:var(--p-green)}
+.premium .brand-icon{background:linear-gradient(145deg,#29614d,#16333a);color:#a4ffcd;box-shadow:0 5px 20px #0005}
+.premium .workspace-label,.premium .heading p,.premium .panel-head p,.premium .muted,.premium .toolbar,.premium footer{color:var(--p-muted)}
+.premium nav button{color:#c8d7e0;min-height:44px;border-radius:10px}
+.premium nav button:hover{background:#1d3039;filter:none}
+.premium nav button.active{background:linear-gradient(90deg,#225641,#1d3741);color:#b2ffd0;box-shadow:inset 3px 0 0 var(--p-green);font-weight:750}
+.premium .nav-dot,.premium .online-dot{background:var(--p-green);box-shadow:0 0 0 3px #76f2b221}
+.premium .local-card,.premium .local-pill{background:#152430;border-color:var(--p-border);color:#d9e6ed}
+.premium .local-card p,.premium .sidebar-bottom>button,.premium .sidebar-bottom>small{color:var(--p-muted)}
+.premium header{background:#111a25ed;border-color:#2d3d49;color:#c2d0d9;backdrop-filter:blur(12px)}
+.premium header b{color:#f7fbff}
+.premium .mobile-backups button{color:var(--p-green);border:1px solid var(--p-border);border-radius:10px}
+.premium h1{letter-spacing:-.9px;line-height:1.2}
+.premium .eyebrow{letter-spacing:1.5px}
+.premium .panel,.premium .dialog{background:var(--p-panel);border:1px solid var(--p-border);color:var(--p-text);border-radius:15px;box-shadow:0 12px 35px #0003}
+.premium .kpi{background:linear-gradient(153deg,#1a2935,#131c26);border:1px solid #314452;border-top:3px solid #7af2b1;border-radius:15px;box-shadow:0 8px 28px #0002}
+.premium .kpi:nth-child(2){border-top-color:#80c7ff}
+.premium .kpi:nth-child(3){border-top-color:#ffcf7a}
+.premium .kpi:nth-child(4){border-top-color:#bea5ff}
+.premium .kpi>div,.premium .kpi small,.premium .rank-row small,.premium .match-date,.premium .match-date small,.premium .team-card p,.premium .team-numbers span,.premium .compare-row>div>span,.premium .compare-select small{color:#b7c7d2}
+.premium .kpi svg{color:#82edba}
+.premium .kpi strong{color:#f8fdff;font-variant-numeric:tabular-nums}
+.premium .tag{color:#dfcbff;background:#2f2b4c}
+.premium .primary{background:#82f1b7;color:#071d13;border:1px solid #a6ffd3;min-height:45px;padding:12px 16px;border-radius:10px;box-shadow:0 5px 20px #66efa22a;font-size:13px;font-weight:800}
+.premium .primary:hover{background:#adffd0;filter:none}
+.premium .text-button{color:#a0f8c8;font-size:12px}
+.premium .text-button:hover{color:#daffeb}
+.premium button:disabled{opacity:.57;cursor:not-allowed;box-shadow:none}
+.premium .segment{background:#101b26;border-color:#3b505f}
+.premium .segment button{color:#c5d3dd}
+.premium .segment .selected{background:#245143;color:#b3ffd4;box-shadow:none}
+.premium a{color:#91d0ff;text-underline-offset:3px}
+.premium a:hover{color:#cee9ff}
+.premium button:focus-visible,.premium a:focus-visible,.premium summary:focus-visible{outline:3px solid #95dbff;outline-offset:3px}
+.premium input,.premium select,.premium textarea{background:#101c26;border:1px solid #526a7a;color:#f4f8fb;border-radius:9px;min-height:45px}
+.premium input::placeholder,.premium textarea::placeholder{color:#a7b9c8}
+.premium label,.premium .review-confirm{color:#d6e5ee}
+.premium input:focus,.premium select:focus,.premium textarea:focus{outline:2px solid #95dbff;outline-offset:2px}
+.premium .notice{background:#193b30;border-color:#4b8767;color:#bbfbd9}
+.premium .alert{background:#382a21;border-color:#a27649;color:#ffe0a7}
+.premium .overlay{background:#03080ddd}
+.premium .stats-form,.premium .image-picker,.premium .image-preview,.premium .ocr-draft,.premium .ocr-result details,.premium .final-score-review{background:#1b2a36;border-color:var(--p-border);color:#f1f7fb}
+.premium .needs-review{background:#3b311e;border-color:#ad884d}
+.premium .rank-row,.premium .match-row,.premium .team-numbers,.premium .compare-row,.premium .detail-row,.premium .import-result,.premium .ocr-review,.premium .panel-foot{border-color:#324452}
+.premium .bar-track{background:#273746}
+.premium .rank-row b,.premium .team-numbers b,.premium .live-score strong{color:var(--p-green)}
+.premium .match-row:hover{background:#1c303c}
+.premium .score{background:#263c48;color:#f4fafb}
+.premium .score em{color:#a6bbc7}
+.premium .empty{color:#b8c7d0}
+.premium .empty>svg{color:var(--p-green)}
+.premium .empty h3{color:#c9ffe2}
+.premium .insight{background:linear-gradient(140deg,#205b46,#10353f);border:1px solid #487a69}
+.premium .insight p{color:#d1e8e1}
+.premium .insight .eyebrow{color:#a4fed0}
+.premium .insight button{background:#adffcc;color:#18402c}
+.premium .analysis-table{color:#e8f1f7}
+.premium .analysis-table th,.premium .analysis-table td{border-color:#304553}
+.premium .analysis-table thead th,.premium .analysis-table caption,.premium .analysis-table small{color:#b8cbd5}
+.premium .analysis-table tbody tr:nth-child(even){background:#1b2a35}
+.premium .pregame-card,.premium .live-snapshot,.premium .radar-context,.premium .radar-venue,.premium .calendar-agenda,
+.premium .radar-backtest,.premium .radar-backtest-card,.premium .radar-market-card,.premium .radar-benchmark-summary,.premium .radar-benchmark-row,
+.premium .radar-v2-card,.premium .radar-bulk-round,.premium .radar-saved,.premium .radar-venue-prospective{
+ background:#192631;border:1px solid #364a57;color:#eef5fa;border-radius:13px
+}
+.premium .pregame-card details,.premium .pregame-card summary,.premium .source-list small,.premium .source-meta,.premium .live-status,
+.premium .radar-venue p,.premium .radar-context p,.premium .radar-venue div span{color:#b8cad5}
+.premium .radar-venue div strong,.premium .radar-v2-comparison strong{color:#a0fbc6}
+.premium .radar-backtest h3,.premium .radar-backtest-card h4,.premium .radar-market-card h4,
+.premium .radar-benchmark-summary h4,.premium .radar-benchmark-row h5,.premium .radar-v2-card h4,
+.premium .radar-backtest-card details h5{color:#e3fcef}
+.premium .radar-backtest-card h4 small,.premium .radar-backtest-stat span,.premium .radar-backtest-card dt,
+.premium .radar-market-card dt,.premium .radar-benchmark-metrics span,.premium .radar-period-row small,
+.premium .radar-v2-comparison span,.premium .radar-v2-comparison small{color:#b7c9d4}
+.premium .radar-backtest-stat strong,.premium .radar-benchmark-metrics strong,.premium .radar-v2-verdict{color:#a5f7c7}
+.premium .radar-backtest-card dd,.premium .radar-market-card dd{color:#eaf5fb}
+.premium .radar-backtest-card dl>div,.premium .radar-market-card dl>div,.premium .radar-benchmark-holdout,.premium .radar-period-row{border-color:#334b56}
+.premium .radar-market-card .radar-actual{background:#204736}
+.premium .radar-backtest-card summary{color:#99f4c7}
+.premium .radar-v2-card,.premium .radar-backtest-card{background:linear-gradient(155deg,#1c2d38,#151f2a)}
+.premium .calendar-agenda{background:linear-gradient(160deg,#142e2b,#141e2b);border-color:#447e68;box-shadow:inset 3px 0 0 #7af2b1}
+.premium .calendar-agenda h3{color:#abffd0;font-size:18px}
+.premium .calendar-fixture{background:#101f2b;border-color:#395363;border-radius:11px;padding:14px}
+.premium .calendar-fixture b{color:#f2fafc;font-size:14px}
+.premium .calendar-fixture small{color:#c5d6e0;opacity:1}
+.premium .calendar-fixture .text-button{border:1px solid #5a9a7e;background:#244b3e;color:#b3ffd4;padding:10px 14px;min-height:42px;border-radius:8px;justify-content:center}
+.premium .calendar-fixture .text-button:disabled{background:#26353f;color:#a6b7be;border-color:#455661}
+.premium .radar-hero{padding:23px;border:1px solid #3b8670;border-radius:17px;background:radial-gradient(ellipse at 100% 0%,#205e50,transparent 68%),linear-gradient(115deg,#183b38,#172432);position:relative;overflow:hidden}
+.premium .radar-hero:after{content:"";position:absolute;right:-48px;top:-43px;width:170px;height:170px;border:1px solid #a0ffd535;border-radius:50%;box-shadow:0 0 0 22px #a0ffd507,0 0 0 46px #a0ffd505;pointer-events:none}
+.premium .radar-hero-eyebrow{color:#98fbc5;letter-spacing:1.5px;font-size:10px;font-weight:800}
+.premium .radar-hero h3{font-size:clamp(20px,2.7vw,29px);margin:13px 0 7px}
+.premium .radar-hero>p{color:#c6e1de;font-size:13px;line-height:1.7;max-width:570px}
+.premium .radar-hero-stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:19px}
+.premium .radar-hero-stats>span{display:flex;gap:9px;align-items:center;padding:10px 13px;border:1px solid #4c8273;background:#0e272aaf;border-radius:10px;color:#cee6e2;font-size:12px}
+.premium .radar-hero-stats strong{color:#a9ffcf;font-size:21px;font-variant-numeric:tabular-nums}
+.premium .radar-bulk-round,.premium .radar-saved{padding:19px;background:#16242e}
+.premium .radar-bulk-round{border-color:#4b846b}
+.premium .radar-bulk-round h3,.premium .radar-venue-prospective h4{color:#b4ffd5}
+.premium .radar-bulk-round details{padding:15px;margin:15px 0;background:#101d28;border:1px solid #435766;border-radius:11px}
+.premium .radar-bulk-round summary{color:#b1ffcf;font-weight:700;cursor:pointer}
+.premium .radar-bulk-round details>div{padding:12px 0;border-top:1px solid #344955}
+.premium .round-count{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-size:12px;color:#e1eef3}
+.premium .round-count>strong{display:grid;place-items:center;min-width:36px;height:36px;border-radius:9px;background:#a4ffca;color:#123322;font-size:20px}
+.premium .round-count small{color:#b8c8d2}
+.premium .bulk-market,.premium .saved-market,.premium .forecast-line{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid #344956;margin:0;padding:12px 0;font-size:12px;line-height:1.65}
+.premium .bulk-market>span,.premium .saved-market>span,.premium .forecast-line>div{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.premium .bulk-market small{color:#d8e9f1;font-size:12px}
+.premium .forecast-line b{color:#f4fbff;font-size:13px}
+.premium .forecast-line small{color:#bdcbd4}
+.premium .signal{display:inline-flex;align-items:center;padding:3px 9px;border:1px solid;white-space:nowrap;line-height:1.65;font-size:11px;font-weight:750;border-radius:99px}
+.premium .signal--over{color:#acffd0;background:#1c4833;border-color:#508b65}
+.premium .signal--under{color:#c2e6ff;background:#194361;border-color:#558eb0}
+.premium .signal--neutral{color:#dae3ec;background:#2b3744;border-color:#657584}
+.premium .radar-venue-prospective{padding:16px;border-color:#4c806c}
+.premium .radar-saved>ul{list-style:none;margin:10px 0;padding:0;display:grid;gap:12px}
+.premium .radar-saved>ul>li{padding:15px;border:1px solid #3e5461;background:#1b2a36;border-radius:12px;font-size:12px;overflow-wrap:anywhere}
+.premium .radar-saved li>small{display:block;color:#b8cbd5;line-height:1.7;margin-top:6px}
+.premium .radar-prospective-score{background:#142e2a;border:1px solid #366557;border-radius:12px;padding:15px}
+.premium .radar-prospective-score p{font-size:12px}
+.premium .record-status{display:inline-block;border:1px solid #977a46;color:#ffe1a3;border-radius:7px;background:#40331e;padding:5px 9px;font-weight:650}
+.premium .record-status[data-state=complete]{color:#acffd0;border-color:#4d946a;background:#234633}
+.premium .record-status[data-state=pending]{color:#bedfff;border-color:#5784a7;background:#17394f}
+.premium .record-status[data-state=late],.premium .record-status[data-state=ambiguous]{color:#ffbebc;border-color:#99645f;background:#412929}
+.premium .home-shortcuts{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.95fr);gap:20px;align-items:center;margin-bottom:23px;padding:23px;background:linear-gradient(115deg,#205643,#172f3b 62%,#132331);border:1px solid #4d846e;border-radius:16px;box-shadow:0 12px 30px #0002}
+.premium .home-shortcuts-copy h2{font-size:23px;margin:8px 0;color:#f2fff8}
+.premium .home-shortcuts-copy p{font-size:12px;line-height:1.7;color:#cfe6e1}
+.premium .quick-eyebrow{font-size:10px;font-weight:800;letter-spacing:1.5px}
+.premium .quick-actions{display:grid;gap:10px}
+.premium .quick-actions button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#0e2129e6;color:#effff5;border:1px solid #4f7b70;padding:14px;border-radius:11px;min-height:66px}
+.premium .quick-actions button:hover{background:#163c32;filter:none}
+.premium .quick-actions button>svg:first-child{color:#a3ffce;flex-shrink:0}
+.premium .quick-actions button>svg:last-child{margin-left:auto;flex-shrink:0;color:#9cc6b5}
+.premium .quick-actions strong,.premium .quick-actions small{display:block}
+.premium .quick-actions strong{font-size:13px}
+.premium .quick-actions small{color:#b2cfc8;font-size:11px;margin-top:3px;line-height:1.5}
+.premium .automatic-fixture{background:#1d2b36;border-color:#445868;color:#f1f7fb}
+.premium .image-preview img{background:#0e151d}
+.premium .radar-panel hr{width:100%;border:0;border-top:1px solid #334954;margin:8px 0}
+.premium .radar-upcoming>h3{scroll-margin-top:18px}
+@media(max-width:800px){
+ .premium nav{scrollbar-color:#477968 transparent;gap:7px}
+ .premium nav button{background:#1a2833;border:1px solid #304451;border-radius:9px;padding:10px 12px}
+ .premium header{height:55px}
+ .premium main{padding:24px 18px}
+ .premium .home-shortcuts{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+ .premium .radar-upcoming .radar-market-table{display:block}
+ .premium .radar-upcoming .radar-market-table table{min-width:650px}
+}
+@media(max-width:580px){
+ .premium main{padding:20px 14px}
+ .premium .heading h1{font-size:27px}
+ .premium .heading .primary{white-space:normal}
+ .premium .kpis{gap:10px}
+ .premium .kpi{padding:15px 13px}
+ .premium .kpi strong{font-size:27px}
+ .premium .kpi small{font-size:10px;line-height:1.6}
+ .premium .home-shortcuts{padding:17px}
+ .premium .home-shortcuts-copy h2{font-size:20px}
+ .premium .radar-inner{padding:12px;gap:14px}
+ .premium .radar-hero{padding:18px}
+ .premium .radar-hero-stats>span{flex:1;min-width:120px;padding:10px;font-size:11px}
+ .premium .calendar-agenda{padding:14px}
+ .premium .calendar-fixture{gap:11px}
+ .premium .calendar-fixture button{width:100%;max-width:100%}
+ .premium .radar-bulk-round,.premium .radar-saved{padding:13px}
+ .premium .forecast-line>div,.premium .bulk-market>span{width:100%}
+ .premium .analysis-table{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .premium *{animation:none!important;transition:none!important}
+}
