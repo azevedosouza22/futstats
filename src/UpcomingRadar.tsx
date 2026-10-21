@@ -137,7 +137,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
     <div className="radar-bulk-round" aria-label="Registro da rodada 32">
       <h3>Teste da rodada 32 · Registro em lote</h3>
       <p className="muted">Registre os jogos restantes de uma só vez, usando os mesmos cálculos V2/V3 já disponíveis no Radar. Os registros ficam congelados antes do início; confrontos já registrados não serão substituídos. A agenda é uma referência estática e deve ser conferida na fonte.</p>
-      <p><b>${bulkCount} jogos novos disponíveis para registrar</b> · limite de 50 previsões salvas neste navegador.</p>
+      <p><b>{bulkCount} jogos novos disponíveis para registrar</b> · limite de 50 previsões salvas neste navegador.</p>
       {bulkCount>0&&<details>
         <summary>Conferir previsões antes de registrar</summary>
         {roundPlans.slice(0,bulkCount).map(p=><div key={p.f.id}>
