@@ -16,12 +16,26 @@ export type ImageOrigin = {
   matchFields: Record<'home' | 'away' | 'date' | 'competition', FieldOrigin | null> & Partial<Record<'country'|'round',FieldOrigin|null>>;
 };
 export type Team = {id: string; name: string; color: string; externalId?: string};
+export type ResearchOrigin = {
+  provider: 'work-csv'; source: 'Flashscore'; sourceId: string; sourceUrl: string;
+  importedAt: string; full: [Stats, Stats]; titleDate?: string; dateDiscrepancy: boolean;
+};
 export type Match = {
   id: string; home: string; away: string; date: string; competition: string;country?:string;round?:string;
-  first: [Stats, Stats]; second: [Stats, Stats]; image?: ImageOrigin;
+  first: [Stats, Stats]; second: [Stats, Stats]; image?: ImageOrigin; research?: ResearchOrigin;
   external?: {provider: 'thesportsdb'; id: string; importedAt: string; status: string; full: [Stats, Stats]};
 };
-export type Data = {teams: Team[]; matches: Match[]};
+export type RadarSavedMarket = {
+  id: string; label: string; metric: Metric; period: Period; line: number;
+  observed: number; overs: number; historyRate: number | null; historicalMean: number | null;
+};
+export type RadarSaved = {
+  id: string; capturedAt: string; kickoff: string; date: string;
+  home: string; away: string; homeName: string; awayName: string; competition: string;
+  homeHistoryCount: number; awayHistoryCount: number; uniqueHistoryCount: number;
+  markets: RadarSavedMarket[];
+};
+export type Data = {teams: Team[]; matches: Match[]; radarSnapshots?: RadarSaved[]};
 export const labels: Record<Metric, string> = {goals:'Gols',shots:'Finalizações',target:'No alvo',corners:'Escanteios',yellow:'Cartões amarelos',red:'Cartões vermelhos',possession:'Posse de bola (%)',xg:'Gols esperados (xG)',chances:'Chances claras'};
 export const additiveMetrics: Metric[] = [...coreMetrics, 'chances'];
 export const unavailable = (): ResolvedStats => Object.fromEntries(metrics.map(k=>[k,null])) as ResolvedStats;
@@ -29,6 +43,7 @@ export const empty = (): ResolvedStats => ({...unavailable(),goals:0,shots:0,tar
 export const normalized = (s: Stats): ResolvedStats => Object.fromEntries(metrics.map(k=>[k,s[k]??null])) as ResolvedStats;
 
 export function stats(m: Match, side: number, period: Period): ResolvedStats {
+  if (m.research) return normalized(period==='full'?m.research.full[side]:m[period][side]);
   if (m.external) return normalized(period==='full'?m.external.full[side]:m[period][side]);
   if (period!=='full') return normalized(m[period][side]);
   if (m.image) return normalized(m.image.full[side]);
@@ -60,8 +75,28 @@ export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
   if (!validDate(m.date)) return 'Informe a data da partida.';
   if(['country','round'].some(k=>m[k as 'country'|'round']!==undefined&&(typeof m[k as 'country'|'round']!=='string'||m[k as 'country'|'round']!.length>100)))return 'País ou rodada inválidos.';
-  if (!validPair(m.first,!!m.external||!!m.image)||!validPair(m.second,!!m.external||!!m.image)) return 'Períodos ou valores inválidos.';
-  if (m.external&&m.image) return 'Origens incompatíveis.';
+  if (!validPair(m.first,!!m.external||!!m.image||!!m.research)||!validPair(m.second,!!m.external||!!m.image||!!m.research)) return 'Períodos ou valores inválidos.';
+  if (Number(!!m.external)+Number(!!m.image)+Number(!!m.research)>1) return 'Origens incompatíveis.';
+  if (m.research) {
+    const r=m.research;
+    if (r.provider!=='work-csv'||r.source!=='Flashscore'||!/^[-_a-zA-Z0-9]{3,80}$/.test(r.sourceId)||
+      !isoDate(r.importedAt)||!validPair(r.full,true)||typeof r.dateDiscrepancy!=='boolean'||
+      (r.titleDate!==undefined&&!validDate(r.titleDate))||
+      (r.dateDiscrepancy!==(r.titleDate!==undefined&&r.titleDate!==m.date))) return 'Metadados CSV inválidos.';
+    try {
+      const url=new URL(r.sourceUrl);
+      if(url.protocol!=='https:'||!['www.flashscore.com.br','flashscore.com.br','www.flashscore.com','flashscore.com'].includes(url.hostname)||
+        url.username||url.password||url.searchParams.get('mid')!==r.sourceId) return 'Link CSV inválido.';
+    } catch {return 'Link CSV inválido.';}
+    for(const period of [m.first,m.second,r.full])
+      for(const s of period) if(s.shots!=null&&s.target!=null&&s.target>s.shots)return 'Finalizações inconsistentes no CSV.';
+    for(const k of additiveMetrics)for(const side of [0,1]){
+      const a=m.first[side][k],b=m.second[side][k],c=r.full[side][k];
+      if(c!=null&&((a!=null&&a>c)||(b!=null&&b>c)||(a!=null&&b!=null&&a+b!==c)))
+        return 'Estatísticas incompatíveis entre períodos.';
+    }
+    return '';
+  }
   if (m.external) {
     const e=m.external;
     if (e.provider!=='thesportsdb'||!/^\d+$/.test(e.id)||typeof e.status!=='string'||!isoDate(e.importedAt)||!validPair(e.full,true)||!e.full.every(s=>metrics.every(k=>k==='goals'||s[k]==null)&&(['FT','Match Finished'].includes(e.status)||s.goals===null))||[...m.first,...m.second].some(s=>metrics.some(k=>s[k]!=null))) return 'Importação inválida.';
@@ -93,7 +128,7 @@ export function validateMatch(m: Match): string {
   for (const s of [...m.first,...m.second,...(m.image?.full??[])]) {
     if (s.target!=null&&s.shots!=null&&s.target>s.shots) return 'Finalizações no alvo não podem superar as finalizações.';
     // Keep the existing manual convention; imported images may include own goals.
-    if (!m.image&&s.goals!=null&&s.target!=null&&s.goals>s.target) return 'Gols não podem superar as finalizações no alvo.';
+    if (!m.image&&!m.research&&s.goals!=null&&s.target!=null&&s.goals>s.target) return 'Gols não podem superar as finalizações no alvo.';
   }
   return '';
 }
@@ -106,11 +141,45 @@ export function validData(value: unknown): value is Data {
     if (!t||typeof t.id!=='string'||ids.has(t.id)||typeof t.name!=='string'||!t.name.trim()||typeof t.color!=='string'||!/^#[0-9a-f]{6}$/i.test(t.color)||t.externalId!==undefined&&(typeof t.externalId!=='string'||!/^\d+$/.test(t.externalId)||externalTeams.has(t.externalId))) return false;
     ids.add(t.id); if(t.externalId) externalTeams.add(t.externalId);
   }
-  const matchIds=new Set(),externalMatches=new Set();
+  if (d.radarSnapshots !== undefined) {
+    if (!Array.isArray(d.radarSnapshots) || d.radarSnapshots.length > 500) return false;
+    const seenRadar = new Set<string>();
+    for (const snapshot of d.radarSnapshots) {
+      if (!snapshot || typeof snapshot.id !== 'string' || !snapshot.id || seenRadar.has(snapshot.id) ||
+        !isoDate(snapshot.capturedAt) || !isoDate(snapshot.kickoff) || !validDate(snapshot.date) ||
+        typeof snapshot.home !== 'string' || typeof snapshot.away !== 'string' ||
+        snapshot.home === snapshot.away || !ids.has(snapshot.home) || !ids.has(snapshot.away) ||
+        typeof snapshot.homeName !== 'string' || !snapshot.homeName.trim() || snapshot.homeName.length > 100 ||
+        typeof snapshot.awayName !== 'string' || !snapshot.awayName.trim() || snapshot.awayName.length > 100 ||
+        typeof snapshot.competition !== 'string' || !snapshot.competition.trim() || snapshot.competition.length > 150 ||
+        ![snapshot.homeHistoryCount,snapshot.awayHistoryCount,snapshot.uniqueHistoryCount].every(x=>Number.isSafeInteger(x)&&x>=0&&x<=10) ||
+        !Array.isArray(snapshot.markets) || !snapshot.markets.length || snapshot.markets.length > 20) return false;
+      seenRadar.add(snapshot.id);
+      const seenMarkets = new Set<string>();
+      for (const market of snapshot.markets) {
+        if (!market || typeof market.id !== 'string' || !market.id || seenMarkets.has(market.id) ||
+          typeof market.label !== 'string' || !market.label.trim() ||
+          !metrics.includes(market.metric) || !['first','second','full'].includes(market.period) ||
+          typeof market.line !== 'number' || !Number.isFinite(market.line) || market.line < 0 ||
+          !Number.isSafeInteger(market.observed) || market.observed < 0 || market.observed > 10 ||
+          !Number.isSafeInteger(market.overs) || market.overs < 0 || market.overs > market.observed ||
+          (market.historyRate !== null && (typeof market.historyRate !== 'number' ||
+            !Number.isFinite(market.historyRate) || Math.abs(market.historyRate-(market.overs/market.observed))>1e-9)) ||
+          (market.observed === 0 && market.historyRate !== null) ||
+          (market.observed > 0 && market.historyRate === null) ||
+          (market.historicalMean !== null && (typeof market.historicalMean !== 'number' || !Number.isFinite(market.historicalMean) || market.historicalMean < 0)) ||
+          (market.observed === 0 && market.historicalMean !== null) ||
+          (market.observed > 0 && market.historicalMean === null)) return false;
+        seenMarkets.add(market.id);
+      }
+    }
+  }
+  const matchIds=new Set(),externalMatches=new Set(),researchMatches=new Set();
   return d.matches.every(m=> {
     if (!m||typeof m.id!=='string'||matchIds.has(m.id)||!ids.has(m.home)||!ids.has(m.away)||typeof m.competition!=='string'||validateMatch(m)) return false;
     matchIds.add(m.id);
     if (m.external) {if(externalMatches.has(m.external.id)) return false; externalMatches.add(m.external.id);}
+    if (m.research) {if(researchMatches.has(m.research.sourceId)) return false; researchMatches.add(m.research.sourceId);}
     return true;
   });
 }

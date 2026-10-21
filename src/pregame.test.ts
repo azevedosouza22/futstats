@@ -17,6 +17,34 @@ describe('Pré-jogo', () => {
   it('não utiliza jogos no dia do confronto ou posteriores', () => {
     expect(recentMatches(games, 'a', 5, '2026-09-04').map(m => m.id)).toEqual(['2','1','0']);
   });
+  it('não inclui no pré-jogo uma partida CSV cuja data do título é o dia da análise', () => {
+    const ambiguous: Match = {
+      ...games[0], id: 'csv-date-mismatch', date: '2026-10-12',
+      research: {
+        provider: 'work-csv', source: 'Flashscore', sourceId: 'vXrY11bl',
+        sourceUrl: 'https://www.flashscore.com.br/?mid=vXrY11bl',
+        importedAt: '2026-10-19T00:00:00.000Z',
+        titleDate: '2026-10-13', dateDiscrepancy: true,
+        full: [empty(), empty()],
+      },
+    };
+    expect(recentMatches([...games, ambiguous], 'a', 5, '2026-10-13').some(m => m.id === ambiguous.id)).toBe(false);
+    expect(recentMatches([...games, ambiguous], 'a', 5, '2026-10-14')[0].id).toBe(ambiguous.id);
+  });
+  it('separa competição e mandante/visitante sem misturar campeonatos', () => {
+    const fixtures:Match[]=[
+      {...games[0],id:'br-home',home:'a',away:'b',date:'2026-09-01',competition:'Brasileirão Série A'},
+      {...games[1],id:'br-away',home:'b',away:'a',date:'2026-09-02',competition:'Brasileirão Série A'},
+      {...games[2],id:'cop-home',home:'a',away:'c',date:'2026-09-03',competition:'Copa do Brasil'},
+      {...games[3],id:'de-home',home:'d',away:'e',date:'2026-09-04',competition:'Bundesliga'},
+    ];
+    expect(recentMatches(fixtures,'a',5,'2026-10-01')).toHaveLength(3);
+    expect(recentMatches(fixtures,'a',5,'2026-10-01',{competition:'Brasileirão Série A'})).toHaveLength(2);
+    expect(recentMatches(fixtures,'a',5,'2026-10-01',{competition:'Brasileirão Série A',venue:'home'}).map(m=>m.id)).toEqual(['br-home']);
+    expect(recentMatches(fixtures,'a',5,'2026-10-01',{competition:'Brasileirão Série A',venue:'away'}).map(m=>m.id)).toEqual(['br-away']);
+    expect(recentMatches(fixtures,'d',5,'2026-10-01',{competition:'Bundesliga'})).toHaveLength(1);
+    expect(pregameAverage(fixtures,'a',5,'full','2026-10-01',{competition:'Ligue 1'}).values.shots).toBeNull();
+  });
   it('amostra vazia não vira média zero', () => {
     const result = pregameAverage([], 'a', 10, 'first', '2026-10-01');
     expect(result.values.goals).toBeNull(); expect(result.count).toBe(0); expect(result.samples.shots).toBe(0);
