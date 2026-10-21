@@ -584,3 +584,45 @@ html{scroll-behavior:smooth}
   .premium .radar-quick-action small{font-size:11px}
   .premium #radar-new-forecast{padding:12px;font-size:18px}
 }
+
+
+/* V4 Radar: three actual screens instead of one long scrolling document. */
+.premium .radar-quick-action[aria-pressed="true"]{
+ border-color:#7ec9f3;background:#294d60;box-shadow:inset 0 0 0 1px #a8d5ff33;
+}
+.premium .radar-quick-action--create[aria-pressed="true"]{border-color:#6fe2a8}
+.premium .radar-quick-action--saved[aria-pressed="true"]{border-color:#75b4fa}
+.premium .radar-quick-action--history[aria-pressed="true"]{border-color:#f1c78b}
+.premium .radar-fixture-form{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px;
+ margin:16px 0;
+}
+.premium .radar-fixture-form label{min-width:0;display:grid;gap:8px;color:#daebf4;font-size:13px}
+.premium .radar-fixture-form select,
+.premium .radar-fixture-form input{width:100%;min-width:0;max-width:100%;min-height:45px;color:#f3f9fc;border:1px solid #567083;background:#1c303c;border-radius:9px;padding:10px 12px;font-size:14px}
+.premium .radar-fixture-form select:disabled{opacity:.55;cursor:not-allowed}
+.premium .radar-fixture-form label:first-child{grid-column:1/-1}
+.premium .radar-league-team-count{
+ grid-column:1/-1;margin:0;padding:8px 12px;background:#1c3742;
+ border-left:3px solid #6cc9b4;border-radius:5px;
+ color:#c2e6e8;font-size:12px;line-height:1.5
+}
+.premium .radar-extra-agenda,
+.premium .radar-extra-bulk{
+ margin:18px 0;padding:12px;border:1px solid #3f5a68;border-radius:12px;
+ background:#152936;color:#d3e5ed;
+}
+.premium .radar-extra-agenda>summary,
+.premium .radar-extra-bulk>summary{font-size:13px;font-weight:750;cursor:pointer;list-style-position:inside}
+.premium .radar-extra-agenda .calendar-agenda{margin-top:16px}
+.premium .radar-extra-bulk .radar-bulk-round{margin-top:12px}
+@media(max-width:760px){
+ .premium .radar-fixture-form{grid-template-columns:minmax(0,1fr)}
+ .premium .radar-fixture-form label:first-child,
+ .premium .radar-league-team-count{grid-column:auto}
+ .premium .radar-quick-nav{margin:8px 10px 16px}
+ .premium .radar-quick-actions{gap:8px}
+ .premium .radar-quick-action{min-height:65px}
+}
