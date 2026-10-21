@@ -626,3 +626,29 @@ html{scroll-behavior:smooth}
  .premium .radar-quick-actions{gap:8px}
  .premium .radar-quick-action{min-height:65px}
 }
+
+
+/* Read-only OpenFootball Premier League (CC0) pilot, intentionally separate from Radar data. */
+.premium .openfootball-pilot{margin-bottom:24px}
+.premium .openfootball-content{padding:0 22px 24px}
+.premium .openfootball-guard{background:#223747;border-left:4px solid #65a7e5;border-radius:8px;padding:14px;color:#d0e6f0;font-size:12px;line-height:1.65}
+.premium .openfootball-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin:16px 0}
+.premium .openfootball-actions a,.premium .openfootball-timestamp a{font-size:12px;color:#9ed4ff}
+.premium .openfootball-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.premium .openfootball-kpis>div{min-width:0;padding:13px;border:1px solid #40596a;background:#1d3140;border-radius:10px}
+.premium .openfootball-kpis strong{font-size:24px;color:#b7e4ff;display:block;font-variant-numeric:tabular-nums}
+.premium .openfootball-kpis span{color:#c4d5de;display:block;font-size:11px;line-height:1.45;margin-top:6px}
+.premium .openfootball-caution{color:#f0d5a8;border:1px solid #755e3d;border-radius:9px;padding:12px;font-size:12px;line-height:1.65;background:#302a24}
+.premium .openfootball-round{display:grid;gap:7px;max-width:320px;font-size:12px;font-weight:650;color:#deeef7;margin:20px 0}
+.premium .openfootball-round select{width:100%;max-width:100%;padding:11px 13px;color:#f0f9ff;background:#233948;border:1px solid #526c7b;border-radius:8px;min-height:44px}
+.premium .openfootball-fixtures{display:grid;gap:7px;margin:14px 0}
+.premium .openfootball-fixture{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-radius:10px;border:1px solid #374f5b;background:#1a2f3d}
+.premium .openfootball-fixture strong{display:block;font-size:12px;color:#f2f9fe;line-height:1.5}
+.premium .openfootball-fixture small{display:block;color:#bdd2dc;font-size:11px;margin-top:3px}
+.premium .openfootball-score{flex-shrink:0;color:#a7dafa;font-weight:750;font-size:12px}
+.premium .openfootball-timestamp{font-size:11px;color:#9db5c4;margin-top:18px;line-height:1.6}
+@media(max-width:680px){
+ .premium .openfootball-content{padding:0 13px 18px}
+ .premium .openfootball-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium .openfootball-fixture{align-items:flex-start;flex-direction:column;gap:6px}
+}
