@@ -652,3 +652,35 @@ html{scroll-behavior:smooth}
  .premium .openfootball-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
  .premium .openfootball-fixture{align-items:flex-start;flex-direction:column;gap:6px}
 }
+
+/* Experimental FPL full-time statistics panel, never connected to user predictions */
+.premium .fpl-stats-pilot{margin-bottom:24px}
+.premium .fpl-pilot-content{padding:0 22px 24px;display:grid;gap:12px}
+.premium .fpl-pilot-warning{margin:4px 0 0;border-left:3px solid #eab56f;background:#342d28;border-radius:9px;padding:13px;color:#f0dec7;font-size:12px;line-height:1.7}
+.premium .fpl-pilot-content .text-button{justify-self:start;min-height:42px}
+.premium .fpl-pilot-numbers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.premium .fpl-pilot-numbers>div{min-width:0;padding:12px;background:#193242;border:1px solid #436174;border-radius:11px}
+.premium .fpl-pilot-numbers strong{font-size:24px;color:#b8e5fc;display:block;line-height:1.4;font-variant-numeric:tabular-nums}
+.premium .fpl-pilot-numbers span{font-size:11px;color:#c3dce4;line-height:1.5;display:block}
+.premium .fpl-pilot-round{display:grid;gap:8px;max-width:300px;color:#d6e7f0;font-size:12px;font-weight:750}
+.premium .fpl-pilot-round select{min-height:44px;width:100%;max-width:100%;color:#f2f8ff;background:#233847;padding:8px 11px;border:1px solid #536c7b;border-radius:9px}
+.premium .fpl-pilot-games{display:grid;gap:11px;margin:2px 0}
+.premium .fpl-pilot-game{border:1px solid #3e5b6b;border-radius:11px;background:#1b3040;padding:14px}
+.premium .fpl-pilot-game-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:12px}
+.premium .fpl-pilot-game-top strong{color:#f5fbfd;font-size:13px;line-height:1.5}
+.premium .fpl-pilot-game-top small{color:#c1d1dc;font-size:11px}
+.premium .fpl-pilot-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.premium .fpl-pilot-metrics>div{border-radius:8px;background:#243d4c;padding:8px;min-width:0}
+.premium .fpl-pilot-metrics small{display:block;color:#c0d4e0;font-size:10px;line-height:1.4}
+.premium .fpl-pilot-metrics strong{display:block;color:#b6dfff;font-size:14px;margin-top:4px;font-variant-numeric:tabular-nums}
+.premium .fpl-pilot-metrics>div:nth-child(2) strong{color:#d0b1ff}
+.premium .fpl-pilot-metrics>div:nth-child(3) strong{color:#a1e7e3}
+.premium .fpl-pilot-metrics>div:nth-child(4) strong{color:#f2c084}
+.premium .fpl-pilot-content .muted{line-height:1.6}
+.premium .fpl-pilot-content a{color:#a8d5ff}
+@media(max-width:740px){
+ .premium .fpl-pilot-content{padding:0 13px 20px}
+ .premium .fpl-pilot-numbers{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium .fpl-pilot-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium .fpl-pilot-game{padding:10px}
+}
