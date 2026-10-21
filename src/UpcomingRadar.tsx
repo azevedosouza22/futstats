@@ -2,15 +2,11 @@ import {useState,useRef} from 'react';
 import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
-import {radarUpcoming, type RadarMarketResult} from './radar';
-import {captureVenuePredictions,settleVenuePredictions,scoreSettlements,type SavedVenuePrediction} from './radarProspective';
+import {radarUpcoming} from './radar';
+import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
+import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 
-type Saved = {
-  key: string; savedAt: string; matchAt: string; competition: string;
-  home: string; away: string; homeCount: number; awayCount: number;
-  markets: Pick<RadarMarketResult,'id'|'label'|'line'|'historyRate'|'observed'|'overs'|'historicalMean'>[];
-  venue?: SavedVenuePrediction[]; // Older saved records remain readable.
-};
+type Saved = SavedRadarRecord;
 const KEY='futstats-radar-previews-v1';
 function readSaved(): Saved[] {
   try {
@@ -34,6 +30,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const [message,setMessage]=useState('');
   const [calendarSelection,setCalendarSelection]=useState('');
   const futureFormRef=useRef<HTMLHeadingElement>(null);
+  const restoreInput=useRef<HTMLInputElement>(null);
   function useCalendarFixture(f:ScheduledFixture){
     const h=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.home));
     const a=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
@@ -127,12 +124,49 @@ export default function UpcomingRadar({data}:{data:Data}) {
     try{localStorage.setItem(KEY,JSON.stringify(next));setSaved(next);setMessage('Análise prospectiva registrada neste navegador. Exporte o arquivo para conservar uma cópia.');}
     catch{setMessage('Não foi possível salvar no navegador. Libere espaço e tente novamente.');}
   }
+  async function restoreSaved(file?:File){
+    if(!file)return;
+    setMessage('');
+    try{
+      if(file.size>2_000_000||!file.name.toLowerCase().endsWith('.json'))throw Error('Selecione um JSON de previsões de até 2 MB.');
+      const imported=parseRadarRecords(JSON.parse(await file.text()) as unknown);
+      const onDisk=readSaved();
+      const preview=mergeRadarRecords(onDisk,imported);
+      if(preview.added===0){
+        setSaved(onDisk);setMessage('Nenhuma previsão nova: todos os registros desse arquivo já estão salvos.');return;
+      }
+      if(!window.confirm(`Restaurar ${preview.added} previsões ausentes? Os registros atuais e a base histórica não serão substituídos.`))return;
+      // Re-read just before saving, keeping the previous data in precedence.
+      const merged=mergeRadarRecords(readSaved(),imported);
+      localStorage.setItem(KEY,JSON.stringify(merged.entries));
+      setSaved(merged.entries);
+      setMessage(`${merged.added} previsões restauradas. ${merged.skipped} duplicadas ou excedentes ignoradas; as existentes foram preservadas.`);
+    }catch(e){setMessage(e instanceof Error?e.message:'Falha ao restaurar previsões. Nada foi substituído.');}
+    finally{if(restoreInput.current)restoreInput.current.value='';}
+  }
   function exportSaved(){
     if(!saved.length)return;
     const url=URL.createObjectURL(new Blob([JSON.stringify(saved,null,2)],{type:'application/json'}));
     const a=document.createElement('a');a.href=url;a.download='futstats-radar-registros.json';a.click();
     URL.revokeObjectURL(url);
   }
+  const roundStatuses=brasileiraoRound32.map(f=>{
+    const i=saved.findIndex(r=>r.matchAt.slice(0,10)===f.date&&
+      normalizeTeam(r.home)===normalizeTeam(f.home)&&
+      normalizeTeam(r.away)===normalizeTeam(f.away)&&r.competition.trim()===f.competition.trim());
+    const result=i>=0?settlements[i]:null;
+    const complete=result?.status==='complete'&&result.markets.some(m=>
+      [m.v2,m.v3].some(v=>v==='Acertou'||v==='Errou'));
+    const status=i<0?'missing':complete?'scored':result?.status==='complete'?'insufficient':result?.status??'pending';
+    const label=({
+      missing:'Sem previsão',scored:'Conferido',insufficient:'Estatísticas insuficientes',
+      future:'Aguardando jogo',pending:'Aguardando resultado',
+      ambiguous:'Revisar dados',late:'Registrado após início',legacy:'Previsão antiga',
+    } as Record<string,string>)[status]??'Em análise';
+    return {f,status,label};
+  });
+  const registered=roundStatuses.filter(x=>x.status!=='missing').length;
+  const evaluated=roundStatuses.filter(x=>x.status==='scored').length;
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     <div className="radar-hero">
       <span className="radar-hero-eyebrow">RADAR EXPERIMENTAL · V2 + V3</span>
@@ -140,6 +174,21 @@ export default function UpcomingRadar({data}:{data:Data}) {
       <p>Confira a agenda, acompanhe os sinais e compare as previsões com os resultados quando os jogos terminarem.</p>
       <div className="radar-hero-stats"><span><strong>{data.matches.length}</strong> partidas na base</span><span><strong>{saved.length}</strong> registros pré-jogo</span></div>
     </div>
+    <section className="round-tracker" aria-label="Acompanhamento da rodada 32">
+      <div className="round-tracker-head"><div><span className="quick-eyebrow">ACOMPANHAMENTO</span><h3>Rodada 32 · Seus resultados</h3></div><span className="round-tracker-date">23–26 OUT</span></div>
+      <div className="round-tracker-metrics">
+        <div><strong>{registered}/10</strong><span>Previsões registradas</span></div>
+        <div><strong>{evaluated}/10</strong><span>Jogos avaliados</span></div>
+        <div><strong>{registered-evaluated}</strong><span>Em acompanhamento</span></div>
+      </div>
+      <p className="muted">As previsões ficam congeladas. A conferência aparece aqui depois que as estatísticas reais são importadas e validadas na base. Ainda não existe atualização automática de resultados.</p>
+      <details className="round-tracker-details"><summary>Ver situação dos 10 confrontos</summary>
+        <div className="round-tracker-list">{roundStatuses.map(({f,status,label})=><div key={f.id} className="round-tracker-row">
+          <div><b>{f.home} × {f.away}</b><small>{f.date} · {f.time??'N/D'} (Brasília)</small></div>
+          <span className="round-state-pill" data-state={status}>{label}</span>
+        </div>)}</div>
+      </details>
+    </section>
     <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
     <div className="radar-bulk-round" aria-label="Registro da rodada 32">
       <h3>Teste da rodada 32 · Registro em lote</h3>
@@ -194,7 +243,13 @@ export default function UpcomingRadar({data}:{data:Data}) {
     {message&&<p role="status" className="notice">{message}</p>}
     <div className="radar-saved">
       <h4>Registros pré-jogo salvos ({saved.length})</h4>
-      {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
+      <div className="radar-record-actions">
+        {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
+        <label className="radar-record-import">Restaurar registros JSON
+          <input ref={restoreInput} aria-label="Restaurar registros JSON" type="file" accept=".json,application/json"
+            onChange={e=>{void restoreSaved(e.currentTarget.files?.[0]);}}/>
+        </label>
+      </div>
       <div className="radar-prospective-score" aria-label="Placares das previsões registradas">
         <h5>Teste com previsões registradas antes dos jogos</h5>
         <p>V2: {scoreText(scores.v2)} · referência sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV2)} · sempre Under: {scoreText(scores.alwaysUnderV2)}</p>
@@ -216,6 +271,6 @@ export default function UpcomingRadar({data}:{data:Data}) {
         })}
       </ul>}
     </div>
-    <p className="muted">Os registros V2/V3 ficam congelados no armazenamento deste navegador, separados da base de partidas e do backup principal. Exporte os registros para proteção; o resultado só é comparado após ser importado na base. A agenda ainda não consulta sites automaticamente.</p>
+    <p className="muted">Previsões V2/V3 ficam congeladas neste navegador, separadas da base de partidas e do backup principal. O arquivo de registros pode ser exportado ou restaurado sem substituir registros existentes. A conferência exige resultados reais validados na base; ainda não há consulta automática de resultados.</p>
   </section>;
 }

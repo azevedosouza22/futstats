@@ -302,3 +302,51 @@ html{scroll-behavior:smooth}
  html{scroll-behavior:auto}
  .premium *{animation:none!important;transition:none!important}
 }
+
+
+/* Verified prospective tracking and non-destructive JSON restore. */
+.premium .round-tracker{
+ border:1px solid #406f62;border-radius:15px;padding:19px;
+ background:linear-gradient(142deg,#17332f,#13202e 68%);
+ box-shadow:0 10px 24px #0002;min-width:0
+}
+.premium .round-tracker-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.premium .round-tracker-head h3{margin:7px 0 0;font-size:18px}
+.premium .round-tracker-date{
+ border-radius:999px;border:1px solid #477763;
+ padding:6px 10px;color:#c8ffda;background:#214535;
+ font-size:11px;font-weight:750;white-space:nowrap
+}
+.premium .round-tracker-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}
+.premium .round-tracker-metrics>div{padding:14px;border:1px solid #3b5a59;border-radius:12px;background:#10262c}
+.premium .round-tracker-metrics strong{display:block;font-size:26px;font-variant-numeric:tabular-nums;color:#a7ffce}
+.premium .round-tracker-metrics>div:nth-child(2) strong{color:#94d5ff}
+.premium .round-tracker-metrics>div:nth-child(3) strong{color:#ffe4ab}
+.premium .round-tracker-metrics span{display:block;font-size:11px;color:#cadbdc;margin-top:5px;line-height:1.5}
+.premium .round-tracker-details{border:1px solid #405766;background:#13242e;border-radius:10px;padding:12px}
+.premium .round-tracker-details summary{cursor:pointer;color:#b4ffcf;font-size:13px;font-weight:750}
+.premium .round-tracker-list{margin-top:14px;display:grid;gap:8px}
+.premium .round-tracker-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid #3a505f;background:#172a35;border-radius:9px}
+.premium .round-tracker-row>div{display:grid;gap:5px;min-width:0}
+.premium .round-tracker-row b{font-size:12px;color:#edf9fa}
+.premium .round-tracker-row small{font-size:10px;color:#b3c6d1}
+.premium .round-state-pill{display:inline-flex;align-items:center;flex-shrink:0;font-size:10px;font-weight:750;line-height:1.5;padding:5px 9px;border:1px solid #9c7e46;border-radius:99px;color:#ffe2a8;background:#3a3125}
+.premium .round-state-pill[data-state=scored]{background:#1c4833;border-color:#4c966b;color:#aeffd0}
+.premium .round-state-pill[data-state=pending]{background:#163d55;border-color:#5684a3;color:#b9e2ff}
+.premium .round-state-pill[data-state=missing],.premium .round-state-pill[data-state=ambiguous],
+.premium .round-state-pill[data-state=late],.premium .round-state-pill[data-state=insufficient]{
+ color:#ffc4bd;border-color:#a3645e;background:#3e282a
+}
+.premium .radar-record-actions{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px;margin:10px 0 15px}
+.premium .radar-record-import{display:grid;gap:7px;min-width:min(100%,240px);font-size:12px;color:#cff3de}
+.premium .radar-record-import input[type=file]{font-size:11px;max-width:100%;min-width:0}
+@media(max-width:580px){
+ .premium .round-tracker{padding:14px}
+ .premium .round-tracker-metrics{gap:7px}
+ .premium .round-tracker-metrics>div{padding:10px 8px}
+ .premium .round-tracker-metrics strong{font-size:21px}
+ .premium .round-tracker-metrics span{font-size:10px}
+ .premium .round-tracker-row{align-items:flex-start;flex-direction:column}
+ .premium .round-state-pill{align-self:flex-start}
+ .premium .radar-record-actions{align-items:stretch;flex-direction:column}
+}

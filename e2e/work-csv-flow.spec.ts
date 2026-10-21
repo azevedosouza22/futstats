@@ -206,6 +206,40 @@ test('visual escuro premium e atalho principal para o Radar',async({page})=>{
   await expect(page.getByText('Agenda de confrontos · rodada 32 disponível')).toBeVisible();
 });
 
+test('restaura previsões exportadas sem sobrescrever dados existentes',async({page})=>{
+  await page.clock.install({time:new Date('2026-10-20T17:00:00Z')});
+  await page.goto('/');
+  await page.getByRole('button',{name:'Importar',exact:true}).click();
+  await page.getByLabel('Escolher pesquisa CSV').setInputFiles(upload);
+  page.on('dialog',dialog=>dialog.accept());
+  await page.getByRole('button',{name:'Confirmar 11 partidas novas'}).click();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await page.getByRole('combobox',{name:'Mandante futuro'}).selectOption({label:'RB Bragantino'});
+  await page.getByRole('combobox',{name:'Visitante futuro'}).selectOption({label:'Cruzeiro'});
+  await page.getByRole('combobox',{name:'Competição futura'}).selectOption({label:'Brasileirão Série A'});
+  await page.getByLabel('Data futura').fill('2026-10-23');
+  await page.getByLabel('Hora futura').fill('20:00');
+  await page.getByRole('button',{name:'Registrar análise antes do jogo'}).click();
+  await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
+  const original=await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'));
+  expect(original).toBeTruthy();
+  await page.evaluate(()=>localStorage.removeItem('futstats-radar-previews-v1'));
+  await page.reload();
+  await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
+  await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (0)');
+  const file={name:'futstats-radar-registros.json',mimeType:'application/json',buffer:Buffer.from(original!,'utf8')};
+  await page.getByLabel('Restaurar registros JSON').setInputFiles(file);
+  await expect(page.getByRole('status').filter({hasText:'previsões restauradas'})).toBeVisible();
+  await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
+  const restored=await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'));
+  expect(restored).toBe(original);
+  await page.getByLabel('Restaurar registros JSON').setInputFiles(file);
+  await expect(page.getByRole('status').filter({hasText:'Nenhuma previsão nova'})).toBeVisible();
+  await expect(page.locator('.radar-saved')).toContainText('Registros pré-jogo salvos (1)');
+  await expect(page.locator('.toolbar')).toContainText('11 partidas na sua base');
+  await expect(page.getByRole('heading',{name:'Rodada 32 · Seus resultados'})).toBeVisible();
+});
+
 test('radar prospectivo registra indicadores antes da partida e persiste após recarregar',async({page})=>{
   await page.goto('/');
   await page.getByRole('button',{name:'Importar',exact:true}).click();
