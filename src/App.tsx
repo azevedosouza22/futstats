@@ -1,5 +1,5 @@
 import {useState,useRef,useEffect,type FormEvent} from 'react';
-import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Target,Flag,Shield,Download,Upload,X,Trash2,Pencil,Check,Activity,ChevronRight} from 'lucide-react';
+import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Target,Flag,Shield,Download,Upload,X,Trash2,Pencil,Check,Activity,ChevronRight,CalendarDays,Crosshair,Database,Radio,Wrench,ScanLine,CloudDownload} from 'lucide-react';
 import Integration from './Integration';
 import WorkCsvImport from './WorkCsvImport';
 import PreGame from './PreGame';
@@ -8,22 +8,66 @@ import Live from './Live';
 import AutomaticMatches from './AutomaticMatches';
 import {metrics,labels,empty,stats,average,matchAverage,validateMatch,validData,STORAGE,type Data,type Team,type Match,type Stats} from './model';
 import {createFullBackup,parseFullBackup,restoreFullBackup,RADAR_STORAGE} from './fullBackup';
+import {leagueOptions,seasonOptions,filterMatchesByLeague,paginateMatches,competitionParts,ALL_LEAGUES} from './leagueCatalog';
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:2});
 const dateLabel=(d:string)=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
 const blank:Data={teams:[],matches:[]};
 function load(){try{const raw=localStorage.getItem(STORAGE);if(!raw)return {data:blank,error:''};const d=JSON.parse(raw);if(!validData(d))throw Error();return {data:d,error:''};}catch{return {data:blank,error:'Não foi possível ler os dados locais. Importe um backup para recuperá-los.'};}}
 const initial=load();
-const tabs=[{name:'Visão geral',icon:LayoutDashboard},{name:'Equipes',icon:Users},{name:'Comparação',icon:ArrowLeftRight},{name:'Histórico',icon:History},{name:'Importar',icon:Download},{name:'Pré-jogo',icon:Target},{name:'Radar experimental',icon:Target},{name:'Ao vivo',icon:Activity},{name:'Partidas automáticas',icon:Activity}];
+const tabs=[
+ {name:'Visão geral',icon:LayoutDashboard,area:'overview'},
+ {name:'Equipes',icon:Users,area:'teams'},
+ {name:'Comparação',icon:ArrowLeftRight,area:'compare'},
+ {name:'Histórico',icon:History,area:'history'},
+ {name:'Base de dados',icon:Database,area:'database'},
+ {name:'Pré-jogo',icon:CalendarDays,area:'pregame'},
+ {name:'Radar V2 × V3',icon:Crosshair,area:'radar'},
+ {name:'Ferramentas e testes',icon:Wrench,area:'tools'},
+];
 export default function App(){
  const [data,setData]=useState<Data>(initial.data),[page,setPage]=useState(0),[period,setPeriod]=useState<'first'|'full'>('full'),[modal,setModal]=useState<'team'|'match'|null>(null),[error,setError]=useState(initial.error),[notice,setNotice]=useState(''),[edit,setEdit]=useState<string|null>(null),[teamName,setTeamName]=useState(''),[color,setColor]=useState('#23875b'),[match,setMatch]=useState<Match|null>(null),[compare,setCompare]=useState<[string,string]>(['','']),[search,setSearch]=useState(''),[detail,setDetail]=useState<Match|null>(null);
  const file=useRef<HTMLInputElement>(null);
  const [detailPeriod,setDetailPeriod]=useState<'first'|'second'|'full'>('full');
+ const [leagueFilter,setLeagueFilter]=useState(()=>{
+   const first=initial.data.matches[0];return first?competitionParts(first.competition).league:ALL_LEAGUES;
+ });
+ const [seasonFilter,setSeasonFilter]=useState(ALL_LEAGUES);
+ const [historyPage,setHistoryPage]=useState(1);
+ const [toolPanel,setToolPanel]=useState<'image'|'sportsdb'|'live'|'api'>('image');
  const imageFieldOrigin=(k:keyof Stats,side:number)=>{const origin=detail?.image?.fields[detailPeriod]?.[k]?.[side];return origin?({recognized:'Reconhecido e revisado',corrected:'Corrigido pelo usuário',calculated:'Calculado'})[origin]:'';};
  useEffect(()=>{if(!modal&&!detail)return;const previous=document.activeElement as HTMLElement|null;const dialog=document.querySelector<HTMLElement>('[role="dialog"]');const focusable=()=>Array.from(dialog?.querySelectorAll<HTMLElement>('button,input,select,[href],[tabindex="0"]')??[]).filter(el=>!el.hasAttribute('disabled'));focusable()[0]?.focus();const handler=(e:KeyboardEvent)=>{if(e.key==='Escape'){setModal(null);setDetail(null);}if(e.key==='Tab'){const els=focusable();const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};document.addEventListener('keydown',handler);const overflow=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.removeEventListener('keydown',handler);document.body.style.overflow=overflow;previous?.focus();};},[modal,detail]);
 
  function commit(next:Data){try{localStorage.setItem(STORAGE,JSON.stringify(next));setData(next);setError('');return true;}catch{setError('Não foi possível salvar. Verifique o espaço e as permissões do navegador. Exporte um backup antes de sair.');return false;}}
  const team=(id:string)=>data.teams.find(t=>t.id===id);
  const sorted=[...data.matches].sort((a,b)=>b.date.localeCompare(a.date));
+ const leagues=leagueOptions(data.matches);
+ const selectedLeague=leagues.includes(leagueFilter)?leagueFilter:ALL_LEAGUES;
+ const seasons=seasonOptions(data.matches,selectedLeague);
+ const selectedSeason=seasons.includes(seasonFilter)?seasonFilter:ALL_LEAGUES;
+ const scopedMatches=filterMatchesByLeague(data.matches,selectedLeague,selectedSeason);
+ const scopedTeamIds=new Set(scopedMatches.flatMap(m=>[m.home,m.away]));
+ const scopedTeams=selectedLeague===ALL_LEAGUES&&selectedSeason===ALL_LEAGUES
+   ?data.teams:data.teams.filter(t=>scopedTeamIds.has(t.id));
+ const historyMatches=scopedMatches.filter(m=>
+   (`${data.teams.find(t=>t.id===m.home)?.name??''} ${data.teams.find(t=>t.id===m.away)?.name??''} ${m.competition}`)
+     .toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR'))
+ ).sort((a,b)=>b.date.localeCompare(a.date));
+ const historyListing=paginateMatches(historyMatches,historyPage);
+ const leagueFilters=<section className="league-filters" aria-label="Filtros por campeonato e temporada">
+   <label>Campeonato
+     <select aria-label="Filtrar campeonato" value={selectedLeague} onChange={e=>{setLeagueFilter(e.target.value);setSeasonFilter(ALL_LEAGUES);setHistoryPage(1);setCompare(['','']);}}>
+       <option value={ALL_LEAGUES}>Todos os campeonatos</option>
+       {leagues.map(league=><option value={league} key={league}>{league}</option>)}
+     </select>
+   </label>
+   <label>Temporada
+     <select aria-label="Filtrar temporada" value={selectedSeason} onChange={e=>{setSeasonFilter(e.target.value);setHistoryPage(1);setCompare(['','']);}}>
+       <option value={ALL_LEAGUES}>Todas as temporadas</option>
+       {seasons.map(season=><option value={season} key={season}>{season}</option>)}
+     </select>
+   </label>
+   <span className="league-scope-count">{scopedMatches.length} {scopedMatches.length===1?'partida':'partidas'} nesta seleção</span>
+ </section>;
  const total=(k:keyof Stats)=>matchAverage(data.matches,k,period).total;
  const mean=(k:keyof Stats)=>matchAverage(data.matches,k,period);
  const ranking=data.teams.map(t=>({...t,...average(data.matches,t.id,period)})).sort((a,b)=>(b.values.goals??-1)-(a.values.goals??-1));
@@ -62,12 +106,30 @@ export default function App(){
  function demo(){if(data.teams.length||data.matches.length)return;const teams=[{id:'demo-a',name:'Palmeiras',color:'#23794e'},{id:'demo-b',name:'Flamengo',color:'#b74242'},{id:'demo-c',name:'Corinthians',color:'#3e4652'},{id:'demo-d',name:'São Paulo',color:'#bc4b50'}];const matches:Match[]=Array.from({length:8},(_,i)=>({id:`demo-${i}`,home:teams[i%4].id,away:teams[(i+1)%4].id,date:`2026-09-${String(10+i*2).padStart(2,'0')}`,competition:'Dados de demonstração',first:[{goals:i%2,shots:5+i%3,target:2,corners:3,yellow:1,red:0},{goals:1,shots:4,target:2,corners:2,yellow:1,red:0}],second:[{goals:1,shots:7,target:3,corners:4,yellow:2,red:0},{goals:i%3,shots:6,target:3,corners:3,yellow:1,red:0}]}));commit({teams,matches});setNotice('Dados fictícios carregados. Você pode excluir as partidas pelo histórico.');}
  function Badge({id}:{id:string}){const t=team(id);return <span className="badge" style={{background:t?.color??'#586b60'}}>{t?.name.slice(0,3).toUpperCase()??'?'}</span>;}
  function MatchRow({m}:{m:Match}){const a=stats(m,0,period),b=stats(m,1,period);return <button className="match-row" onClick={()=>{setDetailPeriod(period);setDetail(m);}}><span className="match-date">{dateLabel(m.date)}<small>{(m.competition||'Amistoso')+(m.external?' · TheSportsDB':m.image?' · Imagem revisada':m.research?' · Pesquisa CSV':'')}</small></span><span className="match-teams"><Badge id={m.home}/><span>{team(m.home)?.name}</span><b className="score">{fmt(a.goals)} <em>:</em> {fmt(b.goals)}</b><span>{team(m.away)?.name}</span><Badge id={m.away}/></span><ChevronRight size={18}/></button>;}
- const selected:[string,string]=[compare[0]||data.teams[0]?.id||'',compare[1]||data.teams[1]?.id||''];
- return <div className={page===8?"app intelligence premium":"app premium"}><aside><a className="brand" href="#" onClick={()=>setPage(0)}><span className="brand-icon"><Activity size={24}/></span>Fut<span>Stats</span></a><div className="workspace-label">SEU CENTRO DE ESTATÍSTICAS</div><nav>{tabs.map((t,i)=><button className={page===i?'active':''} key={t.name} onClick={()=>{setPage(i);setSearch('');}}><t.icon size={20}/>{t.name}{page===i&&<span className="nav-dot"/>}</button>)}</nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Exportar tudo</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · versão 3.0</small></div></aside>
+ const selected:[string,string]=[scopedTeams.find(t=>t.id===compare[0])?.id??scopedTeams[0]?.id??'',scopedTeams.find(t=>t.id===compare[1])?.id??scopedTeams[1]?.id??''];
+ return <div className={page===7&&toolPanel==='api'?"app intelligence premium":"app premium"}><aside><a className="brand" href="#" onClick={()=>setPage(0)}><span className="brand-icon"><Activity size={24}/></span>Fut<span>Stats</span></a><div className="workspace-label">SEU CENTRO DE ESTATÍSTICAS</div><nav aria-label="Navegação principal">{tabs.slice(0,7).map((t,i)=><button type="button" data-area={t.area} className={page===i?'active':''} key={t.name} onClick={()=>{setPage(i);setSearch('');setHistoryPage(1);}}><t.icon size={20}/>{t.name}{page===i&&<span className="nav-dot"/>}</button>)}
+ <div className="nav-tools-label">RECURSOS OPCIONAIS</div>
+ <button type="button" data-area="tools" className={page===7?'active':''} onClick={()=>setPage(7)}><Wrench size={20}/>Ferramentas e testes{page===7&&<span className="nav-dot"/>}</button>
+ </nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Exportar tudo</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
  <div className="main"><header><span>Futebol / <b>{tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button aria-label="Exportar backup completo com jogos e previsões" title="Exportar backup completo" onClick={exportData}><Download size={18}/></button><button aria-label="Restaurar backup completo ou antigo" title="Restaurar backup" onClick={()=>file.current?.click()}><Upload size={18}/></button></div></header><main>
- <div className="heading"><div><div className="eyebrow">CADA PARTIDA CONTA</div><h1>{['Seu futebol em números.','Suas equipes.','Compare. Entenda.','A história de cada jogo.','Amplie sua base.','Prepare sua análise.','Valide os sinais históricos.','Acompanhe a partida.','Explore partidas automáticas.'][page]}</h1><p>{['Acompanhe o desempenho e descubra o que os dados dizem.','Organize as equipes que fazem parte da sua análise.','Duas equipes, os mesmos critérios. Uma visão mais completa.','Todas as partidas e estatísticas em um só lugar.','Busque equipes e jogos com a integração experimental.','Compare janelas recentes, com amostras e fontes claras.','Compare mercados retrospectivos sem vazamento dos resultados.','Consulte os dados disponíveis na fonte, quando você solicitar.','Consulte a API-Football sem alterar sua base.'][page]}</p></div><button className="primary" onClick={()=>page===6?document.querySelector('.calendar-agenda')?.scrollIntoView({behavior:'smooth',block:'start'}):page===1?openTeam():openMatch()}>{page===6?<Target size={18}/>:<Plus size={18}/>} {page===6?'Ver agenda':page===1?'Nova equipe':'Nova partida'}</button></div>
+ <div className="heading"><div><div className="eyebrow">FUTSTATS · CENTRO DE ANÁLISES</div><h1>{[
+ 'Seu futebol em números.','Equipes por campeonato.','Compare dentro da competição.',
+ 'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.','Radar V2 × V3.',
+ 'Ferramentas e testes opcionais.'
+ ][page]}</h1><p>{[
+ 'Acompanhe o desempenho e descubra o que os dados dizem.',
+ 'Filtre equipes por liga e temporada para não misturar médias.',
+ 'Use a mesma competição e temporada para comparar equipes.',
+ 'Encontre jogos por campeonato, temporada ou busca.',
+ 'Importe pesquisas CSV revisadas com segurança.',
+ 'Compare janelas recentes, com amostras e fontes claras.',
+ 'Registre análises antes de cada partida e avalie resultados reais.',
+ 'OCR, TheSportsDB, consultas pontuais e outros testes experimentais.'
+ ][page]}</p></div>
+ {(page===0||page===1||page===3||page===6)&&<button className="primary" onClick={()=>page===6?document.querySelector('.calendar-agenda')?.scrollIntoView({behavior:'smooth',block:'start'}):page===1?openTeam():openMatch()}>{page===6?<CalendarDays size={18}/>:<Plus size={18}/>} {page===6?'Ver agenda':page===1?'Nova equipe':'Nova partida'}</button>}</div>
  {error&&<div className="alert" role="alert">{error}<button aria-label="Fechar aviso" onClick={()=>setError('')}><X size={16}/></button></div>}{notice&&<div className="notice" role="status"><Check size={17}/>{notice}<button aria-label="Fechar mensagem" onClick={()=>setNotice('')}><X size={16}/></button></div>}
- <div className="toolbar"><span><span className="online-dot"/> {page===1?`${data.teams.length} equipes cadastradas`:`${data.matches.length} partidas na sua base`}</span>{page!==1&&page<5&&<div className="segment"><button className={period==='first'?'selected':''} onClick={()=>setPeriod('first')}>1º tempo</button><button className={period==='full'?'selected':''} onClick={()=>setPeriod('full')}>Partida completa</button></div>}</div>
+ <div className="toolbar"><span><span className="online-dot"/> {page===1?`${scopedTeams.length} equipes nesta seleção`:[2,3].includes(page)?`${scopedMatches.length} partidas nesta seleção`:`${data.matches.length} partidas na sua base`}</span>{[0,1,2,3].includes(page)&&<div className="segment"><button className={period==='first'?'selected':''} onClick={()=>setPeriod('first')}>1º tempo</button><button className={period==='full'?'selected':''} onClick={()=>setPeriod('full')}>Partida completa</button></div>}</div>
+ {[1,2,3].includes(page)&&leagueFilters}
  {page===0&&<><section className="home-shortcuts" aria-label="Acesso rápido às análises">
   <div className="home-shortcuts-copy"><span className="quick-eyebrow">CENTRAL DE ANÁLISE</span><h2>Seu próximo jogo começa aqui.</h2><p>Acompanhe a agenda e veja os sinais dos Radares V2 e V3 em poucos toques.</p></div>
   <div className="quick-actions">
