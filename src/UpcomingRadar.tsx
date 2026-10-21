@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,useRef} from 'react';
 import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
@@ -31,12 +31,17 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const [league,setLeague]=useState('');
   const [saved,setSaved]=useState(readSaved);
   const [message,setMessage]=useState('');
+  const [calendarSelection,setCalendarSelection]=useState('');
+  const futureFormRef=useRef<HTMLHeadingElement>(null);
   function useCalendarFixture(f:ScheduledFixture){
     const h=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.home));
     const a=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
     if(!h||!a||!f.time)return;
     setIds([h.id,a.id]);setLeague(f.competition);setDate(f.date);setTime(f.time);
-    setMessage('Confronto da agenda selecionado. Confira as amostras antes de registrar.');
+    setCalendarSelection(`${f.home} × ${f.away} · ${f.date} às ${f.time} (Brasília)`);
+    setMessage('');
+    // Keep the user on the same page but bring the filled-in Radar controls into view.
+    futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
   }
   const teams=data.teams;
   const leagues=[...new Set(data.matches.map(m=>m.competition.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
@@ -84,7 +89,8 @@ export default function UpcomingRadar({data}:{data:Data}) {
   }
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
-    <h3>Radar · Novo confronto futuro</h3>
+    <h3 ref={futureFormRef}>Radar · Novo confronto futuro</h3>
+    {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
     <div className="analysis-controls">
       <label>Mandante<select aria-label="Mandante futuro" value={ids[0]} onChange={e=>setIds([e.target.value,ids[1]])}>
