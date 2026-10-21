@@ -106,3 +106,20 @@ export function calendarWindow(entries:ScheduledFixture[],window:CalendarWindow,
   return entries.filter(f=>f.date>=current&&f.date<=endDate&&isUpcoming(f,now))
     .sort((a,b)=>a.date.localeCompare(b.date)||(a.time??'99:99').localeCompare(b.time??'99:99'));
 }
+
+// Snapshot of the CBF's official round 32 fixture list, published 27/09/2026.
+// The schedule may change. This is a read-only starting point, NOT a live feed.
+// Team aliases intentionally match the previously imported FutStats CSV names.
+const ROUND_32_SOURCE = 'https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro/a/cbf-garante-duas-semanas-completas-de-futebol-para-rodadas-33-e-34-do-brasileirao-e-semis-da-copa-do-brasil';
+export const brasileiraoRound32: ScheduledFixture[] = (
+ {date:'2026-10-23',time:'20:00',competition:'Brasileirão Série A',home:'Cruzeiro',away:'Remo'},
+ {date:'2026-10-24',time:'16:30',competition:'Brasileirão Série A',home:'Mirassol',away:'São Paulo'},
+ {date:'2026-10-24',time:'16:30',competition:'Brasileirão Série A',home:'Internacional',away:'Botafogo'},
+ {date:'2026-10-24',time:'16:30',competition:'Brasileirão Série A',home:'Vitória',away:'Athletico-PR'},
+ {date:'2026-10-24',time:'18:30',competition:'Brasileirão Série A',home:'Vasco',away:'Corinthians'},
+ {date:'2026-10-24',time:'18:30',competition:'Brasileirão Série A',home:'Palmeiras',away:'RB Bragantino'},
+ {date:'2026-10-24',time:'19:30',competition:'Brasileirão Série A',home:'Chapecoense',away:'Fluminense'},
+ {date:'2026-10-24',time:'21:00',competition:'Brasileirão Série A',home:'Santos',away:'Bahia'},
+ {date:'2026-10-26',time:'19:30',competition:'Brasileirão Série A',home:'Coritiba',away:'Grêmio'},
+ {date:'2026-10-26',time:'20:00',competition:'Brasileirão Série A',home:'Flamengo',away:'Atlético-MG'},
+).map(f=>({...f,id:fixtureId(f),sourceUrl:ROUND_32_SOURCE}));

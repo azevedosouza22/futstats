@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {parseCalendarCsv,mergeCalendar,calendarWindow,isUpcoming,brasiliaDate} from './calendar';
+import {parseCalendarCsv,mergeCalendar,calendarWindow,isUpcoming,brasiliaDate,brasileiraoRound32} from './calendar';
 
 const head='data,horario_brasilia,competicao,mandante,visitante,url_fonte';
 const lines=[
@@ -9,6 +9,17 @@ const lines=[
 const parse=(rows:string[])=>parseCalendarCsv([head,...rows].join('\n'));
 
 describe('Agenda CSV de jogos futuros',()=>{
+ it('oferece dez jogos confirmados da rodada 32 sem gravar na base',()=>{
+   expect(brasileiraoRound32).toHaveLength(10);
+   expect(brasileiraoRound32[0]).toMatchObject({
+    date:'2026-10-23',time:'20:00',home:'Cruzeiro',away:'Remo',competition:'Brasileirão Série A',
+   });
+   expect(brasileiraoRound32.find(f=>f.home==='Palmeiras'&&f.away==='RB Bragantino')?.time).toBe('18:30');
+   expect(new Set(brasileiraoRound32.map(f=>f.id)).size).toBe(10);
+   const now=new Date('2026-10-20T18:00:00Z');
+   expect(calendarWindow(brasileiraoRound32,'week',now)).toHaveLength(10);
+   expect(mergeCalendar(brasileiraoRound32,brasileiraoRound32).added).toBe(0);
+ });
  it('interpreta datas, fontes e deduplica importações repetidas',()=>{
    const loaded=parse(lines);
    expect(loaded).toHaveLength(2);

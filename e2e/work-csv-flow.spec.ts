@@ -236,8 +236,8 @@ test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page}
   await page.getByLabel('Importar calendário CSV').setInputFiles(file);
   await expect(page.getByRole('status')).toContainText('Agenda: 1 novos jogos');
   await page.getByRole('button',{name:'7 dias'}).click();
-  await expect(page.locator('.calendar-fixture')).toHaveCount(1);
-  await page.getByRole('button',{name:'Analisar jogo'}).click();
+  await expect(page.locator('.calendar-fixture').filter({hasText:'RB Bragantino × Cruzeiro'})).toHaveCount(1);
+  await page.locator('.calendar-fixture').filter({hasText:'RB Bragantino × Cruzeiro'}).getByRole('button',{name:'Analisar jogo'}).click();
   await expect(page.getByRole('combobox',{name:'Mandante futuro'})).toHaveValue(/.+/);
   await expect(page.getByRole('combobox',{name:'Visitante futuro'})).toHaveValue(/.+/);
   await expect(page.getByRole('combobox',{name:'Competição futura'})).toHaveValue('Brasileirão Série A');
@@ -249,7 +249,7 @@ test('agenda CSV mostra próximos jogos e envia confronto ao Radar',async({page}
   await page.reload();
   await page.getByRole('button',{name:'Radar experimental',exact:true}).click();
   await page.getByRole('button',{name:'7 dias'}).click();
-  await expect(page.locator('.calendar-fixture')).toHaveCount(1);
+  await expect(page.locator('.calendar-fixture').filter({hasText:'RB Bragantino × Cruzeiro'})).toHaveCount(1);
 });
 
 test('backtest automático apresenta sinais e mercados em cartões legíveis no celular',async({page})=>{
