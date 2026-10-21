@@ -5,6 +5,7 @@ import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming} from './radar';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
+import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
 
 type Saved = SavedRadarRecord;
 const KEY='futstats-radar-previews-v1';
@@ -27,6 +28,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const [time,setTime]=useState('20:00');
   const [league,setLeague]=useState('');
   const [saved,setSaved]=useState(readSaved);
+  const [recordFilter,setRecordFilter]=useState<FollowupFilter>('all');
   const [message,setMessage]=useState('');
   const [calendarSelection,setCalendarSelection]=useState('');
   const futureFormRef=useRef<HTMLHeadingElement>(null);
@@ -50,6 +52,12 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const prospective=eligible&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
   const settlements=saved.map(v=>settleVenuePredictions(data,v));
   const scores=scoreSettlements(settlements);
+  const followup=summarizeRadarFollowup(saved,settlements);
+  const visibleSaved=saved.map((record,index)=>({record,index,status:followup.statuses[index]}))
+    .filter(r=>recordFilter==='all'||r.status===recordFilter);
+  const evaluatedScore=(correct:number,count:number)=>count
+    ?`${correct}/${count} (${(100*correct/count).toLocaleString('pt-BR',{maximumFractionDigits:1})}%)`
+    :'N/D';
   const scoreText=(v:{correct:number;signals:number})=>v.signals?`${v.correct}/${v.signals} (${(100*v.correct/v.signals).toLocaleString('pt-BR',{maximumFractionDigits:1})}%)`:'N/D';
 
   // Preview all missing predictions from the verified round. No writes happen
@@ -268,14 +276,66 @@ export default function UpcomingRadar({data}:{data:Data}) {
             onChange={e=>{void restoreSaved(e.currentTarget.files?.[0]);}}/>
         </label>
       </div>
-      <div className="radar-prospective-score" aria-label="Placares das previsões registradas">
-        <h5>Teste com previsões registradas antes dos jogos</h5>
-        <p>V2: {scoreText(scores.v2)} · referência sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV2)} · sempre Under: {scoreText(scores.alwaysUnderV2)}</p>
-        <p>V3: {scoreText(scores.v3)} · referência sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV3)} · sempre Under: {scoreText(scores.alwaysUnderV3)}</p>
-        <p className="muted">Só entram sinais registrados antes do início e resultados identificados com segurança. N/D significa sem amostra; indicadores de mercados diferentes não são jogos independentes.</p>
-      </div>
-      {saved.length===0?<p className="muted">Nenhum registro salvo neste navegador.</p>:<ul>
-        {saved.slice(0,10).map((v,i)=>{
+      <section className="radar-followup" aria-label="Painel de acompanhamento das previsões">
+        <h5>Painel de acompanhamento · V2 × V3</h5>
+        <p className="muted">Acompanhe as previsões congeladas antes das partidas. Os acertos só aparecem após importar resultados reais e validados.</p>
+        <div className="radar-followup-kpis">
+          {[
+            {label:'Registros',count:followup.counts.total},
+            {label:'Aguardando jogo',count:followup.counts.future},
+            {label:'Aguardando resultado',count:followup.counts.pending},
+            {label:'Jogos avaliados',count:followup.counts.scored},
+            {label:'Revisar / N/D',count:followup.counts.review},
+          ].map(item=><div key={item.label}><strong>{item.count}</strong><span>{item.label}</span></div>)}
+        </div>
+        <div className="radar-followup-scroll">
+          <table className="radar-followup-table">
+            <thead><tr><th scope="col">Mercado</th><th scope="col">Sinais V2</th><th scope="col">Acertos V2</th><th scope="col">Sinais V3</th><th scope="col">Acertos V3</th></tr></thead>
+            <tbody>{followup.byMarket.map(m=><tr key={m.id}>
+              <th scope="row">{m.label}</th>
+              <td>{m.v2Signals}</td><td>{evaluatedScore(m.v2Correct,m.v2Evaluated)}</td>
+              <td>{m.v3Signals}</td><td>{evaluatedScore(m.v3Correct,m.v3Evaluated)}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <div className="radar-followup-cards" aria-label="Sinais e acertos por mercado no celular">
+          {followup.byMarket.map(m=><article className="radar-followup-card" key={m.id}>
+            <h6>{m.label}</h6>
+            <div className="radar-followup-card-versions">
+              <div>
+                <b>Radar V2</b>
+                <span>Sinais <strong>{m.v2Signals}</strong></span>
+                <span>Acertos <strong>{evaluatedScore(m.v2Correct,m.v2Evaluated)}</strong></span>
+              </div>
+              <div>
+                <b>Radar V3</b>
+                <span>Sinais <strong>{m.v3Signals}</strong></span>
+                <span>Acertos <strong>{evaluatedScore(m.v3Correct,m.v3Evaluated)}</strong></span>
+              </div>
+            </div>
+          </article>)}
+        </div>
+        <p className="muted">Sinais = previsões Over/Under feitas antes do jogo. Acertos = somente sinais com resultado conferido. N/D significa que ainda não há resultado válido; não equivale a erro ou acerto.</p>
+        <details className="radar-followup-baselines">
+          <summary>Comparar com referências sempre Over e sempre Under</summary>
+          <p>V2: {scoreText(scores.v2)} · sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV2)} · sempre Under: {scoreText(scores.alwaysUnderV2)}</p>
+          <p>V3: {scoreText(scores.v3)} · sempre Over nos mesmos sinais: {scoreText(scores.alwaysOverV3)} · sempre Under: {scoreText(scores.alwaysUnderV3)}</p>
+          <p className="muted">Mercados diferentes não são jogos independentes. Amostras pequenas não comprovam capacidade preditiva.</p>
+        </details>
+        <label className="radar-followup-filter">Filtrar registros
+          <select aria-label="Filtrar registros pré-jogo por situação" value={recordFilter} onChange={e=>setRecordFilter(e.target.value as FollowupFilter)}>
+            <option value="all">Todos ({followup.counts.total})</option>
+            <option value="future">Aguardando jogo ({followup.counts.future})</option>
+            <option value="pending">Aguardando resultado ({followup.counts.pending})</option>
+            <option value="scored">Jogos avaliados ({followup.counts.scored})</option>
+            <option value="review">Revisar / N/D ({followup.counts.review})</option>
+          </select>
+        </label>
+      </section>
+      {saved.length===0?<p className="muted">Nenhum registro salvo neste navegador.</p>:<>
+        {visibleSaved.length===0&&<p className="muted">Nenhum registro nesta situação. Selecione "Todos" para ver os demais.</p>}
+        <ul>
+        {visibleSaved.map(({record:v,index:i})=>{
           const settled=settlements[i];
           const status={future:'Aguardando jogo',pending:'Aguardando resultado na base',ambiguous:'Resultado com data ou identidade ambígua',late:'Registro posterior ao início (não pontua)',legacy:'Registro antigo — sem V2/V3',complete:'Resultado disponível'}[settled.status];
           return <li key={v.key}><b>{v.home} × {v.away}</b>
@@ -288,8 +348,8 @@ export default function UpcomingRadar({data}:{data:Data}) {
             <button type="button" className="radar-record-delete" aria-label={`Excluir apenas o registro pré-jogo ${v.home} × ${v.away} de ${v.matchAt.slice(0,10)}`} onClick={()=>removeSavedRecord(v)}>Excluir somente este registro</button>
           </li>;
         })}
-      </ul>}
+      </ul></>}
     </div>
-    <p className="muted">Previsões V2/V3 ficam congeladas neste navegador, separadas da base de partidas e do backup principal. O arquivo de registros pode ser exportado ou restaurado sem substituir registros existentes. A conferência exige resultados reais validados na base; ainda não há consulta automática de resultados.</p>
+    <p className="muted">Previsões V2/V3 ficam congeladas neste navegador. O backup completo agora inclui os jogos e os registros pré-jogo; o JSON separado do Radar permanece disponível. A conferência exige resultados reais validados na base; ainda não há consulta automática de resultados.</p>
   </section>;
 }
