@@ -90,7 +90,7 @@ export default function UpcomingRadar({data}:{data:Data}) {
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
     <h3 ref={futureFormRef}>Radar · Novo confronto futuro</h3>
-    {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>
+    {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>}
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
     <div className="analysis-controls">
       <label>Mandante<select aria-label="Mandante futuro" value={ids[0]} onChange={e=>setIds([e.target.value,ids[1]])}>
