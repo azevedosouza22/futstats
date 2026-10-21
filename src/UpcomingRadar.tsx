@@ -1,6 +1,6 @@
 import {useState,useRef} from 'react';
 import type {Data} from './model';
-import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
+import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming, type RadarMarketResult} from './radar';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements,type SavedVenuePrediction} from './radarProspective';
@@ -54,6 +54,51 @@ export default function UpcomingRadar({data}:{data:Data}) {
   const scores=scoreSettlements(settlements);
   const scoreText=(v:{correct:number;signals:number})=>v.signals?`${v.correct}/${v.signals} (${(100*v.correct/v.signals).toLocaleString('pt-BR',{maximumFractionDigits:1})}%)`:'N/D';
 
+  // Preview all missing predictions from the verified round. No writes happen
+  // until the user explicitly confirms. Already saved forecasts are immutable.
+  const alreadyRegistered=(f:ScheduledFixture,records:Saved[]=saved)=>
+    records.some(v=>v.matchAt.slice(0,10)===f.date&&
+      v.competition.trim()===f.competition.trim()&&
+      normalizeTeam(v.home)===normalizeTeam(f.home)&&normalizeTeam(v.away)===normalizeTeam(f.away));
+  const roundPlans=brasileiraoRound32.flatMap(f=>{
+    if(!f.time||!isUpcoming(f)||alreadyRegistered(f))return [];
+    const h=teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.home));
+    const a=teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
+    if(!h||!a||h.id===a.id)return [];
+    const fixture={home:h.id,away:a.id,date:f.date,competition:f.competition};
+    const analysis=radarUpcoming(data,fixture);
+    if(!analysis.homeHistory.length||!analysis.awayHistory.length)return [];
+    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture)}];
+  });
+  const bulkCount=Math.min(roundPlans.length,Math.max(0,50-saved.length));
+  function registerRound(){
+    const latest=readSaved();
+    // Recheck duplicate records from disk, not only the React render.
+    const now=new Date(),timestamp=now.toISOString();
+    const free=Math.max(0,50-latest.length);
+    const chosen=roundPlans.filter(p=>isUpcoming(p.f,now)&&!alreadyRegistered(p.f,latest)).slice(0,free);
+    if(!chosen.length){setMessage('Nenhum confronto novo pode ser registrado. Os já salvos continuam intactos.');return;}
+    const newRecords:Saved[]=chosen.map(p=>({
+      key:crypto.randomUUID(),savedAt:timestamp,matchAt:p.f.date+'T'+p.f.time+':00',
+      competition:p.f.competition,home:p.home.name,away:p.away.name,
+      homeCount:p.analysis.homeHistory.length,awayCount:p.analysis.awayHistory.length,
+      venue:p.venue,
+      markets:p.analysis.markets.map(m=>({
+        id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
+        observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
+      })),
+    }));
+    const next=[...newRecords,...latest];
+    try{
+      localStorage.setItem(KEY,JSON.stringify(next));
+      setSaved(next);
+      setMessage(`${newRecords.length} análises registradas antes dos jogos. As anteriores foram preservadas, sem duplicatas. Confira os registros abaixo.`);
+      futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch{
+      setMessage('Não foi possível salvar as análises. Nenhum registro anterior foi alterado.');
+    }
+  }
+
   function saveSnapshot(){
     if(!eligible||!comparison||!home||!away)return;
     const matchAt=date+'T'+time+':00';
@@ -89,6 +134,22 @@ export default function UpcomingRadar({data}:{data:Data}) {
   }
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
+    <div className="radar-bulk-round" aria-label="Registro da rodada 32">
+      <h3>Teste da rodada 32 · Registro em lote</h3>
+      <p className="muted">Registre os jogos restantes de uma só vez, usando os mesmos cálculos V2/V3 já disponíveis no Radar. Os registros ficam congelados antes do início; confrontos já registrados não serão substituídos. A agenda é uma referência estática e deve ser conferida na fonte.</p>
+      <p><b>${bulkCount} jogos novos disponíveis para registrar</b> · limite de 50 previsões salvas neste navegador.</p>
+      {bulkCount>0&&<details>
+        <summary>Conferir previsões antes de registrar</summary>
+        {roundPlans.slice(0,bulkCount).map(p=><div key={p.f.id}>
+          <p><b>{p.f.home} × {p.f.away}</b> · {p.f.date} às {p.f.time} (Brasília)</p>
+          {p.venue.map(m=><p key={m.marketId}><small>{m.label}: V2 {m.v2} · V3 {m.v3}</small></p>)}
+        </div>)}
+      </details>}
+      <button type="button" className="primary" disabled={bulkCount===0} onClick={registerRound}>
+        Registrar {bulkCount} {bulkCount===1?'análise':'análises'} da rodada 32
+      </button>
+      <p className="muted">O botão grava apenas no navegador, sem apostas nem alterações nas 299 partidas. Ao importar os resultados futuramente, o Radar comparará as previsões salvas com os valores realizados.</p>
+    </div>
     <h3 ref={futureFormRef}>Radar · Novo confronto futuro</h3>
     {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>}
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
