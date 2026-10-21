@@ -34,6 +34,11 @@ export default function AutomaticMatches({data,save}:{data:Data;save:(next:Data)
  async function prepareImport(signal:AbortSignal){
    setCandidate(null);setImportNotice('');
    if(!selected||!stamp)throw Error('Consulte primeiro os detalhes e o acumulado da partida.');
+   const radar:unknown=JSON.parse(localStorage.getItem(RADAR_STORAGE)??'[]');
+   const savedRecords=parseRadarRecords(radar);
+   // Validate identity, FT status, duplicates and full-time numbers *before* spending
+   // another API call on half-time statistics for an ineligible match.
+   previewFootballResult(data,savedRecords,selected,full,[],false);
    let halvesData=halves,verified=!!halfStamp;
    if(!verified){
      // Only an explicit user request consumes the additional upstream call.
@@ -48,8 +53,6 @@ export default function AutomaticMatches({data,save}:{data:Data;save:(next:Data)
      setHalfStamp(verified?response.fetchedAt:'');
      setHalfNotice(verified?'':'Dados por tempo indisponíveis: os períodos serão importados como N/D.');
    }
-   const radar:unknown=JSON.parse(localStorage.getItem(RADAR_STORAGE)??'[]');
-   const savedRecords=parseRadarRecords(radar);
    const result=previewFootballResult(data,savedRecords,selected,full,halvesData,verified);
    if(!signal.aborted)setCandidate(result);
  }
