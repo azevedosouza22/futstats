@@ -298,6 +298,23 @@ export default function UpcomingRadar({data}:{data:Data}) {
             </tr>)}</tbody>
           </table>
         </div>
+        <div className="radar-followup-cards" aria-label="Sinais e acertos por mercado no celular">
+          {followup.byMarket.map(m=><article className="radar-followup-card" key={m.id}>
+            <h6>{m.label}</h6>
+            <div className="radar-followup-card-versions">
+              <div>
+                <b>Radar V2</b>
+                <span>Sinais <strong>{m.v2Signals}</strong></span>
+                <span>Acertos <strong>{evaluatedScore(m.v2Correct,m.v2Evaluated)}</strong></span>
+              </div>
+              <div>
+                <b>Radar V3</b>
+                <span>Sinais <strong>{m.v3Signals}</strong></span>
+                <span>Acertos <strong>{evaluatedScore(m.v3Correct,m.v3Evaluated)}</strong></span>
+              </div>
+            </div>
+          </article>)}
+        </div>
         <p className="muted">Sinais = previsões Over/Under feitas antes do jogo. Acertos = somente sinais com resultado conferido. N/D significa que ainda não há resultado válido; não equivale a erro ou acerto.</p>
         <details className="radar-followup-baselines">
           <summary>Comparar com referências sempre Over e sempre Under</summary>
