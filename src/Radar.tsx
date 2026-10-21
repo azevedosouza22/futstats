@@ -34,11 +34,32 @@ export default function Radar({data}: {data: Data}) {
       <h2>Radar · Validação retrospectiva</h2>
       <p>Veja o que os números anteriores a uma partida indicavam, sem utilizar o resultado dela nos cálculos.</p>
     </div></div>
+    <nav className="radar-quick-nav" aria-label="Escolha o que fazer no Radar">
+      <h3>O que você quer fazer?</h3>
+      <p>Escolha uma ação. As três áreas abaixo têm funções diferentes.</p>
+      <div className="radar-quick-actions">
+        <button type="button" className="radar-quick-action radar-quick-action--create"
+          onClick={()=>document.getElementById('radar-new-forecast')?.scrollIntoView({behavior:'smooth',block:'start'})}>
+          <span aria-hidden="true">1</span><strong>Criar previsão para um jogo futuro</strong>
+          <small>Nosso teste diário: escolha equipes, data e competição e salve V2/V3 antes do jogo.</small>
+        </button>
+        <button type="button" className="radar-quick-action radar-quick-action--saved"
+          onClick={()=>document.getElementById('radar-saved-forecasts')?.scrollIntoView({behavior:'smooth',block:'start'})}>
+          <span aria-hidden="true">2</span><strong>Ver previsões já registradas</strong>
+          <small>Consulte os 10 testes existentes e os resultados quando forem confirmados.</small>
+        </button>
+        <button type="button" className="radar-quick-action radar-quick-action--history"
+          onClick={()=>document.getElementById('radar-retrospective')?.scrollIntoView({behavior:'smooth',block:'start'})}>
+          <span aria-hidden="true">3</span><strong>Analisar jogos que já terminaram</strong>
+          <small>Simulação histórica. Não registra um novo teste antes da partida.</small>
+        </button>
+      </div>
+    </nav>
     <div className="radar-inner">
       <UpcomingRadar data={data}/>
       <hr/>
-      <h3>Comparar partidas já concluídas</h3>
-      <p className="muted">Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
+      <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>
+      <p className="muted">Esta área NÃO registra novos testes diários. Use o botão «Criar previsão para um jogo futuro» no topo. Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
       {!researchMatches.length ? <div className="empty">
         Importe pesquisas CSV para habilitar a validação retrospectiva. O Radar não cria partidas fictícias na sua base.
       </div> : <>
