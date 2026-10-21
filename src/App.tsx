@@ -3,6 +3,7 @@ import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Targ
 import Integration from './Integration';
 import WorkCsvImport from './WorkCsvImport';
 import OpenFootballPilot from './OpenFootballPilot';
+import FplStatsPilot from './FplStatsPilot';
 import PreGame from './PreGame';
 import Radar from './Radar';
 import Live from './Live';
@@ -160,7 +161,7 @@ export default function App(){
      <button type="button" disabled={historyListing.page===historyListing.pages} onClick={()=>setHistoryPage(Math.min(historyListing.pages,historyListing.page+1))}>Próxima →</button>
    </div>}
  </section>}
- {page===4&&<><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
+ {page===4&&<><FplStatsPilot/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
  {page===5&&<PreGame data={data}/>}
  {page===6&&<Radar data={data}/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
