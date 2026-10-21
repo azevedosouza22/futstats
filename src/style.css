@@ -553,3 +553,34 @@ html{scroll-behavior:smooth}
   .premium .history-pagination{gap:9px}
   .premium .tools-hub-menu{grid-template-columns:repeat(1,minmax(0,1fr))}
 }
+
+
+/* Radar V4: explain tasks before statistics and make the daily test discoverable. */
+.premium .radar-quick-nav{display:block;padding:18px;margin:18px 22px 8px;border:1px solid #486173;border-radius:15px;background:linear-gradient(130deg,#22394b,#1a2a38)}
+.premium .radar-quick-nav h3{margin:0 0 6px;color:#f4f8fc;font-size:18px}
+.premium .radar-quick-nav p{font-size:12px;line-height:1.6;color:#bdcfda;margin:0 0 14px}
+.premium .radar-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.premium .radar-quick-action{display:grid;grid-template-columns:30px minmax(0,1fr);column-gap:10px;row-gap:6px;align-items:center;text-align:left;padding:14px;min-height:125px;color:#f7fbfd;border:1px solid #557287;background:#1c3242;border-radius:12px}
+.premium .radar-quick-action:hover{background:#264355;filter:none}
+.premium .radar-quick-action:focus-visible{outline:3px solid #a8d5ff;outline-offset:2px}
+.premium .radar-quick-action>span{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#12634d;color:#c4ffe2;font-weight:800}
+.premium .radar-quick-action strong{font-size:13px;line-height:1.3}
+.premium .radar-quick-action small{grid-column:2;color:#b9ccdb;line-height:1.55;font-size:11px}
+.premium .radar-quick-action--saved>span{background:#2a578d;color:#d7ebff}
+.premium .radar-quick-action--history>span{background:#634c2a;color:#ffe3ba}
+.premium #radar-new-forecast,.premium #radar-retrospective,.premium #radar-saved-forecasts{scroll-margin-top:24px}
+.premium #radar-new-forecast{margin-top:26px;padding:14px 18px;border:1px solid #65a3d6;border-radius:12px;background:#1d4057;color:#d4ebff;font-size:20px}
+.premium .radar-form-help{margin:8px 0;padding:10px 15px;background:#213342;border-left:3px solid #85bdf4;border-radius:6px;color:#d0e1eb;font-size:12px;line-height:1.7}
+.premium .radar-v2v3-explain{margin:12px 0 15px;padding:12px 16px;border:1px solid #526979;border-radius:10px;color:#d4e7ee;background:#1b2b37;font-size:12px;line-height:1.65}
+.premium .radar-v2v3-explain summary{cursor:pointer;font-weight:700;color:#afe2ff}
+.premium .radar-v2v3-explain p{margin:10px 0 0}
+.premium #radar-retrospective{margin:18px 0 10px;padding:10px 12px;border-left:3px solid #e7ba74;color:#e5d2b0}
+.premium #radar-saved-forecasts{border-top:3px solid #699ad6}
+.premium #radar-saved-forecasts>h4{color:#d2e8ff}
+@media(max-width:1000px){.premium .radar-quick-actions{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .premium .radar-quick-nav{margin:12px 10px;padding:13px}
+  .premium .radar-quick-action{min-height:72px;grid-template-columns:30px 1fr;padding:11px}
+  .premium .radar-quick-action small{font-size:11px}
+  .premium #radar-new-forecast{padding:12px;font-size:18px}
+}
