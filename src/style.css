@@ -498,3 +498,58 @@ html{scroll-behavior:smooth}
   .premium .radar-followup-card-versions span {font-size:11px;line-height:1.45;color:#c5d6df;overflow-wrap:anywhere}
   .premium .radar-followup-card-versions strong {display:block;font-size:15px;line-height:1.3;color:#f6fafa;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 }
+
+
+/* FutStats Visual V4: distinct navigation, league selection and accessible history. */
+.premium nav .nav-tools-label{
+  margin:20px 12px 6px;padding-top:14px;border-top:1px solid #36505e;
+  color:#8ba3b0;font-size:10px;letter-spacing:.09em;font-weight:700;
+}
+.premium nav button[data-area]{min-height:43px;border-radius:10px;transition:background-color .15s ease}
+.premium nav button[data-area] svg{flex:0 0 auto}
+.premium nav button[data-area="overview"] svg{color:#67b8ed}
+.premium nav button[data-area="teams"] svg{color:#5ed0aa}
+.premium nav button[data-area="compare"] svg{color:#c8a7fa}
+.premium nav button[data-area="history"] svg{color:#f2bc70}
+.premium nav button[data-area="database"] svg{color:#e6ad70}
+.premium nav button[data-area="pregame"] svg{color:#83c2ff}
+.premium nav button[data-area="radar"] svg{color:#c8a2ff}
+.premium nav button[data-area="tools"] svg{color:#9dacb6}
+.premium nav button.active{border-left:3px solid #75bdf6}
+.premium nav button[data-area="radar"].active{border-left-color:#b493ff}
+.premium nav button[data-area="history"].active{border-left-color:#f2bc70}
+.premium nav button[data-area="tools"].active{border-left-color:#9dacb6}
+.premium .league-filters{
+  display:flex;align-items:end;gap:15px;flex-wrap:wrap;padding:17px;
+  border:1px solid #355261;background:#192c38;border-radius:14px;margin:16px 0;
+}
+.premium .league-filters label{display:grid;gap:7px;min-width:0;flex:1 1 190px;color:#d7e9ed;font-size:12px;font-weight:600}
+.premium .league-filters select{width:100%;min-width:0;min-height:42px;border:1px solid #456272;background:#233846;color:#f0f6fa;border-radius:8px;padding:8px 10px}
+.premium .league-scope-count{font-size:12px;color:#b8d3de;line-height:1.5;flex:0 0 auto}
+.premium .history-head{flex-wrap:wrap;gap:12px}
+.premium .history-head>div{min-width:0}
+.premium .history-head .search{max-width:100%;flex:1 1 210px}
+.premium .history-count{padding:5px 23px 12px;color:#a3bdcb;font-size:12px}
+.premium .history-pagination{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:18px;border-top:1px solid #395261}
+.premium .history-pagination button{border:1px solid #587182;border-radius:9px;padding:10px 15px;color:#e6f4fc;font-size:12px;min-height:44px}
+.premium .history-pagination button:disabled{opacity:.38;cursor:not-allowed}
+.premium .history-pagination span{font-size:12px;color:#bbd3dc;font-variant-numeric:tabular-nums}
+.premium .tools-hub{min-width:0;max-width:100%}
+.premium .tools-hub-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
+.premium .tools-hub-menu button{display:flex;gap:9px;align-items:center;text-align:left;min-height:48px;padding:13px;border:1px solid #3c5766;border-radius:11px;background:#1e303c;color:#c7dce8;font-size:12px}
+.premium .tools-hub-menu button[aria-pressed="true"]{border-color:#79ade3;background:#27445a;color:#fff;font-weight:700}
+.premium .tools-hub-menu button svg{flex-shrink:0}
+.premium .tools-hub-hint{font-size:12px;line-height:1.6;color:#b2c6d0;margin-bottom:15px}
+.premium .kpi:nth-child(1) svg{color:#7fc3e8}
+.premium .kpi:nth-child(2) svg{color:#70b6fa}
+.premium .kpi:nth-child(3) svg{color:#bd9cf5}
+.premium .kpi:nth-child(4) svg{color:#eeb66c}
+@media(max-width:650px){
+  .premium .league-filters{padding:12px;gap:10px}
+  .premium .league-filters label{flex:1 1 100%}
+  .premium .league-scope-count{flex:1 1 100%}
+  .premium .history-count{padding:4px 12px 10px}
+  .premium .history-head .search{width:100%;flex:1 1 100%}
+  .premium .history-pagination{gap:9px}
+  .premium .tools-hub-menu{grid-template-columns:repeat(1,minmax(0,1fr))}
+}
