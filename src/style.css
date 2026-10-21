@@ -498,3 +498,13 @@ html{scroll-behavior:smooth}
   .premium .radar-followup-card-versions span {font-size:11px;line-height:1.45;color:#c5d6df;overflow-wrap:anywhere}
   .premium .radar-followup-card-versions strong {display:block;font-size:15px;line-height:1.3;color:#f6fafa;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 }
+
+
+/* Verified FT result import — preview and consent, readable on Android. */
+.premium .auto-import-review{margin:18px 0;padding:16px;border:1px solid #476474;border-radius:12px;background:#1b2d38;min-width:0}
+.premium .auto-import-review h4{margin:0 0 10px;font-size:16px;color:#d0f3de}
+.premium .auto-import-review p{overflow-wrap:anywhere;line-height:1.65}
+.premium .auto-import-preview{margin-top:14px;padding:14px;border:1px solid #526a77;border-radius:10px;background:#263843;min-width:0}
+.premium .auto-import-preview b{color:#e5f9ec}
+.premium .auto-import-preview button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:6px 7px 0 0;white-space:normal}
+@media (max-width:600px){.premium .auto-import-review{padding:12px}.premium .auto-import-preview{padding:10px}.premium .auto-import-preview button{width:100%;margin:6px 0 0 0}}
