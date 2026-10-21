@@ -420,3 +420,17 @@ html{scroll-behavior:smooth}
     max-width: 100%;
   }
 }
+
+
+/* Unified backup controls: readable on narrow Android screens. */
+.backup-unified{display:flex;gap:18px;align-items:center;justify-content:space-between;margin:16px 0;min-width:0}
+.backup-unified>div:first-child{min-width:0}
+.backup-unified h2{margin:0 0 7px}
+.backup-unified p{margin:0;overflow-wrap:anywhere}
+.backup-buttons{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
+.backup-buttons button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;white-space:normal;text-align:center}
+@media(max-width:760px){
+ .backup-unified{flex-direction:column;align-items:stretch}
+ .backup-buttons{flex-direction:column;align-items:stretch}
+ .backup-buttons button{width:100%}
+}
