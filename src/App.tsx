@@ -2,6 +2,7 @@ import {useState,useRef,useEffect,type FormEvent} from 'react';
 import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Target,Flag,Shield,Download,Upload,X,Trash2,Pencil,Check,Activity,ChevronRight,CalendarDays,Crosshair,Database,Radio,Wrench,ScanLine,CloudDownload} from 'lucide-react';
 import Integration from './Integration';
 import WorkCsvImport from './WorkCsvImport';
+import OpenFootballPilot from './OpenFootballPilot';
 import PreGame from './PreGame';
 import Radar from './Radar';
 import Live from './Live';
@@ -159,7 +160,7 @@ export default function App(){
      <button type="button" disabled={historyListing.page===historyListing.pages} onClick={()=>setHistoryPage(Math.min(historyListing.pages,historyListing.page+1))}>Próxima →</button>
    </div>}
  </section>}
- {page===4&&<WorkCsvImport data={data} save={commit}/>}
+ {page===4&&<><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
  {page===5&&<PreGame data={data}/>}
  {page===6&&<Radar data={data}/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
