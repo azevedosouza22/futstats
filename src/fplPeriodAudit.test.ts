@@ -21,6 +21,19 @@ describe('auditoria rigorosa dos eventos da Premier League',()=>{
   expect(a.reconciledIds).toEqual(['ok']);
   expect(a.divergentIds).toEqual(['mismatch']);
   expect(a.pendingIds).toEqual(['pending']);
+  expect(a.periodsById['ok']).toEqual({
+   first:{shots:[1,0],onTarget:[1,0]},
+   second:{shots:[1,1],onTarget:[0,0]}
+  });
+  expect(a.periodsById['mismatch']).toBeUndefined();
+  expect(a.periodsById['pending']).toBeUndefined();
+ });
+ it('classifies minute 45 as first half, minute 46 and minute 90 as second',()=>{
+  const csv=header+'\n'+'ok,1,45,True,goal\nok,2,46,True,miss\nok,3,90,False,block';
+  const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(header+'\nnotused,1,55,False,miss')]);
+  expect(a.reconciled).toBe(1);
+  expect(a.periodsById['ok']?.first).toEqual({shots:[1,0],onTarget:[1,0]});
+  expect(a.periodsById['ok']?.second).toEqual({shots:[1,1],onTarget:[0,0]});
  });
  it('rejeita eventos com minutos ausentes ou valores de minuto inválidos',()=>{
   const csv=header+'\n'+'ok,1,,True,goal\nok,2,47,True,miss\nok,3,60,False,block';
