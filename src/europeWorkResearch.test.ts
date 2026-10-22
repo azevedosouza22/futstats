@@ -96,6 +96,28 @@ describe('Lote Work europeu isolado',()=>{
    gols_total_jogo:'3',gols_total_2t:'2'
   }),original,emptyEuropeWork())).toThrow('Placar');
  });
+ it('reconhece nomes abreviados dos sete confrontos seguintes sem combinar equipes erradas',()=>{
+  const pairs:[string,string,string,string][]=[
+   ['Parma Calcio 1913','Cagliari Calcio','Parma','Cagliari'],
+   ['Frosinone Calcio','Juventus FC','Frosinone','Juventus'],
+   ['Venezia FC','US Lecce','Venezia','Lecce'],
+   ['Atalanta BC','US Sassuolo Calcio','Atalanta','Sassuolo'],
+   ['Torino FC','AC Milan','Torino','Milan'],
+   ['Bologna FC 1909','SS Lazio','Bologna','Lazio'],
+   ['AS Roma','ACF Fiorentina','Roma','Fiorentina']
+  ];
+  for(const [fullHome,fullAway,shortHome,shortAway] of pairs){
+   const first=original.matches[0];
+   const m:EuropeMatch={...first,
+    home:fullHome,away:fullAway,
+    id:['serie-a',1,'2026-08-22',fullHome.toLowerCase(),fullAway.toLowerCase()].join('|')
+   };
+   const db:StoredEuropeanResearch={format:EUROPE_RESEARCH_STORAGE,matches:[m]};
+   const report=reviewEuropeWorkCsv(csv([0],{mandante:shortHome,visitante:shortAway}),db,emptyEuropeWork());
+   expect(report.newEntries).toHaveLength(1);
+   expect(report.newEntries[0].europeId).toBe(m.id);
+  }
+ });
  it('não inclui partidas que não existem nos 155 jogos',()=>{
   expect(()=>reviewEuropeWorkCsv(csv([0],{mandante:'Time aleatório'}),original,emptyEuropeWork())).toThrow('não identificada');
   expect(()=>reviewEuropeWorkCsv(csv([0],{competicao:'Serie A italiana 2025/26'}),original,emptyEuropeWork())).toThrow('Competição');
