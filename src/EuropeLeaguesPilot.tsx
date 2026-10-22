@@ -5,10 +5,17 @@ import {
  parseEuropeanLeague,eligibleEuropeanResults,readStoredEuropeanResearch,stageEuropeanResults,
  type EuropeLeagueId,type EuropeanLeagueCatalog,type StoredEuropeanResearch
 } from './europeLeagueResearch';
+import {
+ EUROPE_WORK_STORAGE,emptyEuropeWork,readEuropeWork,
+ reviewEuropeWorkCsv,stageEuropeWork,type WorkEuropeStore,type MetricPairs
+} from './europeWorkResearch';
 
 const fmtDate=(s:string)=>new Date(s+'T12:00:00').toLocaleDateString('pt-BR');
 const pair=(v:[number,number]|null)=>v?v[0]+' × '+v[1]:'N/D';
 const start:StoredEuropeanResearch={format:EUROPE_RESEARCH_STORAGE,matches:[]};
+const displayWorkPeriod=(period:MetricPairs)=>
+ 'Gols '+pair(period.goals)+' · Finalizações '+pair(period.shots)+
+ ' · No alvo '+pair(period.target)+' · Escanteios '+pair(period.corners);
 
 export default function EuropeLeaguesPilot(){
  const [catalogs,setCatalogs]=useState<EuropeanLeagueCatalog[]>([]);
@@ -20,10 +27,16 @@ export default function EuropeLeaguesPilot(){
  const [notice,setNotice]=useState('');
  const [error,setError]=useState('');
  const [stored,setStored]=useState<StoredEuropeanResearch>(start);
+ const [enriched,setEnriched]=useState<WorkEuropeStore>(emptyEuropeWork);
+ const [workNotice,setWorkNotice]=useState('');
+ const [workError,setWorkError]=useState('');
+ const [workBusy,setWorkBusy]=useState(false);
 
  useEffect(()=>{
   try{setStored(readStoredEuropeanResearch(localStorage.getItem(EUROPE_RESEARCH_STORAGE)));}
   catch(e){setError(e instanceof Error?e.message:'Falha na leitura da base experimental.');}
+  try{setEnriched(readEuropeWork(localStorage.getItem(EUROPE_WORK_STORAGE)));}
+  catch(e){setWorkError(e instanceof Error?e.message:'Falha na leitura das estatísticas Work.');}
  },[]);
  useEffect(()=>{
   const controller=new AbortController();
@@ -75,6 +88,32 @@ export default function EuropeLeaguesPilot(){
  const fixtures=data?.matches.filter(x=>x.round===activeRound)??[];
  const daysOld=data?.lastResultDate?
   Math.floor((Date.parse(today+'T12:00:00Z')-Date.parse(data.lastResultDate+'T12:00:00Z'))/86400000):null;
+ async function addWorkCsv(file?:File){
+  setWorkError('');setWorkNotice('');
+  if(!file)return;
+  if(!file.name.toLowerCase().endsWith('.csv')||file.size>2_000_000){
+   setWorkError('Selecione o CSV do Work de até 2 MB.');return;
+  }
+  setWorkBusy(true);
+  try{
+   const text=await file.text();
+   const base=readStoredEuropeanResearch(localStorage.getItem(EUROPE_RESEARCH_STORAGE));
+   const old=readEuropeWork(localStorage.getItem(EUROPE_WORK_STORAGE));
+   const report=reviewEuropeWorkCsv(text,base,old);
+   if(report.newEntries.length===0){
+    setEnriched(old);
+    setWorkNotice('Arquivo já registrado: '+report.duplicates+' partida(s), nenhuma duplicata adicionada.');
+   }else{
+    const next=stageEuropeWork(old,report);
+    // Only the separately-namespaced Work enrichment is changed.
+    // Existing historical 659, Radar and the 155-score catalogue remain untouched.
+    localStorage.setItem(EUROPE_WORK_STORAGE,JSON.stringify(next));
+    setEnriched(next);
+    setWorkNotice(report.newEntries.length+' partida(s) complementada(s) com estatísticas completas do Work. Os '+base.matches.length+' jogos da pesquisa e o Radar permanecem intactos.');
+   }
+  }catch(e){setWorkError(e instanceof Error?e.message:'CSV não aprovado. Nenhum dado foi gravado.');}
+  finally{setWorkBusy(false);}
+ }
  const addToResearch=()=>{
   setNotice('');setError('');
   try{
@@ -102,6 +141,7 @@ export default function EuropeLeaguesPilot(){
    <div className="europe-league-kpis">
     <div><strong>{eligible.length}</strong><span>Jogos com placar e intervalo conferíveis</span></div>
     <div><strong>{stored.matches.length}</strong><span>Salvos na pesquisa local</span></div>
+    <div><strong>{enriched.entries.length}</strong><span>Jogos completos via Work</span></div>
     <div><strong>{catalogs.length}/3</strong><span>Campeonatos acessíveis</span></div>
    </div>
    <div className="backup-buttons">
@@ -111,6 +151,17 @@ export default function EuropeLeaguesPilot(){
    {notice&&<p role="status" className="notice">{notice}</p>}
    {error&&<p role="alert" className="alert">{error}</p>}
    {failed.length>0&&<p className="alert" role="status">{failed.join('; ')}. As demais ligas continuam disponíveis.</p>}
+   <details className="fpl-pilot-disclosure" aria-label="Completar estatísticas da base experimental com CSV do Work">
+    <summary>Completar estatísticas usando CSV do Work</summary>
+    <p className="muted">Selecione o arquivo de 55 colunas recebido do Work. O FutStats confere nomes das equipes, competição, data, placares e todas as somas; depois complementa somente os jogos que já estão nesta base experimental. Não é preciso repetir a seleção para partidas já importadas. O CSV não sai do seu navegador.</p>
+    <input type="file" accept=".csv,text/csv" disabled={workBusy||stored.matches.length===0}
+      aria-label="Selecionar CSV do Work para complementar base europeia"
+      onChange={e=>{const file=e.currentTarget.files?.[0];e.currentTarget.value='';void addWorkCsv(file);}}/>
+    {workBusy&&<p role="status" className="muted">Conferindo as partidas…</p>}
+    {workNotice&&<p role="status" className="notice">{workNotice}</p>}
+    {workError&&<p role="alert" className="alert">{workError}</p>}
+    <p className="muted">Somente arquivos da pesquisa europeia; não modifica a base histórica de 659 jogos, as previsões ou os placares da pesquisa CC0. Arquivos conflitantes são rejeitados, sem substituir estatísticas existentes.</p>
+   </details>
    <p className="muted">Jogos sem resultado completo não são salvos. Segundo tempo = placar final menos placar do intervalo, apenas quando ambos são válidos. A base experimental não integra automaticamente as médias históricas nem as previsões do Radar.</p>
    <label>Campeonato
     <select aria-label="Escolher liga europeia" value={active} onChange={e=>{setActive(e.target.value as EuropeLeagueId);setRound(0);}}>
@@ -132,8 +183,18 @@ export default function EuropeLeaguesPilot(){
        <div><small>Gols completos</small><strong>{pair(g.full)}</strong></div>
        <div><small>1º tempo</small><strong>{pair(g.half)}</strong></div>
        <div><small>2º tempo</small><strong>{pair(g.second)}</strong></div>
-       <div><small>Chutes/escanteios por tempo</small><strong>N/D</strong></div>
+       <div><small>Chutes/escanteios por tempo</small><strong>{enriched.entries.some(x=>x.europeId===g.id)?'Conferidos':'N/D'}</strong></div>
       </div>
+      {enriched.entries.filter(x=>x.europeId===g.id).map(x=><details className="fpl-half-stat-details" key={x.sourceId}>
+       <summary>Ver gols, finalizações, chutes no gol e escanteios · Work</summary>
+       <div className="fpl-half-stat-sections">
+        <p><strong>Jogo completo:</strong> {displayWorkPeriod(x.full)}</p>
+        <p><strong>1º tempo:</strong> {displayWorkPeriod(x.first)}</p>
+        <p><strong>2º tempo:</strong> {displayWorkPeriod(x.second)}</p>
+       </div>
+       <p className="muted">Conferido com o placar da fonte pública e somas dos períodos. ID Flashscore: {x.sourceId}.</p>
+       <a href={x.sourceUrl} target="_blank" rel="noopener noreferrer">Conferir pesquisa Flashscore ↗</a>
+      </details>)}
      </article>)}
     </div>
    </>}
