@@ -20,5 +20,15 @@ jobs:
           cache: npm
       - name: Instalar dependências
         run: npm ci --no-audit --no-fund
-      - name: Testar atualização e eventos
-        run: npx vitest run src/fplRoundDiscovery.test.ts src/fplFreePilot.test.ts src/fplPeriodAudit.test.ts
+      - name: Testar rodadas, eventos, backup e Radar V2/V3
+        run: >-
+          npx vitest run
+          src/fplRoundDiscovery.test.ts
+          src/fplFreePilot.test.ts
+          src/fplPeriodAudit.test.ts
+          src/fullBackup.test.ts
+          src/radarRecords.test.ts
+          src/radarVenueV2.test.ts
+          src/radarVenueV3.test.ts
+      - name: Compilar versão experimental
+        run: npm run build
