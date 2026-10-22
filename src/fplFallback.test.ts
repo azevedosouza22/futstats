@@ -42,6 +42,10 @@ describe('fallback informativo Flashscore sem importar dados',()=>{
   expect(pending.auditPending).toBe(true);
   expect(pending.missing).toEqual(['Escanteios por tempo']);
  });
+ it('remove escanteios das lacunas apenas com pesquisa anterior conciliada',()=>{
+  expect(unavailableFplIndicators(game,true,true,true)).toEqual({missing:[],auditPending:false});
+  expect(unavailableFplIndicators(game,true,true,false).missing).toEqual(['Escanteios por tempo']);
+ });
  it('não altera a partida recebida',()=>{
   const before=JSON.stringify(game);
   unavailableFplIndicators(game,false);
