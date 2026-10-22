@@ -108,7 +108,25 @@ export default function FplStatsPilot(){
      <div><strong>{audit.compared}</strong><span>Placares comparados</span></div>
     </div>}
    <p className="fpl-pilot-simple-notice"><strong>Somente consulta:</strong> jogos não são adicionados à base do FutStats nem às previsões do Radar.</p>
-   {discovery&&<p className="notice" role="status">
+{audit&&<>
+    <details className="fpl-pilot-disclosure" aria-label="Fonte alternativa para estatísticas indisponíveis">
+     <summary>Flashscore · conferir dados ausentes nesta rodada</summary>
+     <p className="muted">Lista automática de campos ainda não comprovados no piloto. O Flashscore é apenas uma referência para consulta pontual: não existe extração automática nem preenchimento do Radar. Dados sem confirmação continuam N/D.</p>
+     <ul>
+      {selected.map(g=>{
+       const verified=shotAudit?Boolean(shotAudit.periodsById[g.id]):shotError?false:null;
+       const gaps=unavailableFplIndicators(g,verified);
+       return <li key={g.id}>
+        <strong>{g.home} × {g.away}:</strong> {gaps.missing.join('; ')}
+        {gaps.auditPending?'; finalizações por tempo: aguardando auditoria':''}.
+       </li>;
+      })}
+     </ul>
+     <p className="muted">O importador antigo de pesquisa CSV continua separado, mais abaixo em Base de dados, com revisão e confirmação antes de salvar. Ele não modifica automaticamente esta amostra experimental. Reutilização comercial ou coleta automatizada do Flashscore depende de autorização.</p>
+     <a href="https://www.flashscore.com.br/" target="_blank" rel="noreferrer">Abrir Flashscore para consulta ↗</a>
+    </details>
+</>}
+      {discovery&&<p className="notice" role="status">
      <strong>Atualização automática:</strong> a fonte contém {discovery.lastCompleteRound} rodadas completas verificadas nesta consulta.
      {discovery.nextRoundPending!==null&&<> A rodada {discovery.nextRoundPending} ainda não está concluída ou não está disponível na fonte. Ela só entrará quando os dez jogos terminarem e apresentarem estatísticas utilizáveis.</>}
      {' '}A atualização ocorre ao abrir esta tela ou selecionar “Conferir dados novamente”.
@@ -202,22 +220,6 @@ export default function FplStatsPilot(){
       {shotAudit?.divergentIds.includes(g.id)&&<p className="fpl-half-unavailable">1º/2º tempo: N/D (eventos divergentes da estatística do jogo).</p>}
      </article>)}
     </div>
-    <details className="fpl-pilot-disclosure" aria-label="Fonte alternativa para estatísticas indisponíveis">
-     <summary>Flashscore · conferir dados ausentes nesta rodada</summary>
-     <p className="muted">Lista automática de campos ainda não comprovados no piloto. O Flashscore é apenas uma referência para consulta pontual: não existe extração automática nem preenchimento do Radar. Dados sem confirmação continuam N/D.</p>
-     <ul>
-      {selected.map(g=>{
-       const verified=shotAudit?Boolean(shotAudit.periodsById[g.id]):shotError?false:null;
-       const gaps=unavailableFplIndicators(g,verified);
-       return <li key={g.id}>
-        <strong>{g.home} × {g.away}:</strong> {gaps.missing.join('; ')}
-        {gaps.auditPending?'; finalizações por tempo: aguardando auditoria':''}.
-       </li>;
-      })}
-     </ul>
-     <p className="muted">O importador antigo de pesquisa CSV continua separado, mais abaixo em Base de dados, com revisão e confirmação antes de salvar. Ele não modifica automaticamente esta amostra experimental. Reutilização comercial ou coleta automatizada do Flashscore depende de autorização.</p>
-     <a href="https://www.flashscore.com.br/" target="_blank" rel="noreferrer">Abrir Flashscore para consulta ↗</a>
-    </details>
     <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. Gols e escanteios por 1º/2º tempo continuam N/D. Finalizações por período só aparecem quando todos os eventos da partida conferem com os totais. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
     {updatedAt&&<p className="muted">Última consulta: {new Date(updatedAt).toLocaleString('pt-BR')}.</p>}
    </>}
