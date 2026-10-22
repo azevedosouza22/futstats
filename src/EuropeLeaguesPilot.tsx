@@ -109,6 +109,7 @@ export default function EuropeLeaguesPilot(){
     // Existing historical 659, Radar and the 155-score catalogue remain untouched.
     localStorage.setItem(EUROPE_WORK_STORAGE,JSON.stringify(next));
     setEnriched(next);
+    setActive('serie-a');setRound(1);
     setWorkNotice(report.newEntries.length+' partida(s) complementada(s) com estatísticas completas do Work. Os '+base.matches.length+' jogos da pesquisa e o Radar permanecem intactos.');
    }
   }catch(e){setWorkError(e instanceof Error?e.message:'CSV não aprovado. Nenhum dado foi gravado.');}
@@ -137,7 +138,7 @@ export default function EuropeLeaguesPilot(){
    </div><span className="tag">PESQUISA</span>
   </div>
   <div className="openfootball-content">
-   <p className="openfootball-guard"><strong>Base separada do Histórico e do Radar:</strong> partidas podem ser guardadas neste navegador para pesquisa. Finalizações, chutes no alvo e escanteios por tempo continuam N/D até a verificação pelo Work. Nenhum registro antigo é sobrescrito.</p>
+   <p className="openfootball-guard"><strong>Base separada do Histórico e do Radar:</strong> partidas podem ser guardadas neste navegador para pesquisa. Finalizações, chutes no alvo e escanteios por tempo ficam N/D nas partidas ainda não complementadas pelo Work. Nenhum registro antigo é sobrescrito.</p>
    <div className="europe-league-kpis">
     <div><strong>{eligible.length}</strong><span>Jogos com placar e intervalo conferíveis</span></div>
     <div><strong>{stored.matches.length}</strong><span>Salvos na pesquisa local</span></div>
