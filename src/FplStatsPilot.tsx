@@ -1,4 +1,6 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
+import type {Data} from './model';
+import {crossCheckSavedFlashscoreCorners} from './fplFlashscoreCorners';
 import {crossCheckFpl,parseFplPilot,FPL_PREVIEW_HOME,FPL_PREVIEW_RAW,FPL_PREVIEW_ROUNDS,type FplPilotGame} from './fplFreePilot';
 import {OPENFOOTBALL_URL} from './openFootball';
 import {discoverNewFplRounds,inspectNextFplRound,type DiscoveryResult,type NextRoundFixture} from './fplRoundDiscovery';
@@ -8,7 +10,7 @@ import {unavailableFplIndicators} from './fplFallback';
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
 const gameDate=(date:string)=>new Date(date+'T12:00:00').toLocaleDateString('pt-BR');
 const pair=(p:[number,number])=>p[0]+' × '+p[1];
-export default function FplStatsPilot(){
+export default function FplStatsPilot({data}:{data:Data}){
  const [audit,setAudit]=useState<Audit|null>(null);
  const [round,setRound]=useState(7);
  const [tries,setTries]=useState(0);
@@ -90,14 +92,15 @@ export default function FplStatsPilot(){
   void load();
   return ()=>controller.abort();
  },[audit]);
-  const selected=audit?.games.filter(g=>g.gw===round)??[];
+  const savedCorners=useMemo(()=>crossCheckSavedFlashscoreCorners(audit?.games??[],data),[audit,data]);
+ const selected=audit?.games.filter(g=>g.gw===round)??[];
  const processed=audit?.games.filter(g=>g.sourceStatsProcessed).length??0;
  const pending=(audit?.games.length??0)-processed;
  const comparisonOk=!!audit&&audit.compared>0&&audit.disagreed===0&&audit.notLocated===0;
  return <section className="panel fpl-stats-pilot" aria-label="Estatísticas gratuitas em avaliação">
   <div className="panel-head"><div>
    <h2>Premier League 2026/27 · Estatísticas em avaliação</h2>
-   <p>Totais do jogo e, quando os registros conferem, finalizações por tempo.</p>
+   <p>Totais do jogo e estatísticas por tempo verificadas. Escanteios podem ser aproveitados de pesquisas antigas do Flashscore já salvas na sua base.</p>
   </div><span className="tag">{audit?audit.games.length+' PARTIDAS':busy?'CONSULTANDO…':'PILOTO · LEITURA'}</span></div>
   <div className="fpl-pilot-content">
    {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos e procurando novas rodadas concluídas…</p>}
@@ -116,14 +119,14 @@ export default function FplStatsPilot(){
       {selected.map(g=>{
        const verified=shotAudit?Boolean(shotAudit.periodsById[g.id]):shotError?false:null;
        const goals=shotAudit?Boolean(shotAudit.goalPeriodsById[g.id]):shotError?false:null;
-       const gaps=unavailableFplIndicators(g,verified,goals);
+       const gaps=unavailableFplIndicators(g,verified,goals,Boolean(savedCorners.byId[g.id]));
        return <li key={g.id}>
-        <strong>{g.home} × {g.away}:</strong> {gaps.missing.join('; ')}
+        <strong>{g.home} × {g.away}:</strong> {gaps.missing.join('; ')||'Nenhuma lacuna identificada'}
         {gaps.auditPending?'; gols/finalizações por tempo: aguardando auditoria':''}.
        </li>;
       })}
      </ul>
-     <p className="muted">O importador antigo de pesquisa CSV continua separado, mais abaixo em Base de dados, com revisão e confirmação antes de salvar. Ele não modifica automaticamente esta amostra experimental. Reutilização comercial ou coleta automatizada do Flashscore depende de autorização.</p>
+     <p className="muted">Pesquisas antigas do Flashscore já salvas neste navegador são comparadas automaticamente com os jogos do piloto, sem nova importação. Escanteios por tempo somente aparecem quando equipe, data, temporada e soma dos dois tempos conferem com o total. Nesta base: {savedCorners.matched} partida(s) com cantos por tempo confirmados{savedCorners.conflicting>0?' · '+savedCorners.conflicting+' conflito(s) bloqueado(s)':''}. O importador antigo CSV continua abaixo e exige revisão antes de gravar. Coleta automática ou reutilização comercial do Flashscore depende de autorização.</p>
      <a href="https://www.flashscore.com.br/" target="_blank" rel="noreferrer">Abrir Flashscore para consulta ↗</a>
     </details>
 </>}
@@ -162,7 +165,7 @@ export default function FplStatsPilot(){
     </section>}
    <details className="fpl-pilot-disclosure">
     <summary>Por que os dados ainda estão em avaliação?</summary>
-    <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. Gols, finalizações e chutes no gol por tempo aparecem somente quando os eventos são conciliados com os resultados oficiais da fonte; as validações de gols e chutes são independentes. Escanteios por tempo não estão disponíveis. Os registros permanecem separados da base principal.</p>
+    <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. Gols, finalizações e chutes no gol por tempo aparecem somente quando os eventos são conciliados com os resultados oficiais da fonte; as validações de gols e chutes são independentes. Escanteios por tempo permanecem N/D, exceto quando há pesquisa local do Flashscore já validada. Os registros permanecem separados da base principal.</p>
    </details>
    <button className="text-button" type="button" disabled={busy} onClick={()=>setTries(v=>v+1)}>
     {busy?'Conferindo arquivos…':'Conferir dados novamente'}
@@ -183,7 +186,7 @@ export default function FplStatsPilot(){
       <div><strong>{shotAudit.divergent}</strong><span>Com diferenças</span></div>
       <div><strong>{shotAudit.pending}</strong><span>Pendente na fonte</span></div>
      </div>}
-     <p className="muted">Gols por 1º/2º tempo são exibidos apenas quando os eventos conferem com o placar final. Finalizações por período precisam de conciliação independente. Escanteios por tempo continuam N/D. Nenhuma previsão ou importação ao Radar é autorizada; direitos da fonte ainda precisam de validação.</p>
+     <p className="muted">Gols por 1º/2º tempo são exibidos apenas quando os eventos conferem com o placar final. Finalizações por período precisam de conciliação independente. Escanteios por tempo seguem N/D na fonte principal; somente pesquisas anteriores do Flashscore verificadas poderão mostrá-los. Nenhuma previsão ou importação ao Radar é autorizada; direitos da fonte ainda precisam de validação.</p>
     </section>
     <p className={comparisonOk?'notice':'alert'} role="status">
      {comparisonOk?'Conferência independente: '+audit.agreed+'/'+audit.compared+' placares coincidem com o OpenFootball.':
@@ -205,13 +208,22 @@ export default function FplStatsPilot(){
        <div><small>Chutes no gol</small><strong>{g.sourceStatsProcessed?pair(g.onTarget):'N/D'}</strong></div>
        <div><small>Escanteios</small><strong>{g.sourceStatsProcessed?pair(g.corners):'N/D'}</strong></div>
       </div>
+      {savedCorners.byId[g.id]&&<details className="fpl-half-stat-details">
+       <summary>Ver escanteios por tempo (Flashscore · pesquisa antiga conferida)</summary>
+       <div className="fpl-half-stat-sections">
+        <div className="fpl-half-stat-row"><strong>1º tempo</strong><span>Escanteios: <b>{pair(savedCorners.byId[g.id].first)}</b></span></div>
+        <div className="fpl-half-stat-row"><strong>2º tempo</strong><span>Escanteios: <b>{pair(savedCorners.byId[g.id].second)}</b></span></div>
+       </div>
+       <p className="muted">Mandante × visitante. Valores de pesquisa anterior armazenada neste dispositivo, conferidos contra o total do jogo; não são coletados automaticamente do Flashscore.</p>
+       <a href={savedCorners.byId[g.id].sourceUrl} target="_blank" rel="noopener noreferrer">Conferir fonte original ↗</a>
+      </details>}
       {shotAudit?.goalPeriodsById[g.id]&&<details className="fpl-half-stat-details">
        <summary>Ver gols por tempo (conferidos)</summary>
        <div className="fpl-half-stat-sections">
         <div className="fpl-half-stat-row"><strong>1º tempo</strong><span>Gols: <b>{pair(shotAudit.goalPeriodsById[g.id].first)}</b></span></div>
         <div className="fpl-half-stat-row"><strong>2º tempo</strong><span>Gols: <b>{pair(shotAudit.goalPeriodsById[g.id].second)}</b></span></div>
        </div>
-       <p className="muted">Mandante × visitante. Eventos de gol com minuto validado e soma reconciliada com o placar final. Escanteios por tempo: N/D.</p>
+       <p className="muted">Mandante × visitante. Eventos de gol com minuto validado e soma reconciliada com o placar final. Escanteios por tempo: consulte a pesquisa Flashscore local, quando disponível.</p>
       </details>}
       {shotAudit?.periodsById[g.id]&&<details className="fpl-half-stat-details">
        <summary>Ver finalizações por tempo (conferidas)</summary>
@@ -225,12 +237,12 @@ export default function FplStatsPilot(){
          </div>;
         })}
        </div>
-       <p className="muted">Mandante × visitante. Gols por tempo aparecem na seção própria quando confirmados. Escanteios por tempo: N/D. Eventos reconciliados com os totais, apenas para avaliação da fonte.</p>
+       <p className="muted">Mandante × visitante. Gols por tempo aparecem na seção própria quando confirmados. Escanteios por tempo: consulte a pesquisa Flashscore local, quando disponível. Eventos reconciliados com os totais, apenas para avaliação da fonte.</p>
       </details>}
       {shotAudit?.divergentIds.includes(g.id)&&<p className="fpl-half-unavailable">1º/2º tempo: N/D (eventos divergentes da estatística do jogo).</p>}
      </article>)}
     </div>
-    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. Gols por tempo aparecem apenas com os eventos conciliados; escanteios por 1º/2º tempo continuam N/D. Finalizações por período só aparecem quando os eventos conferem com os totais. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
+    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. Gols por tempo aparecem apenas com os eventos conciliados; escanteios por 1º/2º tempo ficam N/D quando não existe pesquisa Flashscore conciliada. Finalizações por período só aparecem quando os eventos conferem com os totais. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
     {updatedAt&&<p className="muted">Última consulta: {new Date(updatedAt).toLocaleString('pt-BR')}.</p>}
    </>}
    <p className="muted">Fonte dos indicadores: <a href={FPL_PREVIEW_HOME} target="_blank" rel="noreferrer">FPL Core Insights ↗</a>. Conferência dos placares: <a href="https://github.com/openfootball/football.json" target="_blank" rel="noreferrer">OpenFootball CC0 ↗</a>. Sem cobrança, sem apostas, sem uso para previsão enquanto o piloto estiver isolado.</p>
