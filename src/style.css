@@ -755,3 +755,15 @@ html{scroll-behavior:smooth}
  .premium .fpl-next-round-score{grid-column:2;grid-row:2;font-size:12px}
  .premium .fpl-next-round-name{grid-column:1;grid-row:1/span 2}
 }
+
+/* Research leagues: readable numeric counters on narrow Android screens. */
+.premium .europe-league-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.premium .europe-league-kpis>div{min-width:0;padding:12px;background:#1d3140;border:1px solid #40596a;border-radius:10px}
+.premium .europe-league-kpis strong{display:block;color:#b7e4ff;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.2}
+.premium .europe-league-kpis span{display:block;color:#c4d5de;font-size:12px;line-height:1.45;margin-top:7px}
+@media(max-width:740px){
+ .premium .europe-league-kpis{grid-template-columns:minmax(0,1fr);gap:7px}
+ .premium .europe-league-kpis>div{display:grid;grid-template-columns:74px minmax(0,1fr);align-items:center;gap:12px;padding:12px 14px}
+ .premium .europe-league-kpis strong{font-size:26px}
+ .premium .europe-league-kpis span{margin:0}
+}
