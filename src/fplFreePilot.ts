@@ -11,6 +11,8 @@ export type Pair=[number,number];
 export type FplPilotGame={
  id:string;gw:number;date:string;sourceKickoff:string;home:string;away:string;
  goals:Pair;shots:Pair;onTarget:Pair;corners:Pair;
+ /** Upstream flag: false means the record is present but not validated by the provider. */
+ sourceStatsProcessed:boolean;
 };
 export type FplAudit={games:FplPilotGame[];teams:number;lastDate:string;
  compared:number;agreed:number;disagreed:number;notLocated:number};
@@ -70,8 +72,13 @@ export function parseFplPilot(teamsCsv:string,gwsCsv:string[]):FplPilotGame[]{
   if(rows.length!==10)throw Error('Rodada '+gw+' tem '+rows.length+' partidas, esperadas 10.');
   for(const r of rows){
    if(cols.some(k=>!(k in r)))throw Error('CSV sem as colunas estatísticas exigidas.');
-   if(int(r,'gameweek')!==gw||r.finished!=='True'||r.stats_processed!=='True')
-    throw Error('Rodada '+gw+' ainda não contém todos os resultados conferidos.');
+   // Preserve independently marked pending rows without interpreting them as validated.
+   // Previously one unprocessed match blocked all 70 results on mobile.
+   if(int(r,'gameweek')!==gw||r.finished!=='True')
+    throw Error('Rodada '+gw+' contém uma partida sem resultado final declarado.');
+   if(r.stats_processed!=='True'&&r.stats_processed!=='False')
+    throw Error('Rodada '+gw+' contém estado de processamento inválido.');
+   const sourceStatsProcessed=r.stats_processed==='True';
    if(!matchDate(r.kickoff_time))throw Error('Data original da partida inválida.');
    const home=clubs.get(int(r,'home_team')),away=clubs.get(int(r,'away_team'));
    if(!home||!away||home===away)throw Error('Equipes não identificadas nesta rodada.');
@@ -81,7 +88,8 @@ export function parseFplPilot(teamsCsv:string,gwsCsv:string[]):FplPilotGame[]{
    const goals=fieldPair(r,'score'),shots=fieldPair(r,'total_shots'),
     onTarget=fieldPair(r,'shots_on_target'),corners=fieldPair(r,'corners');
    if(onTarget.some((x,i)=>x>shots[i]))throw Error('Chutes no gol excedem finalizações.');
-   games.push({id,gw,date:r.kickoff_time.slice(0,10),sourceKickoff:r.kickoff_time,home,away,goals,shots,onTarget,corners});
+   games.push({id,gw,date:r.kickoff_time.slice(0,10),sourceKickoff:r.kickoff_time,
+    home,away,goals,shots,onTarget,corners,sourceStatsProcessed});
   }
  }
  return games.sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
