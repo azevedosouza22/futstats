@@ -5,7 +5,6 @@
  */
 import {parseWorkResearchCsv} from './workCsv';
 import type {FplPilotGame,Pair} from './fplFreePilot';
-import type {Metric} from './model';
 
 export const PILOT_WORK_METRICS=['goals','shots','target','corners'] as const;
 type WorkMetric=typeof PILOT_WORK_METRICS[number];
@@ -36,6 +35,10 @@ export function reviewWorkResearchForFpl(csv:string,games:FplPilotGame[]):WorkPi
  const approved:ReviewedWorkGame[]=[],rejected:WorkPilotReview['rejected']=[];
  const seen=new Set<string>();
  for(const row of rows){
+  if(row.dateDiscrepancy){
+   rejected.push({sourceId:row.sourceId,reason:'A data do título do Flashscore diverge da data da partida.'});
+   continue;
+  }
   if(normalize(row.competition)!=='premier league 2026 27'){
    rejected.push({sourceId:row.sourceId,reason:'Temporada ou competição diferente da Premier League 2026/27.'});
    continue;
