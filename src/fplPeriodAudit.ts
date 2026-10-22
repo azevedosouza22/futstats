@@ -26,7 +26,7 @@ function parseEvents(csv:string):{rows:Event[];invalidIds:Set<string>}{
   // The current provider encodes 45+3 as minute=45, added_time=3.0.
   // Never assign an ambiguous added-time representation to either half.
   const invalidStoppage=addedTime!==''&&(
-    !/^(?:[1-9]\\d*)(?:\\.0+)?$/.test(addedTime)||
+    !/^(?:[1-9]\d*)(?:\.0+)?$/.test(addedTime)||
     (minute!==45&&minute!==90)
   );
   const key=id+'|'+index;
