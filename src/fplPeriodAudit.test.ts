@@ -51,6 +51,38 @@ describe('auditoria rigorosa dos eventos da Premier League',()=>{
   expect(a.divergentIds).toEqual(['ok']);
   expect(a.periodsById['ok']).toBeUndefined();
  });
+ it('valida gols por tempo de modo independente, mesmo se faltam finalizacoes',()=>{
+  const csv=header+'\\n'+'ok,1,45,True,goal\\nok,2,60,False,miss';
+  const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(header+'\\nunused,1,50,True,miss')]);
+  expect(a.reconciled).toBe(0);
+  expect(a.goalReconciled).toBe(1);
+  expect(a.goalPeriodsById['ok']).toEqual({first:[1,0],second:[0,0]});
+ });
+ it('conta gols em 45+3 no primeiro tempo e 90+4 no segundo',()=>{
+  const h='match_id,shot_index,minute,added_time,is_home,outcome';
+  const csv=h+'\\n'+'ok,1,45,3.0,True,goal\\nok,2,90,4.0,True,goal\\nok,3,60,,False,goal';
+  const game={...fixture(1,'ok'),goals:[2,1] as [number,number],shots:[2,1] as [number,number],onTarget:[2,1] as [number,number]};
+  const a=auditFplShotEvents([game],[csv,...Array(6).fill(h+'\\nunused,1,50,,True,miss')]);
+  expect(a.goalReconciled).toBe(1);
+  expect(a.goalPeriodsById['ok']).toEqual({first:[1,0],second:[1,1]});
+  expect(a.reconciled).toBe(1);
+ });
+ it('nao divide gols quando ha gol contra ou placar inconciliavel',()=>{
+  const csv=header+'\\n'+'ok,1,45,True,goal\\nok,2,60,False,owngoal';
+  const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(header+'\\nunused,1,50,True,miss')]);
+  expect(a.goalReconciled).toBe(0);
+  expect(a.goalDivergentIds).toEqual(['ok']);
+  expect(a.goalPeriodsById['ok']).toBeUndefined();
+  const b=auditFplShotEvents([fixture(1,'ok')],[header+'\\n'+'ok,1,45,True,miss',...Array(6).fill(header+'\\nunused,1,50,True,miss')]);
+  expect(b.goalReconciled).toBe(0);
+ });
+ it('conta bloqueios em cima da linha como chute no alvo quando coincidem com o total',()=>{
+  const game={...fixture(1,'ok'),onTarget:[2,0] as [number,number]};
+  const csv=header+'\\n'+'ok,1,15,True,goal\\nok,2,33,True,blocked-off-line\\nok,3,60,False,miss';
+  const a=auditFplShotEvents([game],[csv,...Array(6).fill(header+'\\nunused,1,50,True,miss')]);
+  expect(a.reconciled).toBe(1);
+  expect(a.periodsById['ok']?.first.onTarget).toEqual([2,0]);
+ });
  it('rejeita eventos com minutos ausentes ou valores de minuto inválidos',()=>{
   const csv=header+'\n'+'ok,1,,True,goal\nok,2,47,True,miss\nok,3,60,False,block';
   const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(header+'\nnotused,1,55,False,miss')]);
