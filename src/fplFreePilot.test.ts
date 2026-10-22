@@ -11,7 +11,7 @@ describe('FPL Core experimental: strict and readonly',()=>{
  });
 
  it('shows 70 reported games, distinguishing one pending provider record',()=>{
-  const allTeams='code,name\\n'+Array.from({length:20},(_,i)=>(i+1)+',Team '+(i+1)).join('\\n')+'\\n';
+  const allTeams='code,name\n'+Array.from({length:20},(_,i)=>(i+1)+',Team '+(i+1)).join('\n')+'\n';
   const rounds=Array.from({length:7},(_,n)=>{
     const gw=n+1;
     const rows=Array.from({length:10},(_,j)=>{
@@ -19,7 +19,7 @@ describe('FPL Core experimental: strict and readonly',()=>{
       return [gw,'2026-08-21T19:00:00',j+1,(j+11),2,1,'True',
         '26-27-prem-gw-'+gw+'-fixture-'+j,14,11,5,4,7,6,pending?'False':'True'].join(',');
     });
-    return header+'\\n'+rows.join('\\n')+'\\n';
+    return header+'\n'+rows.join('\n')+'\n';
   });
   const games=parseFplPilot(allTeams,rounds);
   expect(games).toHaveLength(70);
