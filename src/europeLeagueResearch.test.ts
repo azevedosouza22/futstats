@@ -36,6 +36,18 @@ describe('Base de pesquisa CC0: três ligas novas',()=>{
   x.matches[0].date='2027-13-31';
   expect(()=>parseEuropeanLeague(x,'ligue-1')).toThrow('Data ou identidade');
  });
+ it('ignora placares [0,0] sem indicação de fim de jogo, mantendo as demais partidas',()=>{
+  const es=sample('la-liga');
+  es.matches[0].score=[0,0] as unknown as {ht:number[];ft:number[]};
+  const out=parseEuropeanLeague(es,'la-liga');
+  expect(out.matches[0].full).toBeNull();
+  expect(out.matches[0].half).toBeNull();
+  expect(out.completed).toBe(1);
+  expect(eligibleEuropeanResults([out],'2026-10-22')).toHaveLength(1);
+  const fr=sample('ligue-1');
+  fr.matches[0].score=[0,0] as unknown as {ht:number[];ft:number[]};
+  expect(parseEuropeanLeague(fr,'ligue-1').completed).toBe(1);
+ });
  it('bloqueia placares parciais incoerentes e fontes diferentes',()=>{
   const x=sample();
   x.matches[0].score={ht:[3,0],ft:[2,1]};
