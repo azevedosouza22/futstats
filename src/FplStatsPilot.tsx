@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 import {crossCheckFpl,parseFplPilot,FPL_PREVIEW_HOME,FPL_PREVIEW_RAW,FPL_PREVIEW_ROUNDS,type FplPilotGame} from './fplFreePilot';
 import {OPENFOOTBALL_URL} from './openFootball';
-import {discoverNewFplRounds,type DiscoveryResult} from './fplRoundDiscovery';
+import {discoverNewFplRounds,inspectNextFplRound,type DiscoveryResult,type NextRoundFixture} from './fplRoundDiscovery';
 import {auditFplShotEvents,type ShotAudit} from './fplPeriodAudit';
 
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
@@ -15,6 +15,8 @@ export default function FplStatsPilot(){
  const [error,setError]=useState('');
  const [updatedAt,setUpdatedAt]=useState('');
  const [discovery,setDiscovery]=useState<Pick<DiscoveryResult,'lastCompleteRound'|'nextRoundPending'|'reason'>|null>(null);
+ const [nextGames,setNextGames]=useState<NextRoundFixture[]>([]);
+ const [nextGamesError,setNextGamesError]=useState('');
  const [shotAudit,setShotAudit]=useState<ShotAudit|null>(null);
  const [shotBusy,setShotBusy]=useState(false);
  const [shotError,setShotError]=useState('');
@@ -31,12 +33,14 @@ export default function FplStatsPilot(){
     if(replies.some(r=>!r.ok))throw Error('Um dos arquivos gratuitos não pôde ser consultado.');
     const texts=await Promise.all(replies.map(r=>r.text()));
     if(texts.some(c=>c.length>250000))throw Error('Arquivo acima do limite de segurança.');
+    const sourceRounds=new Map<number,string>();
     const discovered=await discoverNewFplRounds(texts.slice(1,-1),async gw=>{
       const url=FPL_PREVIEW_RAW+'By%20Tournament/Premier%20League/GW'+gw+'/matches.csv';
       const response=await fetch(url,{signal:controller.signal,cache:'no-store'});
       if(!response.ok)return null;
       const csv=await response.text();
       if(csv.length>250000)throw Error('Arquivo de nova rodada excedeu o limite previsto.');
+      sourceRounds.set(gw,csv);
       return csv;
     });
     const games=parseFplPilot(texts[0],discovered.completedCsvs);
@@ -45,6 +49,17 @@ export default function FplStatsPilot(){
     setAudit({games,...verification});setUpdatedAt(new Date().toISOString());
     setDiscovery({lastCompleteRound:discovered.lastCompleteRound,
       nextRoundPending:discovered.nextRoundPending,reason:discovered.reason});
+    let parsedNext:NextRoundFixture[]=[];
+    let upcomingError='';
+    if(discovered.nextRoundPending!==null&&sourceRounds.has(discovered.nextRoundPending)){
+      try{
+        parsedNext=inspectNextFplRound(
+          sourceRounds.get(discovered.nextRoundPending)!,discovered.nextRoundPending,texts[0]);
+      }catch{
+        upcomingError='A fonte ainda não permite identificar com segurança os dez jogos da próxima rodada.';
+      }
+    }
+    setNextGames(parsedNext);setNextGamesError(upcomingError);
     setRound(prev=>prev===FPL_PREVIEW_ROUNDS?discovered.lastCompleteRound:prev);
    }catch(e){
     if(!controller.signal.aborted)setError(e instanceof Error?e.message:'Falha na consulta de estatísticas gratuitas.');
@@ -97,6 +112,34 @@ export default function FplStatsPilot(){
      {discovery.nextRoundPending!==null&&<> A rodada {discovery.nextRoundPending} ainda não está concluída ou não está disponível na fonte. Ela só entrará quando os dez jogos terminarem e apresentarem estatísticas utilizáveis.</>}
      {' '}A atualização ocorre ao abrir esta tela ou selecionar “Conferir dados novamente”.
     </p>}
+   {discovery?.nextRoundPending!==null&&discovery&&<section className="fpl-next-round" aria-label="Acompanhamento da próxima rodada">
+     <div className="fpl-next-round-top">
+      <div>
+       <h3>Próxima rodada · {discovery.nextRoundPending}</h3>
+       <p className="muted">Jogos da temporada atual, atualizados ao abrir esta tela ou consultar novamente.</p>
+      </div>
+      <span className="tag">ACOMPANHAMENTO</span>
+     </div>
+     {nextGamesError&&<p className="alert">{nextGamesError}</p>}
+     {nextGames.length===0&&!nextGamesError&&<p className="muted">A relação detalhada da próxima rodada ainda não está disponível na fonte gratuita.</p>}
+     {nextGames.length>0&&<>
+      <div className="fpl-next-round-summary">
+       <span><strong>{nextGames.filter(x=>x.status==='concluido').length}</strong> com estatísticas</span>
+       <span><strong>{nextGames.filter(x=>x.status==='em-revisao').length}</strong> em revisão</span>
+       <span><strong>{nextGames.filter(x=>x.status==='a-jogar').length}</strong> a jogar</span>
+      </div>
+      <div className="fpl-next-round-fixtures">
+       {nextGames.map(g=><div key={g.id} className="fpl-next-round-fixture">
+        <div className="fpl-next-round-name"><b>{g.home} × {g.away}</b><small>{gameDate(g.date.slice(0,10))}</small></div>
+        <span className={'fpl-next-round-status '+g.status}>
+         {g.status==='concluido'?'Concluído':g.status==='em-revisao'?'Em revisão':'A jogar'}
+        </span>
+        <span className="fpl-next-round-score">{g.fullTime?pair(g.fullTime):'N/D'}</span>
+       </div>)}
+      </div>
+      <p className="muted">Resultados N/D não significam empate. Jogos encerrados só entram no catálogo estatístico quando a rodada completa cumprir os critérios de integridade. Nenhum registro é salvo no Histórico ou no Radar.</p>
+     </>}
+    </section>}
    <details className="fpl-pilot-disclosure">
     <summary>Por que os dados ainda estão em avaliação?</summary>
     <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. As estatísticas por tempo são parciais: finalizações e chutes no gol somente em partidas cujos eventos são conciliados. Escanteios por tempo não estão disponíveis. Os registros permanecerão separados da base principal.</p>
