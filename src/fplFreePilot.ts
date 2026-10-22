@@ -57,7 +57,7 @@ const fieldPair=(r:Record<string,string>,k:string):Pair=>
 const matchDate=(s:string)=>/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d$/.test(s)&&
  !Number.isNaN(Date.parse(s+'Z'))&&new Date(s+'Z').toISOString().slice(0,19)===s;
 export function parseFplPilot(teamsCsv:string,gwsCsv:string[]):FplPilotGame[]{
- if(gwsCsv.length!==FPL_PREVIEW_ROUNDS)throw Error('O piloto precisa das sete primeiras rodadas.');
+ if(gwsCsv.length<FPL_PREVIEW_ROUNDS||gwsCsv.length>38)throw Error('O piloto precisa de 7 a 38 rodadas completas e consecutivas.');
  const clubs=new Map<number,string>();
  const teamRows=parseCsv(teamsCsv);
  if(teamRows.length!==20)throw Error('A fonte não retornou os 20 clubes esperados.');
