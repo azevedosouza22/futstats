@@ -41,20 +41,25 @@ export default function FplStatsPilot(){
   <div className="panel-head"><div>
    <h2>Premier League 2026/27 · Estatísticas em avaliação</h2>
    <p>Dados de gols, finalizações, chutes no gol e escanteios — somente jogo completo.</p>
-  </div><span className="tag">PILOTO · LEITURA</span></div>
+  </div><span className="tag">{audit?audit.games.length+' PARTIDAS':busy?'CONSULTANDO…':'PILOTO · LEITURA'}</span></div>
   <div className="fpl-pilot-content">
-   <p className="fpl-pilot-warning"><strong>Atenção:</strong> estes dados ainda estão em avaliação. O autor permite reutilização no README, mas as permissões sobre todos os dados de origem não foram confirmadas para uso comercial. Nenhuma partida é adicionada ao Histórico ou ao Radar por esta tela.</p>
+   {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos das sete primeiras rodadas…</p>}
+   {audit&&<div className="fpl-pilot-numbers" aria-label="Resumo da Premier League 2026/27">
+     <div><strong>{audit.games.length}</strong><span>Partidas com estatísticas</span></div>
+     <div><strong>{audit.compared}</strong><span>Placares comparados</span></div>
+     <div><strong>{audit.agreed}</strong><span>Placares concordantes</span></div>
+     <div><strong>{audit.disagreed}</strong><span>Divergências</span></div>
+    </div>}
+   <p className="fpl-pilot-simple-notice"><strong>Somente consulta:</strong> jogos ainda não são adicionados à base de 659 partidas nem ao Radar.</p>
+   <details className="fpl-pilot-disclosure">
+    <summary>Por que os dados ainda estão em avaliação?</summary>
+    <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. As estatísticas de primeiro e segundo tempo também estão indisponíveis. Os registros permanecerão separados da base principal.</p>
+   </details>
    <button className="text-button" type="button" disabled={busy} onClick={()=>setTries(v=>v+1)}>
     {busy?'Conferindo arquivos…':'Conferir dados novamente'}
    </button>
    {error&&<p className="alert" role="alert">{error}{audit?' Mantendo a última auditoria bem-sucedida nesta tela.':''}</p>}
    {audit&&<>
-    <div className="fpl-pilot-numbers">
-     <div><strong>{audit.games.length}</strong><span>Partidas com estatísticas</span></div>
-     <div><strong>{audit.compared}</strong><span>Placares comparados</span></div>
-     <div><strong>{audit.agreed}</strong><span>Placares concordantes</span></div>
-     <div><strong>{audit.disagreed}</strong><span>Divergências</span></div>
-    </div>
     <p className={comparisonOk?'notice':'alert'} role="status">
      {comparisonOk?'Conferência independente: '+audit.agreed+'/'+audit.compared+' placares coincidem com o OpenFootball.':
       'Atenção: '+audit.disagreed+' divergências e '+audit.notLocated+' resultados sem correspondência. Não utilizar automaticamente.'}
