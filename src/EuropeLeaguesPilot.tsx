@@ -48,6 +48,25 @@ export default function EuropeLeaguesPilot(){
   void check();return ()=>controller.abort();
  },[refresh]);
 
+ // The user already chose to save a batch in this separate research store.
+ // Finish that partial batch after all sources become usable, without asking
+ // for repeated manual clicks. Never touch historical FutStats/Radar storage.
+ useEffect(()=>{
+  if(catalogs.length!==EUROPE_LEAGUES.length)return;
+  try{
+   const existing=readStoredEuropeanResearch(localStorage.getItem(EUROPE_RESEARCH_STORAGE));
+   if(existing.matches.length===0)return;
+   const eligible=eligibleEuropeanResults(catalogs,brasiliaDate().date);
+   const result=stageEuropeanResults(existing,eligible);
+   if(result.added===0){setStored(existing);return;}
+   localStorage.setItem(EUROPE_RESEARCH_STORAGE,JSON.stringify(result.next));
+   setStored(result.next);
+   setNotice('Pesquisa anterior concluída automaticamente: mais '+result.added+
+    ' jogos incluídos na base experimental. Histórico e Radar não alterados.');
+  }catch(e){
+   setError(e instanceof Error?e.message:'Falha ao completar a pesquisa experimental.');
+  }
+ },[catalogs]);
  const today=brasiliaDate().date;
  const eligible=eligibleEuropeanResults(catalogs,today);
  const data=catalogs.find(x=>x.league===active);
@@ -80,7 +99,7 @@ export default function EuropeLeaguesPilot(){
   </div>
   <div className="openfootball-content">
    <p className="openfootball-guard"><strong>Base separada do Histórico e do Radar:</strong> partidas podem ser guardadas neste navegador para pesquisa. Finalizações, chutes no alvo e escanteios por tempo continuam N/D até a verificação pelo Work. Nenhum registro antigo é sobrescrito.</p>
-   <div className="openfootball-stats">
+   <div className="europe-league-kpis">
     <div><strong>{eligible.length}</strong><span>Jogos com placar e intervalo conferíveis</span></div>
     <div><strong>{stored.matches.length}</strong><span>Salvos na pesquisa local</span></div>
     <div><strong>{catalogs.length}/3</strong><span>Campeonatos acessíveis</span></div>
