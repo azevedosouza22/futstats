@@ -13,6 +13,7 @@ const need=['gameweek','match_id','finished','home_score','away_score',
  'home_total_shots','away_total_shots','home_shots_on_target',
  'away_shots_on_target','home_corners','away_corners'];
 const numeric=(s:string|undefined)=>s!==undefined&&/^(?:0|[1-9]\d*)(?:\.0+)?$/.test(s.trim());
+const safeTotal=(s:string|undefined)=>numeric(s)&&Number.isSafeInteger(Number(s))&&Number(s)<=999;
 export function isCompleteFplRound(text:string,round:number):boolean{
  if(!Number.isInteger(round)||round<1||round>FPL_MAX_ROUNDS)return false;
  let rows:Record<string,string>[];
@@ -21,9 +22,12 @@ export function isCompleteFplRound(text:string,round:number):boolean{
  const ids=new Set<string>();
  for(const row of rows){
   if(need.some(k=>!(k in row))||row.gameweek!==String(round)||
-     !row.match_id||ids.has(row.match_id)||row.finished!=='True'||
+     !row.match_id||!/^26-27-prem-[a-z0-9-]+$/.test(row.match_id)||
+     ids.has(row.match_id)||row.finished!=='True'||
      (row.stats_processed!=='True'&&row.stats_processed!=='False')||
-     need.slice(3).some(k=>!numeric(row[k])))return false;
+     need.slice(3).some(k=>!safeTotal(row[k]))||
+     Number(row.home_shots_on_target)>Number(row.home_total_shots)||
+     Number(row.away_shots_on_target)>Number(row.away_total_shots))return false;
   ids.add(row.match_id);
  }
  return true;
@@ -46,11 +50,19 @@ export async function discoverNewFplRounds(
     baseline.some((csv,i)=>!isCompleteFplRound(csv,i+1)))
   throw Error('As rodadas iniciais da fonte estão incompletas ou inconsistentes.');
  const completedCsvs=[...baseline];
+ const baselineIds=baseline.flatMap(csv=>parseCsv(csv).map(row=>row.match_id));
+ if(new Set(baselineIds).size!==baselineIds.length)
+  throw Error('IDs duplicados entre as sete rodadas iniciais.');
+ const seenMatchIds=new Set(baselineIds);
  for(let n=FPL_PREVIEW_ROUNDS+1;n<=maxRound;n++){
   const csv=await loadRound(n);
   if(csv===null)return {completedCsvs,lastCompleteRound:n-1,nextRoundPending:n,reason:'missing'};
   if(!isCompleteFplRound(csv,n))
    return {completedCsvs,lastCompleteRound:n-1,nextRoundPending:n,reason:'partial'};
+  const newMatchIds=parseCsv(csv).map(row=>row.match_id);
+  if(newMatchIds.some(id=>seenMatchIds.has(id)))
+   return {completedCsvs,lastCompleteRound:n-1,nextRoundPending:n,reason:'partial'};
+  newMatchIds.forEach(id=>seenMatchIds.add(id));
   completedCsvs.push(csv);
  }
  return {completedCsvs,lastCompleteRound:completedCsvs.length,nextRoundPending:null,reason:'maximum'};
