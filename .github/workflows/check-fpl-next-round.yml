@@ -27,6 +27,7 @@ jobs:
           src/fplFreePilot.test.ts
           src/fplPeriodAudit.test.ts
           src/fplFallback.test.ts
+          src/fplFlashscoreCorners.test.ts
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/radarRecords.test.ts
