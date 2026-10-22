@@ -61,6 +61,11 @@ export function parseEuropeanLeague(source:unknown,league:EuropeLeagueId):Europe
   ids.add(id);clubs.add(item.team1);clubs.add(item.team2);
   let full:ResultPair|null=null,half:ResultPair|null=null,second:ResultPair|null=null;
   if(item.score!==undefined&&item.score!==null){
+   if(Array.isArray(item.score)){
+    // OpenFootball sometimes publishes [0,0] without the final-time marker.
+    // This is an unconfirmed placeholder, NOT a proven goalless draw.
+    if(!validScore(item.score))throw Error('Placar provisório inválido.');
+   }else{
    if(!isObj(item.score))throw Error('Formato de placar desconhecido.');
    if(item.score.ft!==undefined){
     if(!validScore(item.score.ft))throw Error('Placar final malformado.');
@@ -75,6 +80,7 @@ export function parseEuropeanLeague(source:unknown,league:EuropeLeagueId):Europe
    } else if(item.score.ht!==undefined) {
     // No final score: never mark as finished, nor treat HT as full time.
     if(!validScore(item.score.ht))throw Error('Intervalo malformado.');
+   }
    }
   }
   matches.push({id,league,competition:def.competition,date:item.date,round,
