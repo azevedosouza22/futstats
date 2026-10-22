@@ -56,7 +56,14 @@ const normal=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
 const aliases:Record<string,string>={
  'udinese':'udinese calcio','como':'como 1907',
  'inter':'fc internazionale milano','internazionale':'fc internazionale milano',
- 'monza':'ac monza','genoa':'genoa cfc','napoli':'ssc napoli'
+ 'monza':'ac monza','genoa':'genoa cfc','napoli':'ssc napoli',
+ // Explicit provider-name variants for the remaining seven games in matchday 1.
+ 'parma':'parma calcio 1913','cagliari':'cagliari calcio',
+ 'frosinone':'frosinone calcio','juventus':'juventus fc',
+ 'venezia':'venezia fc','lecce':'us lecce',
+ 'atalanta':'atalanta bc','sassuolo':'us sassuolo calcio',
+ 'torino':'torino fc','milan':'ac milan','bologna':'bologna fc 1909',
+ 'lazio':'ss lazio','roma':'as roma','fiorentina':'acf fiorentina'
 };
 const teamName=(s:string)=>aliases[normal(s)]??normal(s);
 const metricColumn:Record<WorkMetric,'goals'|'shots'|'target'|'corners'>={
