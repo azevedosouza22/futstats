@@ -8,6 +8,7 @@ import type {FplPilotGame} from './fplFreePilot';
 export function unavailableFplIndicators(
   game: FplPilotGame,
   verifiedShotPeriods: boolean | null,
+  verifiedGoalPeriods: boolean | null = false,
 ): {missing: string[]; auditPending: boolean} {
   if (!game.sourceStatsProcessed) {
     return {
@@ -18,8 +19,9 @@ export function unavailableFplIndicators(
       auditPending: false,
     };
   }
-  const missing = ['Gols por tempo', 'Escanteios por tempo'];
+  const missing = ['Escanteios por tempo'];
+  if (verifiedGoalPeriods === false) missing.unshift('Gols por tempo');
   if (verifiedShotPeriods === false)
     missing.push('Finalizações e chutes no gol por tempo');
-  return {missing, auditPending: verifiedShotPeriods === null};
+  return {missing, auditPending: verifiedShotPeriods === null || verifiedGoalPeriods === null};
 }
