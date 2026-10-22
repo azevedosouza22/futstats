@@ -6,6 +6,7 @@ import {OPENFOOTBALL_URL} from './openFootball';
 import {discoverNewFplRounds,inspectNextFplRound,type DiscoveryResult,type NextRoundFixture} from './fplRoundDiscovery';
 import {auditFplShotEvents,type ShotAudit} from './fplPeriodAudit';
 import {unavailableFplIndicators} from './fplFallback';
+import {reviewWorkResearchForFpl,type WorkPilotReview} from './fplWorkReview';
 
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
 const gameDate=(date:string)=>new Date(date+'T12:00:00').toLocaleDateString('pt-BR');
@@ -23,6 +24,21 @@ export default function FplStatsPilot({data}:{data:Data}){
  const [shotAudit,setShotAudit]=useState<ShotAudit|null>(null);
  const [shotBusy,setShotBusy]=useState(false);
  const [shotError,setShotError]=useState('');
+ const [workReview,setWorkReview]=useState<WorkPilotReview|null>(null);
+ const [workReviewName,setWorkReviewName]=useState('');
+ const [workReviewError,setWorkReviewError]=useState('');
+ async function reviewWorkFile(file?:File){
+  setWorkReview(null);setWorkReviewName('');setWorkReviewError('');
+  if(!file)return;
+  if(!audit){setWorkReviewError('Aguarde a consulta à temporada antes de conferir o CSV.');return;}
+  if(!file.name.toLowerCase().endsWith('.csv')||file.size>2_000_000){
+   setWorkReviewError('Selecione um CSV do Work de até 2 MB.');return;
+  }
+  try{
+   const result=reviewWorkResearchForFpl(await file.text(),audit.games);
+   setWorkReview(result);setWorkReviewName(file.name);
+  }catch(e){setWorkReviewError(e instanceof Error?e.message:'Não foi possível conferir o CSV.');}
+ }
  useEffect(()=>{
   const controller=new AbortController();
   async function load(){
@@ -167,6 +183,26 @@ export default function FplStatsPilot({data}:{data:Data}){
     <summary>Por que os dados ainda estão em avaliação?</summary>
     <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. Gols, finalizações e chutes no gol por tempo aparecem somente quando os eventos são conciliados com os resultados oficiais da fonte; as validações de gols e chutes são independentes. Escanteios por tempo permanecem N/D, exceto quando há pesquisa local do Flashscore já validada. Os registros permanecem separados da base principal.</p>
    </details>
+   {audit&&<details className="fpl-pilot-disclosure" aria-label="Conferência temporária de CSV do Work">
+    <summary>Conferir pesquisa do Work sem importar</summary>
+    <p className="muted">Valida arquivos CSV de 55 colunas contra os jogos da Premier League. Os dados ficam apenas nesta tela enquanto ela estiver aberta: nenhuma partida é adicionada ao Histórico, nenhum valor do Radar é alterado e não há envio do arquivo a servidor.</p>
+    <input type="file" accept=".csv,text/csv" aria-label="Selecionar CSV do Work para conferência temporária" onChange={e=>{
+     const file=e.currentTarget.files?.[0];e.currentTarget.value='';void reviewWorkFile(file);
+    }}/>
+    {workReviewError&&<p className="alert" role="alert">{workReviewError}</p>}
+    {workReview&&<>
+      <p role="status" className={workReview.rejected.length?'alert':'notice'}>Arquivo {workReviewName}: {workReview.checked} pesquisa(s), {workReview.approved.length} conferida(s), {workReview.rejected.length} pendente(s). Nenhuma importação realizada.</p>
+      {workReview.approved.map(g=><div className="fpl-half-stat-details" key={g.sourceId}>
+       <strong>{g.home} × {g.away} · {gameDate(g.date)}</strong>
+       <p>1º tempo — gols {pair(g.first.goals)} · finalizações {pair(g.first.shots)} · chutes no gol {pair(g.first.target)} · escanteios {pair(g.first.corners)}</p>
+       <p>2º tempo — gols {pair(g.second.goals)} · finalizações {pair(g.second.shots)} · chutes no gol {pair(g.second.target)} · escanteios {pair(g.second.corners)}</p>
+       <p className="muted">Pesquisa Flashscore ID {g.sourceId} · dados conciliados com a fonte gratuita.</p>
+       <a href={g.sourceUrl} target="_blank" rel="noopener noreferrer">Conferir origem no Flashscore ↗</a>
+      </div>)}
+      {workReview.rejected.map((g,i)=><p className="muted" key={g.sourceId+'-'+i}>ID {g.sourceId}: {g.reason}</p>)}
+      <button className="text-button" type="button" onClick={()=>{setWorkReview(null);setWorkReviewName('');setWorkReviewError('');}}>Fechar conferência temporária</button>
+    </>}
+   </details>}
    <button className="text-button" type="button" disabled={busy} onClick={()=>setTries(v=>v+1)}>
     {busy?'Conferindo arquivos…':'Conferir dados novamente'}
    </button>
