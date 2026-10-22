@@ -3,11 +3,15 @@
  * Events only cover shots and on-target outcomes; no per-half corner data.
  * Dates, season and goal values stay unchanged.
  */
-import {parseCsv,type FplPilotGame, FPL_PREVIEW_ROUNDS} from './fplFreePilot';
+import {parseCsv,type FplPilotGame,type Pair,FPL_PREVIEW_ROUNDS} from './fplFreePilot';
 
+export type VerifiedPeriod={shots:Pair;onTarget:Pair};
+export type VerifiedPeriods={first:VerifiedPeriod;second:VerifiedPeriod};
 export type ShotAudit={
  reconciled:number;divergent:number;pending:number;checked:number;
  eventRows:number;reconciledIds:string[];divergentIds:string[];pendingIds:string[];
+ /** Only published for games whose every event reconciles to full-time totals. */
+ periodsById:Record<string,VerifiedPeriods>;
 };
 type Event={id:string;side:'True'|'False';minute:number;outcome:string;index:string};
 const outcomes=new Set(['save','goal','miss','block','post','owngoal']);
@@ -47,6 +51,7 @@ export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):Sh
   }
  });
  const reconciledIds:string[]=[],divergentIds:string[]=[],pendingIds:string[]=[];
+ const periodsById:Record<string,VerifiedPeriods>={};
  for(const game of games){
   if(!game.sourceStatsProcessed){pendingIds.push(game.id);continue;}
   const events=all.get((game.gw-1)+'|'+game.id)??[];
@@ -56,12 +61,31 @@ export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):Sh
     home.filter(e=>e.outcome==='goal'||e.outcome==='save').length,
     away.filter(e=>e.outcome==='goal'||e.outcome==='save').length];
   const expected=[...game.shots,...game.onTarget];
-  if(totals.every((n,i)=>n===expected[i]))reconciledIds.push(game.id);
-  else divergentIds.push(game.id);
+  if(totals.every((n,i)=>n===expected[i])){
+   // Minutes 1..45, including 45+ stoppage, belong to first half.
+   // Minutes 46..120, including 90+ stoppage, belong to second half.
+   // No corners per half are reported by this source.
+   const period=(first:boolean):VerifiedPeriod=>{
+    const inHalf=(e:Event)=>first?e.minute<=45:e.minute>45;
+    const count=(side:'True'|'False',target:boolean)=>
+     events.filter(e=>e.side===side&&inHalf(e)&&
+       (!target||e.outcome==='goal'||e.outcome==='save')).length;
+    return {shots:[count('True',false),count('False',false)],
+      onTarget:[count('True',true),count('False',true)]};
+   };
+   const first=period(true),second=period(false);
+   if(first.shots.some((v,i)=>v+second.shots[i]!==game.shots[i])||
+      first.onTarget.some((v,i)=>v+second.onTarget[i]!==game.onTarget[i])){
+    divergentIds.push(game.id);
+    continue;
+   }
+   periodsById[game.id]={first,second};
+   reconciledIds.push(game.id);
+  }else divergentIds.push(game.id);
  }
  return {
   reconciled:reconciledIds.length,divergent:divergentIds.length,
   pending:pendingIds.length,checked:games.length,eventRows,
-  reconciledIds,divergentIds,pendingIds
+  reconciledIds,divergentIds,pendingIds,periodsById
  };
 }
