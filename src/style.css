@@ -717,3 +717,15 @@ html{scroll-behavior:smooth}
  .premium .fpl-period-quality-numbers strong{font-size:22px}
  .premium .fpl-period-quality-numbers span{font-size:10px}
 }
+
+
+/* Read-only audited per-half shooting statistics, intentionally collapsed on mobile. */
+.premium .fpl-half-stat-details{margin-top:10px;border:1px solid #51748a;border-radius:9px;background:#233947;padding:11px;color:#d8edfc}
+.premium .fpl-half-stat-details summary{cursor:pointer;font-size:12px;font-weight:750;color:#b3e4ff}
+.premium .fpl-half-stat-sections{display:grid;gap:8px;margin:12px 0}
+.premium .fpl-half-stat-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 11px;background:#1b2c39;border-radius:8px;font-size:12px}
+.premium .fpl-half-stat-row>strong{color:#a7e9cd;min-width:60px}
+.premium .fpl-half-stat-row span{color:#d4e6ee}
+.premium .fpl-half-stat-row b{font-variant-numeric:tabular-nums;color:#f4faff}
+.premium .fpl-half-unavailable{margin:9px 0 0;font-size:11px;line-height:1.5;color:#f3c99c}
+@media(max-width:600px){.premium .fpl-half-stat-row{display:grid;grid-template-columns:1fr 1fr}.premium .fpl-half-stat-row>strong{grid-column:1/-1}}
