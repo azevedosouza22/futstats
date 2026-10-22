@@ -729,3 +729,29 @@ html{scroll-behavior:smooth}
 .premium .fpl-half-stat-row b{font-variant-numeric:tabular-nums;color:#f4faff}
 .premium .fpl-half-unavailable{margin:9px 0 0;font-size:11px;line-height:1.5;color:#f3c99c}
 @media(max-width:600px){.premium .fpl-half-stat-row{display:grid;grid-template-columns:1fr 1fr}.premium .fpl-half-stat-row>strong{grid-column:1/-1}}
+
+
+/* Read-only progress of the next ten Premier League games on Android */
+.premium .fpl-next-round{border:1px solid #476679;border-radius:12px;padding:15px;background:#192c3a;color:#d6e8ef;display:grid;gap:11px}
+.premium .fpl-next-round-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.premium .fpl-next-round-top h3{font-size:15px;color:#ebf5ff;margin:0}
+.premium .fpl-next-round-top p{font-size:11px;margin:5px 0 0}
+.premium .fpl-next-round-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.premium .fpl-next-round-summary span{padding:9px;background:#25404f;border-radius:9px;color:#d4e3ec;font-size:11px;line-height:1.35}
+.premium .fpl-next-round-summary strong{font-size:18px;display:block;font-variant-numeric:tabular-nums;color:#b8e4f5}
+.premium .fpl-next-round-fixtures{display:grid;gap:7px}
+.premium .fpl-next-round-fixture{display:grid;grid-template-columns:minmax(0,1fr) auto 47px;gap:9px;align-items:center;padding:10px 9px;border-radius:8px;background:#253a48;border:1px solid #3b5463}
+.premium .fpl-next-round-name{min-width:0;display:grid;gap:3px}
+.premium .fpl-next-round-name b{font-size:12px;color:#f5f9fc;overflow-wrap:anywhere}
+.premium .fpl-next-round-name small{font-size:11px;color:#c2d4db}
+.premium .fpl-next-round-status{padding:5px 7px;font-size:10px;border-radius:6px;background:#434553;color:#d9e5ee;white-space:nowrap}
+.premium .fpl-next-round-status.concluido{background:#274f41;color:#a4ebca}
+.premium .fpl-next-round-status.em-revisao{background:#59422b;color:#ffdeb6}
+.premium .fpl-next-round-score{text-align:right;color:#ebf5ff;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+@media(max-width:480px){
+ .premium .fpl-next-round{padding:10px}
+ .premium .fpl-next-round-fixture{grid-template-columns:minmax(0,1fr) 65px;gap:6px}
+ .premium .fpl-next-round-status{grid-column:2;grid-row:1;font-size:9px;padding:4px 5px;text-align:center}
+ .premium .fpl-next-round-score{grid-column:2;grid-row:2;font-size:12px}
+ .premium .fpl-next-round-name{grid-column:1;grid-row:1/span 2}
+}
