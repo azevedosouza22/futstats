@@ -2,6 +2,16 @@
 
 **Decisão do usuário em 22/10/2026:** suspender o modelo de micro-lotes (3, 7 partidas etc.). Os planos de lote 01/02 permanecem como histórico/auditoria, **não** como roteiro obrigatório das próximas coletas. O objetivo é obter os datasets restantes **de uma só vez**, um arquivo por competição/temporada, organizados em um único pacote, sem tarefas repetitivas manuais.
 
+## Estratégia de execução segura — UMA LIGA POR VEZ (22/10/2026)
+
+**Correção de escopo solicitada pelo usuário após experiências de travamento:** NÃO disparar todos os campeonatos/temporadas em uma única execução do Work. Fazer **um campeonato/temporada por execução**, começando pela **Serie A italiana 2026/27**. Dentro dessa execução, cobrir **todos os jogos já encerrados**, sem exigir do usuário um comando por rodada ou micro-lote.
+
+Para evitar repetir o problema da Bundesliga 2025/26, o Work deve gerenciar **checkpoints internos duráveis**: registrar progresso a cada conjunto processado, persistir CSVs intermediários e catálogo de IDs/links já conferidos, e retomar do último checkpoint se houver falha. Esses checkpoints são uma decisão técnica *interna ao Work*, não novos pedidos ao usuário. Ao terminar uma liga, **consolidar um único CSV de 55 colunas + relatório**, deduplicando as etapas internas e confirmando contagem e validações. Só depois iniciar o campeonato seguinte, em nova execução, com autorização/continuação do usuário.
+
+**Não prometer execução ininterrupta nem cobertura completa se a fonte não permitir acesso ou fornecimento dos quatro indicadores nos três períodos.** Até o fechamento da temporada, a coleta integral significa todos os jogos *concluídos até a data da pesquisa*, não jogos ainda futuros.
+
+A cláusula anterior de um pacote ZIP agregado de todas as temporadas deve ser lida como **entrega final opcional após a conclusão de cada liga**, não como exigência de uma operação gigantesca simultânea.
+
 ## Procedimento principal já aprovado pelo usuário — cobertura estatística COMPLETA
 
 **Não reduzir a encomenda a um catálogo de placares CC0.** O usuário confirmou que o Work já executou pesquisas completas por campeonato usando o **Flashscore**, consultando as estatísticas de **jogo completo, primeiro tempo e segundo tempo**. A estratégia agora é **replicar a coleta comprovada em escala de temporada**, de preferência em uma única execução por campeonato, **sem o usuário solicitar cada rodada**.
