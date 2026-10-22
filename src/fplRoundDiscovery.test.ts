@@ -1,5 +1,5 @@
 import {describe,expect,it} from 'vitest';
-import {discoverNewFplRounds,isCompleteFplRound} from './fplRoundDiscovery';
+import {discoverNewFplRounds,isCompleteFplRound,inspectNextFplRound} from './fplRoundDiscovery';
 const header='gameweek,match_id,finished,stats_processed,home_score,away_score,home_total_shots,away_total_shots,home_shots_on_target,away_shots_on_target,home_corners,away_corners';
 const round=(number:number,finished=true,pendingOne=false)=>
  header+'\n'+Array.from({length:10},(_,i)=>[
@@ -36,5 +36,41 @@ describe('descoberta automática de rodadas concluídas, sem dados estimados',()
   expect(result.reason).toBe('missing');
   expect(baseline).toHaveLength(7);
   expect(result.completedCsvs).toHaveLength(7);
+ });
+});
+
+
+describe('acompanhar dez partidas da rodada seguinte sem importar ou inventar resultados',()=>{
+ const teams='code,name\n'+Array.from({length:20},(_,i)=>[i+1,'Equipe '+(i+1)].join(',')).join('\n');
+ const header2='gameweek,kickoff_time,home_team,away_team,match_id,finished,stats_processed,home_score,away_score,home_total_shots,away_total_shots,home_shots_on_target,away_shots_on_target,home_corners,away_corners';
+ function gw8(){
+  return header2+'\n'+Array.from({length:10},(_,i)=>{
+   const score=i===1?['1.0','0.0']:['',''];
+   const stats=i===1?['8.0','6.0','3.0','2.0','4.0','5.0']:Array(6).fill('');
+   return [8,'2026-10-24T14:00:00',i+1,i+11,
+    '26-27-prem-team-'+i+'-vs-other-'+i,i===1?'True':'False',
+    i===1?'True':'False',...score,...stats].join(',');
+  }).join('\n');
+ }
+ it('mostra os dez jogos; não transforma nove placares futuros vazios em 0×0',()=>{
+  const out=inspectNextFplRound(gw8(),8,teams);
+  expect(out).toHaveLength(10);
+  expect(out.filter(x=>x.status==='a-jogar')).toHaveLength(9);
+  const played=out.find(x=>x.status==='concluido');
+  expect(played).toMatchObject({home:'Equipe 2',away:'Equipe 12',fullTime:[1,0]});
+  expect(out.filter(x=>x.status==='a-jogar').every(x=>x.fullTime===null)).toBe(true);
+ });
+ it('identifica placar final com estatística ausente como em revisão, não como jogo concluído para importação',()=>{
+  const a=gw8().replace('True,True,1.0,0.0,8.0','True,False,1.0,0.0,8.0');
+  const out=inspectNextFplRound(a,8,teams);
+  expect(out.filter(x=>x.status==='em-revisao')).toHaveLength(1);
+  expect(out.filter(x=>x.status==='em-revisao')[0].fullTime).toEqual([1,0]);
+ });
+ it('rejeita rodada incompleta, duplicatas e times não identificados',()=>{
+  const raw=gw8();
+  expect(()=>inspectNextFplRound(raw.split('\n').slice(0,10).join('\n'),8,teams)).toThrow();
+  expect(()=>inspectNextFplRound(raw.replace('26-27-prem-team-1-vs-other-1','26-27-prem-team-0-vs-other-0'),8,teams)).toThrow();
+  expect(()=>inspectNextFplRound(raw.replace('2026-10-24T14:00:00','invalid'),8,teams)).toThrow();
+  expect(()=>inspectNextFplRound(raw.replace('1,11,26-27-prem','99,11,26-27-prem'),8,teams)).toThrow();
  });
 });
