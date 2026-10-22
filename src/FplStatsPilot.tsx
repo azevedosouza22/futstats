@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import {crossCheckFpl,parseFplPilot,FPL_PREVIEW_HOME,FPL_PREVIEW_RAW,FPL_PREVIEW_ROUNDS,type FplPilotGame} from './fplFreePilot';
 import {OPENFOOTBALL_URL} from './openFootball';
+import {discoverNewFplRounds,type DiscoveryResult} from './fplRoundDiscovery';
 import {auditFplShotEvents,type ShotAudit} from './fplPeriodAudit';
 
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
@@ -13,6 +14,7 @@ export default function FplStatsPilot(){
  const [busy,setBusy]=useState(true);
  const [error,setError]=useState('');
  const [updatedAt,setUpdatedAt]=useState('');
+ const [discovery,setDiscovery]=useState<Pick<DiscoveryResult,'lastCompleteRound'|'nextRoundPending'|'reason'>|null>(null);
  const [shotAudit,setShotAudit]=useState<ShotAudit|null>(null);
  const [shotBusy,setShotBusy]=useState(false);
  const [shotError,setShotError]=useState('');
@@ -29,10 +31,21 @@ export default function FplStatsPilot(){
     if(replies.some(r=>!r.ok))throw Error('Um dos arquivos gratuitos não pôde ser consultado.');
     const texts=await Promise.all(replies.map(r=>r.text()));
     if(texts.some(c=>c.length>250000))throw Error('Arquivo acima do limite de segurança.');
-    const games=parseFplPilot(texts[0],texts.slice(1,-1));
+    const discovered=await discoverNewFplRounds(texts.slice(1,-1),async gw=>{
+      const url=FPL_PREVIEW_RAW+'By%20Tournament/Premier%20League/GW'+gw+'/matches.csv';
+      const response=await fetch(url,{signal:controller.signal,cache:'no-store'});
+      if(!response.ok)return null;
+      const csv=await response.text();
+      if(csv.length>250000)throw Error('Arquivo de nova rodada excedeu o limite previsto.');
+      return csv;
+    });
+    const games=parseFplPilot(texts[0],discovered.completedCsvs);
     const verification=crossCheckFpl(games,JSON.parse(texts[texts.length-1]) as unknown);
     if(controller.signal.aborted)return;
     setAudit({games,...verification});setUpdatedAt(new Date().toISOString());
+    setDiscovery({lastCompleteRound:discovered.lastCompleteRound,
+      nextRoundPending:discovered.nextRoundPending,reason:discovered.reason});
+    setRound(prev=>prev===FPL_PREVIEW_ROUNDS?discovered.lastCompleteRound:prev);
    }catch(e){
     if(!controller.signal.aborted)setError(e instanceof Error?e.message:'Falha na consulta de estatísticas gratuitas.');
    }finally{if(!controller.signal.aborted)setBusy(false);}
@@ -45,7 +58,8 @@ export default function FplStatsPilot(){
   const load=async()=>{
    setShotBusy(true);setShotError('');setShotAudit(null);
    try{
-    const urls=Array.from({length:FPL_PREVIEW_ROUNDS},(_,i)=>
+    const lastRound=Math.max(FPL_PREVIEW_ROUNDS,...audit.games.map(g=>g.gw));
+    const urls=Array.from({length:lastRound},(_,i)=>
       FPL_PREVIEW_RAW+'By%20Tournament/Premier%20League/GW'+(i+1)+'/shots.csv');
     const replies=await Promise.all(urls.map(url=>fetch(url,{signal:controller.signal,cache:'no-store'})));
     if(replies.some(r=>!r.ok))throw Error('A fonte não disponibilizou todos os registros de finalizações.');
@@ -70,14 +84,19 @@ export default function FplStatsPilot(){
    <p>Totais do jogo e, quando os registros conferem, finalizações por tempo.</p>
   </div><span className="tag">{audit?audit.games.length+' PARTIDAS':busy?'CONSULTANDO…':'PILOTO · LEITURA'}</span></div>
   <div className="fpl-pilot-content">
-   {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos das sete primeiras rodadas…</p>}
+   {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos e procurando novas rodadas concluídas…</p>}
    {audit&&<div className="fpl-pilot-numbers" aria-label="Resumo da Premier League 2026/27">
      <div><strong>{audit.games.length}</strong><span>Jogos encontrados</span></div>
      <div><strong>{processed}</strong><span>Marcados como processados</span></div>
      <div><strong>{pending}</strong><span>Pendente de validação</span></div>
      <div><strong>{audit.compared}</strong><span>Placares comparados</span></div>
     </div>}
-   <p className="fpl-pilot-simple-notice"><strong>Somente consulta:</strong> jogos ainda não são adicionados à base de 659 partidas nem ao Radar.</p>
+   <p className="fpl-pilot-simple-notice"><strong>Somente consulta:</strong> jogos não são adicionados à base do FutStats nem às previsões do Radar.</p>
+   {discovery&&<p className="notice" role="status">
+     <strong>Atualização automática:</strong> a fonte contém {discovery.lastCompleteRound} rodadas completas verificadas nesta consulta.
+     {discovery.nextRoundPending!==null&&<> A rodada {discovery.nextRoundPending} ainda não está concluída ou não está disponível na fonte. Ela só entrará quando os dez jogos terminarem e apresentarem estatísticas utilizáveis.</>}
+     {' '}A atualização ocorre ao abrir esta tela ou selecionar “Conferir dados novamente”.
+    </p>}
    <details className="fpl-pilot-disclosure">
     <summary>Por que os dados ainda estão em avaliação?</summary>
     <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. As estatísticas por tempo são parciais: finalizações e chutes no gol somente em partidas cujos eventos são conciliados. Escanteios por tempo não estão disponíveis. Os registros permanecerão separados da base principal.</p>
@@ -109,7 +128,7 @@ export default function FplStatsPilot(){
     <p className="muted">Os totais do jogo são exibidos abaixo. Para conferir os dois tempos nas partidas validadas, abra “Ver finalizações por tempo”. O histórico não é modificado.</p>
     <label className="fpl-pilot-round">Escolher rodada
      <select aria-label="Escolher rodada das estatísticas experimentais" value={round} onChange={e=>setRound(Number(e.target.value))}>
-      {Array.from({length:FPL_PREVIEW_ROUNDS},(_,i)=>i+1).map(v=><option value={v} key={v}>Rodada {v}</option>)}
+      {Array.from({length:discovery?.lastCompleteRound??FPL_PREVIEW_ROUNDS},(_,i)=>i+1).map(v=><option value={v} key={v}>Rodada {v}</option>)}
      </select>
     </label>
     <div className="fpl-pilot-games">
