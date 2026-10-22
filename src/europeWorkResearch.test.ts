@@ -74,6 +74,32 @@ describe('Lote Work europeu isolado',()=>{
   expect(readEuropeWork(JSON.stringify(saved)).entries).toHaveLength(3);
   expect(JSON.stringify(original)).toBe(before);
  });
+ it('aceita partida da rodada 6 ainda sem placar CC0, sem somar jogos aos 155',()=>{
+  const match:EuropeMatch={
+   id:['serie-a',6,'2026-10-10','genoa cfc','acf fiorentina'].join('|'),
+   league:'serie-a',competition:'Serie A italiana 2026/27',date:'2026-10-10',
+   round:6,home:'Genoa CFC',away:'ACF Fiorentina',
+   full:null,half:null,second:null
+  };
+  const researchBefore=JSON.stringify(original);
+  const work=csv([0],{
+   id_fonte:'Rodada6A',url_fonte:'https://www.flashscore.com.br/jogo/futebol/teste/?mid=Rodada6A',
+   data:'2026-10-10',data_titulo_fonte:'2026-10-10',
+   mandante:'Genoa',visitante:'Fiorentina'
+  });
+  const report=reviewEuropeWorkCsv(work,original,emptyEuropeWork(),[match]);
+  expect(report.newEntries).toHaveLength(1);
+  expect(report.matched[0].round).toBe(6);
+  const next=stageEuropeWork(emptyEuropeWork(),report);
+  expect(next.entries[0].fixture?.id).toBe(match.id);
+  expect(next.entries[0].fixture?.full).toEqual([1,1]);
+  expect(readEuropeWork(JSON.stringify(next)).entries).toHaveLength(1);
+  expect(JSON.stringify(original)).toBe(researchBefore);
+  const again=reviewEuropeWorkCsv(work,original,next,[match]);
+  expect(again.duplicates).toBe(1);
+  expect(again.newEntries).toHaveLength(0);
+  expect(()=>reviewEuropeWorkCsv(work,original,emptyEuropeWork(),[])).toThrow('calendário validado');
+ });
  it('ignora a importação repetida e rejeita conflito',()=>{
   const first=reviewEuropeWorkCsv(csv(),original,emptyEuropeWork());
   const store=stageEuropeWork(emptyEuropeWork(),first);
