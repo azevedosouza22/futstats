@@ -64,12 +64,12 @@ export function parseEuropeanLeague(source:unknown,league:EuropeLeagueId):Europe
    if(!isObj(item.score))throw Error('Formato de placar desconhecido.');
    if(item.score.ft!==undefined){
     if(!validScore(item.score.ft))throw Error('Placar final malformado.');
-    full=[...item.score.ft];
+    full=[item.score.ft[0],item.score.ft[1]];
     if(item.score.ht!==undefined){
      if(!validScore(item.score.ht)||
        item.score.ht.some((v,i)=>v>full![i]))
       throw Error('Placar de intervalo divergente do placar final.');
-     half=[...item.score.ht];
+     half=[item.score.ht[0],item.score.ht[1]];
      second=[full[0]-half[0],full[1]-half[1]];
     }
    } else if(item.score.ht!==undefined) {
@@ -112,7 +112,7 @@ export function readStoredEuropeanResearch(value:string|null):StoredEuropeanRese
   !parsed.matches.every(validResearchMatch)||
   new Set(parsed.matches.map((m:EuropeMatch)=>m.id)).size!==parsed.matches.length)
   throw Error('Base experimental inconsistente. Nenhum dado será alterado.');
- return parsed as StoredEuropeanResearch;
+ return {format:EUROPE_RESEARCH_STORAGE,matches:parsed.matches as EuropeMatch[]};
 }
 export function stageEuropeanResults(
  current:StoredEuropeanResearch,entries:EuropeMatch[]
