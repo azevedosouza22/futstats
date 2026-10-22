@@ -84,8 +84,13 @@ export default function EuropeLeaguesPilot(){
  const eligible=eligibleEuropeanResults(catalogs,today);
  const data=catalogs.find(x=>x.league===active);
  const def=EUROPE_LEAGUES.find(x=>x.id===active)!;
- const activeRound=round || data?.matches.filter(x=>x.full!==null).reduce((n,x)=>Math.max(n,x.round),1)||1;
+ const activeRound=round ||
+  Math.max(data?.matches.filter(x=>x.full!==null).reduce((n,x)=>Math.max(n,x.round),1)??1,
+    enriched.entries.filter(x=>x.fixture?.league===active).reduce((n,x)=>Math.max(n,x.fixture!.round),1));
  const fixtures=data?.matches.filter(x=>x.round===activeRound)??[];
+ const workOnly=enriched.entries.filter(x=>x.fixture&&x.fixture.league===active&&x.fixture.round===activeRound &&
+   !fixtures.some(g=>g.id===x.europeId)).map(x=>x.fixture!);
+ const visibleFixtures=[...fixtures,...workOnly];
  const daysOld=data?.lastResultDate?
   Math.floor((Date.parse(today+'T12:00:00Z')-Date.parse(data.lastResultDate+'T12:00:00Z'))/86400000):null;
  async function addWorkCsv(file?:File){
@@ -99,7 +104,7 @@ export default function EuropeLeaguesPilot(){
    const text=await file.text();
    const base=readStoredEuropeanResearch(localStorage.getItem(EUROPE_RESEARCH_STORAGE));
    const old=readEuropeWork(localStorage.getItem(EUROPE_WORK_STORAGE));
-   const report=reviewEuropeWorkCsv(text,base,old);
+   const report=reviewEuropeWorkCsv(text,base,old,catalogs.flatMap(c=>c.matches));
    if(report.newEntries.length===0){
     setEnriched(old);
     setWorkNotice('Arquivo já registrado: '+report.duplicates+' partida(s), nenhuma duplicata adicionada.');
@@ -109,7 +114,8 @@ export default function EuropeLeaguesPilot(){
     // Existing historical 659, Radar and the 155-score catalogue remain untouched.
     localStorage.setItem(EUROPE_WORK_STORAGE,JSON.stringify(next));
     setEnriched(next);
-    setActive('serie-a');setRound(1);
+    const last=report.matched.reduce((n,m)=>Math.max(n,m.round),1);
+    setActive('serie-a');setRound(last);
     setWorkNotice(report.newEntries.length+' partida(s) complementada(s) com estatísticas completas do Work. Os '+base.matches.length+' jogos da pesquisa e o Radar permanecem intactos.');
    }
   }catch(e){setWorkError(e instanceof Error?e.message:'CSV não aprovado. Nenhum dado foi gravado.');}
@@ -140,7 +146,7 @@ export default function EuropeLeaguesPilot(){
   <div className="openfootball-content">
    <p className="openfootball-guard"><strong>Base separada do Histórico e do Radar:</strong> partidas podem ser guardadas neste navegador para pesquisa. Finalizações, chutes no alvo e escanteios por tempo ficam N/D nas partidas ainda não complementadas pelo Work. Nenhum registro antigo é sobrescrito.</p>
    <div className="europe-league-kpis">
-    <div><strong>{eligible.length}</strong><span>Jogos com placar e intervalo conferíveis</span></div>
+    <div><strong>{eligible.length}</strong><span>Jogos com placar e intervalo na fonte gratuita</span></div>
     <div><strong>{stored.matches.length}</strong><span>Salvos na pesquisa local</span></div>
     <div><strong>{enriched.entries.length}</strong><span>Jogos completos via Work</span></div>
     <div><strong>{catalogs.length}/3</strong><span>Campeonatos acessíveis</span></div>
@@ -154,8 +160,8 @@ export default function EuropeLeaguesPilot(){
    {failed.length>0&&<p className="alert" role="status">{failed.join('; ')}. As demais ligas continuam disponíveis.</p>}
    <details className="fpl-pilot-disclosure" aria-label="Completar estatísticas da base experimental com CSV do Work">
     <summary>Completar estatísticas usando CSV do Work</summary>
-    <p className="muted">Selecione o arquivo de 55 colunas recebido do Work. O FutStats confere nomes das equipes, competição, data, placares e todas as somas; depois complementa somente os jogos que já estão nesta base experimental. Não é preciso repetir a seleção para partidas já importadas. O CSV não sai do seu navegador.</p>
-    <input type="file" accept=".csv,text/csv" disabled={workBusy||stored.matches.length===0}
+    <p className="muted">Selecione o CSV consolidado de 55 colunas recebido do Work. O FutStats confere nomes, competição, datas, placares disponíveis e somas dos períodos. Jogos do calendário que ainda não tenham resultado na fonte gratuita ficam salvos somente na pesquisa Work, sem modificar os 155 jogos originais. A seleção repetida não cria duplicatas. O CSV não sai do seu navegador.</p>
+    <input type="file" accept=".csv,text/csv" disabled={workBusy||stored.matches.length===0||catalogs.length!==EUROPE_LEAGUES.length}
       aria-label="Selecionar CSV do Work para complementar base europeia"
       onChange={e=>{const file=e.currentTarget.files?.[0];e.currentTarget.value='';void addWorkCsv(file);}}/>
     {workBusy&&<p role="status" className="muted">Conferindo as partidas…</p>}
@@ -178,12 +184,12 @@ export default function EuropeLeaguesPilot(){
      </select>
     </label>
     <div className="fpl-pilot-games">
-     {fixtures.map(g=><article key={g.id} className="fpl-pilot-game">
+     {visibleFixtures.map(g=><article key={g.id} className="fpl-pilot-game">
       <div className="fpl-pilot-game-top"><strong>{g.home} × {g.away}</strong><small>{fmtDate(g.date)}</small></div>
       <div className="fpl-pilot-metrics">
-       <div><small>Gols completos</small><strong>{pair(g.full)}</strong></div>
-       <div><small>1º tempo</small><strong>{pair(g.half)}</strong></div>
-       <div><small>2º tempo</small><strong>{pair(g.second)}</strong></div>
+       <div><small>Gols completos</small><strong>{pair(g.full??enriched.entries.find(x=>x.europeId===g.id)?.full.goals??null)}</strong></div>
+       <div><small>1º tempo</small><strong>{pair(g.half??enriched.entries.find(x=>x.europeId===g.id)?.first.goals??null)}</strong></div>
+       <div><small>2º tempo</small><strong>{pair(g.second??enriched.entries.find(x=>x.europeId===g.id)?.second.goals??null)}</strong></div>
        <div><small>Chutes/escanteios por tempo</small><strong>{enriched.entries.some(x=>x.europeId===g.id)?'Conferidos':'N/D'}</strong></div>
       </div>
       {enriched.entries.filter(x=>x.europeId===g.id).map(x=><details className="fpl-half-stat-details" key={x.sourceId}>
