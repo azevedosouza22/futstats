@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import {crossCheckFpl,parseFplPilot,FPL_PREVIEW_HOME,FPL_PREVIEW_RAW,FPL_PREVIEW_ROUNDS,type FplPilotGame} from './fplFreePilot';
 import {OPENFOOTBALL_URL} from './openFootball';
+import {auditFplShotEvents,type ShotAudit} from './fplPeriodAudit';
 
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
 const gameDate=(date:string)=>new Date(date+'T12:00:00').toLocaleDateString('pt-BR');
@@ -12,6 +13,9 @@ export default function FplStatsPilot(){
  const [busy,setBusy]=useState(true);
  const [error,setError]=useState('');
  const [updatedAt,setUpdatedAt]=useState('');
+ const [shotAudit,setShotAudit]=useState<ShotAudit|null>(null);
+ const [shotBusy,setShotBusy]=useState(false);
+ const [shotError,setShotError]=useState('');
  useEffect(()=>{
   const controller=new AbortController();
   async function load(){
@@ -35,7 +39,28 @@ export default function FplStatsPilot(){
   }
   void load();return ()=>controller.abort();
  },[tries]);
- const selected=audit?.games.filter(g=>g.gw===round)??[];
+ useEffect(()=>{
+  if(!audit)return;
+  const controller=new AbortController();
+  const load=async()=>{
+   setShotBusy(true);setShotError('');setShotAudit(null);
+   try{
+    const urls=Array.from({length:FPL_PREVIEW_ROUNDS},(_,i)=>
+      FPL_PREVIEW_RAW+'By%20Tournament/Premier%20League/GW'+(i+1)+'/shots.csv');
+    const replies=await Promise.all(urls.map(url=>fetch(url,{signal:controller.signal,cache:'no-store'})));
+    if(replies.some(r=>!r.ok))throw Error('A fonte não disponibilizou todos os registros de finalizações.');
+    const texts=await Promise.all(replies.map(r=>r.text()));
+    if(texts.some(x=>x.length>250000))throw Error('O arquivo de finalizações excedeu o limite de segurança.');
+    const report=auditFplShotEvents(audit.games,texts);
+    if(!controller.signal.aborted)setShotAudit(report);
+   }catch(e){
+    if(!controller.signal.aborted)setShotError(e instanceof Error?e.message:'Auditoria de finalizações indisponível.');
+   }finally{if(!controller.signal.aborted)setShotBusy(false);}
+  };
+  void load();
+  return ()=>controller.abort();
+ },[audit]);
+  const selected=audit?.games.filter(g=>g.gw===round)??[];
  const processed=audit?.games.filter(g=>g.sourceStatsProcessed).length??0;
  const pending=(audit?.games.length??0)-processed;
  const comparisonOk=!!audit&&audit.compared>0&&audit.disagreed===0&&audit.notLocated===0;
@@ -65,6 +90,18 @@ export default function FplStatsPilot(){
     {pending>0&&<p className="fpl-pilot-warning" role="status">
        <strong>{pending} partida em revisão na fonte.</strong> Seus números não serão apresentados como estatísticas confirmadas e não serão usados no Radar.
       </p>}
+    <section className="fpl-period-quality" aria-label="Auditoria dos eventos de finalização por tempo">
+     <h3>Conferência dos eventos de finalização</h3>
+     <p className="muted">Comparamos cada finalização registrada com o total do jogo completo. Só consideramos uma partida consistente quando os totais de finalizações e chutes no gol de ambas as equipes coincidem, e todos os eventos têm minuto válido.</p>
+     {shotBusy&&<p role="status">Conferindo os registros de cada jogo…</p>}
+     {shotError&&<p className="alert" role="alert">Não foi possível concluir esta conferência: {shotError}. O catálogo de 70 jogos permanece disponível.</p>}
+     {shotAudit&&<div className="fpl-period-quality-numbers">
+      <div><strong>{shotAudit.reconciled}</strong><span>Registros de chutes consistentes</span></div>
+      <div><strong>{shotAudit.divergent}</strong><span>Com diferenças</span></div>
+      <div><strong>{shotAudit.pending}</strong><span>Pendente na fonte</span></div>
+     </div>}
+     <p className="muted">Esta conferência não disponibiliza escanteios ou gols por tempo e não autoriza criar previsões. Partidas divergentes ou pendentes continuarão N/D na análise por tempo. A origem e as permissões de reutilização também precisam de validação.</p>
+    </section>
     <p className={comparisonOk?'notice':'alert'} role="status">
      {comparisonOk?'Conferência independente: '+audit.agreed+'/'+audit.compared+' placares coincidem com o OpenFootball.':
       'Atenção: '+audit.disagreed+' divergências e '+audit.notLocated+' resultados sem correspondência. Não utilizar automaticamente.'}
