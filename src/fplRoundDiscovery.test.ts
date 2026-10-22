@@ -3,7 +3,7 @@ import {discoverNewFplRounds,isCompleteFplRound,inspectNextFplRound} from './fpl
 const header='gameweek,match_id,finished,stats_processed,home_score,away_score,home_total_shots,away_total_shots,home_shots_on_target,away_shots_on_target,home_corners,away_corners';
 const round=(number:number,finished=true,pendingOne=false)=>
  header+'\n'+Array.from({length:10},(_,i)=>[
- number,'game-'+number+'-'+i,finished?'True':'False',
+ number,'26-27-prem-game-'+number+'-'+i,finished?'True':'False',
  pendingOne&&i===0?'False':'True',2,1,18,11,7,4,5,6
  ].join(',')).join('\n');
 describe('descoberta automática de rodadas concluídas, sem dados estimados',()=>{
@@ -27,9 +27,25 @@ describe('descoberta automática de rodadas concluídas, sem dados estimados',()
   expect(actual.lastCompleteRound).toBe(8);
   expect(actual.nextRoundPending).toBe(9);
  });
+ it('rejeita rodada de outra temporada, numeros impossiveis e chutes no gol maiores que finalizacoes',()=>{
+  const valid=round(8);
+  expect(isCompleteFplRound(valid,8)).toBe(true);
+  expect(isCompleteFplRound(valid.replace('26-27-prem-game-8-0','25-26-prem-game-8-0'),8)).toBe(false);
+  expect(isCompleteFplRound(valid.replace(',18,11,7,4,5,6',',18,11,20,4,5,6'),8)).toBe(false);
+  expect(isCompleteFplRound(valid.replace(',18,11,7,4,5,6',',1000,11,7,4,5,6'),8)).toBe(false);
+ });
+ it('nao promove uma rodada que reutiliza ID de uma rodada anterior',async()=>{
+  const baseline=Array.from({length:7},(_,i)=>round(i+1));
+  const corrupted=round(8).replace('26-27-prem-game-8-0','26-27-prem-game-1-0');
+  const result=await discoverNewFplRounds(baseline,async n=>n===8?corrupted:null);
+  expect(result.lastCompleteRound).toBe(7);
+  expect(result.nextRoundPending).toBe(8);
+  expect(result.reason).toBe('partial');
+  expect(result.completedCsvs).toEqual(baseline);
+ });
  it('does not mutate the caller baseline and rejects a duplicate / blank round',async()=>{
   const baseline=Array.from({length:7},(_,i)=>round(i+1));
-  expect(isCompleteFplRound(round(8).replace('game-8-1','game-8-0'),8)).toBe(false);
+  expect(isCompleteFplRound(round(8).replace('26-27-prem-game-8-1','26-27-prem-game-8-0'),8)).toBe(false);
   expect(isCompleteFplRound(round(8,false),8)).toBe(false);
   expect(isCompleteFplRound('gameweek,match_id\n8,test',8)).toBe(false);
   const result=await discoverNewFplRounds(baseline,async()=>null);
