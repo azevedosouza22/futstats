@@ -29,8 +29,8 @@ function verified(game:FplPilotGame,match:Match):VerifiedFlashscoreCorners|null{
  if(!values.every(validCorner))return null;
  if(match.research.full[0].corners!==game.corners[0]||
     match.research.full[1].corners!==game.corners[1])return null;
- if(homeFirst!+homeSecond!==game.corners[0]||
-    awayFirst!+awaySecond!==game.corners[1])return null;
+ if(homeFirst!+homeSecond! !== game.corners[0]||
+    awayFirst!+awaySecond! !== game.corners[1])return null;
  try{
   const url=new URL(match.research.sourceUrl);
   if(url.protocol!=='https:'||
