@@ -35,6 +35,22 @@ describe('auditoria rigorosa dos eventos da Premier League',()=>{
   expect(a.periodsById['ok']?.first).toEqual({shots:[1,0],onTarget:[1,0]});
   expect(a.periodsById['ok']?.second).toEqual({shots:[1,1],onTarget:[0,0]});
  });
+ it('inclui 45+3 no primeiro tempo e 90+4 no segundo, conforme o CSV real',()=>{
+  const h='match_id,shot_index,minute,added_time,is_home,outcome';
+  const csv=h+'\n'+'ok,1,45,3.0,True,goal\nok,2,46,,True,miss\nok,3,90,4.0,False,block';
+  const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(h+'\nnotused,1,55,,False,miss')]);
+  expect(a.reconciled).toBe(1);
+  expect(a.periodsById['ok']?.first).toEqual({shots:[1,0],onTarget:[1,0]});
+  expect(a.periodsById['ok']?.second).toEqual({shots:[1,1],onTarget:[0,0]});
+ });
+ it('rejeita periodo ambiguo quando added_time nao corresponde a 45 ou 90',()=>{
+  const h='match_id,shot_index,minute,added_time,is_home,outcome';
+  const csv=h+'\n'+'ok,1,48,3.0,True,goal\nok,2,46,,True,miss\nok,3,90,4.0,False,block';
+  const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(h+'\nnotused,1,55,,False,miss')]);
+  expect(a.reconciled).toBe(0);
+  expect(a.divergentIds).toEqual(['ok']);
+  expect(a.periodsById['ok']).toBeUndefined();
+ });
  it('rejeita eventos com minutos ausentes ou valores de minuto inválidos',()=>{
   const csv=header+'\n'+'ok,1,,True,goal\nok,2,47,True,miss\nok,3,60,False,block';
   const a=auditFplShotEvents([fixture(1,'ok')],[csv,...Array(6).fill(header+'\nnotused,1,55,False,miss')]);
