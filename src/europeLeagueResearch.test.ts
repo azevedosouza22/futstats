@@ -40,7 +40,7 @@ describe('Base de pesquisa CC0: três ligas novas',()=>{
   const x=sample();
   x.matches[0].score={ht:[3,0],ft:[2,1]};
   expect(()=>parseEuropeanLeague(x,'serie-a')).toThrow('divergente');
-  const y=sample();y.name='Outra temporada';
+  const y:{name:string;matches:ReturnType<typeof sample>['matches']}=sample();y.name='Outra temporada';
   expect(()=>parseEuropeanLeague(y,'serie-a')).toThrow('Fonte pública');
  });
  it('permite salvamento separado do histórico, rejeita cópias e divergências',()=>{
