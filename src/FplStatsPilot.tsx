@@ -36,6 +36,8 @@ export default function FplStatsPilot(){
   void load();return ()=>controller.abort();
  },[tries]);
  const selected=audit?.games.filter(g=>g.gw===round)??[];
+ const processed=audit?.games.filter(g=>g.sourceStatsProcessed).length??0;
+ const pending=(audit?.games.length??0)-processed;
  const comparisonOk=!!audit&&audit.compared>0&&audit.disagreed===0&&audit.notLocated===0;
  return <section className="panel fpl-stats-pilot" aria-label="Estatísticas gratuitas em avaliação">
   <div className="panel-head"><div>
@@ -45,10 +47,10 @@ export default function FplStatsPilot(){
   <div className="fpl-pilot-content">
    {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos das sete primeiras rodadas…</p>}
    {audit&&<div className="fpl-pilot-numbers" aria-label="Resumo da Premier League 2026/27">
-     <div><strong>{audit.games.length}</strong><span>Partidas com estatísticas</span></div>
+     <div><strong>{audit.games.length}</strong><span>Jogos encontrados</span></div>
+     <div><strong>{processed}</strong><span>Marcados como processados</span></div>
+     <div><strong>{pending}</strong><span>Pendente de validação</span></div>
      <div><strong>{audit.compared}</strong><span>Placares comparados</span></div>
-     <div><strong>{audit.agreed}</strong><span>Placares concordantes</span></div>
-     <div><strong>{audit.disagreed}</strong><span>Divergências</span></div>
     </div>}
    <p className="fpl-pilot-simple-notice"><strong>Somente consulta:</strong> jogos ainda não são adicionados à base de 659 partidas nem ao Radar.</p>
    <details className="fpl-pilot-disclosure">
@@ -60,6 +62,9 @@ export default function FplStatsPilot(){
    </button>
    {error&&<p className="alert" role="alert">{error}{audit?' Mantendo a última auditoria bem-sucedida nesta tela.':''}</p>}
    {audit&&<>
+    {pending>0&&<p className="fpl-pilot-warning" role="status">
+       <strong>{pending} partida em revisão na fonte.</strong> Seus números não serão apresentados como estatísticas confirmadas e não serão usados no Radar.
+      </p>}
     <p className={comparisonOk?'notice':'alert'} role="status">
      {comparisonOk?'Conferência independente: '+audit.agreed+'/'+audit.compared+' placares coincidem com o OpenFootball.':
       'Atenção: '+audit.disagreed+' divergências e '+audit.notLocated+' resultados sem correspondência. Não utilizar automaticamente.'}
@@ -73,15 +78,16 @@ export default function FplStatsPilot(){
     <div className="fpl-pilot-games">
      {selected.map(g=><article key={g.id} className="fpl-pilot-game">
       <div className="fpl-pilot-game-top"><strong>{g.home} × {g.away}</strong><small>{gameDate(g.date)}</small></div>
+      {!g.sourceStatsProcessed&&<p className="fpl-pilot-pending">Dados deste jogo aguardam processamento na fonte. Estatísticas: N/D até confirmação.</p>}
       <div className="fpl-pilot-metrics">
-       <div><small>Gols</small><strong>{pair(g.goals)}</strong></div>
-       <div><small>Finalizações</small><strong>{pair(g.shots)}</strong></div>
-       <div><small>Chutes no gol</small><strong>{pair(g.onTarget)}</strong></div>
-       <div><small>Escanteios</small><strong>{pair(g.corners)}</strong></div>
+       <div><small>Gols</small><strong>{g.sourceStatsProcessed?pair(g.goals):'N/D'}</strong></div>
+       <div><small>Finalizações</small><strong>{g.sourceStatsProcessed?pair(g.shots):'N/D'}</strong></div>
+       <div><small>Chutes no gol</small><strong>{g.sourceStatsProcessed?pair(g.onTarget):'N/D'}</strong></div>
+       <div><small>Escanteios</small><strong>{g.sourceStatsProcessed?pair(g.corners):'N/D'}</strong></div>
       </div>
      </article>)}
     </div>
-    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. 1º e 2º tempo: N/D até serem obtidos dados verificáveis. A concordância de placares não valida automaticamente todas as estatísticas.</p>
+    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. 1º e 2º tempo: N/D até serem obtidos dados verificáveis. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
     {updatedAt&&<p className="muted">Última consulta: {new Date(updatedAt).toLocaleString('pt-BR')}.</p>}
    </>}
    <p className="muted">Fonte dos indicadores: <a href={FPL_PREVIEW_HOME} target="_blank" rel="noreferrer">FPL Core Insights ↗</a>. Conferência dos placares: <a href="https://github.com/openfootball/football.json" target="_blank" rel="noreferrer">OpenFootball CC0 ↗</a>. Sem cobrança, sem apostas, sem uso para previsão enquanto o piloto estiver isolado.</p>
