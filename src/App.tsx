@@ -3,6 +3,7 @@ import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Targ
 import Integration from './Integration';
 import WorkCsvImport from './WorkCsvImport';
 import OpenFootballPilot from './OpenFootballPilot';
+import EuropeLeaguesPilot from './EuropeLeaguesPilot';
 import FplStatsPilot from './FplStatsPilot';
 import PwaUpdateStatus from './PwaUpdateStatus';
 import PreGame from './PreGame';
@@ -162,7 +163,7 @@ export default function App(){
      <button type="button" disabled={historyListing.page===historyListing.pages} onClick={()=>setHistoryPage(Math.min(historyListing.pages,historyListing.page+1))}>Próxima →</button>
    </div>}
  </section>}
- {page===4&&<><PwaUpdateStatus/><FplStatsPilot data={data}/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
+ {page===4&&<><PwaUpdateStatus/><EuropeLeaguesPilot/><FplStatsPilot data={data}/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
  {page===5&&<PreGame data={data}/>}
  {page===6&&<Radar data={data}/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
