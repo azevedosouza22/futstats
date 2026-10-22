@@ -21,11 +21,18 @@ function parseEvents(csv:string):{rows:Event[];invalidIds:Set<string>}{
  const seen=new Set<string>();
  for(const row of data){
   const id=row.match_id??'',side=row.is_home,minute=Number(row.minute),
-   outcome=(row.outcome??'').toLowerCase(),index=row.shot_index??'';
+   outcome=(row.outcome??'').toLowerCase(),index=row.shot_index??'',
+   addedTime=(row.added_time??'').trim();
+  // The current provider encodes 45+3 as minute=45, added_time=3.0.
+  // Never assign an ambiguous added-time representation to either half.
+  const invalidStoppage=addedTime!==''&&(
+    !/^(?:[1-9]\\d*)(?:\\.0+)?$/.test(addedTime)||
+    (minute!==45&&minute!==90)
+  );
   const key=id+'|'+index;
   if(!id||!index||seen.has(key)||!['True','False'].includes(side)||
      !/^\d{1,3}$/.test(row.minute??'')||!Number.isInteger(minute)||
-     minute<1||minute>120||!outcomes.has(outcome)){
+     minute<1||minute>120||invalidStoppage||!outcomes.has(outcome)){
    invalidIds.add(id);
    continue;
   }
