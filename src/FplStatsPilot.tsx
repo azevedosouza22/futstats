@@ -115,10 +115,11 @@ export default function FplStatsPilot(){
      <ul>
       {selected.map(g=>{
        const verified=shotAudit?Boolean(shotAudit.periodsById[g.id]):shotError?false:null;
-       const gaps=unavailableFplIndicators(g,verified);
+       const goals=shotAudit?Boolean(shotAudit.goalPeriodsById[g.id]):shotError?false:null;
+       const gaps=unavailableFplIndicators(g,verified,goals);
        return <li key={g.id}>
         <strong>{g.home} × {g.away}:</strong> {gaps.missing.join('; ')}
-        {gaps.auditPending?'; finalizações por tempo: aguardando auditoria':''}.
+        {gaps.auditPending?'; gols/finalizações por tempo: aguardando auditoria':''}.
        </li>;
       })}
      </ul>
@@ -161,7 +162,7 @@ export default function FplStatsPilot(){
     </section>}
    <details className="fpl-pilot-disclosure">
     <summary>Por que os dados ainda estão em avaliação?</summary>
-    <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. As estatísticas por tempo são parciais: finalizações e chutes no gol somente em partidas cujos eventos são conciliados. Escanteios por tempo não estão disponíveis. Os registros permanecerão separados da base principal.</p>
+    <p>O autor permite reutilização no README, mas as permissões sobre todas as fontes originais ainda não foram confirmadas para uso comercial. Gols, finalizações e chutes no gol por tempo aparecem somente quando os eventos são conciliados com os resultados oficiais da fonte; as validações de gols e chutes são independentes. Escanteios por tempo não estão disponíveis. Os registros permanecem separados da base principal.</p>
    </details>
    <button className="text-button" type="button" disabled={busy} onClick={()=>setTries(v=>v+1)}>
     {busy?'Conferindo arquivos…':'Conferir dados novamente'}
@@ -173,21 +174,22 @@ export default function FplStatsPilot(){
       </p>}
     <section className="fpl-period-quality" aria-label="Auditoria dos eventos de finalização por tempo">
      <h3>Conferência dos eventos de finalização</h3>
-     <p className="muted">Comparamos cada finalização registrada com o total do jogo completo. Só consideramos uma partida consistente quando os totais de finalizações e chutes no gol de ambas as equipes coincidem, e todos os eventos têm minuto válido.</p>
+     <p className="muted">Conferimos os gols por tempo contra o placar final de ambas as equipes e, separadamente, as finalizações e chutes no gol contra os totais publicados. Eventos sem minuto válido, gols contra ambíguos ou divergências continuam N/D.</p>
      {shotBusy&&<p role="status">Conferindo os registros de cada jogo…</p>}
      {shotError&&<p className="alert" role="alert">Não foi possível concluir esta conferência: {shotError}. O catálogo de 70 jogos permanece disponível.</p>}
      {shotAudit&&<div className="fpl-period-quality-numbers">
+      <div><strong>{shotAudit.goalReconciled}</strong><span>Gols por tempo conferidos</span></div>
       <div><strong>{shotAudit.reconciled}</strong><span>Registros de chutes consistentes</span></div>
       <div><strong>{shotAudit.divergent}</strong><span>Com diferenças</span></div>
       <div><strong>{shotAudit.pending}</strong><span>Pendente na fonte</span></div>
      </div>}
-     <p className="muted">Apenas partidas consistentes recebem finalizações e chutes no gol por 1º/2º tempo neste piloto. Escanteios e gols por período continuam N/D. Não autoriza criar previsões nem importar registros ao Radar; direitos da fonte ainda precisam de validação.</p>
+     <p className="muted">Gols por 1º/2º tempo são exibidos apenas quando os eventos conferem com o placar final. Finalizações por período precisam de conciliação independente. Escanteios por tempo continuam N/D. Nenhuma previsão ou importação ao Radar é autorizada; direitos da fonte ainda precisam de validação.</p>
     </section>
     <p className={comparisonOk?'notice':'alert'} role="status">
      {comparisonOk?'Conferência independente: '+audit.agreed+'/'+audit.compared+' placares coincidem com o OpenFootball.':
       'Atenção: '+audit.disagreed+' divergências e '+audit.notLocated+' resultados sem correspondência. Não utilizar automaticamente.'}
     </p>
-    <p className="muted">Os totais do jogo são exibidos abaixo. Para conferir os dois tempos nas partidas validadas, abra “Ver finalizações por tempo”. O histórico não é modificado.</p>
+    <p className="muted">Os totais do jogo são exibidos abaixo. Abra “Ver gols por tempo” e/ou “Ver finalizações por tempo” quando houver conciliação. O histórico não é modificado.</p>
     <label className="fpl-pilot-round">Escolher rodada
      <select aria-label="Escolher rodada das estatísticas experimentais" value={round} onChange={e=>setRound(Number(e.target.value))}>
       {Array.from({length:discovery?.lastCompleteRound??FPL_PREVIEW_ROUNDS},(_,i)=>i+1).map(v=><option value={v} key={v}>Rodada {v}</option>)}
@@ -203,6 +205,14 @@ export default function FplStatsPilot(){
        <div><small>Chutes no gol</small><strong>{g.sourceStatsProcessed?pair(g.onTarget):'N/D'}</strong></div>
        <div><small>Escanteios</small><strong>{g.sourceStatsProcessed?pair(g.corners):'N/D'}</strong></div>
       </div>
+      {shotAudit?.goalPeriodsById[g.id]&&<details className="fpl-half-stat-details">
+       <summary>Ver gols por tempo (conferidos)</summary>
+       <div className="fpl-half-stat-sections">
+        <div className="fpl-half-stat-row"><strong>1º tempo</strong><span>Gols: <b>{pair(shotAudit.goalPeriodsById[g.id].first)}</b></span></div>
+        <div className="fpl-half-stat-row"><strong>2º tempo</strong><span>Gols: <b>{pair(shotAudit.goalPeriodsById[g.id].second)}</b></span></div>
+       </div>
+       <p className="muted">Mandante × visitante. Eventos de gol com minuto validado e soma reconciliada com o placar final. Escanteios por tempo: N/D.</p>
+      </details>}
       {shotAudit?.periodsById[g.id]&&<details className="fpl-half-stat-details">
        <summary>Ver finalizações por tempo (conferidas)</summary>
        <div className="fpl-half-stat-sections">
@@ -215,12 +225,12 @@ export default function FplStatsPilot(){
          </div>;
         })}
        </div>
-       <p className="muted">Mandante × visitante. Gols por tempo: N/D · Escanteios por tempo: N/D. Eventos reconciliados com os totais, apenas para avaliação da fonte.</p>
+       <p className="muted">Mandante × visitante. Gols por tempo aparecem na seção própria quando confirmados. Escanteios por tempo: N/D. Eventos reconciliados com os totais, apenas para avaliação da fonte.</p>
       </details>}
       {shotAudit?.divergentIds.includes(g.id)&&<p className="fpl-half-unavailable">1º/2º tempo: N/D (eventos divergentes da estatística do jogo).</p>}
      </article>)}
     </div>
-    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. Gols e escanteios por 1º/2º tempo continuam N/D. Finalizações por período só aparecem quando todos os eventos da partida conferem com os totais. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
+    <p className="muted">Cada dupla de valores está na ordem mandante × visitante. Data conforme a origem; fuso de horário não presumido. Gols por tempo aparecem apenas com os eventos conciliados; escanteios por 1º/2º tempo continuam N/D. Finalizações por período só aparecem quando os eventos conferem com os totais. A concordância de placares não valida automaticamente todas as estatísticas. Jogos marcados como não processados pela fonte aparecem com N/D.</p>
     {updatedAt&&<p className="muted">Última consulta: {new Date(updatedAt).toLocaleString('pt-BR')}.</p>}
    </>}
    <p className="muted">Fonte dos indicadores: <a href={FPL_PREVIEW_HOME} target="_blank" rel="noreferrer">FPL Core Insights ↗</a>. Conferência dos placares: <a href="https://github.com/openfootball/football.json" target="_blank" rel="noreferrer">OpenFootball CC0 ↗</a>. Sem cobrança, sem apostas, sem uso para previsão enquanto o piloto estiver isolado.</p>
