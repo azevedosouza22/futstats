@@ -55,3 +55,61 @@ export async function discoverNewFplRounds(
  }
  return {completedCsvs,lastCompleteRound:completedCsvs.length,nextRoundPending:null,reason:'maximum'};
 }
+
+
+/** Read-only fixture statuses for the NEXT round, before all matches finish. */
+export type NextRoundFixture={
+ id:string;gw:number;date:string;home:string;away:string;
+ status:'a-jogar'|'em-revisao'|'concluido';
+ fullTime:[number,number]|null;
+};
+const toCode=(value:string|undefined):number|null=>{
+ if(!value||!/^(?:0|[1-9]\d*)(?:\.0+)?$/.test(value))return null;
+ const n=Number(value);return Number.isSafeInteger(n)?n:null;
+};
+const validDate=(v:string|undefined)=>!!v&&
+ /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(v)&&
+ !Number.isNaN(Date.parse(v+'Z'))&&new Date(v+'Z').toISOString().slice(0,19)===v;
+/**
+ * Missing stats must never be represented by zero. Completed but unprocessed
+ * matches are displayed as "em revisão", not added to the FutStats history.
+ * Never blend source seasons or derive team identities from fuzzy name matching.
+ */
+export function inspectNextFplRound(
+ csv:string,
+ round:number,
+ teamsCsv:string
+):NextRoundFixture[]{
+ if(!Number.isInteger(round)||round<1||round>FPL_MAX_ROUNDS)
+  throw Error('Rodada de acompanhamento inválida.');
+ const teamRows=parseCsv(teamsCsv),teams=new Map<number,string>();
+ if(teamRows.length!==20)throw Error('Clubes da temporada incompletos.');
+ for(const t of teamRows){
+  const id=toCode(t.code);
+  if(id===null||!t.name||teams.has(id))throw Error('Clube duplicado ou desconhecido.');
+  teams.set(id,t.name);
+ }
+ const rows=parseCsv(csv);
+ if(rows.length!==10)throw Error('A próxima rodada não possui dez partidas.');
+ const used=new Set<string>();
+ const fixtures:NextRoundFixture[]=[];
+ for(const r of rows){
+  if(!r.match_id||used.has(r.match_id)||!/^26-27-prem-[a-z0-9-]+$/.test(r.match_id)||
+   r.gameweek!==String(round)||!validDate(r.kickoff_time)||
+   (r.finished!=='True'&&r.finished!=='False'))
+   throw Error('A próxima rodada tem jogos duplicados ou dados inválidos.');
+  used.add(r.match_id);
+  const h=teams.get(toCode(r.home_team)??-1),a=teams.get(toCode(r.away_team)??-1);
+  if(!h||!a||h===a)throw Error('Equipes da próxima rodada não identificadas.');
+  const score=(r.finished==='True'&&numeric(r.home_score)&&numeric(r.away_score))
+   ?[Number(r.home_score),Number(r.away_score)] as [number,number]:null;
+  const hasFullStats=[
+   'home_total_shots','away_total_shots','home_shots_on_target','away_shots_on_target',
+   'home_corners','away_corners'
+  ].every(k=>numeric(r[k]));
+  const status:NextRoundFixture['status']=r.finished==='False'?'a-jogar':
+   r.stats_processed==='True'&&score&&hasFullStats?'concluido':'em-revisao';
+  fixtures.push({id:r.match_id,gw:round,date:r.kickoff_time,home:h,away:a,status,fullTime:score});
+ }
+ return fixtures.sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+}
