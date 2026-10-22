@@ -49,7 +49,7 @@ export function readEuropeWork(text:string|null):WorkEuropeStore{
   new Set(value.entries.map((e:WorkEuropeEntry)=>e.europeId)).size!==value.entries.length||
   new Set(value.entries.map((e:WorkEuropeEntry)=>e.sourceId)).size!==value.entries.length)
   throw Error('Pesquisa Work existente é incompatível. Nenhum dado será sobrescrito.');
- return value as WorkEuropeStore;
+ return {format:EUROPE_WORK_STORAGE,entries:value.entries as WorkEuropeEntry[]};
 }
 const normal=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
@@ -139,7 +139,7 @@ export function stageEuropeWork(
  original:WorkEuropeStore,review:WorkEuropeReview
 ):WorkEuropeStore{
  readEuropeWork(JSON.stringify(original));
- const next={format:EUROPE_WORK_STORAGE,entries:[...original.entries,...review.newEntries]};
+ const next:WorkEuropeStore={format:EUROPE_WORK_STORAGE,entries:[...original.entries,...review.newEntries]};
  readEuropeWork(JSON.stringify(next));
  return next;
 }
