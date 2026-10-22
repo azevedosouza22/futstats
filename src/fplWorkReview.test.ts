@@ -70,6 +70,11 @@ describe('conferência temporária de Work CSV para Premier League',()=>{
   expect(out.approved).toHaveLength(0);
   expect(out.rejected[0].reason).toContain('incompatíveis');
  });
+ it('bloqueia data de título divergente sem presumir qual está correta',()=>{
+  const out=reviewWorkResearchForFpl(csv([sample({data_titulo_fonte:'2026-10-20'})]),[game]);
+  expect(out.approved).toHaveLength(0);
+  expect(out.rejected[0].reason).toContain('data do título');
+ });
  it('rejeita outra temporada, identidade incerta e jogo não processado',()=>{
   expect(reviewWorkResearchForFpl(csv([sample({competicao:'Bundesliga 2026/27'})]),[game]).approved).toHaveLength(0);
   expect(reviewWorkResearchForFpl(csv([sample({mandante:'Outra Equipe'})]),[game]).approved).toHaveLength(0);
