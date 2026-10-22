@@ -35,8 +35,9 @@ function parseEvents(csv:string):{rows:Event[];invalidIds:Set<string>}{
  return {rows:result,invalidIds};
 }
 export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):ShotAudit{
- if(shotCsvByGw.length!==FPL_PREVIEW_ROUNDS)
-  throw Error('A auditoria de eventos exige todas as 7 rodadas.');
+ const maxGameRound=Math.max(FPL_PREVIEW_ROUNDS,...games.map(g=>g.gw));
+ if(shotCsvByGw.length!==maxGameRound)
+  throw Error('A auditoria exige arquivos de eventos para todas as rodadas concluídas.');
  const all=new Map<string,Event[]>(),invalidIds=new Set<string>();
  let eventRows=0;
  shotCsvByGw.forEach((raw,i)=>{
