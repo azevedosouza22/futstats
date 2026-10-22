@@ -29,6 +29,19 @@ describe('fallback informativo Flashscore sem importar dados',()=>{
   expect(result.missing[0]).toContain('jogo completo');
   expect(result.missing[1]).toContain('1º/2º tempo');
  });
+ it('retira gols por tempo das pendencias somente quando os placares por periodo conferem',()=>{
+  expect(unavailableFplIndicators(game,true,true)).toEqual({
+   missing:['Escanteios por tempo'],auditPending:false
+  });
+  expect(unavailableFplIndicators(game,false,true).missing).toEqual([
+   'Escanteios por tempo','Finalizações e chutes no gol por tempo'
+  ]);
+ });
+ it('sinaliza que gols ainda estao em conferencia em vez de adivinhar valores',()=>{
+  const pending=unavailableFplIndicators(game,null,null);
+  expect(pending.auditPending).toBe(true);
+  expect(pending.missing).toEqual(['Escanteios por tempo']);
+ });
  it('não altera a partida recebida',()=>{
   const before=JSON.stringify(game);
   unavailableFplIndicators(game,false);
