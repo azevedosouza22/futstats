@@ -97,9 +97,11 @@ function validResearchMatch(item:unknown):item is EuropeMatch{
   !validDate(item.date)||typeof item.round!=='number'||!Number.isSafeInteger(item.round)||
   !team(item.home)||!team(item.away)||typeof item.id!=='string'||
   item.id!==dateRoundId(item.league as EuropeLeagueId,item.round,item.date,item.home,item.away)||
-  !validScore(item.full)||!validScore(item.half)||!validScore(item.second)||
-  item.half.some((n,i)=>n+item.second[i]!==item.full[i]))
+  !validScore(item.full)||!validScore(item.half)||!validScore(item.second))
   return false;
+ const first=item.half,second=item.second,full=item.full;
+ if(!validScore(first)||!validScore(second)||!validScore(full)||
+    first.some((n,i)=>n+second[i]!==full[i]))return false;
  const def=findDef(item.league as EuropeLeagueId);
  return item.round>=1&&item.round<=def.rounds&&item.competition===def.competition;
 }
