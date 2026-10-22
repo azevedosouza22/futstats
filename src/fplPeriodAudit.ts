@@ -10,11 +10,14 @@ export type VerifiedPeriods={first:VerifiedPeriod;second:VerifiedPeriod};
 export type ShotAudit={
  reconciled:number;divergent:number;pending:number;checked:number;
  eventRows:number;reconciledIds:string[];divergentIds:string[];pendingIds:string[];
- /** Only published for games whose every event reconciles to full-time totals. */
+ /** Goal periods are independently checked against BOTH published full-time scores. */
+ goalReconciled:number;goalReconciledIds:string[];goalDivergentIds:string[];
+ goalPeriodsById:Record<string,{first:Pair;second:Pair}>;
+ /** Only published for games whose every shot reconciles to full-time totals. */
  periodsById:Record<string,VerifiedPeriods>;
 };
 type Event={id:string;side:'True'|'False';minute:number;outcome:string;index:string};
-const outcomes=new Set(['save','goal','miss','block','post','owngoal']);
+const outcomes=new Set(['save','goal','miss','block','post','owngoal','blocked-off-line']);
 function parseEvents(csv:string):{rows:Event[];invalidIds:Set<string>}{
  const data=parseCsv(csv);
  const result:Event[]=[];const invalidIds=new Set<string>();
@@ -60,14 +63,33 @@ export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):Sh
  });
  const reconciledIds:string[]=[],divergentIds:string[]=[],pendingIds:string[]=[];
  const periodsById:Record<string,VerifiedPeriods>={};
+ const goalPeriodsById:Record<string,{first:Pair;second:Pair}>={};
+ const goalReconciledIds:string[]=[],goalDivergentIds:string[]=[];
  for(const game of games){
   if(!game.sourceStatsProcessed){pendingIds.push(game.id);continue;}
   const events=all.get((game.gw-1)+'|'+game.id)??[];
-  if(!events.length||invalidIds.has(game.id)){divergentIds.push(game.id);continue;}
+  if(!events.length||invalidIds.has(game.id)){
+   divergentIds.push(game.id);goalDivergentIds.push(game.id);continue;
+  }
+  // A shot's explicit goal outcome is usable for period totals only when both
+  // sides' recorded goal counts match the full-time scoreboard. Own goals are
+  // held out: the shooting player's side need not be the side credited.
+  const goals=events.filter(e=>e.outcome==='goal');
+  const scoring=(side:'True'|'False')=>goals.filter(e=>e.side===side);
+  const goalTotals:[number,number]=[scoring('True').length,scoring('False').length];
+  if(!events.some(e=>e.outcome==='owngoal')&&
+     goalTotals.every((n,i)=>n===game.goals[i])){
+   const perHalf=(first:boolean):Pair=>[
+    scoring('True').filter(e=>first?e.minute<=45:e.minute>45).length,
+    scoring('False').filter(e=>first?e.minute<=45:e.minute>45).length
+   ];
+   goalPeriodsById[game.id]={first:perHalf(true),second:perHalf(false)};
+   goalReconciledIds.push(game.id);
+  }else goalDivergentIds.push(game.id);
   const home=events.filter(e=>e.side==='True'),away=events.filter(e=>e.side==='False');
   const totals=[home.length,away.length,
-    home.filter(e=>e.outcome==='goal'||e.outcome==='save').length,
-    away.filter(e=>e.outcome==='goal'||e.outcome==='save').length];
+    home.filter(e=>['goal','save','blocked-off-line'].includes(e.outcome)).length,
+    away.filter(e=>['goal','save','blocked-off-line'].includes(e.outcome)).length];
   const expected=[...game.shots,...game.onTarget];
   if(totals.every((n,i)=>n===expected[i])){
    // Minutes 1..45, including 45+ stoppage, belong to first half.
@@ -77,7 +99,7 @@ export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):Sh
     const inHalf=(e:Event)=>first?e.minute<=45:e.minute>45;
     const count=(side:'True'|'False',target:boolean)=>
      events.filter(e=>e.side===side&&inHalf(e)&&
-       (!target||e.outcome==='goal'||e.outcome==='save')).length;
+       (!target||['goal','save','blocked-off-line'].includes(e.outcome))).length;
     return {shots:[count('True',false),count('False',false)],
       onTarget:[count('True',true),count('False',true)]};
    };
@@ -94,6 +116,7 @@ export function auditFplShotEvents(games:FplPilotGame[],shotCsvByGw:string[]):Sh
  return {
   reconciled:reconciledIds.length,divergent:divergentIds.length,
   pending:pendingIds.length,checked:games.length,eventRows,
-  reconciledIds,divergentIds,pendingIds,periodsById
+  reconciledIds,divergentIds,pendingIds,periodsById,
+  goalReconciled:goalReconciledIds.length,goalReconciledIds,goalDivergentIds,goalPeriodsById
  };
 }
