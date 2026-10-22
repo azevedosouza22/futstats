@@ -698,3 +698,22 @@ html{scroll-behavior:smooth}
   margin:0 0 11px;padding:10px 12px;border-left:3px solid #efbe7b;
   border-radius:7px;background:#372e28;color:#f4e0be;font-size:12px;line-height:1.55;
 }
+
+
+/* Evidence-only reconciliation of Premier League shot event totals; no import into Radar. */
+.premium .fpl-period-quality{margin:12px 0;padding:14px;border:1px solid #4b6878;border-radius:12px;background:#192d3b}
+.premium .fpl-period-quality h3{font-size:15px;margin:0 0 8px;color:#d9f1ff}
+.premium .fpl-period-quality p{font-size:12px;line-height:1.6}
+.premium .fpl-period-quality-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0}
+.premium .fpl-period-quality-numbers>div{min-width:0;padding:11px 9px;border-radius:9px;border:1px solid #436477;background:#233c49}
+.premium .fpl-period-quality-numbers strong{font-size:23px;line-height:1.3;font-variant-numeric:tabular-nums;color:#a7e3cf;display:block}
+.premium .fpl-period-quality-numbers>div:nth-child(2) strong{color:#ffc493}
+.premium .fpl-period-quality-numbers>div:nth-child(3) strong{color:#d7c9fc}
+.premium .fpl-period-quality-numbers span{display:block;color:#c6d9df;font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+@media(max-width:560px){
+ .premium .fpl-period-quality{padding:11px}
+ .premium .fpl-period-quality-numbers{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .premium .fpl-period-quality-numbers>div{padding:9px 7px}
+ .premium .fpl-period-quality-numbers strong{font-size:22px}
+ .premium .fpl-period-quality-numbers span{font-size:10px}
+}
