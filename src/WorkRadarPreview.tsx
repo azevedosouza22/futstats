@@ -8,6 +8,7 @@ import {
  workRadarData,projectWorkRadar,backtestWorkRadar
 } from './workRadar';
 import {validateWorkRadar} from './workRadarValidation';
+import WorkRadarProspectivePanel from './WorkRadarProspectivePanel';
 
 const format=(v:number|null)=>v===null?'N/D':
  v.toLocaleString('pt-BR',{maximumFractionDigits:2});
@@ -138,6 +139,7 @@ export default function WorkRadarPreview(){
      </article>)}
     </div>
    </>}
+   <WorkRadarProspectivePanel matches={matches} league={league} home={home} away={away} date={date}/>
    <details className="fpl-pilot-disclosure" open={showBacktest}
     onToggle={e=>setShowBacktest(e.currentTarget.open)}>
     <summary>Conferir teste cronológico V2 × V3 desta liga</summary>
