@@ -36,6 +36,7 @@ jobs:
           src/fplWorkStore.test.ts
           src/workAnalysis.test.ts
           src/workRadar.test.ts
+          src/workRadarValidation.test.ts
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/radarRecords.test.ts
