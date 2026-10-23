@@ -32,10 +32,10 @@ const sourceUrlOk=(v:string,id:string)=>{
  }catch{return false;}
 };
 const validSnapshot=(match:unknown,europeId:string):match is EuropeMatch=>{
- if(!asRecord(match)||match.id!==europeId||match.league!=='serie-a'||
-    match.competition!=='Serie A italiana 2026/27'||
+ if(!asRecord(match)||match.id!==europeId||
+    !EUROPE_LEAGUES.some(l=>l.id===match.league&&l.competition===match.competition&&
+      Number.isInteger(match.round)&&Number(match.round)>=1&&Number(match.round)<=l.rounds)||
     typeof match.round!=='number'||!Number.isInteger(match.round)||
-    match.round<1||match.round>38||
     typeof match.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(match.date)||
     Number.isNaN(Date.parse(match.date))||
     typeof match.home!=='string'||typeof match.away!=='string'||
@@ -87,7 +87,18 @@ const aliases:Record<string,string>={
  'venezia':'venezia fc','lecce':'us lecce',
  'atalanta':'atalanta bc','sassuolo':'us sassuolo calcio',
  'torino':'torino fc','milan':'ac milan','bologna':'bologna fc 1909',
- 'lazio':'ss lazio','roma':'as roma','fiorentina':'acf fiorentina'
+ 'lazio':'ss lazio','roma':'as roma','fiorentina':'acf fiorentina',
+ // La Liga 2026/27: Flashscore's short club names mapped to OpenFootball.
+ 'alaves':'deportivo alaves','getafe':'getafe cf',
+ 'sevilla':'sevilla fc','rayo vallecano':'rayo vallecano de madrid',
+ 'racing santander':'real racing club de santander',
+ 'villarreal':'villarreal cf','espanyol':'rcd espanyol de barcelona',
+ 'levante':'levante ud','a coruna':'rc deportivo la coruna',
+ 'elche':'elche cf','atl madrid':'club atletico de madrid',
+ 'malaga':'malaga cf','betis':'real betis balompie',
+ 'real sociedad':'real sociedad de futbol','ath bilbao':'athletic club',
+ 'valencia':'valencia cf','celta de vigo':'rc celta de vigo',
+ 'real madrid':'real madrid cf','osasuna':'ca osasuna','barcelona':'fc barcelona'
 };
 const teamName=(s:string)=>aliases[normal(s)]??normal(s);
 const metricColumn:Record<WorkMetric,'goals'|'shots'|'target'|'corners'>={
@@ -119,7 +130,7 @@ export function isWork55Header(csv:string):boolean{
 }
 export type WorkEuropeReview={
  checked:number;newEntries:WorkEuropeEntry[];duplicates:number;
- matched:{game:string;sourceId:string;round:number}[];
+ matched:{game:string;sourceId:string;round:number;league:EuropeMatch['league']}[];
 };
 export function reviewEuropeWorkCsv(
  csv:string,base:StoredEuropeanResearch,current:WorkEuropeStore,
@@ -181,7 +192,7 @@ export function reviewEuropeWorkCsv(
     throw Error('Placar publicado diverge do jogo já pesquisado: '+row.sourceId+'.');
    duplicates++;
   }else newEntries.push(item);
-  matched.push({game:game.home+' × '+game.away,sourceId:row.sourceId,round:game.round});
+  matched.push({game:game.home+' × '+game.away,sourceId:row.sourceId,round:game.round,league:game.league});
  }
  if(current.entries.length+newEntries.length>1100)throw Error('Limite da pesquisa Work atingido.');
  return {checked:rows.length,newEntries,duplicates,matched};
