@@ -31,6 +31,8 @@ jobs:
           src/fplWorkReview.test.ts
           src/europeLeagueResearch.test.ts
           src/europeWorkResearch.test.ts
+          src/apiFootball.test.ts
+          src/apiCoverageAudit.test.ts
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/radarRecords.test.ts
