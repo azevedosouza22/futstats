@@ -7,6 +7,7 @@ import {
 import {
  workRadarData,projectWorkRadar,backtestWorkRadar
 } from './workRadar';
+import {validateWorkRadar} from './workRadarValidation';
 
 const format=(v:number|null)=>v===null?'N/D':
  v.toLocaleString('pt-BR',{maximumFractionDigits:2});
@@ -40,6 +41,7 @@ export default function WorkRadarPreview(){
  const projections=data&&home&&away&&home!==away&&date?
   projectWorkRadar(data,home,away,cutoff):[];
  const backtest=useMemo(()=>showBacktest&&data?backtestWorkRadar(data):null,[showBacktest,data]);
+ const combined=useMemo(()=>read?validateWorkRadar(matches):null,[read,matches]);
  const count=(read?.europeCount??0)+(read?.premierCount??0);
 
  return <section className="panel work-radar-panel" aria-label="Radar V2 V3 experimental com Work">
@@ -52,11 +54,51 @@ export default function WorkRadarPreview(){
    <div className="fpl-pilot-numbers" aria-label="Amostra Radar Work">
     <div><strong>{count}</strong><span>Jogos Work salvos</span></div>
     <div><strong>{data?.matches.length??0}</strong><span>Jogos da liga escolhida</span></div>
-    <div><strong>{projections.filter(x=>x.v3.decision!=='Sem sinal').length}</strong><span>Indicadores V3 confirmados pelo filtro</span></div>
+    <div><strong>{projections.filter(x=>x.v3.decision!=='Sem sinal').length}</strong><span>Sinais V3 após filtros</span></div>
    </div>
    {error&&<p className="alert" role="alert">{error}. Dados anteriores preservados.</p>}
    {!error&&read&&count===0&&<p className="muted">Abra o FutStats no navegador em que foram salvas as pesquisas Work.</p>}
    {read&&read.unresolved>0&&<p className="alert" role="alert">{read.unresolved} registros sem identificação local ficaram fora do teste. Os arquivos não foram modificados.</p>}
+   {combined&&combined.total.fixtures>0&&<section className="work-radar-validation" aria-label="Validação retrospectiva Work V2 V3 nas quatro ligas">
+    <h3>Validação cronológica · quatro ligas</h3>
+    <p className="muted">Treinamos a direção da referência no início de cada campeonato e avaliamos os modelos nas partidas posteriores, sempre usando apenas dados anteriores a cada confronto.</p>
+    <table className="analysis-table">
+     <caption>Acertos em jogos posteriores ao período inicial</caption>
+     <thead><tr><th>Modelo</th><th>Acertos</th><th>Taxa</th></tr></thead>
+     <tbody>
+      <tr><th>V2 · todos os sinais</th>
+       <td>{combined.total.v2.correct}/{combined.total.v2.signals}</td>
+       <td>{pct(combined.total.v2.correct,combined.total.v2.signals)}</td></tr>
+      <tr><th>V3 · sinais selecionados</th>
+       <td>{combined.total.v3.correct}/{combined.total.v3.signals}</td>
+       <td>{pct(combined.total.v3.correct,combined.total.v3.signals)}</td></tr>
+      <tr><th>Regra simples · mesmos sinais V3</th>
+       <td>{combined.total.baseline.correct}/{combined.total.baseline.signals}</td>
+       <td>{pct(combined.total.baseline.correct,combined.total.baseline.signals)}</td></tr>
+     </tbody>
+    </table>
+    <p className="muted">{combined.total.v3.signals===0?'Ainda não houve sinais V3 para avaliar.':
+     combined.total.v3.signals!==combined.total.baseline.signals?
+      'Referência indisponível para todos os sinais V3; não é possível concluir vantagem.':
+     combined.total.v3.correct>combined.total.baseline.correct?
+      'V3 acima da referência nesta amostra retrospectiva; isso não comprova vantagem futura.':
+      'V3 ainda não superou a regra simples nos mesmos confrontos. Manter o Radar principal inalterado.'}
+    </p>
+    <details className="fpl-pilot-disclosure">
+     <summary>Ver avaliação de cada campeonato</summary>
+     <table className="analysis-table">
+      <caption>Totais agrupados dos três mercados de cada liga</caption>
+      <thead><tr><th>Campeonato</th><th>V2 · todos</th><th>V3 · aceitos</th><th>Regra simples · aceitos</th></tr></thead>
+      <tbody>{combined.leagues.map(l=><tr key={l.id}>
+       <th>{l.name}<small>Validação a partir de {l.validationStart??'N/D'}</small></th>
+       <td>{l.v2.correct}/{l.v2.signals}</td>
+       <td>{l.v3.correct}/{l.v3.signals}</td>
+       <td>{l.baseline.correct}/{l.baseline.signals}</td>
+      </tr>)}</tbody>
+     </table>
+    </details>
+    <p className="muted">Os 87 sinais do V2 e os 45 selecionados pelo V3 não são amostras iguais; a comparação justa do V3 é com a referência aplicada aos mesmos 45. Os três mercados podem reutilizar a mesma partida, portanto os sinais não são independentes. As estatísticas representam uma avaliação histórica com amostra limitada, não probabilidades ou rentabilidade. Nenhum palpite ou previsão anterior é alterado.</p>
+   </section>}
    {league&&<div className="analysis-controls">
     <label>Campeonato
      <select aria-label="Liga no Radar Work" value={league}
