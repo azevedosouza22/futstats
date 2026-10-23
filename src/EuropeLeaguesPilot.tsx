@@ -114,8 +114,9 @@ export default function EuropeLeaguesPilot(){
     // Existing historical 659, Radar and the 155-score catalogue remain untouched.
     localStorage.setItem(EUROPE_WORK_STORAGE,JSON.stringify(next));
     setEnriched(next);
-    const last=report.matched.reduce((n,m)=>Math.max(n,m.round),1);
-    setActive('serie-a');setRound(last);
+    const chosen=report.matched.at(-1)?.league??'serie-a';
+    const last=report.matched.filter(m=>m.league===chosen).reduce((n,m)=>Math.max(n,m.round),1);
+    setActive(chosen);setRound(last);
     setWorkNotice(report.newEntries.length+' partida(s) complementada(s) com estatísticas completas do Work. Os '+base.matches.length+' jogos da pesquisa e o Radar permanecem intactos.');
    }
   }catch(e){setWorkError(e instanceof Error?e.message:'CSV não aprovado. Nenhum dado foi gravado.');}
