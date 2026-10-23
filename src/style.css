@@ -767,3 +767,13 @@ html{scroll-behavior:smooth}
  .premium .europe-league-kpis strong{font-size:26px}
  .premium .europe-league-kpis span{margin:0}
 }
+
+/* API-Football private proof: compact, explicit coverage status on Android. */
+.intelligence .auto-coverage{border:1px solid #476777;background:#1d303b;padding:14px 16px;border-radius:12px;margin:16px 0}
+.intelligence .auto-coverage h4{font-size:14px;margin:0 0 9px;color:#edf7ff}
+.intelligence .auto-coverage>strong{display:block;font-size:17px;color:#b5e8ff;margin-bottom:12px}
+.intelligence .auto-coverage-periods{display:grid;gap:7px}
+.intelligence .auto-coverage-periods>div{display:flex;justify-content:space-between;gap:14px;padding:9px 11px;background:#233e4b;border-radius:7px;font-size:12px}
+.intelligence .auto-coverage-periods b{font-size:14px;white-space:nowrap}
+.intelligence .auto-coverage p{line-height:1.6;font-size:12px}
+.intelligence .auto-coverage p[role=alert]{color:#ffd19c}
