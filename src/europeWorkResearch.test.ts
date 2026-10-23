@@ -100,6 +100,32 @@ describe('Lote Work europeu isolado',()=>{
   expect(again.newEntries).toHaveLength(0);
   expect(()=>reviewEuropeWorkCsv(work,original,emptyEuropeWork(),[])).toThrow('calendário validado');
  });
+ it('associa jogo La Liga 2026/27 sem placar CC0 e aceita empate 0x0 conferido pelo Work',()=>{
+  const g:EuropeMatch={
+   id:['la-liga',2,'2026-08-22','valencia cf','rc celta de vigo'].join('|'),
+   league:'la-liga',competition:'La Liga espanhola 2026/27',date:'2026-08-22',
+   round:2,home:'Valencia CF',away:'RC Celta de Vigo',
+   full:null,half:null,second:null
+  };
+  const zeros:Record<string,string>={
+   id_fonte:'TesteLaLiga',url_fonte:'https://www.flashscore.com.br/jogo/futebol/teste/?mid=TesteLaLiga',
+   competicao:'La Liga espanhola 2026/27',data:'2026-08-22',data_titulo_fonte:'2026-08-22',
+   mandante:'Valencia',visitante:'Celta de Vigo'
+  };
+  for(const period of ['jogo','1t','2t'])for(const side of ['mandante','visitante','total'])
+    zeros['gols_'+side+'_'+period]='0';
+  const work=csv([0],zeros);
+  const before=JSON.stringify(original);
+  const preview=reviewEuropeWorkCsv(work,original,emptyEuropeWork(),[g]);
+  expect(preview.checked).toBe(1);
+  expect(preview.newEntries).toHaveLength(1);
+  expect(preview.matched[0].league).toBe('la-liga');
+  expect(preview.newEntries[0].fixture?.full).toEqual([0,0]);
+  const stored=stageEuropeWork(emptyEuropeWork(),preview);
+  expect(readEuropeWork(JSON.stringify(stored)).entries).toHaveLength(1);
+  expect(reviewEuropeWorkCsv(work,original,stored,[g]).duplicates).toBe(1);
+  expect(JSON.stringify(original)).toBe(before);
+ });
  it('ignora a importação repetida e rejeita conflito',()=>{
   const first=reviewEuropeWorkCsv(csv(),original,emptyEuropeWork());
   const store=stageEuropeWork(emptyEuropeWork(),first);
