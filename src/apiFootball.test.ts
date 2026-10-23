@@ -1,5 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
-import {createFootballService} from '../server/api-football.js';
+import {createFootballService,sanitizeFixtures} from '../server/api-football.js';
 import {periodStats,statValue,type AutoFixture} from './apiFootball';
 const env=()=>({API_SPORTS_KEY:'not-a-real-key',API_SPORTS_POC_TOKEN:'private-test-token-123',API_SPORTS_ALLOWED_DATES:'2026-10-13',API_SPORTS_ALLOWED_FIXTURES:'1492402'});
 const auth='Bearer private-test-token-123';
@@ -60,6 +60,19 @@ describe('API-Football server-only PoC',()=>{
  it('rejects mismatched fixture identity and returns empty data honestly',async()=>{
   expect((await createFootballService({env,fetcher:vi.fn().mockResolvedValue(response({...raw,parameters:{fixture:'9'}}))})(query(),auth)).status).toBe(502);
   const r=await createFootballService({env,fetcher:vi.fn().mockResolvedValue(response({response:[],errors:[]}))})(query(),auth);expect(r.body.items).toEqual([]);
+ });
+});
+describe('Placar de intervalo no provedor',()=>{
+ it('preserva halftime explicitamente informado e nao inventa ausencias',()=>{
+  const fixture=(score:unknown)=>({
+   fixture:{id:1492402,date:'2026-10-13T20:00:00+00:00',status:{short:'FT'}},
+   teams:{home:{id:1,name:'A'},away:{id:2,name:'B'}},
+   goals:{home:2,away:1},score
+  });
+  const yes=sanitizeFixtures([fixture({halftime:{home:1,away:0}})]);
+  expect(yes[0].halfGoals).toEqual([1,0]);
+  const no=sanitizeFixtures([fixture({})]);
+  expect(no[0].halfGoals).toEqual([null,null]);
  });
 });
 describe('Normalização sem dados inventados',()=>{
