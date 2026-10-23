@@ -4,6 +4,7 @@ import UpcomingRadar from './UpcomingRadar';
 import RadarBacktest from './RadarBacktest';
 import RadarVenueV2 from './RadarVenueV2';
 import RadarVenueV3 from './RadarVenueV3';
+import WorkRadarPreview from './WorkRadarPreview';
 import type {Data} from './model';
 
 const number = (n: number | null) =>
@@ -137,5 +138,6 @@ export default function Radar({data}: {data: Data}) {
       </>}
       </>}
     </div>
+    <WorkRadarPreview/>
   </section>;
 }
