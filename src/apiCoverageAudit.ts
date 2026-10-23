@@ -3,7 +3,6 @@
  * No network requests, user data mutation, quota changes or assumed statistics.
  */
 import {periodStats,type AutoFixture,type StatTeam} from './apiFootball';
-import type {Metric} from './model';
 
 export type CoverageResult={
  status:'ready'|'incomplete'|'conflict'|'not-final';
@@ -11,7 +10,8 @@ export type CoverageResult={
  periods:{period:'Jogo completo'|'1º tempo'|'2º tempo';found:number;expected:8}[];
 };
 
-const metrics:[Metric,string][]=[
+type CheckedMetric='goals'|'shots'|'target'|'corners';
+const metrics:[CheckedMetric,string][]=[
  ['goals','Gols'],['shots','Finalizações'],
  ['target','Chutes no gol'],['corners','Escanteios']
 ];
