@@ -101,12 +101,13 @@ function notes(value:string,sourceId:string):{
  let data:unknown;
  try{data=JSON.parse(value);}catch{throw Error('Observações do Work inválidas no jogo '+sourceId+'.');}
  if(!obj(data)||data.temporada!=='2026/2027'||
-  typeof data.piloto_id!=='string'||!Number.isInteger(data.rodada)||
+  typeof data.piloto_id!=='string'||typeof data.rodada!=='number'||!Number.isInteger(data.rodada)||
   !Array.isArray(data.divergencias_piloto)||!['True','False'].includes(String(data.piloto_stats_processed)))
   throw Error('Metadados do piloto não identificados no jogo '+sourceId+'.');
  const list=data.divergencias_piloto as unknown[];
  if(!list.every(x=>obj(x)&&typeof x.indicator==='string'&&
-  Number.isSafeInteger(x.flashscore)&&Number.isSafeInteger(x.piloto)))
+  typeof x.flashscore==='number'&&Number.isSafeInteger(x.flashscore)&&
+  typeof x.piloto==='number'&&Number.isSafeInteger(x.piloto)))
   throw Error('Divergência documentada inválida: '+sourceId+'.');
  return {pilotId:data.piloto_id,round:data.rodada as number,
   divergences:list as Divergence[],unprocessed:data.piloto_stats_processed==='False'};
