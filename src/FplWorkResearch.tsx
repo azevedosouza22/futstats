@@ -1,5 +1,6 @@
 import {useEffect,useState} from 'react';
 import type {FplPilotGame} from './fplFreePilot';
+import {EUROPE_WORK_STORAGE,readEuropeWork} from './europeWorkResearch';
 import {
  FPL_WORK_STORAGE,readFplWork,emptyFplWork,previewFplWorkCsv,addFplWork,
  type FplWorkStore,type Period
@@ -19,11 +20,13 @@ export default function FplWorkResearch({
  const [message,setMessage]=useState('');
  const [error,setError]=useState('');
  const [busy,setBusy]=useState(false);
+ const [otherLeagues,setOtherLeagues]=useState<number|null>(null);
 
  useEffect(()=>{
   try{
    const saved=readFplWork(localStorage.getItem(FPL_WORK_STORAGE));
    setData(saved);onStoredCount(saved.entries.length);
+   try{setOtherLeagues(readEuropeWork(localStorage.getItem(EUROPE_WORK_STORAGE)).entries.length);}catch{setOtherLeagues(null);}
   }catch(e){
    setError(e instanceof Error?e.message:'Pesquisa da Premier League indisponível.');
   }
@@ -73,6 +76,7 @@ export default function FplWorkResearch({
   <div className="fpl-pilot-numbers">
    <div><strong>{data.entries.length}</strong><span>Jogos completos via Work</span></div>
    <div><strong>{rounds.length}</strong><span>Rodadas com dados</span></div>
+   {otherLeagues!==null&&<div><strong>{otherLeagues+data.entries.length}</strong><span>Total via Work nas quatro ligas</span></div>}
    <div><strong>{data.entries.filter(e=>e.discrepancies.length>0).length}</strong><span>Diferenças preservadas</span></div>
   </div>
   <details className="fpl-pilot-disclosure" open={data.entries.length===0}>
