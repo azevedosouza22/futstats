@@ -33,6 +33,7 @@ jobs:
           src/europeWorkResearch.test.ts
           src/apiFootball.test.ts
           src/apiCoverageAudit.test.ts
+          src/fplWorkStore.test.ts
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/radarRecords.test.ts
