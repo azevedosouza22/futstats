@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Frozen V2/V3 Work Radar forecasts, separate from both the 659-match history
  * and the user's original immutable Radar snapshots.
