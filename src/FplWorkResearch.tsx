@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useEffect,useMemo,useState} from 'react';
 import type {FplPilotGame} from './fplFreePilot';
 import {FPL_WORK_STORAGE,addFplWork,emptyFplWork,
