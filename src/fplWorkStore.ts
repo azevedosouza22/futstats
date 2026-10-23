@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Private FPL Work 2026/27 research store. Replaces the PILOT DISPLAY only
  * after explicit local CSV import; never mutates main history, Radar, or
