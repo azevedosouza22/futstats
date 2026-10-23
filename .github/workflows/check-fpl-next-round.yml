@@ -38,6 +38,7 @@ jobs:
           src/workRadar.test.ts
           src/workRadarValidation.test.ts
           src/workRadarProspective.test.ts
+          src/WorkRadarProspectivePanel.test.tsx
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/radarRecords.test.ts
