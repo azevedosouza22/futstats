@@ -16,7 +16,7 @@ export default function Radar({data}: {data: Data}) {
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedFixtureId, setSelectedFixtureId] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [mode,setMode] = useState<'new'|'saved'|'history'>('new');
+  const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
 
   const researchMatches = data.matches.filter(m => !!m.research);
   const competitions = [...new Set(researchMatches.map(m => m.competition).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
@@ -55,10 +55,16 @@ export default function Radar({data}: {data: Data}) {
           <span aria-hidden="true">3</span><strong>Analisar jogos que já terminaram</strong>
           <small>Simulação histórica. Não registra um novo teste antes da partida.</small>
         </button>
+        <button type="button" className="radar-quick-action radar-quick-action--work" aria-pressed={mode==='work'}
+          onClick={()=>setMode('work')}>
+          <span aria-hidden="true">4</span><strong>Radar Work · Teste com novas ligas</strong>
+          <small>Usa as 292 partidas pesquisadas em uma simulação separada, sem salvar previsões.</small>
+        </button>
       </div>
     </nav>
     <div className="radar-inner">
-      {mode!=='history'&&<UpcomingRadar data={data} view={mode}/>}
+      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}/>}
+      {mode==='work'&&<WorkRadarPreview/>}
       {mode==='history'&&<>
       <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>
       <p className="muted">Esta área NÃO registra novos testes diários. Use o botão «Criar previsão para um jogo futuro» no topo. Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
@@ -138,6 +144,5 @@ export default function Radar({data}: {data: Data}) {
       </>}
       </>}
     </div>
-    <WorkRadarPreview/>
   </section>;
 }
