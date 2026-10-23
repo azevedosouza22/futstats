@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Frozen V2/V3 Work Radar forecasts, separate from both the 659-match history
  * and the user's original immutable Radar snapshots.
@@ -35,8 +34,10 @@ const identity=(league:WorkLeague,date:string,home:string,away:string)=>
 const record=(x:unknown):x is Record<string,unknown>=>
  x!==null&&typeof x==='object'&&!Array.isArray(x);
 const choice=(x:unknown)=>x==='Over'||x==='Under'||x==='Sem sinal';
-function validateEntry(v:unknown):v is FrozenWorkForecast{
- if(!record(v)||typeof v.id!=='string'||!eligibleLeague(v.league)||
+function validateEntry(input:unknown):input is FrozenWorkForecast{
+ if(!record(input))return false;
+ const v:Record<string,any>=input;
+ if(typeof v.id!=='string'||!eligibleLeague(v.league)||
   typeof v.home!=='string'||!v.home.trim()||v.home.length>120||
   typeof v.away!=='string'||!v.away.trim()||v.away.length>120||
   normalizeTeam(v.home)===normalizeTeam(v.away)||
