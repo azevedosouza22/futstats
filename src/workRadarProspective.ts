@@ -53,7 +53,7 @@ function validateEntry(v:unknown):v is FrozenWorkForecast{
   return record(m)&&m.marketId===market.id&&m.line===market.line&&
    typeof m.label==='string'&&m.label===market.label&&choice(m.v2)&&choice(m.v3)&&
    (m.baseline===null||m.baseline==='Over'||m.baseline==='Under')&&
-   Number.isSafeInteger(m.historicalObserved)&&m.historicalObserved>=0&&
+   typeof m.historicalObserved==='number'&&Number.isSafeInteger(m.historicalObserved)&&m.historicalObserved>=0&&
    (m.projectedTotal===null||(typeof m.projectedTotal==='number'&&Number.isFinite(m.projectedTotal)&&m.projectedTotal>=0))&&
    Array.isArray(m.failedChecks)&&m.failedChecks.every((x:unknown)=>
     x==='homeMean'||x==='awayMean'||x==='homeFrequency'||x==='awayFrequency');
