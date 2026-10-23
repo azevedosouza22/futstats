@@ -7,6 +7,7 @@ import {discoverNewFplRounds,inspectNextFplRound,type DiscoveryResult,type NextR
 import {auditFplShotEvents,type ShotAudit} from './fplPeriodAudit';
 import {unavailableFplIndicators} from './fplFallback';
 import {reviewWorkResearchForFpl,type WorkPilotReview} from './fplWorkReview';
+import FplWorkResearch from './FplWorkResearch';
 
 type Audit={games:FplPilotGame[];compared:number;agreed:number;disagreed:number;notLocated:number};
 const gameDate=(date:string)=>new Date(date+'T12:00:00').toLocaleDateString('pt-BR');
@@ -25,6 +26,7 @@ export default function FplStatsPilot({data}:{data:Data}){
  const [shotBusy,setShotBusy]=useState(false);
  const [shotError,setShotError]=useState('');
  const [workReview,setWorkReview]=useState<WorkPilotReview|null>(null);
+ const [fplStoredCount,setFplStoredCount]=useState(0);
  const [workReviewName,setWorkReviewName]=useState('');
  const [workReviewError,setWorkReviewError]=useState('');
  async function reviewWorkFile(file?:File){
@@ -118,7 +120,10 @@ export default function FplStatsPilot({data}:{data:Data}){
    <h2>Premier League 2026/27 · Estatísticas em avaliação</h2>
    <p>Totais do jogo e estatísticas por tempo verificadas. Escanteios podem ser aproveitados de pesquisas antigas do Flashscore já salvas na sua base.</p>
   </div><span className="tag">{audit?audit.games.length+' PARTIDAS':busy?'CONSULTANDO…':'PILOTO · LEITURA'}</span></div>
-  <div className="fpl-pilot-content">
+  <FplWorkResearch games={audit?.games??[]} onStoredCount={setFplStoredCount}/>
+  <details className="fpl-pilot-disclosure" open={fplStoredCount===0}>
+   <summary>{fplStoredCount?'Comparar com o piloto antigo (somente leitura)':'Exibir piloto gratuito e testes de referência'}</summary>
+   <div className="fpl-pilot-content">
    {busy&&!audit&&<p className="notice" role="status">Conferindo os arquivos gratuitos e procurando novas rodadas concluídas…</p>}
    {audit&&<div className="fpl-pilot-numbers" aria-label="Resumo da Premier League 2026/27">
      <div><strong>{audit.games.length}</strong><span>Jogos encontrados</span></div>
@@ -282,6 +287,7 @@ export default function FplStatsPilot({data}:{data:Data}){
     {updatedAt&&<p className="muted">Última consulta: {new Date(updatedAt).toLocaleString('pt-BR')}.</p>}
    </>}
    <p className="muted">Fonte dos indicadores: <a href={FPL_PREVIEW_HOME} target="_blank" rel="noreferrer">FPL Core Insights ↗</a>. Conferência dos placares: <a href="https://github.com/openfootball/football.json" target="_blank" rel="noreferrer">OpenFootball CC0 ↗</a>. Sem cobrança, sem apostas, sem uso para previsão enquanto o piloto estiver isolado.</p>
-  </div>
+   </div>
+  </details>
  </section>;
 }
