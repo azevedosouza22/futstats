@@ -170,6 +170,37 @@ describe('Lote Work europeu isolado',()=>{
    expect(report.newEntries[0].europeId).toBe(m.id);
   }
  });
+ it('reconhece os 18 clubes da Ligue 1 e não troca mandante com visitante',()=>{
+  const pairs:[string,string,string,string][]=[
+   ['Angers SCO','AJ Auxerre','Angers','Auxerre'],
+   ['Stade Brestois 29','Le Havre AC','Brest','Le Havre'],
+   ['Le Mans FC','Racing Club de Lens','Le Mans','Lens'],
+   ['Lille OSC','FC Lorient','Lille','Lorient'],
+   ['Olympique Lyonnais','Olympique de Marseille','Lyon','Marseille'],
+   ['AS Monaco FC','OGC Nice','Monaco','Nice'],
+   ['Paris Saint-Germain FC','Paris FC','PSG','Paris FC'],
+   ['Stade Rennais FC 1901','RC Strasbourg Alsace','Rennes','Strasbourg'],
+   ['Toulouse FC','ES Troyes AC','Toulouse','Troyes']
+  ];
+  for(const [home,away,shortHome,shortAway] of pairs){
+   const g:EuropeMatch={
+    id:['ligue-1',1,'2026-08-21',home.toLowerCase(),away.toLowerCase()].join('|'),
+    league:'ligue-1',competition:'Ligue 1 francesa 2026/27',
+    date:'2026-08-21',round:1,home,away,full:null,half:null,second:null
+   };
+   const work=csv([0],{
+    id_fonte:'TestLigue1',url_fonte:'https://www.flashscore.com.br/jogo/futebol/teste/?mid=TestLigue1',
+    competicao:'Ligue 1 francesa 2026/27',
+    data:'2026-08-21',data_titulo_fonte:'2026-08-21',
+    mandante:shortHome,visitante:shortAway
+   });
+   const review=reviewEuropeWorkCsv(work,original,emptyEuropeWork(),[g]);
+   expect(review.newEntries).toHaveLength(1);
+   expect(review.newEntries[0].europeId).toBe(g.id);
+   expect(review.matched[0].league).toBe('ligue-1');
+   expect(readEuropeWork(JSON.stringify(stageEuropeWork(emptyEuropeWork(),review))).entries).toHaveLength(1);
+  }
+ });
  it('não inclui partidas que não existem nos 155 jogos',()=>{
   expect(()=>reviewEuropeWorkCsv(csv([0],{mandante:'Time aleatório'}),original,emptyEuropeWork())).toThrow('não identificada');
   expect(()=>reviewEuropeWorkCsv(csv([0],{competicao:'Serie A italiana 2025/26'}),original,emptyEuropeWork())).toThrow('Competição');
