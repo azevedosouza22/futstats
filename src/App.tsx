@@ -7,6 +7,7 @@ import EuropeLeaguesPilot from './EuropeLeaguesPilot';
 import FplStatsPilot from './FplStatsPilot';
 import PwaUpdateStatus from './PwaUpdateStatus';
 import PreGame from './PreGame';
+import WorkPreGame from './WorkPreGame';
 import Radar from './Radar';
 import Live from './Live';
 import AutomaticMatches from './AutomaticMatches';
@@ -164,7 +165,7 @@ export default function App(){
    </div>}
  </section>}
  {page===4&&<><PwaUpdateStatus/><EuropeLeaguesPilot/><FplStatsPilot data={data}/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
- {page===5&&<PreGame data={data}/>}
+ {page===5&&<><WorkPreGame/><PreGame data={data}/></>}
  {page===6&&<Radar data={data}/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
    <div className="tools-hub-menu" role="group" aria-label="Selecionar ferramenta">
