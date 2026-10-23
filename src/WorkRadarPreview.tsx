@@ -51,13 +51,14 @@ export default function WorkRadarPreview(){
    <p>Os mesmos critérios por mando do Radar, agora testados sobre as pesquisas europeias completas</p>
   </div><span className="tag">SOMENTE LEITURA</span></div>
   <div className="analysis-content">
-   <p className="muted">Esta área é independente do Radar original. Não registra previsões, não altera os resultados anteriores e não importa os jogos Work para o Histórico. As projeções são exploratórias e não representam chances de acerto ou indicação de aposta.</p>
+   <p className="muted">A análise histórica e os novos testes prospectivos ficam separados do Radar principal e não importam jogos Work para o Histórico. Previsões prospectivas só são registradas quando você escolhe um confronto futuro e confirma. Nenhuma previsão antiga é modificada.</p>
    <div className="fpl-pilot-numbers" aria-label="Amostra Radar Work">
     <div><strong>{count}</strong><span>Jogos Work salvos</span></div>
     <div><strong>{data?.matches.length??0}</strong><span>Jogos da liga escolhida</span></div>
     <div><strong>{projections.filter(x=>x.v3.decision!=='Sem sinal').length}</strong><span>Sinais V3 após filtros</span></div>
    </div>
    {error&&<p className="alert" role="alert">{error}. Dados anteriores preservados.</p>}
+   <WorkRadarProspectivePanel matches={matches}/>
    {!error&&read&&count===0&&<p className="muted">Abra o FutStats no navegador em que foram salvas as pesquisas Work.</p>}
    {read&&read.unresolved>0&&<p className="alert" role="alert">{read.unresolved} registros sem identificação local ficaram fora do teste. Os arquivos não foram modificados.</p>}
    {combined&&combined.total.fixtures>0&&<section className="work-radar-validation" aria-label="Validação retrospectiva Work V2 V3 nas quatro ligas">
@@ -139,7 +140,7 @@ export default function WorkRadarPreview(){
      </article>)}
     </div>
    </>}
-   <WorkRadarProspectivePanel matches={matches} league={league} home={home} away={away} date={date}/>
+   
    <details className="fpl-pilot-disclosure" open={showBacktest}
     onToggle={e=>setShowBacktest(e.currentTarget.open)}>
     <summary>Conferir teste cronológico V2 × V3 desta liga</summary>
