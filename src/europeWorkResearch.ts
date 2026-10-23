@@ -98,7 +98,15 @@ const aliases:Record<string,string>={
  'malaga':'malaga cf','betis':'real betis balompie',
  'real sociedad':'real sociedad de futbol','ath bilbao':'athletic club',
  'valencia':'valencia cf','celta de vigo':'rc celta de vigo',
- 'real madrid':'real madrid cf','osasuna':'ca osasuna','barcelona':'fc barcelona'
+ 'real madrid':'real madrid cf','osasuna':'ca osasuna','barcelona':'fc barcelona',
+ // Ligue 1 2026/27: Flashscore short team names -> OpenFootball canonical teams.
+ 'angers':'angers sco','auxerre':'aj auxerre',
+ 'brest':'stade brestois 29','le havre':'le havre ac','le mans':'le mans fc',
+ 'lens':'racing club de lens','lille':'lille osc','lorient':'fc lorient',
+ 'lyon':'olympique lyonnais','marseille':'olympique de marseille',
+ 'monaco':'as monaco fc','nice':'ogc nice','psg':'paris saint germain fc',
+ 'rennes':'stade rennais fc 1901','strasbourg':'rc strasbourg alsace',
+ 'toulouse':'toulouse fc','troyes':'es troyes ac'
 };
 const teamName=(s:string)=>aliases[normal(s)]??normal(s);
 const metricColumn:Record<WorkMetric,'goals'|'shots'|'target'|'corners'>={
