@@ -91,32 +91,32 @@ export default function WorkRadarProspectivePanel({matches}:Props){
   <div className="analysis-controls" aria-label="Formulário completo do teste prospectivo">
    <label>1. Campeonato
     <select aria-label="Campeonato para novo teste prospectivo" value={league??''}
-     onChange={e=>{setChosenLeague(e.target.value as WorkLeague);setChosenHome('');setChosenAway('');setNotice('');}}>
+     onChange={e=>{setChosenLeague(e.target.value as WorkLeague);setChosenHome('');setChosenAway('');setNotice('');setError('');}}>
      {!available.length&&<option value="">Nenhum campeonato disponível</option>}
      {available.map(x=><option value={x.id} key={x.id}>{x.label}</option>)}
     </select>
    </label>
    <label>2. Mandante (em casa)
     <select aria-label="Mandante do teste prospectivo" value={home}
-     onChange={e=>{setChosenHome(e.target.value);setNotice('');}}>
+     onChange={e=>{setChosenHome(e.target.value);setNotice('');setError('');}}>
      <option value="">Selecione o mandante</option>
      {teams.map(t=><option value={t} key={t}>{t}</option>)}
     </select>
    </label>
    <label>3. Visitante (fora)
     <select aria-label="Visitante do teste prospectivo" value={away}
-     onChange={e=>{setChosenAway(e.target.value);setNotice('');}}>
+     onChange={e=>{setChosenAway(e.target.value);setNotice('');setError('');}}>
      <option value="">Selecione o visitante</option>
      {teams.map(t=><option value={t} key={t}>{t}</option>)}
     </select>
    </label>
    <label>4. Data do jogo
     <input type="date" aria-label="Data do novo confronto prospectivo"
-     min={today.date} value={date} onChange={e=>{setDate(e.target.value);setNotice('');}} />
+     min={today.date} value={date} onChange={e=>{setDate(e.target.value);setNotice('');setError('');}} />
    </label>
    <label>5. Horário do jogo (Brasília)
     <input type="time" aria-label="Horário de início em Brasília"
-     value={kickoff} onChange={e=>{setKickoff(e.target.value);setNotice('');}}/>
+     value={kickoff} onChange={e=>{setKickoff(e.target.value);setNotice('');setError('');}}/>
    </label>
   </div>
   <p className="muted" role="status">{help}</p>
