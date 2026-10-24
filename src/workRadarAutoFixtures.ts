@@ -59,7 +59,6 @@ export async function loadUpcomingPremierFixtures(
  if(teamsCsv.length>maxSourceSize)throw Error('Arquivo de equipes acima do limite.');
  const found:AutoWorkFixture[]=[];
  const ids=new Set<string>();
- let seenUpcoming=false;
  // Fetch just a few rounds at a time. This is reading an already public CSV,
  // not bulk extracting proprietary game statistics.
  for(let gw=FPL_PREVIEW_ROUNDS+1;gw<=FPL_MAX_ROUNDS;gw+=4){
@@ -84,8 +83,7 @@ export async function loadUpcomingPremierFixtures(
     ids.add(f.id);found.push(f);
    }
   }
-  if(found.length){seenUpcoming=true;break;}
-  if(seenUpcoming)break;
+  if(found.length)break;
  }
  return found.sort((a,b)=>a.kickoffUtc.localeCompare(b.kickoffUtc)||a.id.localeCompare(b.id));
 }
@@ -97,13 +95,22 @@ export function automaticCaptureCandidates(fixtures:readonly AutoWorkFixture[],n
  });
 }
 function resolveWorkTeam(matches:readonly WorkAnalysisMatch[],name:string):string|null{
- const normalize=(v:string)=>normalizeTeam(v)
-  .replace(/\b(fc|afc|hotspur|united|city)\b/g,'').replace(/\s+/g,' ').trim();
  const aliases:Record<string,string>={
   'spurs':'tottenham','tottenham hotspur':'tottenham','tottenham hotspur fc':'tottenham',
   'nott m forest':'nottingham','nottingham forest':'nottingham',
-  'man utd':'manchester','manchester united':'manchester',
-  'man city':'manchester city',
+  'man utd':'manchester united','manchester united':'manchester united',
+  'manchester utd':'manchester united','man city':'manchester city',
+  'manchester city fc':'manchester city',
+  'coventry city fc':'coventry city','hull city afc':'hull city',
+  'afc bournemouth':'bournemouth','bournemouth afc':'bournemouth',
+  'arsenal fc':'arsenal','chelsea fc':'chelsea','everton fc':'everton',
+  'leeds united fc':'leeds','newcastle united':'newcastle',
+  'newcastle united fc':'newcastle','sunderland afc':'sunderland',
+  'brighton hove albion fc':'brighton','brighton hove albion':'brighton',
+  'brighton':'brighton',
+  'liverpool fc':'liverpool','ipswich town fc':'ipswich town',
+  'brentford fc':'brentford','fulham fc':'fulham',
+  'aston villa fc':'aston villa','crystal palace fc':'crystal palace',
  };
  const canon=(v:string)=>{
   const n=normalizeTeam(v).replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
