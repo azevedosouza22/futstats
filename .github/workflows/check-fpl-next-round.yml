@@ -40,6 +40,7 @@ jobs:
           src/workRadarProspective.test.ts
           src/workRadarAutoFixtures.test.ts
           src/europeWorkSchedule.test.ts
+          src/verifiedEuropeWorkFixtures.test.ts
           src/WorkRadarProspectivePanel.test.tsx
           src/workCsv.test.ts
           src/fullBackup.test.ts
