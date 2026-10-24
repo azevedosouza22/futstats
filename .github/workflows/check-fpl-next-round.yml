@@ -45,6 +45,7 @@ jobs:
           src/workCsv.test.ts
           src/fullBackup.test.ts
           src/safetyArchive.test.ts
+          src/safetyRestore.test.ts
           src/radarRecords.test.ts
           src/radarVenueV2.test.ts
           src/radarVenueV3.test.ts
