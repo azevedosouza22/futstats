@@ -1,0 +1,53 @@
+name: Conferir próxima rodada da Premier League
+on:
+  push:
+    branches:
+      - feat/futstats-visual-v4-league-navigation
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-next-round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependências
+        run: npm ci --no-audit --no-fund
+      - name: Testar rodadas, eventos, backup e Radar V2/V3
+        run: >-
+          npx vitest run
+          src/fplRoundDiscovery.test.ts
+          src/fplFreePilot.test.ts
+          src/fplPeriodAudit.test.ts
+          src/fplFallback.test.ts
+          src/fplFlashscoreCorners.test.ts
+          src/fplWorkReview.test.ts
+          src/europeLeagueResearch.test.ts
+          src/europeWorkResearch.test.ts
+          src/apiFootball.test.ts
+          src/apiCoverageAudit.test.ts
+          src/fplWorkStore.test.ts
+          src/workAnalysis.test.ts
+          src/workRadar.test.ts
+          src/workRadarValidation.test.ts
+          src/workRadarProspective.test.ts
+          src/workRadarAutoFixtures.test.ts
+          src/europeWorkSchedule.test.ts
+          src/verifiedEuropeWorkFixtures.test.ts
+          src/WorkRadarProspectivePanel.test.tsx
+          src/workCsv.test.ts
+          src/fullBackup.test.ts
+          src/safetyArchive.test.ts
+          src/safetyRestore.test.ts
+          src/radarRecords.test.ts
+          src/radarVenueV2.test.ts
+          src/radarVenueV3.test.ts
+      - name: Compilar versão experimental
+        run: npm run build

@@ -1,7 +1,7 @@
 import {diagnosticProperties,diagnosticCategories} from '../shared/football-diagnostics.js';
 import {safeBuild} from './build';
 import {unavailable,type ResolvedStats,type Metric} from './model';
-export type AutoFixture={id:number;date:string|null;status:string|null;statusLabel:string|null;minute:number|null;league:string|null;country:string|null;home:{id:number;name:string|null};away:{id:number;name:string|null};goals:[number|null,number|null]};
+export type AutoFixture={id:number;date:string|null;status:string|null;statusLabel:string|null;minute:number|null;league:string|null;country:string|null;home:{id:number;name:string|null};away:{id:number;name:string|null};goals:[number|null,number|null];halfGoals?:[number|null,number|null]};
 export type StatRow={type:string;value:number|string|null};
 export type StatTeam={team:{id:number;name:string|null};statistics:StatRow[]|null;statistics_1h:StatRow[]|null;statistics_2h:StatRow[]|null};
 const mapping:Record<string,Metric>={'Goals':'goals','Total Shots':'shots','Shots on Goal':'target','Corner Kicks':'corners','Ball Possession':'possession','Yellow Cards':'yellow','Red Cards':'red','expected_goals':'xg','Expected Goals':'xg','Big Chances':'chances'};

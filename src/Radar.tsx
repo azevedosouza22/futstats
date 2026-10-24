@@ -4,6 +4,7 @@ import UpcomingRadar from './UpcomingRadar';
 import RadarBacktest from './RadarBacktest';
 import RadarVenueV2 from './RadarVenueV2';
 import RadarVenueV3 from './RadarVenueV3';
+import WorkRadarPreview from './WorkRadarPreview';
 import type {Data} from './model';
 
 const number = (n: number | null) =>
@@ -15,6 +16,7 @@ export default function Radar({data}: {data: Data}) {
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedFixtureId, setSelectedFixtureId] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
 
   const researchMatches = data.matches.filter(m => !!m.research);
   const competitions = [...new Set(researchMatches.map(m => m.competition).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
@@ -31,14 +33,41 @@ export default function Radar({data}: {data: Data}) {
 
   return <section className="panel radar-panel">
     <div className="panel-head"><div>
-      <h2>Radar · Validação retrospectiva</h2>
-      <p>Veja o que os números anteriores a uma partida indicavam, sem utilizar o resultado dela nos cálculos.</p>
+      <h2>Radar · Previsões e análises</h2>
+      <p>Escolha uma tarefa abaixo. A nova previsão é feita antes do início do jogo.</p>
     </div></div>
+    <nav className="radar-quick-nav" aria-label="Escolha o que fazer no Radar">
+      <h3>O que você quer fazer?</h3>
+      <p>Escolha uma ação. As três áreas abaixo têm funções diferentes.</p>
+      <div className="radar-quick-actions">
+        <button type="button" className="radar-quick-action radar-quick-action--create" aria-pressed={mode==='new'}
+          onClick={()=>setMode('new')}>
+          <span aria-hidden="true">1</span><strong>Criar previsão para um jogo futuro</strong>
+          <small>Nosso teste diário: escolha equipes, data e competição e salve V2/V3 antes do jogo.</small>
+        </button>
+        <button type="button" className="radar-quick-action radar-quick-action--saved" aria-pressed={mode==='saved'}
+          onClick={()=>setMode('saved')}>
+          <span aria-hidden="true">2</span><strong>Ver previsões já registradas</strong>
+          <small>Consulte os testes já salvos, incluindo qualquer novo registro, e acompanhe os resultados.</small>
+        </button>
+        <button type="button" className="radar-quick-action radar-quick-action--history" aria-pressed={mode==='history'}
+          onClick={()=>setMode('history')}>
+          <span aria-hidden="true">3</span><strong>Analisar jogos que já terminaram</strong>
+          <small>Simulação histórica. Não registra um novo teste antes da partida.</small>
+        </button>
+        <button type="button" className="radar-quick-action radar-quick-action--work" aria-pressed={mode==='work'}
+          onClick={()=>setMode('work')}>
+          <span aria-hidden="true">4</span><strong>Radar Work · Teste com novas ligas</strong>
+          <small>Usa as 292 partidas pesquisadas em uma simulação separada, sem salvar previsões.</small>
+        </button>
+      </div>
+    </nav>
     <div className="radar-inner">
-      <UpcomingRadar data={data}/>
-      <hr/>
-      <h3>Comparar partidas já concluídas</h3>
-      <p className="muted">Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
+      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}/>}
+      {mode==='work'&&<WorkRadarPreview/>}
+      {mode==='history'&&<>
+      <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>
+      <p className="muted">Esta área NÃO registra novos testes diários. Use o botão «Criar previsão para um jogo futuro» no topo. Modo experimental: estas partidas já aconteceram. As frequências são históricas, não probabilidades estimadas para apostas. Sem odds, sem recomendações automáticas e sem calendário futuro automático nesta versão.</p>
       {!researchMatches.length ? <div className="empty">
         Importe pesquisas CSV para habilitar a validação retrospectiva. O Radar não cria partidas fictícias na sua base.
       </div> : <>
@@ -112,6 +141,7 @@ export default function Radar({data}: {data: Data}) {
           </button>
           <p className="muted">Fonte: <a href={fixture.research?.sourceUrl} target="_blank" rel="noopener noreferrer">pesquisa CSV · verificar jogo no Flashscore</a>. Dados locais, sem acesso automático ao site.</p>
         </>}
+      </>}
       </>}
     </div>
   </section>;
