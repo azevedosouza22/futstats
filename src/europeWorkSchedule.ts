@@ -9,6 +9,7 @@
  */
 import type {WorkLeague} from './workAnalysis';
 import {EUROPE_LEAGUES} from './europeLeagueResearch';
+import {brasiliaDate} from './calendar';
 
 export type EuropeScheduleLeague=Exclude<WorkLeague,'premier-league'>;
 export type EuropeScheduleFixture={
@@ -47,9 +48,7 @@ export function parseEuropeSchedule(
 export async function loadEuropeSchedule(
  now=new Date(),signal?:AbortSignal,get:typeof fetch=fetch
 ):Promise<{fixtures:EuropeScheduleFixture[];errors:string[]}>{
- const today=new Intl.DateTimeFormat('en-CA',{
-  timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'
- }).format(now);
+ const today=brasiliaDate(now).date;
  // Only tomorrow+; we cannot distinguish elapsed from future matches today
  // because OpenFootball's wall-clock time has no authoritative UTC offset.
  const tomorrow=new Date(today+'T12:00:00Z');
