@@ -18,7 +18,7 @@ export default function AutomaticWorkRadarSchedule({
  const [fixtures,setFixtures]=useState<AutoWorkFixture[]>([]);
  const [loading,setLoading]=useState(true);
  const [enabled,setEnabled]=useState(()=>
-  localStorage.getItem(AUTO_WORK_RADAR_SETTING)==='enabled');
+  typeof localStorage!=='undefined'&&localStorage.getItem(AUTO_WORK_RADAR_SETTING)==='enabled');
  const [status,setStatus]=useState('');
  const [error,setError]=useState('');
  function capture(next:AutoWorkFixture[]){
