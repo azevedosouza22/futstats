@@ -13,6 +13,7 @@ import Live from './Live';
 import AutomaticMatches from './AutomaticMatches';
 import {metrics,labels,empty,stats,average,matchAverage,validateMatch,validData,STORAGE,type Data,type Team,type Match,type Stats} from './model';
 import {createFullBackup,parseFullBackup,restoreFullBackup,RADAR_STORAGE} from './fullBackup';
+import SafetyArchivePanel from './SafetyArchivePanel';
 import {leagueOptions,seasonOptions,filterMatchesByLeague,paginateMatches,competitionParts,ALL_LEAGUES} from './leagueCatalog';
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:2});
 const dateLabel=(d:string)=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
@@ -115,8 +116,8 @@ export default function App(){
  return <div className={page===7&&toolPanel==='api'?"app intelligence premium":"app premium"}><aside><a className="brand" href="#" onClick={()=>setPage(0)}><span className="brand-icon"><Activity size={24}/></span>Fut<span>Stats</span></a><div className="workspace-label">SEU CENTRO DE ESTATÍSTICAS</div><nav aria-label="Navegação principal">{tabs.slice(0,7).map((t,i)=><button type="button" data-area={t.area} className={page===i?'active':''} key={t.name} onClick={()=>{setPage(i);setSearch('');setHistoryPage(1);}}><t.icon size={20}/>{t.name}{page===i&&<span className="nav-dot"/>}</button>)}
  <div className="nav-tools-label">RECURSOS OPCIONAIS</div>
  <button type="button" data-area="tools" className={page===7?'active':''} onClick={()=>setPage(7)}><Wrench size={20}/>Ferramentas e testes{page===7&&<span className="nav-dot"/>}</button>
- </nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Exportar tudo</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
- <div className="main"><header><span>Futebol / <b>{tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button aria-label="Exportar backup completo com jogos e previsões" title="Exportar backup completo" onClick={exportData}><Download size={18}/></button><button aria-label="Restaurar backup completo ou antigo" title="Restaurar backup" onClick={()=>file.current?.click()}><Upload size={18}/></button></div></header><main>
+ </nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Histórico + Radar (backup antigo)</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
+ <div className="main"><header><span>Futebol / <b>{tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button aria-label="Exportar histórico e previsões originais (backup antigo)" title="Backup do histórico e Radar original" onClick={exportData}><Download size={18}/></button><button aria-label="Restaurar backup completo ou antigo" title="Restaurar backup" onClick={()=>file.current?.click()}><Upload size={18}/></button></div></header><main>
  <div className="heading"><div><div className="eyebrow">FUTSTATS · CENTRO DE ANÁLISES</div><h1>{[
  'Seu futebol em números.','Equipes por campeonato.','Compare dentro da competição.',
  'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.','Radar V2 × V3.',
@@ -167,6 +168,7 @@ export default function App(){
  {page===4&&<><PwaUpdateStatus/><EuropeLeaguesPilot/><FplStatsPilot data={data}/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
  {page===5&&<><WorkPreGame/><PreGame data={data}/></>}
  {page===6&&<Radar data={data}/>}
+ {page===7&&<SafetyArchivePanel/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
    <div className="tools-hub-menu" role="group" aria-label="Selecionar ferramenta">
     {[
