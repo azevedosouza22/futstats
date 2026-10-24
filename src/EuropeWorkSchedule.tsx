@@ -26,7 +26,7 @@ export default function EuropeWorkSchedule(){
  return <details className="fpl-pilot-disclosure" open={open}
   onToggle={e=>setOpen(e.currentTarget.open)}>
   <summary>Ver calendário gratuito de Itália, Espanha e França (somente consulta)</summary>
-  <p className="muted">O FutStats consulta as três agendas gratuitamente quando você abre esta lista. É uma fonte comunitária que pode estar desatualizada. **Ainda não registramos previsões automaticamente nessas ligas**, pois primeiro precisamos confirmar os horários e o fuso de cada confronto.</p>
+  <p className="muted">O FutStats consulta as três agendas gratuitamente quando você abre esta lista. É uma fonte comunitária que pode estar desatualizada. <strong>Ainda não registramos previsões automaticamente nessas ligas</strong>, pois primeiro precisamos confirmar os horários e o fuso de cada confronto.</p>
   {loading&&<p role="status" className="muted">Consultando calendários gratuitos…</p>}
   {errors.length>0&&<p role="alert" className="alert">{errors.join('; ')}</p>}
   {!loading&&fixtures.length===0&&<p className="muted">Nenhuma partida futura utilizável encontrada. Nenhum jogo foi criado.</p>}
