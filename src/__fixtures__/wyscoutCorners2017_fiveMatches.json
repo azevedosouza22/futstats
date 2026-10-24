@@ -1,0 +1,513 @@
+{
+  "description": "FutStats independent historical validation · 5 real Premier League 2017/18 matches · extracted corner events only",
+  "license": "CC BY 4.0 original Wyscout/Pappalardo event dataset; preserve attribution",
+  "originalDataset": "https://doi.org/10.6084/m9.figshare.c.4415000.v5",
+  "processedCopy": "https://github.com/koenvo/wyscout-soccer-match-event-dataset",
+  "inspectedAt": "2026-10-22",
+  "note": "Each event was extracted from the entire match JSON, filtering eventName=Free Kick and subEventName=Corner. Totals from independent historical match pages; one mismatch is preserved intentionally. No data from 2017/18 may be tagged 2026/27 or used by the Radar.",
+  "fixtures": [
+    {
+      "id": 2499841,
+      "homeId": 1673,
+      "awayId": 1625,
+      "home": "Huddersfield Town",
+      "away": "Manchester City",
+      "total": [
+        3,
+        7
+      ],
+      "checkUrl": "https://www.sportinglife.com/football/live/33313/huddersfield-town-vs-manchester-city/stats",
+      "sourceUrl": "https://raw.githubusercontent.com/koenvo/wyscout-soccer-match-event-dataset/main/processed-v2/files/2499841.json",
+      "sourceEventTotal": 1593,
+      "corners": [
+        {
+          "id": 209378871,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 343.04942200000005,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209378872,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 372.29589599999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379073,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 987.5305430000001,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379091,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 1069.883607,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379101,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 1102.789366,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379355,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "1H",
+          "eventSec": 1985.4332789999999,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379750,
+          "matchId": 2499841,
+          "teamId": 1673,
+          "matchPeriod": "1H",
+          "eventSec": 2715.335589,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379762,
+          "matchId": 2499841,
+          "teamId": 1673,
+          "matchPeriod": "1H",
+          "eventSec": 2743.086398,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209379709,
+          "matchId": 2499841,
+          "teamId": 1625,
+          "matchPeriod": "2H",
+          "eventSec": 401.2552740000001,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209380207,
+          "matchId": 2499841,
+          "teamId": 1673,
+          "matchPeriod": "2H",
+          "eventSec": 2223.024259,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        }
+      ]
+    },
+    {
+      "id": 2499842,
+      "homeId": 1612,
+      "awayId": 1610,
+      "home": "Liverpool",
+      "away": "Chelsea",
+      "total": [
+        7,
+        8
+      ],
+      "checkUrl": "https://lfcbeta.liverpoolfc.com/it/partite/mens-team/liverpool-v-chelsea-english-premier-league-20171125",
+      "sourceUrl": "https://raw.githubusercontent.com/koenvo/wyscout-soccer-match-event-dataset/main/processed-v2/files/2499842.json",
+      "sourceEventTotal": 1979,
+      "corners": [
+        {
+          "id": 209021700,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "1H",
+          "eventSec": 220.56641100000002,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022080,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "1H",
+          "eventSec": 1255.435689,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022145,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "1H",
+          "eventSec": 1414.49032,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022494,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "1H",
+          "eventSec": 2390.914234,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022547,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "1H",
+          "eventSec": 2537.942696,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022675,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "2H",
+          "eventSec": 131.92869400000018,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022782,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 258.647516,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022788,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 285.12773100000004,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022792,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "2H",
+          "eventSec": 322.8243980000002,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209022864,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 485.8332949999999,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209023085,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 1085.0677249999999,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209023381,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 1991.7831079999996,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209023422,
+          "matchId": 2499842,
+          "teamId": 1610,
+          "matchPeriod": "2H",
+          "eventSec": 2091.8316059999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209023452,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 2149.4761399999998,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209023686,
+          "matchId": 2499842,
+          "teamId": 1612,
+          "matchPeriod": "2H",
+          "eventSec": 2743.5657250000004,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        }
+      ]
+    },
+    {
+      "id": 2499843,
+      "homeId": 1611,
+      "awayId": 1651,
+      "home": "Manchester United",
+      "away": "Brighton & Hove Albion",
+      "total": [
+        5,
+        0
+      ],
+      "checkUrl": "https://www.tntsports.co.uk/football/premier-league/2017-2018/live-manchester-united-brighton-hove-albion_mtc946672/live-stats.shtml",
+      "sourceUrl": "https://raw.githubusercontent.com/koenvo/wyscout-soccer-match-event-dataset/main/processed-v2/files/2499843.json",
+      "sourceEventTotal": 1767,
+      "corners": [
+        {
+          "id": 209058512,
+          "matchId": 2499843,
+          "teamId": 1611,
+          "matchPeriod": "1H",
+          "eventSec": 1912.723657,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209058813,
+          "matchId": 2499843,
+          "teamId": 1611,
+          "matchPeriod": "1H",
+          "eventSec": 2630.2208,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209059276,
+          "matchId": 2499843,
+          "teamId": 1611,
+          "matchPeriod": "2H",
+          "eventSec": 1048.107825,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209059366,
+          "matchId": 2499843,
+          "teamId": 1611,
+          "matchPeriod": "2H",
+          "eventSec": 1248.2872049999996,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        }
+      ]
+    },
+    {
+      "id": 2499844,
+      "homeId": 1613,
+      "awayId": 1644,
+      "home": "Newcastle United",
+      "away": "Watford",
+      "total": [
+        6,
+        3
+      ],
+      "checkUrl": "https://www.premierleague.com/en/match/919018/newcastle-united-vs-watford/stats",
+      "sourceUrl": "https://raw.githubusercontent.com/koenvo/wyscout-soccer-match-event-dataset/main/processed-v2/files/2499844.json",
+      "sourceEventTotal": 1768,
+      "corners": [
+        {
+          "id": 208959116,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "1H",
+          "eventSec": 201.53774499999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208959130,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "1H",
+          "eventSec": 262.20143,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208959257,
+          "matchId": 2499844,
+          "teamId": 1644,
+          "matchPeriod": "1H",
+          "eventSec": 404.18782799999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208959313,
+          "matchId": 2499844,
+          "teamId": 1644,
+          "matchPeriod": "1H",
+          "eventSec": 580.336082,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208959387,
+          "matchId": 2499844,
+          "teamId": 1644,
+          "matchPeriod": "1H",
+          "eventSec": 813.052013,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208959386,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "1H",
+          "eventSec": 1459.114108,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208960125,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "2H",
+          "eventSec": 836.9136840000001,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208960239,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "2H",
+          "eventSec": 1212.0548559999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 208960625,
+          "matchId": 2499844,
+          "teamId": 1613,
+          "matchPeriod": "2H",
+          "eventSec": 2428.4574490000005,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        }
+      ]
+    },
+    {
+      "id": 2499845,
+      "homeId": 1619,
+      "awayId": 1623,
+      "home": "Southampton",
+      "away": "Everton",
+      "total": [
+        7,
+        2
+      ],
+      "checkUrl": "https://www.tntsports.co.uk/football/premier-league/2017-2018/live-southampton-everton_mtc946675/live.shtml",
+      "sourceUrl": "https://raw.githubusercontent.com/koenvo/wyscout-soccer-match-event-dataset/main/processed-v2/files/2499845.json",
+      "sourceEventTotal": 1802,
+      "corners": [
+        {
+          "id": 209387497,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "1H",
+          "eventSec": 374.67266099999995,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209387333,
+          "matchId": 2499845,
+          "teamId": 1623,
+          "matchPeriod": "1H",
+          "eventSec": 810.129222,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209387587,
+          "matchId": 2499845,
+          "teamId": 1623,
+          "matchPeriod": "1H",
+          "eventSec": 1895.992486,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209388501,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "1H",
+          "eventSec": 2409.458684,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209388511,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "1H",
+          "eventSec": 2430.992438,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209388871,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "2H",
+          "eventSec": 955.6785490000002,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209388929,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "2H",
+          "eventSec": 1240.1774109999997,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209389088,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "2H",
+          "eventSec": 2253.382206,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        },
+        {
+          "id": 209389195,
+          "matchId": 2499845,
+          "teamId": 1619,
+          "matchPeriod": "2H",
+          "eventSec": 2854.7986010000004,
+          "eventName": "Free Kick",
+          "subEventName": "Corner"
+        }
+      ]
+    }
+  ]
+}
