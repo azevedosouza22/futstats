@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {planSafetyRestore,restoreSafetyArchiveEmpty,type RestorePlan} from './safetyRestore';
 import {
  createSafetyArchive,inspectSafetyStorage,inspectSafetyArchive,
  type SafetyInspection
@@ -9,6 +10,9 @@ export default function SafetyArchivePanel(){
  const [report,setReport]=useState<SafetyInspection|null>(null);
  const [message,setMessage]=useState('');
  const [error,setError]=useState('');
+ const [restorePlan,setRestorePlan]=useState<RestorePlan|null>(null);
+ const [candidate,setCandidate]=useState<unknown>(null);
+ const [restoreDone,setRestoreDone]=useState(false);
  function refresh(){
   setError('');setMessage('');
   try{
@@ -45,6 +49,55 @@ export default function SafetyArchivePanel(){
   }catch(e){
    setError(e instanceof Error?e.message:'Não foi possível gerar a cópia integral.');
   }
+ }
+ async function chooseArchive(file?:File){
+  setError('');setMessage('');setCandidate(null);setRestorePlan(null);setRestoreDone(false);
+  if(!file)return;
+  if(!file.name.toLowerCase().endsWith('.json')||file.size>35_000_000){
+   setError('Selecione um arquivo V4 JSON de até 35 MB. Nenhum dado foi alterado.');
+   return;
+  }
+  try{
+   const raw=await file.text();
+   const parsed:unknown=JSON.parse(raw);
+   const plan=planSafetyRestore(parsed,localStorage);
+   setRestorePlan(plan);setCandidate(parsed);
+   setMessage('Arquivo V4 conferido, sem importar dados. '+plan.reason);
+  }catch(e){
+   setError('O arquivo não passou na verificação: '+
+    (e instanceof Error?e.message:'formato desconhecido')+
+    '. Nenhum dado foi alterado.');
+  }
+ }
+ function restoreEmpty(){
+  if(!restorePlan?.canRestore||!candidate)return;
+  setError('');setMessage('');
+  try{
+   // Re-check immediately before the user's explicit confirmation.
+   const current=planSafetyRestore(candidate,localStorage);
+   setRestorePlan(current);
+   if(!current.canRestore)throw Error(current.reason);
+   const confirmText=
+    'RECUPERAÇÃO V4 — PERFIL VAZIO\n\n' +
+    'Serão restaurados somente os dados que constam no arquivo validado. '+
+    'Esta operação não é uma importação para o Histórico antigo e não mistura dados. '+
+    'Antes de confirmar, mantenha uma cópia do arquivo de segurança.\n\n' +
+    'Restaurar neste navegador vazio agora?';
+   if(!window.confirm(confirmText))return;
+   const result=restoreSafetyArchiveEmpty(localStorage,candidate);
+   setRestoreDone(true);
+   setCandidate(null);setRestorePlan(null);
+   setMessage('Restauração V4 verificada: '+result.restored+
+    ' grupos recuperados, '+description(result.archivedMatches)+
+    ' jogos históricos, '+description(result.archivedWork)+
+    ' pesquisas Work e '+description(result.archivedForecasts)+
+    ' previsões Work. Para recarregar a interface, toque em Reiniciar visualização.');
+  }catch(e){
+   setError(e instanceof Error?e.message:'Falha de recuperação; confira os dados antes de continuar.');
+  }
+ }
+ function reloadAfterRestore(){
+  if(restoreDone)window.location.reload();
  }
  return <section className="panel safety-archive-panel"
   aria-label="Segurança e backup integral do FutStats V4">
@@ -86,7 +139,29 @@ export default function SafetyArchivePanel(){
     {report.missing>0&&<p className="muted">Alguns grupos não existem neste navegador. Eles são salvos como ausentes, sem criar registros artificiais. A quantidade de jogos pode ser diferente de outros aparelhos.</p>}
     {report.invalid>0&&<p className="alert">A cópia integral não será gerada enquanto houver dados inconsistentes. Isso evita substituir silenciosamente registros antigos.</p>}
    </>}
-   <p className="muted">Importante: este é um novo formato de arquivo para proteção e auditoria, distinto do backup antigo. <strong>A restauração integral ainda não está habilitada</strong>; o botão antigo de restauração não reconhece esta cópia V4. Até validarmos uma recuperação transacional, nenhuma base será sobrescrita automaticamente.</p>
+   <details className="fpl-pilot-disclosure" aria-label="Recuperação segura V4">
+    <summary>Recuperar cópia integral V4 (somente em dispositivo vazio)</summary>
+    <p className="muted">A recuperação é permitida somente quando este navegador não contém nenhum dos oito grupos de dados FutStats. Se já existem jogos ou previsões, a operação é bloqueada para evitar qualquer substituição. O arquivo é lido e validado aqui mesmo, sem envio para servidores. O backup antigo continua com seu próprio botão de restauração e não aceita este formato.</p>
+    <label>Selecionar arquivo de segurança V4
+     <input type="file" accept=".json,application/json" aria-label="Escolher cópia integral V4"
+      onChange={e=>{void chooseArchive(e.target.files?.[0]);e.currentTarget.value='';}}/>
+    </label>
+    {restorePlan&&<>
+     <div className="fpl-pilot-numbers">
+      <div><strong>{description(restorePlan.inspection.matches)}</strong><span>Históricos no arquivo</span></div>
+      <div><strong>{description(restorePlan.inspection.workMatches)}</strong><span>Pesquisas Work no arquivo</span></div>
+      <div><strong>{description(restorePlan.inspection.workForecasts)}</strong><span>Previsões Work no arquivo</span></div>
+      <div><strong>{restorePlan.existingKeys.length}</strong><span>Grupos já existentes neste aparelho</span></div>
+     </div>
+     <p className="muted" role="status">{restorePlan.reason}</p>
+     <button type="button" className="primary"
+      disabled={!restorePlan.canRestore} onClick={restoreEmpty}>
+      Restaurar cópia V4 neste perfil vazio
+     </button>
+    </>}
+    {restoreDone&&<button type="button" onClick={reloadAfterRestore}>Reiniciar visualização do FutStats</button>}
+   </details>
+   <p className="muted">A nova cópia integral V4 agora pode ser verificada e restaurada exclusivamente em um perfil vazio. Não existe opção para mesclar, apagar ou substituir os 659 históricos ou quaisquer registros já salvos. Em caso de falha, o aplicativo tenta reverter todas as escritas. Guarde sempre a cópia original, inclusive após a restauração.</p>
   </div>
  </section>;
 }
