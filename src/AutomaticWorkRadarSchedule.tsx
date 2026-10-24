@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import type {WorkAnalysisMatch} from './workAnalysis';
 import EuropeWorkSchedule from './EuropeWorkSchedule';
+import VerifiedEuropeAutoPilot from './VerifiedEuropeAutoPilot';
 import {
  AUTO_WORK_RADAR_SETTING,AUTO_WORK_RADAR_HOURS,
  loadUpcomingPremierFixtures,automaticCaptureCandidates,captureUpcomingWorkPredictions,
@@ -107,6 +108,7 @@ export default function AutomaticWorkRadarSchedule({
   </>}
   {!loading&&!fixtures.length&&!error&&
    <p className="muted">A fonte ainda não publicou partidas futuras utilizáveis. Nenhum horário será inventado.</p>}
+  <VerifiedEuropeAutoPilot matches={matches} onStored={onStored}/>
   <EuropeWorkSchedule/>
   <p className="muted">Primeira fase: automatização da Premier League apenas. Esta fonte é comunitária, não oficial, e horários podem ser alterados. Partidas reagendadas ficam para revisão; registros já congelados não são substituídos. Quando o app estiver fechado, ele não executa tarefas em segundo plano. Para automatização contínua, será necessária uma rotina no servidor e armazenamento seguro dos dados autorizados.</p>
  </section>;
