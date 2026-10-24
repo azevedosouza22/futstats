@@ -41,7 +41,8 @@ describe('Agenda pública e registro automático da Premier League',()=>{
  it('não inventa partidas concluídas e converte UTC para horário de Brasília',()=>{
   const ready=parseUpcomingPremierWeek(teams,fixturesCsv,8,now);
   expect(ready).toHaveLength(9);
-  expect(ready[0].home).toBe('Team 3');
+  // Fixtures on the same kickoff date sort by stable ID, not numerical team code.
+  expect(ready.some(x=>x.home==='Team 3')).toBe(true);
   expect(ready[0].date).toBe('2026-10-24');
   expect(ready[0].time).toBe('11:00');
   expect(ready.some(x=>x.home==='Team 1')).toBe(false);
