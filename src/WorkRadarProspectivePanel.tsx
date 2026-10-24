@@ -6,6 +6,7 @@ import {
  type FrozenWorkForecast
 } from './workRadarProspective';
 import {brasiliaDate} from './calendar';
+import AutomaticWorkRadarSchedule from './AutomaticWorkRadarSchedule';
 
 const format=(n:number,d:number)=>d?(100*n/d).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%':'N/D';
 const labels={future:'Aguardando a partida',waiting:'Aguardando estatísticas novas do Work',
@@ -86,8 +87,11 @@ export default function WorkRadarProspectivePanel({matches}:Props){
  }
  return <section className="work-radar-prospective" aria-label="Acompanhamento prospectivo Radar Work">
   <h3>Testes prospectivos · novos confrontos</h3>
-  <p className="muted">Nesta etapa registramos os sinais <strong>antes do início real</strong> de cada confronto. Eles ficam congelados e são comparados apenas depois de o resultado completo chegar à pesquisa Work. O Radar principal não é alterado.</p>
-  <p className="muted"><strong>Como usar:</strong> escolha abaixo o campeonato, o mandante, o visitante e a data de um jogo real que ainda não começou. Depois informe o horário de Brasília. Tudo fica neste formulário; não precisa procurar campos em outra área do Radar.</p>
+  <p className="muted">Agora o sistema pode buscar automaticamente os próximos jogos e registrar os sinais <strong>antes do início real</strong>, com uma única ativação. Os testes ficam congelados e são conferidos após chegarem novos resultados Work. O Radar principal não é alterado.</p>
+  <AutomaticWorkRadarSchedule matches={matches} onStored={setSnapshots}/>
+  <details className="fpl-pilot-disclosure" aria-label="Opção manual de cadastro prospectivo">
+   <summary>Cadastro manual (opcional, apenas para jogos sem agenda automática)</summary>
+   <p className="muted">Escolha o campeonato, mandante, visitante, data e horário verificados de um jogo futuro. Não é preciso preencher isso quando a agenda automática estiver funcionando.</p>
   <div className="analysis-controls" aria-label="Formulário completo do teste prospectivo">
    <label>1. Campeonato
     <select aria-label="Campeonato para novo teste prospectivo" value={league??''}
@@ -126,7 +130,8 @@ export default function WorkRadarProspectivePanel({matches}:Props){
   <button type="button" className="primary" onClick={register} disabled={!eligible}>
    Registrar teste antes da partida
   </button>
-  <p className="muted">O aplicativo não verifica automaticamente a agenda desses campeonatos: confirme a partida e seu horário em uma fonte confiável antes do registro. Após confirmar, os sinais ficam congelados, sem alterar o Radar original.</p>
+  <p className="muted">No cadastro manual, confirme a partida e o horário em uma fonte confiável. Os sinais ficam congelados; o Radar original não é modificado.</p>
+  </details>
   {error&&<p className="alert" role="alert">{error}</p>}
   {notice&&<p className="notice" role="status">{notice}</p>}
   <div className="fpl-pilot-numbers" aria-label="Acompanhamento dos testes Work">
