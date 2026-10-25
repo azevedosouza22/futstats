@@ -11,7 +11,7 @@ import type {WorkAnalysisMatch} from './workAnalysis';
 import {WORK_ANALYSIS_LEAGUES} from './workAnalysis';
 import {canonicalTeamInCompetition,resolveTeamInCompetition} from './radarTeamAliases';
 import {assessGapSource} from './statGapSource';
-import type {GapQueueItem,GapSourceStatus} from './statGapQueue';
+import type {GapQueueItem} from './statGapQueue';
 import {COVERAGE_METRICS,COVERAGE_PERIODS,type CoverageMetric,type CoveragePeriod} from './leagueCoverageAudit';
 
 export type PreflightState='blocked'|'needs-source-confirmation'|'no-new-fields';
