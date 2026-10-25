@@ -937,3 +937,17 @@ html{scroll-behavior:smooth}
 .premium .stat-gap-item a{font-size:11px;color:#9cdbff;overflow-wrap:anywhere}
 @media(max-width:520px){.premium .stat-gap-queue{padding:10px}
  .premium .stat-gap-filters{grid-template-columns:minmax(0,1fr)}}
+
+/* Evidence is about stored provenance, never a verified live statistics feed. */
+.premium .stat-gap-source-status{font-size:11px;line-height:1.5;overflow-wrap:anywhere;
+ padding:7px 9px;border-radius:7px;margin:0;font-weight:650}
+.premium .stat-gap-source-linked-unchecked{color:#d5eaff;
+ background:#263f56;border:1px solid #507593}
+.premium .stat-gap-source-missing-source{color:#ffdcb6;
+ background:#47392f;border:1px solid #8f684d}
+.premium .stat-gap-source-invalid-source{color:#ffc8c3;
+ background:#51323b;border:1px solid #975a5d}
+.premium .stat-gap-source-needs-review{color:#ffdea9;
+ background:#453b2c;border:1px solid #826844}
+.premium .stat-gap-filters{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:800px){.premium .stat-gap-filters{grid-template-columns:minmax(0,1fr)}}
