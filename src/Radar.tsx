@@ -63,7 +63,7 @@ export default function Radar({data}: {data: Data}) {
       </div>
     </nav>
     <div className="radar-inner">
-      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}/>}
+      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode} onOpenWork={()=>setMode('work')}/>}
       {mode==='work'&&<WorkRadarPreview/>}
       {mode==='history'&&<>
       <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>
