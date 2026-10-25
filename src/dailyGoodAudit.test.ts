@@ -2,6 +2,7 @@ import {describe,expect,it} from 'vitest';
 import {empty,type Data,type Match} from './model';
 import type {SavedRadarRecord} from './radarRecords';
 import {auditDailyGoodPicks} from './dailyGoodAudit';
+import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
 
 const when=new Date('2026-10-26T18:00:00.000Z');
 const prior='2026-10-25T15:00:00.000Z';
@@ -127,5 +128,65 @@ describe('Etapa 38 — auditoria prospectiva das Boas do Dia',()=>{
   const m=result();
   m.research!.importedAt='2026-10-25T23:20:00Z';
   expect(auditDailyGoodPicks(data([m]),[rec()],when).rows[0].status).toBe('source_missing');
+ });
+});
+
+
+describe('Etapa 43 — acompanhamento portátil de evidências prospectivas',()=>{
+ it('exporta apenas a seleção congelada e nunca promove registros Radar legados',()=>{
+  const pick=rec();
+  const legacy={...rec(),key:'radar-legado',goodPicks:undefined};
+  const records=[legacy,pick];
+  const before=JSON.stringify(records);
+  const report=auditDailyGoodPicks(data(),records,new Date('2026-10-25T19:00:00Z'));
+  const csv=exportDailyGoodEvidenceCsv(records,report);
+  expect(csv.startsWith('\uFEFF"registro_id";')).toBe(true);
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(csv).toContain('"frozen-1"');
+  expect(csv).not.toContain('radar-legado');
+  expect(csv).toContain('"future"');
+  expect(csv).toContain('"Under"');
+  expect(csv).toContain('"1.4"');
+  expect(csv).toContain('"PENDENTE"');
+  expect(csv).toContain('"N/D"');
+  expect(JSON.stringify(records)).toBe(before);
+ });
+ it('distingue resultado com CSV local de conferência externa INEXISTENTE',()=>{
+  const record=rec();
+  const report=auditDailyGoodPicks(data([result()]),[record],when);
+  const csv=exportDailyGoodEvidenceCsv([record],report);
+  expect(csv).toContain('"scored"');
+  expect(csv).toContain('"2";"Acertou";"https://www.flashscore.com.br/jogo/?mid=game-001";"PENDENTE"');
+  expect(csv).not.toContain('"CONFIRMADO"');
+  expect(csv).not.toContain('"validado externamente"');
+ });
+ it('mantém pendências e excluídos, sem reconstruir estatística ausente',()=>{
+  const waiting={...rec(),key:'sem-resultado'};
+  const late={...rec(),key:'depois-do-inicio',home:'Outra Casa',away:'Outra Equipe',
+   savedAt:'2026-10-25T23:10:00Z'};
+  const report=auditDailyGoodPicks(data(),[waiting,late],when);
+  const csv=exportDailyGoodEvidenceCsv([waiting,late],report);
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(3);
+  expect(csv).toContain('"waiting"');
+  expect(csv).toContain('"late"');
+  expect(csv.match(/"PENDENTE"/g)).toHaveLength(2);
+  expect(csv).not.toContain('"Acertou"');
+  expect(csv).not.toContain('"Errou"');
+ });
+ it('protege planilhas de fórmula injetada sem perder delimitadores nem acentos',()=>{
+  const malicious={...rec(),key:'teste-export',
+   home:' =HYPERLINK("https://phishing.invalid";"abrir")',
+   away:'Clube "São Paulo"; B'};
+  const report=auditDailyGoodPicks(data(),[malicious],when);
+  const csv=exportDailyGoodEvidenceCsv([malicious],report);
+  expect(csv).toContain('"\' =HYPERLINK(""https://phishing.invalid"";""abrir"")"');
+  expect(csv).toContain('"Clube ""São Paulo""; B"');
+  expect(csv).toContain('"PENDENTE"');
+ });
+ it('não produz relatório associando snapshots a auditorias de outra ordem',()=>{
+  const a=rec(),b={...rec(),key:'segundo'};
+  const audit=auditDailyGoodPicks(data(),[a,b],when);
+  expect(()=>exportDailyGoodEvidenceCsv([b,a],audit)).toThrow('Ordem de auditoria');
+  expect(()=>exportDailyGoodEvidenceCsv([a],audit)).toThrow('divergente');
  });
 });

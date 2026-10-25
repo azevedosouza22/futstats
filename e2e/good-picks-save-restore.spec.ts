@@ -104,6 +104,23 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await expect(audit).toContainText('1 registro(s) com identificação da lista');
   await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  // The real UI exports a read-only ledger; it must not mutate the saved pick
+  // or claim that synthetic/local CSV results were checked on the web.
+  const [ledger]=await Promise.all([
+    page.waitForEvent('download'),
+    audit.getByRole('button',{name:'Exportar controle das indicações (CSV)'}).click()
+  ]);
+  expect(ledger.suggestedFilename()).toBe('futstats-as-boas-acompanhamento.csv');
+  const text=await readFile((await ledger.path())!,'utf-8');
+  expect(text.startsWith('\uFEFF"registro_id";')).toBe(true);
+  expect(text.split('\r\n').filter(Boolean)).toHaveLength(4); // 3 frozen markets + header
+  expect(text).toContain('"PENDENTE"');
+  expect(text).toContain('"future"');
+  expect(text).not.toContain('"Acertou"');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+
+  await expect(page.locator('#radar-saved-forecasts')).toBeVisible();
   await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
   await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
   // A revisit must never silently duplicate or recalculate frozen entries.
@@ -161,6 +178,8 @@ test('Sem base, horário válido ou fonte recente, As Boas não inventa previsã
   await details.click();
   await expect(boas.getByText(/Nenhuma referência oficial futura cadastrada/)).toBeVisible();
   await expect(boas.getByRole('button',{name:/Abrir Radar/})).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'Exportar controle das indicações (CSV)'}))
+    .toHaveCount(0);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
 
