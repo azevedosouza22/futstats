@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vitest run src/leagueCoverageAudit.test.ts src/workFixtureCoverage.test.ts src/radarTeamAliases.test.ts src/officialCalendar.test.ts src/freeCalendarDiscovery.test.ts src/radarDailyOverview.test.ts src/radarCalendarSelection.test.ts src/radarLineExplorer.test.ts src/radarNumericContext.test.ts src/safetyArchive.test.ts src/safetyRestore.test.ts src/workAnalysis.test.ts src/workRadar.test.ts src/workRadarValidation.test.ts src/workRadarProspective.test.ts src/workRadarAutoFixtures.test.ts src/europeWorkSchedule.test.ts src/verifiedEuropeWorkFixtures.test.ts src/WorkRadarProspectivePanel.test.tsx && tsc -b && vite build",
+    "build": "vitest run src/statGapQueue.test.ts src/leagueCoverageAudit.test.ts src/workFixtureCoverage.test.ts src/radarTeamAliases.test.ts src/officialCalendar.test.ts src/freeCalendarDiscovery.test.ts src/radarDailyOverview.test.ts src/radarCalendarSelection.test.ts src/radarLineExplorer.test.ts src/radarNumericContext.test.ts src/safetyArchive.test.ts src/safetyRestore.test.ts src/workAnalysis.test.ts src/workRadar.test.ts src/workRadarValidation.test.ts src/workRadarProspective.test.ts src/workRadarAutoFixtures.test.ts src/europeWorkSchedule.test.ts src/verifiedEuropeWorkFixtures.test.ts src/WorkRadarProspectivePanel.test.tsx && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "predev": "node scripts/copy-ocr-assets.mjs",
