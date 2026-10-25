@@ -457,6 +457,6 @@ test('Etapa 49: nove jogos oficiais Bundesliga acessíveis por filtro, vencendo 
     .selectOption('Bundesliga 2026/27');
   const listed=stale.locator('.official-fixture');
   await expect(listed).toHaveCount(9);
-  await expect(listed).toContainText(Array(9).fill('horário N/D · reconfirmar').join('')); // each match refuses old kickoff
+  expect((await listed.allTextContents()).every(v=>v.includes('horário N/D · reconfirmar'))).toBe(true);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
