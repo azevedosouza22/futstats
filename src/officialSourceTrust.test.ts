@@ -3,13 +3,14 @@ import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTr
 describe('Etapa 40: confiança conservadora em fontes oficiais',()=>{
  it('reconhece domínios exatos das 6 fontes oficiais entre agenda e backup',()=>{
   for(const host of ['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
-    'www.premierleague.com','www.legaseriea.it','credencial.cbf.com.br'])
+    'www.premierleague.com','www.legaseriea.it','credencial.cbf.com.br','www.bundesliga.com'])
    expect(safeOfficialFixtureUrl('https://'+host+'/fixture')).toBe(true);
  });
  it('rejeita http, subdomínios não aprovados, phishing por userinfo e links malformados',()=>{
   for(const url of ['http://www.laliga.com/event','https://www.laliga.com.evil.invalid/a',
     'https://www.legaseriea.it@evil.invalid/event','https://www.cbf.com.br@attacker.invalid/',
-    'https://legaseriea.it/event','https://credencial.cbf.com.br.evil.invalid/x',
+    'https://legaseriea.it/event','https://bundesliga.com/en/bundesliga',
+    'https://www.bundesliga.com.evil.invalid/en/bundesliga','https://credencial.cbf.com.br.evil.invalid/x',
     'file:///tmp/results','not a url'])
     expect(safeOfficialFixtureUrl(url)).toBe(false);
  });
