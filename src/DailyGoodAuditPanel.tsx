@@ -262,7 +262,10 @@ export default function DailyGoodAuditPanel({data,records}:{
         <strong> não acessa nem autentica a página externa</strong>. Mesmo quando
         coincidem, a verificação real permanece PENDENTE.</p>
       <DailyGoodQuickEvidenceForm records={records} report={report}
-        readyKeys={readyForEvidence} onCompared={(source,comparison)=>{
+        readyKeys={readyForEvidence} onClear={()=>{
+          setDocumentary(null);setDocumentarySource(null);
+          setDossierNotice('');setDocumentationNotice('');
+        }} onCompared={(source,comparison)=>{
           setDocumentarySource(source);setDocumentary(comparison);
           setDossierNotice('');setDocumentationNotice(
            'Comparação digitada nesta tela; nenhum site foi verificado automaticamente.');
