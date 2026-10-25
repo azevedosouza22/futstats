@@ -39,7 +39,7 @@ describe('Backup integral FutStats V4 — apenas leitura',()=>{
   expect(backup.version).toBe(2);
   expect(backup.exportedAt).toBe('2026-10-24T12:00:00.000Z');
   expect(Object.keys(backup.stores)).toHaveLength(9);
-  for(const key of SAFETY_KEYS)expect(backup.stores[key]).toBe(all[key]);
+  for(const key of SAFETY_KEYS)expect(backup.stores[key]).toBe(all[key]??null);
   expect(JSON.stringify(all)).toBe(before);
   expect(source.reads()).toBeGreaterThan(0);
   const roundTrip=JSON.parse(JSON.stringify(backup)) as unknown;
