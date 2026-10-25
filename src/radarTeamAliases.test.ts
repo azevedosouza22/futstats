@@ -54,6 +54,34 @@ describe('identificação conservadora de clubes entre fontes',()=>{
     expect(resolveCalendarFixture(data,
       f('La Liga espanhola 2025/26','FC Barcelona','Real Madrid CF'))).toBeNull();
   });
+  it('liga clubes oficiais da Bundesliga a nomes históricos somente na mesma temporada',()=>{
+    const competition='Bundesliga 2026/27';
+    const cases=[
+      ['FC Bayern München','Bayern Munich'],
+      ['Bayer 04 Leverkusen','Bayer Leverkusen'],
+      ['Sport-Club Freiburg','SC Freiburg'],
+      ['SV Werder Bremen','Werder Bremen'],
+      ['1. FSV Mainz 05','Mainz 05'],
+      ['FC Schalke 04','Schalke 04'],
+      ['1. FC Union Berlin','Union Berlin'],
+      ['1. FC Köln','FC Köln'],
+    ];
+    for(const [official,local] of cases){
+      expect(canonicalTeamInCompetition(official,competition))
+        .toBe(canonicalTeamInCompetition(local,competition));
+    }
+    expect(canonicalTeamInCompetition('FC Bayern München','Bundesliga 2025/26'))
+      .not.toBe(canonicalTeamInCompetition('Bayern Munich','Bundesliga 2025/26'));
+    const synthetic:Data={
+      teams:[{id:'bayern',name:'Bayern Munich',color:'#555'},
+        {id:'bvb',name:'Borussia Dortmund',color:'#666'}],
+      matches:[match('bundes01',competition,'bayern','bvb')]
+    };
+    expect(resolveCalendarFixture(synthetic,f(competition,'FC Bayern München','Borussia Dortmund')))
+      .toMatchObject({homeId:'bayern',awayId:'bvb'});
+    expect(resolveCalendarFixture(synthetic,
+      f('Bundesliga 2025/26','FC Bayern München','Borussia Dortmund'))).toBeNull();
+  });
   it('mantém todos os dados e clubes originais sem reescrever IDs',()=>{
     const before=JSON.stringify(data);
     expect(basicTeamName('  Atlético–MG ')).toBe('atletico mg');
