@@ -31,14 +31,14 @@ const disk=(values:Record<string,string|null>)=>{
  };
 };
 describe('Backup integral FutStats V4 — apenas leitura',()=>{
- it('agrupa todas as oito bases sem sobrescrever e valida a própria cópia',()=>{
+ it('agrupa as nove bases, incluindo agenda quando presente sem sobrescrever e valida a própria cópia',()=>{
   const source=disk(all);
   const before=JSON.stringify(all);
   const backup=createSafetyArchive(source,new Date('2026-10-24T12:00:00Z'));
   expect(backup.format).toBe(SAFETY_ARCHIVE_FORMAT);
-  expect(backup.version).toBe(1);
+  expect(backup.version).toBe(2);
   expect(backup.exportedAt).toBe('2026-10-24T12:00:00.000Z');
-  expect(Object.keys(backup.stores)).toHaveLength(8);
+  expect(Object.keys(backup.stores)).toHaveLength(9);
   for(const key of SAFETY_KEYS)expect(backup.stores[key]).toBe(all[key]);
   expect(JSON.stringify(all)).toBe(before);
   expect(source.reads()).toBeGreaterThan(0);
@@ -54,7 +54,7 @@ describe('Backup integral FutStats V4 — apenas leitura',()=>{
   const report=inspectSafetyStorage(disk({[STORAGE]:JSON.stringify(data)}));
   expect(report.ok).toBe(true);
   expect(report.present).toBe(1);
-  expect(report.missing).toBe(7);
+  expect(report.missing).toBe(8);
   expect(report.matches).toBe(0);
   expect(report.workMatches).toBe(0);
   const backup=createSafetyArchive(disk({[STORAGE]:JSON.stringify(data)}));
@@ -68,7 +68,7 @@ describe('Backup integral FutStats V4 — apenas leitura',()=>{
   expect(report.invalid).toBe(1);
   expect(()=>createSafetyArchive(disk(values))).toThrow('inconsistente');
   const backup=createSafetyArchive(disk(all));
-  expect(()=>inspectSafetyArchive({...backup,version:2})).toThrow();
+  expect(()=>inspectSafetyArchive({...backup,version:1})).toThrow();
   expect(()=>inspectSafetyArchive({...backup,stores:{[STORAGE]:'{}'}})).toThrow();
   expect(()=>inspectSafetyArchive({...backup,stores:{
    ...backup.stores,[FPL_WORK_STORAGE]:'not json'
