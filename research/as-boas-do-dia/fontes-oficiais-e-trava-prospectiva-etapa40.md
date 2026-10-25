@@ -1,0 +1,20 @@
+# FutStats IA — Etapa 40: cobertura por ligas e segurança de snapshots
+
+**Data da conferência das fontes:** 25/10/2026 (Brasília). **Tipo:** snapshot manual de agenda, não API ao vivo, não resultado de campeonato, não previsão criada em nome de usuário. Todos os jogos abaixo estavam programados para depois da data de referência. Horários sujeitos a alterações pelos organizadores.
+
+## Fontes
+- [Lega Serie A — programação 6ª–12ª rodadas](https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata) informa os horários italianos e confrontos até novembro. **7 eventos selecionados**, em horário Europe/Rome (CET, UTC+1 após a mudança de 25/10): Roma × Cagliari e Sassuolo × Lazio (27/10); Milan × Bologna e Genoa × Juventus (28/10); Fiorentina × Atalanta (29/10); Milan × Inter (31/10); Juventus × Napoli (01/11). Datas/UTC/horários locais convertidos pelo app para Brasília.
+- [LaLiga — horários da 11ª rodada](https://www.laliga.com/es-MX/noticias/horarios-de-la-undecima-jornada-de-laliga-ea-sports-2026-27) confirma início em 30/10 com Villarreal × Espanyol às 21h (Madrid). Páginas oficiais por equipe confirmam os outros quatro eventos: [Rayo × Celta](https://www.laliga.com/clubes/rayo-vallecano/proximos-partidos) 31/10 16h15, [Betis × Málaga](https://www.laliga.com/clubes/real-betis/proximos-partidos) 31/10 18h30, [Barcelona × Alavés](https://www.laliga.com/clubes/fc-barcelona/proximos-partidos) 31/10 21h, e [Racing × Real Madrid](https://www.laliga.com/clubes/real-madrid/proximos-partidos) 01/11 16h15. São **5 jogos adicionais**, zona Europe/Madrid CET (UTC+1 após 25/10).
+- Total da Etapa 40: **12 referências adicionais**, somadas às 8 da Etapa 39. Este número representa *referências cadastradas*, não cobertura completa de calendário, partidas disputadas ou sinais de IA.
+
+## Regras preservadas
+1. A verificação de URL HTTPS está centralizada em `src/officialSourceTrust.ts`, com allowlist de domínios exatos: CBF, LaLiga, LFP, Roma, Premier League, Lega Serie A. Domínios parecidos, URL com usuário/senha, HTTP e URLs sem origem conhecida não passam.
+2. A referência de agenda só é considerada fresca se foi conferida **no mesmo dia ou nos 2 dias anteriores** ao momento da consulta. Em exibição, ultrapassado esse intervalo, a hora vira **N/D**. Os novos jogos mais distantes **não** serão autorizados como “As Boas do Dia” sem conferência posterior perto do confronto.
+3. A auditoria prospectiva agora verifica **a data de conferência em relação ao dia em que o usuário salvou o snapshot**, não apenas se a fonte foi publicada antes do registro. Previsão local alterada para incorporar uma referência já expirada fica inelegível, preservando-a sem lhe atribuir acerto.
+4. Backups com metadados de indicação da Premier League ou Lega Serie A passam a usar a **mesma allowlist** da seleção e auditoria. Não se perde uma previsão legítima apenas por divergência entre validações em telas diferentes.
+5. Apenas registro explicitamente salvo **antes do início**, com sinais V2/V3 e amostras congeladas, pode futuramente ser comparado a resultado real documentado. Sem entrada no banco e conferência externa de resultado, desempenho permanece **N/D**.
+
+## Limites e validação
+Não foi efetuada a inscrição de previsões reais no navegador pessoal do usuário, importação de resultados nem conferência de partidas já finalizadas. Os testes automatizados simulam estes fluxos, mas não comprovam desempenho real, inteligência calibrada nem taxa de acertos. Para alterar qualquer algoritmo por liga será exigida validação prospectiva com pelo menos 30 **confrontos distintos** com desfechos reais externamente conferidos, em diferentes datas, além das referências baselines, períodos e N/D.
+
+Executar Vitest (incluindo novos testes da lista de fontes e da restauração), compilação TypeScript/Vite e fluxo Playwright desktop + viewport Android no PR experimental, **sem merge, sem Vercel deploy, sem alterar 659 históricos, Radar original, backups ou Work**.
