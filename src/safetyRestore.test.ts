@@ -65,7 +65,7 @@ describe('Recuperação transacional V4 — somente perfil vazio',()=>{
    archivedForecasts:0,archivedCalendarFixtures:0,verified:true
   });
   expect(dest.getItem('unrelated:personal')).toBe('preserve');
-  for(const key of SAFETY_KEYS)expect(dest.getItem(key)).toBe(samples[key]);
+  for(const key of SAFETY_KEYS)expect(dest.getItem(key)).toBe(samples[key]??null);
   expect(inspectSafetyStorage(dest).ok).toBe(true);
  });
  it('recusa sobrescrever mesmo uma única chave FutStats existente sem escrever nada',()=>{
