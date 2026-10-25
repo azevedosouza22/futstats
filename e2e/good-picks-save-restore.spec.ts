@@ -117,8 +117,8 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   ]);
   expect(queueFile.suggestedFilename()).toBe('futstats-fila-verificacao-resultados.csv');
   const queueCsv=await readFile((await queueFile.path())!,'utf-8');
-  expect(queueCsv.startsWith('\\uFEFF"registro_id";')).toBe(true);
-  expect(queueCsv.split('\\r\\n').filter(Boolean)).toHaveLength(2);
+  expect(queueCsv.startsWith('\uFEFF"registro_id";')).toBe(true);
+  expect(queueCsv.split('\r\n').filter(Boolean)).toHaveLength(2);
   expect(queueCsv).toContain('"await_kickoff"');
   expect(queueCsv).toContain('"PENDENTE"');
   expect(queueCsv).not.toContain('"CONFIRMADO"');
