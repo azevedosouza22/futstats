@@ -1,5 +1,6 @@
 import {useEffect,useMemo,useState} from 'react';
 import {localDate} from './pregame';
+import {radarUpcoming} from './radar';
 import {
  readBrowserWorkAnalysis,WORK_ANALYSIS_LEAGUES,workTeamNames,
  type WorkAnalysisRead,type WorkLeague
@@ -41,6 +42,11 @@ export default function WorkRadarPreview(){
  const data=useMemo(()=>league?workRadarData(matches,league):null,[matches,league]);
  const projections=data&&home&&away&&home!==away&&date?
   projectWorkRadar(data,home,away,cutoff):[];
+ const homeId=data?.teams.find(t=>t.name===home)?.id;
+ const awayId=data?.teams.find(t=>t.name===away)?.id;
+ const cornerHistory=data&&homeId&&awayId&&homeId!==awayId&&date?
+  radarUpcoming(data,{home:homeId,away:awayId,date:cutoff,competition:data.matches[0]?.competition??''})
+   .markets.find(m=>m.id==='corners-full-8.5'):null;
  const backtest=useMemo(()=>showBacktest&&data?backtestWorkRadar(data):null,[showBacktest,data]);
  const combined=useMemo(()=>read?validateWorkRadar(matches):null,[read,matches]);
  const count=(read?.europeCount??0)+(read?.premierCount??0);
@@ -138,6 +144,7 @@ export default function WorkRadarPreview(){
       </div>
       <p className="muted">Amostra válida no mando: {m.homeCount} jogos do mandante em casa e {m.awayCount} do visitante fora (até dez anteriores considerados por equipe).</p>
      </article>)}
+     {cornerHistory&&<article className="radar-v2-card"><h4>Escanteios · partida completa<small>Linha histórica ilustrativa {format(cornerHistory.line)}</small></h4><p>Média histórica: <strong>{format(cornerHistory.historicalMean)}</strong> · {cornerHistory.observed} partidas válidas</p><p className="muted">Indicador informativo. O Radar Work ainda não emite sinal V2/V3 para escanteios.</p></article>}
     </div>
    </>}
    

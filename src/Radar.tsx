@@ -104,6 +104,7 @@ export default function Radar({data}: {data: Data}) {
                 <div><span>Finalizações a favor</span><strong>{number(item.summary.shotsFor.mean)}</strong></div>
                 <div><span>Finalizações sofridas</span><strong>{number(item.summary.shotsAgainst.mean)}</strong></div>
                 <div><span>Escanteios a favor</span><strong>{number(item.summary.cornersFor.mean)}</strong></div>
+                <div><span>Escanteios sofridos</span><strong>{number(item.summary.cornersAgainst.mean)}</strong></div>
                 <div><span>Gols a favor</span><strong>{number(item.summary.goalsFor.mean)}</strong></div>
               </article>
             )}
