@@ -8,7 +8,7 @@
  */
 import {
  SAFETY_KEYS,inspectSafetyArchive,inspectSafetyStorage,
- type SafetyArchive,type SafetyInspection
+ type SafetyArchiveFile,type SafetyInspection
 } from './safetyArchive';
 
 type RestoreStorage=Pick<Storage,'getItem'|'setItem'|'removeItem'>;
@@ -36,20 +36,21 @@ export function planSafetyRestore(
 ):RestorePlan{
  const inspection=inspectSafetyArchive(archive);
  const existingKeys=validateExisting(storage);
- const source=archive as SafetyArchive;
- const importKeys=SAFETY_KEYS.filter(key=>source.stores[key]!==null);
+ const source=archive as SafetyArchiveFile;
+ const stores=source.stores as Record<string,string|null>;
+ const importKeys=SAFETY_KEYS.filter(key=>Object.hasOwn(stores,key)&&stores[key]!==null);
  const canRestore=existingKeys.length===0&&importKeys.length>0;
  return {
   inspection,existingKeys,importKeys,canRestore,
   reason:existingKeys.length?
    'O FutStats deste navegador já contém dados. Para protegê-los, a restauração V4 é permitida somente em um perfil vazio. Nenhum registro atual será substituído.':
    importKeys.length===0?'O arquivo não contém grupos de dados para recuperar.':
-   'Arquivo validado. Este navegador não contém dados do FutStats nos oito grupos protegidos.'
+   'Arquivo validado. Este navegador não contém dados nos nove grupos protegidos (o backup V4 antigo inclui oito).'
  };
 }
 export type RestoreResult={
  restored:number;archivedMatches:number;archivedWork:number;
- archivedForecasts:number;verified:boolean;
+ archivedForecasts:number;archivedCalendarFixtures:number;verified:boolean;
 };
 
 /**
@@ -66,7 +67,8 @@ export function restoreSafetyArchiveEmpty(
 ):RestoreResult{
  const plan=planSafetyRestore(archive,storage);
  if(!plan.canRestore)throw Error(plan.reason);
- const data=archive as SafetyArchive;
+ const data=archive as SafetyArchiveFile;
+ const stores=data.stores as Record<string,string|null>;
  const previous=new Map<string,string|null>();
  // Take a second snapshot immediately before writing: any occupied key now
  // means abort. No merge, no replacement or deletion of existing data.
@@ -82,7 +84,7 @@ export function restoreSafetyArchiveEmpty(
    // Protect against a change while the operation is running.
    if(storage.getItem(key)!==null)
     throw Error('Outro registro foi encontrado durante a restauração. Nenhum dado anterior pode ser substituído.');
-   const raw=data.stores[key as keyof SafetyArchive['stores']];
+   const raw=stores[key];
    if(raw===null)continue;
    // Keep key in rollback list even if setItem mutates and then throws.
    written.push(key);
@@ -94,13 +96,14 @@ export function restoreSafetyArchiveEmpty(
   // Verify ALL protected keys, including those explicitly absent in the
   // archive. A new unexpected value must not pass as a complete restoration.
   if(!verified.ok||verified.entries.some(e=>e.status==='invalid')||
-   SAFETY_KEYS.some(key=>storage.getItem(key)!==data.stores[key]))
+   SAFETY_KEYS.some(key=>storage.getItem(key)!==(stores[key]??null)))
    throw Error('A verificação após restauração falhou.');
   return {
    restored:written.length,
    archivedMatches:plan.inspection.matches,
    archivedWork:plan.inspection.workMatches,
    archivedForecasts:plan.inspection.workForecasts,
+   archivedCalendarFixtures:plan.inspection.calendarFixtures,
    verified:true
   };
  }catch(e){
