@@ -394,7 +394,7 @@ test('Etapa 48: preparar prévia em 7 dias sem registrar como Boa do Dia',async(
     first:[stat(1,10,4,5),stat(2,18,7,5)],
     second:[stat(0,0,0,0),stat(0,0,0,0)]
   });
-  await page.evaluate(data=>localStorage.setItem(DATA_KEY,JSON.stringify(data)),data);
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),{key:DATA_KEY,data});
   await page.reload();
   await openRadar(page);
   const shortlist=page.getByRole('region',{name:/As Boas do Dia/});
