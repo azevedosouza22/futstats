@@ -101,11 +101,13 @@ describe('As Boas do Dia — filtro estatístico conservador',()=>{
    expect(Object.keys(r.items[0].signals[0])).not.toContain('odds');
  });
  it('não recomenda quando o algoritmo não emite sinais',()=>{
-   const low={...data,matches:matches.map(m=>({
+   // Three games above and two below each line at BOTH venues. Neither
+   // direction satisfies the strict V3 agreement checks.
+   const mixed={...data,matches:matches.map((m,i)=>({
      ...m,
-     first:[s(1,10,3,4),s(1,10,3,4)] as [Stats,Stats]
+     first:i%5<3?m.first:[s(0,4,1,1),s(0,4,1,1)] as [Stats,Stats]
    }))};
-   const r=selectDailyGoodSignals(low,[official()],now);
+   const r=selectDailyGoodSignals(mixed,[official()],now);
    expect(r.items).toEqual([]);
    expect(r.checked).toBe(1);
  });
