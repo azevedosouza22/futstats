@@ -405,7 +405,7 @@ test('Etapa 48: preparar prévia em 7 dias sem registrar como Boa do Dia',async(
   const section=page.getByLabel('Preparar análises dos próximos sete dias');
   await expect(section).toContainText('FC Barcelona × Deportivo Alavés');
   await expect(section).toContainText('Prévia possível — não é indicação');
-  await expect(section).toContainText('Fonte ou horário a reconfirmar');
+  await expect(section).toContainText('Histórico insuficiente');
   await section.getByRole('button',{name:'Abrir prévia no Radar (sem indicação)'}).first().click();
   const fixture=page.locator('.radar-selected-fixture');
   await expect(fixture).toContainText('FC Barcelona × Deportivo Alavés');
