@@ -72,7 +72,10 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   });
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{
     expect(officialCalendarItem(sample,new Date('2026-10-25T16:16:00Z'))).toBeNull();
-    expect(readOfficialCalendar(new Date('2026-10-30T00:00:00Z'))).toEqual([]);
+    const october30=readOfficialCalendar(new Date('2026-10-30T00:00:00Z'));
+    expect(october30.every(x=>x.fixture.date>='2026-10-30')).toBe(true);
+    expect(october30.some(x=>x.fixture.home==='Chelsea')).toBe(true);
+    expect(readOfficialCalendar(new Date('2026-11-03T00:00:00Z'))).toEqual([]);
   });
   it('rejeita URLs arbitrárias, fuso/UTC divergentes e data futura de verificação',()=>{
     expect(officialCalendarItem({...sample,officialUrl:'https://evil.example.net/x'},now)).toBeNull();
