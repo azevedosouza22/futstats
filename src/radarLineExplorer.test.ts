@@ -17,7 +17,7 @@ describe('compareRadarLines',()=>{
     const first=game('1','2026-10-10','A','B',12,4);
     const data:Data={teams:[],matches:[
       first,
-      game('1','2026-10-11','A','B',100,50),
+      game('1','2026-10-11','A','B',12,4),
       game('2','2026-10-12','A','C',10,3),
       game('3','2026-10-13','D','B',14,5),
       game('4','2026-10-25','A','B',100,50),
