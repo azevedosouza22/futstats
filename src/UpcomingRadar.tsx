@@ -259,6 +259,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       <div className="radar-venue-prospective" aria-label="Previsões futuras V2 e V3">
         <h4>Previsão deste jogo · V2 e V3 (ainda não salva)</h4>
         {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span><small>Projeção {format(m.projectedTotal)}</small></div></div>)}
+        {comparison.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="forecast-line" key={m.id}><b>Escanteios · partida completa</b><div><span>Linha ilustrativa {format(m.line)}</span><span>Média histórica {format(m.historicalMean)}</span><small>{m.observed} jogos válidos · sem sinal V2/V3 nesta versão</small></div></div>)}
       </div>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
@@ -376,6 +377,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
               const result=settled.markets.find(s=>s.marketId===m.marketId);
               return <p className="saved-market" key={m.marketId}><b>{m.label}</b><span>V2 <Signal value={m.v2}/>{result?' · '+result.v2:''}</span><span>V3 <Signal value={m.v3}/>{result?' · '+result.v3:''}</span></p>;
             })}
+            {v.markets.filter(m=>m.id==='corners-full-8.5').map(m=><p className="saved-market" key={m.id}><b>Escanteios · referência histórica salva</b><span>Média {format(m.historicalMean)} · Linha {format(m.line)} · {m.observed} jogos · sem sinal V2/V3</span></p>)}
             <button type="button" className="radar-record-delete" aria-label={`Excluir apenas o registro pré-jogo ${v.home} × ${v.away} de ${v.matchAt.slice(0,10)}`} onClick={()=>removeSavedRecord(v)}>Excluir somente este registro</button>
           </li>;
         })}
