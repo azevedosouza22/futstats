@@ -4,6 +4,7 @@ import {buildRadarDailyOverview} from './radarDailyOverview';
 import {readBrowserWorkAnalysis,type WorkAnalysisRead} from './workAnalysis';
 import {workFixtureCoverage} from './workFixtureCoverage';
 import RadarDailyCard from './RadarDailyCard';
+import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
 import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
@@ -186,6 +187,8 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         <p className="muted">Consulta somente leitura. Estes candidatos não possuem horário confirmado e não podem ser salvos automaticamente como previsões. Não são jogos oficiais verificados.</p>
       </>}
     </section>
+    <LeagueCoveragePanel data={data} workMatches={workRead.value?.matches??null}
+      workError={workRead.error}/>
     <details className="calendar-import-extra">
       <summary>Adicionar outros campeonatos e datas (CSV)</summary>
       <p className="muted">O FutStats não pesquisa automaticamente uma agenda atualizada. Use um CSV de calendário com fonte conferível.</p>

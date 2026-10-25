@@ -886,3 +886,30 @@ html{scroll-behavior:smooth}
  border-radius:8px;padding:10px 12px;font-weight:650;color:#ecf7ff;background:#284762}
 .premium .radar-work-coverage button:hover{background:#365877}
 @media(max-width:580px){.premium .radar-work-coverage button{width:100%;justify-self:stretch}}
+
+/* Optional, read-only coverage audit. Never replaces the daily fixture list. */
+.premium .league-coverage-panel{margin:18px 0;padding:14px;border:1px solid #49697b;
+ border-radius:12px;background:#172c39;min-width:0}
+.premium .league-coverage-panel>summary{cursor:pointer;font-size:14px;
+ font-weight:750;color:#dff3ff;line-height:1.6}
+.premium .league-coverage-panel>h4{margin:18px 0 7px;color:#e7f4fa;font-size:15px}
+.premium .league-coverage-panel .muted{font-size:11px;line-height:1.65}
+.premium .league-coverage-list{display:grid;gap:10px}
+.premium .league-coverage-league{border:1px solid #435968;border-radius:10px;
+ padding:12px;min-width:0;background:#1d3442}
+.premium .league-coverage-league header{display:grid;gap:3px;margin-bottom:10px}
+.premium .league-coverage-league header strong{font-size:13px;color:#eaf8ff}
+.premium .league-coverage-league header small{font-size:11px;color:#b8cbd6}
+.premium .league-coverage-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.premium .league-coverage-metric{display:grid;gap:4px;border:1px solid #38515f;
+ border-radius:8px;padding:9px;min-width:0;color:#d3e8f5}
+.premium .league-coverage-metric b{font-size:12px;color:#f4faff}
+.premium .league-coverage-metric span{font-size:10px;line-height:1.5}
+.premium .league-coverage-corners{border-color:#7b8e6b;background:#283e38}
+.premium .league-coverage-warning{font-size:11px;color:#ffdaa6;line-height:1.5}
+.premium .league-coverage-league details{font-size:11px;color:#d3e1eb;margin-top:8px}
+.premium .league-coverage-league summary{cursor:pointer}
+.premium .league-coverage-league ul{padding-left:20px;overflow-wrap:anywhere}
+@media(max-width:940px){.premium .league-coverage-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:410px){.premium .league-coverage-panel{padding:11px}
+ .premium .league-coverage-metrics{grid-template-columns:minmax(0,1fr)}}
