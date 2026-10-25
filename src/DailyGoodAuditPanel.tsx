@@ -4,7 +4,8 @@ import type {SavedRadarRecord} from './radarRecords';
 import {auditDailyGoodPicks} from './dailyGoodAudit';
 import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
 import {buildIndependentReviewQueue,exportIndependentReviewQueueCsv} from './dailyGoodIndependentReview';
-import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidence,type DocumentaryComparison} from './dailyGoodEvidenceCompare';
+import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidence,type DocumentaryComparison,type ExternalEvidence} from './dailyGoodEvidenceCompare';
+import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDossier';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -24,6 +25,8 @@ export default function DailyGoodAuditPanel({data,records}:{
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
  const independentQueue=buildIndependentReviewQueue(records,report);
  const [documentary,setDocumentary]=useState<DocumentaryComparison|null>(null);
+ const [documentarySource,setDocumentarySource]=useState<ExternalEvidence|null>(null);
+ const [dossierNotice,setDossierNotice]=useState('');
  const [documentationNotice,setDocumentationNotice]=useState('');
  const readyForEvidence=new Set(independentQueue.entries
   .filter(x=>x.state==='check_external').map(x=>x.key));
@@ -47,21 +50,50 @@ export default function DailyGoodAuditPanel({data,records}:{
   }
  }
  async function loadDocumentary(file?:File){
-  setDocumentary(null);setDocumentationNotice('');
+  setDocumentary(null);setDocumentarySource(null);setDossierNotice('');setDocumentationNotice('');
   if(!file)return;
   try{
    if(file.size>200_000||!file.name.toLowerCase().endsWith('.json'))
     throw Error('Selecione um JSON documental de até 200 KB.');
    const input=JSON.parse(await file.text()) as unknown;
-   const comparison=reconcileDocumentaryEvidence(
-    parseDocumentaryEvidence(input),records,report
-   );
+   const source=parseDocumentaryEvidence(input);
+   const comparison=reconcileDocumentaryEvidence(source,records,report);
    if(!readyForEvidence.has(comparison.recordKey))
     throw Error('Partida ainda não liberada para comparação documental.');
-   setDocumentary(comparison);
+   setDocumentary(comparison);setDocumentarySource(source);
    setDocumentationNotice('Valores informados comparados apenas nesta tela, sem salvar ou verificar páginas na internet.');
   }catch(e){
    setDocumentationNotice(e instanceof Error?e.message:'Arquivo recusado; nenhuma previsão foi alterada.');
+  }
+ }
+
+
+ async function exportDocumentaryDossier(){
+  setDossierNotice('');
+  if(!documentarySource||!documentary)return;
+  try{
+   const json=await createDocumentaryDossier(documentarySource,records,report);
+   downloadFile('futstats-dossie-comparacao-local.json',json,'application/json;charset=utf-8');
+   setDossierNotice('Dossiê gerado localmente. SHA-256 confere integridade, não autenticidade externa.');
+  }catch(e){
+   setDossierNotice(e instanceof Error?e.message:'Não foi possível criar o dossiê.');
+  }
+ }
+ async function openDocumentaryDossier(file?:File){
+  setDossierNotice('');
+  if(!file)return;
+  try{
+   if(file.size>300_000||!file.name.toLowerCase().endsWith('.json'))
+    throw Error('Selecione um dossiê JSON com até 300 KB.');
+   const loaded=JSON.parse(await file.text()) as unknown;
+   const examined=await inspectDocumentaryDossier(loaded,records,report);
+   if(!readyForEvidence.has(examined.comparison.recordKey))
+    throw Error('O registro do dossiê não está mais apto para revisão.');
+   setDocumentary(examined.comparison);
+   setDocumentarySource(examined.source);
+   setDossierNotice('Integridade SHA-256 consistente com os dados locais atuais. DOCUMENTAÇÃO NÃO VERIFICADA NA WEB; verificação externa PENDENTE.');
+  }catch(e){
+   setDossierNotice(e instanceof Error?e.message:'Dossiê recusado.');
   }
  }
 
@@ -164,6 +196,22 @@ export default function DailyGoodAuditPanel({data,records}:{
           onChange={e=>{void loadDocumentary(e.currentTarget.files?.[0]);e.currentTarget.value='';}}/>
       </label>
       {documentationNotice&&<p role="status" className="muted">{documentationNotice}</p>}
+      {documentary&&documentarySource&&<div className="daily-good-dossier">
+        <button type="button" className="text-button"
+          onClick={()=>{void exportDocumentaryDossier();}}>
+          Exportar dossiê local da comparação (JSON)
+        </button>
+        <p className="muted">O dossiê inclui previsão congelada, resultado CSV local,
+          documento da segunda fonte informada e comparação. SHA-256 serve para
+          detectar alterações acidentais, <strong>não é assinatura digital nem
+          prova de consulta ao site</strong>. O arquivo não restaura dados.</p>
+      </div>}
+      <label>Reabrir dossiê local para conferir integridade (JSON)
+        <input type="file" accept=".json,application/json"
+          aria-label="Conferir integridade do dossiê (JSON)"
+          onChange={e=>{void openDocumentaryDossier(e.currentTarget.files?.[0]);e.currentTarget.value='';}}/>
+      </label>
+      {dossierNotice&&<p role="status" className="muted">{dossierNotice}</p>}
       {documentary&&<div role="region" aria-label="Resultado da comparação documental">
         <strong>{documentary.fixture}</strong>
         <p className="muted">{documentary.conclusion} ·
