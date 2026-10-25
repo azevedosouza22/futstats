@@ -77,6 +77,59 @@ const CBF_FIXTURES:readonly OfficialCalendarRecord[]=[
    verifiedAt:'2026-10-25'},
 ];
 
+// DFL Bundesliga 2026/27, rodada 8: 9 partidas com pares e horários conferidos
+// em 25/10/2026 contra www.bundesliga.com e products.bundesliga.com.
+// Link ao calendário da rodada (NÃO a uma página individual, NÃO feed ao vivo).
+// Horários locais CET (Europe/Berlin); UTC confirmado na agenda DFL.
+// A informação caduca após dois dias, sem atualizar automaticamente.
+const BUNDESLIGA_FIXTURES:readonly OfficialCalendarRecord[]=[
+  {id:'de-elversberg-mainz-2026',competition:'Bundesliga 2026/27',
+   home:'SV Elversberg',away:'1. FSV Mainz 05',localDate:'2026-10-30',localTime:'20:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-30T19:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-leverkusen-stuttgart-2026',competition:'Bundesliga 2026/27',
+   home:'Bayer 04 Leverkusen',away:'VfB Stuttgart',localDate:'2026-10-31',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-augsburg-freiburg-2026',competition:'Bundesliga 2026/27',
+   home:'FC Augsburg',away:'Sport-Club Freiburg',localDate:'2026-10-31',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-gladbach-paderborn-2026',competition:'Bundesliga 2026/27',
+   home:'Borussia Mönchengladbach',away:'SC Paderborn 07',localDate:'2026-10-31',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-bremen-hoffenheim-2026',competition:'Bundesliga 2026/27',
+   home:'SV Werder Bremen',away:'TSG Hoffenheim',localDate:'2026-10-31',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-schalke-leipzig-2026',competition:'Bundesliga 2026/27',
+   home:'FC Schalke 04',away:'RB Leipzig',localDate:'2026-10-31',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-bayern-dortmund-2026',competition:'Bundesliga 2026/27',
+   home:'FC Bayern München',away:'Borussia Dortmund',localDate:'2026-10-31',localTime:'18:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-10-31T17:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-union-koeln-2026',competition:'Bundesliga 2026/27',
+   home:'1. FC Union Berlin',away:'1. FC Köln',localDate:'2026-11-01',localTime:'15:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-11-01T14:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+  {id:'de-frankfurt-hamburg-2026',competition:'Bundesliga 2026/27',
+   home:'Eintracht Frankfurt',away:'Hamburger SV',localDate:'2026-11-01',localTime:'17:30',
+   timezone:'Europe/Berlin',utcKickoff:'2026-11-01T16:30:00Z',
+   officialUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8',
+   verifiedAt:'2026-10-25'},
+];
+
 const PREMIER_LEAGUE_FIXTURES:readonly OfficialCalendarRecord[]=[
   // Times from the Premier League's revised UK fixture schedule. The UK is
   // on GMT after the 25 October clock change; local times are not Brasilia.
@@ -209,8 +262,8 @@ export function officialCalendarItem(record:OfficialCalendarRecord,now=new Date(
 
 /** Only a few manually checked fixtures; NO network fetch or auto-refresh. */
 export function readOfficialCalendar(now=new Date()):OfficialCalendarItem[]{
-  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES,...PREMIER_LEAGUE_FIXTURES,
-    ...SERIE_A_ITALIANA_FIXTURES,...LA_LIGA_FIXTURES];
+  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES,...BUNDESLIGA_FIXTURES,
+    ...PREMIER_LEAGUE_FIXTURES,...SERIE_A_ITALIANA_FIXTURES,...LA_LIGA_FIXTURES];
   for(const item of VERIFIED_EUROPE_FIXTURES){
     if(!fixtureWithOfficialTime(item,now))continue;
     const competition=WORK_LEAGUES[item.league];
