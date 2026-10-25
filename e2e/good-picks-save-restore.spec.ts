@@ -103,6 +103,7 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
   await expect(audit).toContainText('1 registro(s) com identificação da lista');
   await expect(audit).toContainText('0 confronto(s) com resultado');
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
   // The real UI exports a read-only ledger; it must not mutate the saved pick
   // or claim that synthetic/local CSV results were checked on the web.
   const [ledger]=await Promise.all([
@@ -119,7 +120,7 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(saved);
 
-  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  await expect(page.locator('#radar-saved-forecasts')).toBeVisible();
   await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
   await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
   // A revisit must never silently duplicate or recalculate frozen entries.
