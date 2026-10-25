@@ -35,6 +35,9 @@ describe('resolver confronto na agenda do Radar',()=>{
   it('não seleciona clube de temporada/liga incorreta',()=>{
     expect(resolveCalendarFixture(data,{...fixture,competition:'Brasileirão Série B',away:'Cruzeiro'})).toBeNull();
   });
+  it('bloqueia fonte de agenda sem HTTPS confiável',()=>{
+    expect(resolveCalendarFixture(data,{...fixture,sourceUrl:'javascript:alert(1)'})).toBeNull();
+  });
   it('rejeita horário inválido e confronto com mesma equipe',()=>{
     expect(resolveCalendarFixture(data,{...fixture,time:'27:00'})).toBeNull();
     expect(resolveCalendarFixture(data,{...fixture,away:'RB Bragantino'})).toBeNull();
