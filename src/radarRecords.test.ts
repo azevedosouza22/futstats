@@ -30,6 +30,18 @@ describe('recuperação segura dos registros pré-jogo',()=>{
   expect(()=>parseRadarRecords([record('dup'),record('dup','Palmeiras')])).toThrow('repetidos');
   expect(()=>mergeRadarRecords([record('x')],[record('x','Palmeiras')])).toThrow('Conflito');
  });
+ it('preserva a origem de As Boas na exportação/restauração sem atribuir registros antigos',()=>{
+  const original=record('valid');
+  const withPick={...original,goodPicks:{
+   verifiedAt:'2026-10-20',sourceUrl:'https://www.cbf.com.br/futebol-brasileiro/jogos/teste',
+   signals:[{id:'shots-full-24.5',label:'Finalizações',line:24.5,direction:'Over' as const,
+    projection:31,historicalMean:29,historicalSample:10,leagueSample:22,relativeDistance:.26}]
+  }};
+  expect(parseRadarRecords(JSON.parse(JSON.stringify([withPick])))[0].goodPicks).toEqual(withPick.goodPicks);
+  expect(parseRadarRecords([original])[0].goodPicks).toBeUndefined();
+  expect(()=>parseRadarRecords([{...withPick,goodPicks:{...withPick.goodPicks,
+    sourceUrl:'http://site-falso.invalid'}}])).toThrow('inválido');
+ });
  it('respeita o limite do armazenamento e não remove previsões existentes',()=>{
   const existing=Array.from({length:50},(_,i)=>({...record('old-'+i,'Casa'+i),away:'Fora'+i}));
   const merged=mergeRadarRecords(existing,[record('new')]);
