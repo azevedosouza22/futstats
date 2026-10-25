@@ -14,7 +14,7 @@ const sample:OfficialCalendarRecord={
 describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('expõe 29 jogos futuros com fontes oficiais e horário confirmado',()=>{
     const entries=readOfficialCalendar(now);
-    expect(entries).toHaveLength(29);
+    expect(entries).toHaveLength(38);
     expect(entries.some(x=>x.fixture.home==='SSC Napoli')).toBe(false);
     expect(entries.every(x=>x.fixture.id.startsWith('official|'))).toBe(true);
     expect(entries.every(x=>x.fixture.sourceUrl.startsWith('https://'))).toBe(true);
@@ -30,6 +30,38 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
     const clasico=readOfficialCalendar(now).find(x=>x.fixture.home==='FC Barcelona');
     expect(clasico?.fixture.time).toBe('17:00');
     expect(clasico?.fixture.date).toBe('2026-10-25');
+  });
+  it('inclui 9 partidas reais da rodada 8 alemã, com CET/UTC e horário de Brasília',()=>{
+    const entries=readOfficialCalendar(now).filter(x=>
+      x.fixture.competition==='Bundesliga 2026/27');
+    expect(entries).toHaveLength(9);
+    const expected=[
+      ['SV Elversberg','1. FSV Mainz 05','2026-10-30','16:30'],
+      ['Bayer 04 Leverkusen','VfB Stuttgart','2026-10-31','11:30'],
+      ['FC Augsburg','Sport-Club Freiburg','2026-10-31','11:30'],
+      ['Borussia Mönchengladbach','SC Paderborn 07','2026-10-31','11:30'],
+      ['SV Werder Bremen','TSG Hoffenheim','2026-10-31','11:30'],
+      ['FC Schalke 04','RB Leipzig','2026-10-31','11:30'],
+      ['FC Bayern München','Borussia Dortmund','2026-10-31','14:30'],
+      ['1. FC Union Berlin','1. FC Köln','2026-11-01','11:30'],
+      ['Eintracht Frankfurt','Hamburger SV','2026-11-01','13:30']
+    ];
+    for(const [home,away,date,time] of expected){
+      const entry=entries.find(x=>x.fixture.home===home&&x.fixture.away===away);
+      expect(entry?.fixture).toMatchObject({
+        date,time,sourceUrl:'https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8'
+      });
+      expect(entry?.verifiedAt).toBe('2026-10-25');
+      expect(entry?.fresh).toBe(true);
+    }
+    expect(new Set(entries.map(x=>x.fixture.id)).size).toBe(9);
+    const stale=readOfficialCalendar(new Date('2026-10-29T12:00:00Z'))
+      .filter(x=>x.fixture.competition==='Bundesliga 2026/27');
+    expect(stale).toHaveLength(9);
+    expect(stale.every(x=>!x.fresh&&x.fixture.time===null)).toBe(true);
+    const concluded=readOfficialCalendar(new Date('2026-11-01T17:00:00Z'))
+      .filter(x=>x.fixture.competition==='Bundesliga 2026/27');
+    expect(concluded).toHaveLength(0);
   });
   it('inclui Premier League com horário GMT correto após transição de outubro',()=>{
     const entries=readOfficialCalendar(now);
@@ -111,7 +143,7 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('quando a conferência envelhece, apaga a hora reutilizável em vez de mantê-la',()=>{
     const later=new Date('2026-10-28T12:00:00Z');
     const items=readOfficialCalendar(later);
-    expect(items).toHaveLength(23);
+    expect(items).toHaveLength(32);
     expect(items.every(x=>!x.fresh&&x.fixture.time===null)).toBe(true);
   });
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{
