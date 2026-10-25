@@ -40,6 +40,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   const lookupWork=(f:ScheduledFixture)=>workRead.value
     ?workFixtureCoverage(workRead.value.matches,f):null;
   const [window,setWindow]=useState<CalendarWindow>('today');
+  const [officialLeagueFilter,setOfficialLeagueFilter]=useState('all');
   const [error,setError]=useState('');
   const [notice,setNotice]=useState('');
   const [free,setFree]=useState<FreeAgendaResult|null>(null);
@@ -80,7 +81,12 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
     calendarWindow([item.fixture],window).length>0);
   const recheck=officialRecheckQueue(officialVisible,clock);
   const urgentReview=recheck.entries.filter(x=>x.reason!=='later');
-  const officialListed=officialVisible.slice(0,20).map(item=>({
+  const officialLeagueNames=[...new Set(
+    officialVisible.map(x=>x.fixture.competition)
+  )].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const officialFiltered=officialVisible.filter(x=>
+    officialLeagueFilter==='all'||x.fixture.competition===officialLeagueFilter);
+  const officialListed=officialFiltered.slice(0,20).map(item=>({
     ...item,overview:buildRadarDailyOverview(data,item.fixture),work:lookupWork(item.fixture),
   }));
   const officialIds=new Set(officialVisible.map(item=>identity(item.fixture)));
@@ -133,6 +139,22 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         aguardando reconfirmação de horário:
         {' '}{officialVisible.filter(x=>!x.fresh||x.fixture.time===null).length}.
         Fontes cadastradas manualmente; a consulta não se renova sozinha.</p>
+      {officialVisible.length>0&&<div className="official-league-filter">
+        <label>Filtrar campeonato na agenda oficial
+          <select aria-label="Filtrar campeonato na agenda oficial"
+            value={officialLeagueFilter}
+            onChange={e=>setOfficialLeagueFilter(e.target.value)}>
+            <option value="all">Todas as competições ({officialVisible.length})</option>
+            {officialLeagueNames.map(name=><option key={name} value={name}>
+              {name} ({officialVisible.filter(x=>x.fixture.competition===name).length})
+            </option>)}
+          </select>
+        </label>
+        <p className="muted" role="status">
+          {officialFiltered.length} partida(s) com referência oficial neste filtro.
+          Programação datada, não consulta automática em tempo real.
+        </p>
+      </div>}
       {urgentReview.length>0&&<div className="calendar-review-queue"
         role="region" aria-label="Prioridades de reconferência da agenda oficial">
         <h5>Conferência prioritária da programação</h5>
@@ -163,7 +185,10 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       </div>}
       {officialVisible.length===0
         ?<p className="muted">Nenhuma referência oficial futura cadastrada para este período. Isso não significa que não existam jogos.</p>
-        :<div className="calendar-list">
+        :officialFiltered.length===0
+         ?<p className="muted">Nenhum jogo desta competição na janela escolhida.
+            Selecione todas as competições ou outro período.</p>
+         :<div className="calendar-list">
           {officialListed.map(({fixture:f,verifiedAt,fresh,overview,work})=>
             <article key={f.id} className="calendar-fixture radar-daily-fixture official-fixture">
               <div className="radar-daily-fixture-head">
