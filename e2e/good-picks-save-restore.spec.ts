@@ -587,3 +587,71 @@ test('Etapa 51: ID de resultado duplicado e importação futura não viram acert
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(saved);
 });
+
+
+test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(original).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const cohorts=audit.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'});
+  await expect(cohorts).toContainText('1 jogo(s) distinto(s) elegível(is)');
+  await expect(cohorts).toContainText('0 com indicador do CSV local');
+  await expect(cohorts).toContainText('0 resultado(s) verificado(s) independentemente');
+  await expect(cohorts).toContainText('0/30 · N/D');
+  await expect(cohorts.getByRole('row',{name:/La Liga espanhola 2026\/27/}))
+    .toContainText('PENDENTE');
+  const [empty]=await Promise.all([
+    page.waitForEvent('download'),
+    cohorts.getByRole('button',{name:'Exportar acompanhamento por campeonato (CSV)'}).click()
+  ]);
+  expect(empty.suggestedFilename()).toBe('futstats-amostras-prospectivas-por-liga.csv');
+  const first=await readFile((await empty.path())!,'utf8');
+  expect(first.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(first).toContain('"0";"30";"30";"N/D";"PENDENTE"');
+  expect(first).not.toContain('"CONFIRMADO"');
+
+  base.matches.push({
+    id:'e2e-cohort-result',date:'2026-10-25',
+    home:'barcelona',away:'real-madrid',competition:COMPETITION,
+    first:[stat(2,18,7,5),stat(1,14,5,6)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)],
+    research:{provider:'work-csv',source:'Flashscore',
+      sourceId:'e2e-cohort-result',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=e2e-cohort-result',
+      importedAt:'2026-10-26T03:00:00Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]}
+  } as (typeof base.matches)[number]);
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const updated=page.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'});
+  await expect(updated).toContainText('1 com indicador do CSV local');
+  await expect(updated).toContainText('0 resultado(s) verificado(s) independentemente');
+  const league=updated.getByRole('row',{name:/La Liga espanhola 2026\/27/});
+  await expect(league).toContainText('1 · PENDENTE');
+  await expect(league).toContainText('0/30 · N/D');
+  const [download]=await Promise.all([
+    page.waitForEvent('download'),
+    updated.getByRole('button',{name:'Exportar acompanhamento por campeonato (CSV)'}).click()
+  ]);
+  const csv=await readFile((await download.path())!,'utf8');
+  expect(csv).toContain('"1";"1";"1"');
+  expect(csv).toContain('"0";"30";"30";"N/D";"PENDENTE"');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(original);
+});
