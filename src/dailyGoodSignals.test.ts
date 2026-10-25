@@ -100,6 +100,33 @@ describe('As Boas do Dia — filtro estatístico conservador',()=>{
    expect(Object.keys(r.items[0].signals[0])).not.toContain('winProbability');
    expect(Object.keys(r.items[0].signals[0])).not.toContain('odds');
  });
+ it('expõe motivo por campeonato sem transformar jogos posteriores em indicação',()=>{
+   const entries=[
+     official(),
+     official({...fixture,id:'outro-dia',date:'2026-10-26'}),
+     {...official({...fixture,id:'vencido',home:'Outra casa',time:null}),fresh:false},
+     official({...fixture,id:'sem-historico',home:'Time sem jogos'}),
+   ];
+   const original=JSON.stringify(entries);
+   const r=selectDailyGoodSignals(data,entries,now);
+   expect(r.checked).toBe(2);
+   expect(r.items).toHaveLength(1);
+   expect(r.readiness).toEqual([{
+     competition:'Liga fictícia 2026/27',scheduledFuture:4,needsRecheck:1,
+     otherDates:1,todayVerified:2,insufficientHistory:1,
+     noConsistentSignal:0,qualified:1,featured:1
+   }]);
+   expect(JSON.stringify(entries)).toBe(original);
+ });
+ it('mostra N/D de elegibilidade com fonte vencida e não calcula desempenho',()=>{
+   const r=selectDailyGoodSignals(data,[{...official(),fresh:false}],now);
+   expect(r.items).toEqual([]);
+   expect(r.readiness[0]).toMatchObject({
+     scheduledFuture:1,needsRecheck:1,todayVerified:0,qualified:0,featured:0
+   });
+   expect(JSON.stringify(r)).not.toContain('winProbability');
+   expect(JSON.stringify(r)).not.toContain('hitRate');
+ });
  it('não recomenda quando o algoritmo não emite sinais',()=>{
    // Three games above and two below each line at BOTH venues. Neither
    // direction satisfies the strict V3 agreement checks.
@@ -110,5 +137,6 @@ describe('As Boas do Dia — filtro estatístico conservador',()=>{
    const r=selectDailyGoodSignals(mixed,[official()],now);
    expect(r.items).toEqual([]);
    expect(r.checked).toBe(1);
+   expect(r.readiness[0]).toMatchObject({todayVerified:1,noConsistentSignal:1,qualified:0});
  });
 });

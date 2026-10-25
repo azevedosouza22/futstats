@@ -12,9 +12,9 @@ const sample:OfficialCalendarRecord={
   verifiedAt:'2026-10-23'
 };
 describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
-  it('expõe 26 jogos futuros e horários confirmados em cinco campeonatos',()=>{
+  it('expõe 29 jogos futuros com fontes oficiais e horário confirmado',()=>{
     const entries=readOfficialCalendar(now);
-    expect(entries).toHaveLength(26);
+    expect(entries).toHaveLength(29);
     expect(entries.some(x=>x.fixture.home==='SSC Napoli')).toBe(false);
     expect(entries.every(x=>x.fixture.id.startsWith('official|'))).toBe(true);
     expect(entries.every(x=>x.fixture.sourceUrl.startsWith('https://'))).toBe(true);
@@ -82,6 +82,25 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
     expect(entries.filter(x=>x.fixture.competition==='La Liga espanhola 2026/27'))
       .toHaveLength(6); // 5 new games plus the earlier Barcelona vs Real Madrid
   });
+  it('inclui três jogos da rodada 33 com fonte CBF listada, sem antecipar resultados',()=>{
+    const entries=readOfficialCalendar(now);
+    const expected=[
+      ['Fluminense','Internacional','19:30'],
+      ['RB Bragantino','Chapecoense','19:30'],
+      ['Remo','Botafogo','21:30']
+    ];
+    for(const [home,away,time] of expected){
+      const found=entries.find(x=>x.fixture.home===home&&x.fixture.away===away);
+      expect(found?.fixture).toMatchObject({date:'2026-10-28',time,
+        competition:'Brasileirão Série A',
+        sourceUrl:'https://credencial.cbf.com.br/competicoes/listar/42/1'});
+      expect(found?.verifiedAt).toBe('2026-10-25');
+      expect(found?.fresh).toBe(true);
+    }
+    // An expired CBF source cannot silently restore a kickoff.
+    const after=readOfficialCalendar(new Date('2026-10-28T13:00:00Z'));
+    expect(after.find(x=>x.fixture.home==='Fluminense')?.fixture.time).toBeNull();
+  });
   it('converte horários CBF para Brasília sem virar o dia indevidamente',()=>{
     const entries=readOfficialCalendar(now);
     const bahia=entries.find(x=>x.fixture.home==='Bahia')!;
@@ -92,7 +111,7 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('quando a conferência envelhece, apaga a hora reutilizável em vez de mantê-la',()=>{
     const later=new Date('2026-10-28T12:00:00Z');
     const items=readOfficialCalendar(later);
-    expect(items).toHaveLength(20);
+    expect(items).toHaveLength(23);
     expect(items.every(x=>!x.fresh&&x.fixture.time===null)).toBe(true);
   });
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{

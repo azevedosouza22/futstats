@@ -5,7 +5,8 @@
  */
 const officialHosts=new Set([
   'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
-  'www.premierleague.com','www.legaseriea.it'
+  'www.premierleague.com','www.legaseriea.it',
+  'credencial.cbf.com.br'
 ]);
 export function safeOfficialFixtureUrl(value:string):boolean{
  try{

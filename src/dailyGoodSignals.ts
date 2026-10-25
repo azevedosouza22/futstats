@@ -8,7 +8,7 @@
  * The result is read-only and NEVER saves predictions automatically.
  */
 import type {Data} from './model';
-import {brasiliaDate,type ScheduledFixture} from './calendar';
+import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
 import type {OfficialCalendarItem} from './officialCalendar';
 import {buildRadarDailyOverview} from './radarDailyOverview';
 import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
@@ -21,9 +21,15 @@ export type DailyGoodSignal={
 export type DailyGoodFixture={
   fixture:ScheduledFixture;verifiedAt:string;signals:DailyGoodSignal[];
 };
+/** Read-only explanation for each league; never outcome measurements. */
+export type DailyGoodLeagueReadiness={
+  competition:string;scheduledFuture:number;needsRecheck:number;
+  otherDates:number;todayVerified:number;insufficientHistory:number;
+  noConsistentSignal:number;qualified:number;featured:number;
+};
 export type DailyGoodResult={
   date:string;checked:number;withAdequateHistory:number;
-  items:DailyGoodFixture[];
+  items:DailyGoodFixture[];readiness:DailyGoodLeagueReadiness[];
 };
 const validDate=(s:string)=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&
   !Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
@@ -49,18 +55,48 @@ export function selectDailyGoodSignals(
 ):DailyGoodResult{
  const {date,time}=brasiliaDate(now);
  const found:DailyGoodFixture[]=[];
- const seen=new Set<string>();
- let checked=0,withAdequateHistory=0;
+ // Keep one official entry per fixture and prefer a usable, current reference.
+ // This is a view over caller-owned data: never edit a source or saved record.
+ const unique=new Map<string,OfficialCalendarItem>();
  for(const entry of official){
-   if(!verifiable(entry,date,time))continue;
    const f=entry.fixture;
-   const identity=[f.date,f.competition,f.home.toLowerCase().trim(),f.away.toLowerCase().trim()].join('|');
-   if(seen.has(identity))continue;
-   seen.add(identity);
-   checked++;
+   const id=[f.date,f.competition,normalizeTeam(f.home),normalizeTeam(f.away)].join('|');
+   const prior=unique.get(id);
+   if(!prior||(!verifiable(prior,date,time)&&verifiable(entry,date,time)))unique.set(id,entry);
+ }
+ const byLeague=new Map<string,DailyGoodLeagueReadiness>();
+ const league=(competition:string)=>{
+   let item=byLeague.get(competition);
+   if(!item){
+     item={competition,scheduledFuture:0,needsRecheck:0,otherDates:0,
+       todayVerified:0,insufficientHistory:0,noConsistentSignal:0,
+       qualified:0,featured:0};
+     byLeague.set(competition,item);
+   }
+   return item;
+ };
+ let checked=0,withAdequateHistory=0;
+ for(const entry of unique.values()){
+   const f=entry.fixture;
+   // Past fixtures are never counted as missing candidates.
+   if(f.date<date||(f.date===date&&f.time!==null&&f.time<=time))continue;
+   const stat=league(f.competition);
+   stat.scheduledFuture++;
+   if(!entry.fresh||!f.time||
+     !officialSnapshotFreshAt(entry.verifiedAt,date)||
+     !safeOfficialFixtureUrl(f.sourceUrl)){
+     stat.needsRecheck++;
+     continue;
+   }
+   if(f.date!==date){stat.otherDates++;continue;}
+   if(!verifiable(entry,date,time)){stat.needsRecheck++;continue;}
+   checked++;stat.todayVerified++;
    const overview=buildRadarDailyOverview(data,f);
    if(!overview||!overview.hasKickoffTime||
-      overview.homeCount<5||overview.awayCount<5)continue;
+      overview.homeCount<5||overview.awayCount<5){
+     stat.insufficientHistory++;
+     continue;
+   }
    withAdequateHistory++;
    const signals:DailyGoodSignal[]=[];
    for(const metric of overview.indicators){
@@ -81,7 +117,8 @@ export function selectDailyGoodSignals(
        leagueSample:metric.leagueSample,relativeDistance:distance
      });
    }
-   if(!signals.length)continue;
+   if(!signals.length){stat.noConsistentSignal++;continue;}
+   stat.qualified++;
    signals.sort((a,b)=>b.relativeDistance-a.relativeDistance||
      a.id.localeCompare(b.id));
    found.push({fixture:f,verifiedAt:entry.verifiedAt,signals:signals.slice(0,3)});
@@ -90,5 +127,8 @@ export function selectDailyGoodSignals(
    b.signals[0].relativeDistance-a.signals[0].relativeDistance||
    (a.fixture.time??'').localeCompare(b.fixture.time??'')||
    a.fixture.id.localeCompare(b.fixture.id));
- return {date,checked,withAdequateHistory,items:found.slice(0,3)};
+ const featured=found.slice(0,3);
+ for(const entry of featured)league(entry.fixture.competition).featured++;
+ return {date,checked,withAdequateHistory,items:featured,
+   readiness:[...byLeague.values()].sort((a,b)=>a.competition.localeCompare(b.competition,'pt-BR'))};
 }

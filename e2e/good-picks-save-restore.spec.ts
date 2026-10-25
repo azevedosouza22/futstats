@@ -157,6 +157,9 @@ test('Sem base, horário válido ou fonte recente, As Boas não inventa previsã
   await openRadar(page);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas.getByText(/Nenhuma indicação passou pelos critérios hoje/)).toBeVisible();
+  const details=boas.getByText('Por que alguns jogos ainda não recebem indicações?');
+  await details.click();
+  await expect(boas.getByText(/Nenhuma referência oficial futura cadastrada/)).toBeVisible();
   await expect(boas.getByRole('button',{name:/Abrir Radar/})).toHaveCount(0);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
@@ -217,6 +220,9 @@ test('Agenda: referência oficial vencida exige reconfirmação e não reativa A
     .toHaveAttribute('href',/^https:\/\/www\./);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas).toContainText('Nenhuma indicação passou pelos critérios hoje');
+  await boas.getByText('Por que alguns jogos ainda não recebem indicações?').click();
+  await expect(boas.getByRole('table',{name:/Transparência da lista por campeonato/})).toBeVisible();
+  await expect(boas.getByText('Fonte vencida / conferir')).toBeVisible();
   await expect(boas.getByRole('button',{name:/Abrir Radar/})).toHaveCount(0);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
