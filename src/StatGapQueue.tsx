@@ -2,6 +2,7 @@ import {useMemo,useState} from 'react';
 import type {Data} from './model';
 import type {WorkAnalysisMatch} from './workAnalysis';
 import type {GapSourceStatus} from './statGapSource';
+import StatSupplementPreflight from './StatSupplementPreflight';
 import {
   prioritizeMainGaps,prioritizeWorkGaps,
   type GapQueueItem,type GapPriority,type MissingField
@@ -29,7 +30,7 @@ const sourceLabels:Record<GapSourceStatus,string>={
   'invalid-source':'Link incompatível · corrigir origem',
   'needs-review':'Fonte divergente · revisar antes de usar'
 };
-function Task({item}:{item:GapQueueItem}){
+function Task({item,onSelect}:{item:GapQueueItem;onSelect:(item:GapQueueItem)=>void}){
   const remaining=item.missing.length;
   return <article className="stat-gap-item">
     <header>
@@ -53,6 +54,10 @@ function Task({item}:{item:GapQueueItem}){
       </li>)}</ul>
       {remaining>8&&<p className="muted">Mais {remaining-8} campos ausentes neste jogo.</p>}
     </>}
+    {item.sourceStatus==='linked-unchecked'&&<button type="button"
+      className="text-button" onClick={()=>onSelect(item)}>
+      Pré-validar complemento CSV (sem salvar)
+    </button>}
     {item.sourceUrl
       ?<a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
         Abrir referência cadastrada (dados ainda não confirmados)
@@ -76,6 +81,7 @@ export default function StatGapQueue({data,workMatches,today}:{
   const [origin,setOrigin]=useState<'all'|'main'|'work'>('all');
   const [focus,setFocus]=useState<'corners'|'review'|'all'>('corners');
   const [sourceFilter,setSourceFilter]=useState<'all'|'linked'|'review'|'unlinked'>('all');
+  const [selectedKey,setSelectedKey]=useState<string|null>(null);
   const tasks=useMemo(()=>{
     const main=prioritizeMainGaps(data,today);
     const work=workMatches?prioritizeWorkGaps(workMatches,today):[];
@@ -99,6 +105,7 @@ export default function StatGapQueue({data,workMatches,today}:{
     (focus==='all'||(focus==='review'?t.reviewReason!==null:
       t.priority==='corners-full'||t.priority==='corners-period')));
   const shown=filtered.slice(0,25);
+  const selected=tasks.find(t=>t.key===selectedKey);
   return <section className="stat-gap-queue" aria-label="Fila de lacunas de estatísticas">
     <h4>Fila de conferência · partidas já cadastradas</h4>
     <p className="muted">{tasks.length} partidas com pendências na base disponível
@@ -139,6 +146,9 @@ export default function StatGapQueue({data,workMatches,today}:{
     {shown.length===0
       ?<p className="muted">Nenhuma pendência identificada neste filtro.
         Isso não comprova cobertura total dos campeonatos.</p>
-      :<div className="stat-gap-items">{shown.map(t=><Task key={t.key} item={t}/>)}</div>}
+      :<div className="stat-gap-items">{shown.map(t=><Task key={t.key} item={t}
+        onSelect={item=>setSelectedKey(item.key)}/>)}</div>}
+    {selected&&<StatSupplementPreflight key={selected.key} data={data}
+      workMatches={workMatches} task={selected} onCancel={()=>setSelectedKey(null)}/>}
   </section>;
 }
