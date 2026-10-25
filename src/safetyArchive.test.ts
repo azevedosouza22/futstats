@@ -13,7 +13,7 @@ import {
 } from './safetyArchive';
 
 const data:Data={teams:[],matches:[]};
-const all={
+const all:Record<string,string>={
  [STORAGE]:JSON.stringify(data),
  [RADAR_STORAGE]:'[]',
  [EUROPE_WORK_STORAGE]:JSON.stringify({format:EUROPE_WORK_STORAGE,entries:[]}),
