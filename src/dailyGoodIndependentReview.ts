@@ -69,13 +69,18 @@ export function buildIndependentReviewQueue(
     :'Obter e validar resultado local documentado antes de comparar fontes';
   }
   // A valid official schedule link is only a locator, not an outcome source.
+  // Imported/old snapshots may be shallowly readable but structurally invalid.
+  // Preserve their exclusion without trusting nested, possibly corrupt fields.
+  const signals=Array.isArray(r.goodPicks.signals)
+   ?r.goodPicks.signals.filter(x=>x&&typeof x.label==='string'&&
+      typeof x.direction==='string'&&typeof x.line==='number'):[];
   const officialUrl=safeOfficialFixtureUrl(r.goodPicks.sourceUrl)?
    r.goodPicks.sourceUrl:null;
   entries.push({
    key:r.key,competition:r.competition,home:r.home,away:r.away,
    matchAt:r.matchAt,savedAt:r.savedAt,state,auditStatus:row.status,
    reason,officialUrl,csvSourceUrl:validHttps(row.sourceUrl),
-   indicators:r.goodPicks.signals.map(s=>s.label+' ('+s.direction+' '+s.line+')').join(' | '),
+   indicators:signals.length?signals.map(s=>s.label+' ('+s.direction+' '+s.line+')').join(' | '):'N/D',
    localResults:row.status==='scored'?row.markets.map(m=>
     m.label+': '+(m.actual===null?'N/D':m.actual)).join(' | '):'N/D',
    externalCheck:'PENDENTE'
