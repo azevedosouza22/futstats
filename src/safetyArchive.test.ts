@@ -45,7 +45,7 @@ describe('Backup integral FutStats V4 — apenas leitura',()=>{
   const roundTrip=JSON.parse(JSON.stringify(backup)) as unknown;
   const inspection=inspectSafetyArchive(roundTrip);
   expect(inspection.ok).toBe(true);
-  expect(inspection.missing).toBe(0);
+  expect(inspection.missing).toBe(1); // CSV local ausente nesta amostra antiga
   expect(inspection.invalid).toBe(0);
   expect(inspection.workMatches).toBe(0);
   expect(inspection.workForecasts).toBe(0);
