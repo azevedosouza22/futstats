@@ -951,3 +951,21 @@ html{scroll-behavior:smooth}
  background:#453b2c;border:1px solid #826844}
 .premium .stat-gap-filters{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:800px){.premium .stat-gap-filters{grid-template-columns:minmax(0,1fr)}}
+
+/* Local-only CSV preflight, intentionally no Save/Import control. */
+.premium .stat-supplement-preflight{display:grid;gap:9px;margin-top:12px;
+ padding:15px;border:1px solid #648599;border-radius:12px;background:#1b3545;min-width:0}
+.premium .stat-supplement-preflight h5{font-size:14px;color:#f1fcff;margin:0}
+.premium .stat-supplement-preflight .muted{margin:0;font-size:11px;line-height:1.65}
+.premium .stat-supplement-preflight label{display:grid;gap:7px;color:#d7e9f4;
+ font-size:11px;font-weight:700}
+.premium .stat-supplement-preflight input[type=file]{min-width:0;max-width:100%;
+ border:1px solid #5c8192;padding:9px;border-radius:8px;background:#274458;color:#e7f5ff}
+.premium .stat-supplement-preflight>.text-button{justify-self:start;padding:9px 12px}
+.premium .stat-supplement-result{display:grid;gap:8px;background:#233f50;
+ border:1px solid #567c8e;padding:10px;border-radius:9px;color:#eaf5fc}
+.premium .stat-supplement-result strong{font-size:12px}
+.premium .stat-supplement-result p{margin:0;font-size:11px;line-height:1.5}
+.premium .stat-supplement-result ul{font-size:11px;line-height:1.55;padding-left:18px}
+@media(max-width:560px){.premium .stat-supplement-preflight{padding:10px}
+ .premium .stat-supplement-preflight>.text-button{width:100%;justify-self:stretch}}
