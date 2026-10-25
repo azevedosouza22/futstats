@@ -14,6 +14,7 @@ import {matchTotal} from './radar';
 import type {SavedRadarRecord} from './radarRecords';
 import {venueV2Markets} from './radarVenueV2';
 import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
+import {checkProspectiveResultProvenance} from './dailyGoodResultProvenance';
 
 export type PickVerdict='Acertou'|'Errou'|'N/D';
 export type PickAuditStatus='legacy'|'invalid'|'late'|'future'|'waiting'|'ambiguous'|'source_missing'|'scored';
@@ -128,6 +129,17 @@ export function auditDailyGoodPicks(
    row.status='ambiguous';row.reason='Partida duplicada ou data conflitante';continue;
   }
   const match=matches[0];
+  // A single provider fixture ID must never justify two separate local games.
+  // Do not arbitrarily decide which conflicting row is the "correct" one.
+  const provenance=checkProspectiveResultProvenance(data,match,now);
+  if(provenance.block==='reused_source_id'){
+   row.status='ambiguous';
+   row.reason='Mesmo ID da fonte CSV reutilizado em partidas diferentes';continue;
+  }
+  if(provenance.block==='future_import'){
+   row.status='source_missing';
+   row.reason='Importação CSV possui data futura em relação à consulta';continue;
+  }
   // A local/manual/demo score without traceable original-source metadata
   // must NEVER be treated as a verified real-world result.
   const source=match.research;
