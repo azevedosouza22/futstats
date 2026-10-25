@@ -11,6 +11,7 @@ import {nextGoodPreparationQueue} from './dailyGoodNextWeek';
 import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
 import {officialRecheckQueue} from './officialRecheckQueue';
+import {prepareOfficialSourceBatches,exportOfficialSourceBatchesCsv} from './officialSourceBatches';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
 import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
 import {calendarIdentity} from './radarTeamAliases';
@@ -86,6 +87,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   )].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const officialFiltered=officialVisible.filter(x=>
     officialLeagueFilter==='all'||x.fixture.competition===officialLeagueFilter);
+  const sourcesToReview=prepareOfficialSourceBatches(officialFiltered,clock);
   const officialListed=officialFiltered.slice(0,20).map(item=>({
     ...item,overview:buildRadarDailyOverview(data,item.fixture),work:lookupWork(item.fixture),
   }));
@@ -100,6 +102,18 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   const freeListed=freeVisible.slice(0,20).map(f=>({
     fixture:f,overview:buildRadarDailyOverview(data,f),work:lookupWork(f),
   }));
+  function downloadSourceReviewChecklist(){
+    const csv=exportOfficialSourceBatchesCsv(sourcesToReview);
+    const url=URL.createObjectURL(new Blob([csv],{
+      type:'text/csv;charset=utf-8'
+    }));
+    try{
+      const a=document.createElement('a');
+      a.href=url;a.download='futstats-reconferencia-fontes-oficiais.csv';
+      document.body.appendChild(a);a.click();a.remove();
+    }finally{URL.revokeObjectURL(url);}
+  }
+
   async function load(file?:File) {
     setError('');setNotice('');
     if(!file)return;
@@ -155,6 +169,49 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
           Programação datada, não consulta automática em tempo real.
         </p>
       </div>}
+      {officialFiltered.length>0&&<details className="official-source-review"
+        aria-label="Reconferir fontes oficiais em lotes">
+        <summary>Reconferir por página oficial · {sourcesToReview.distinctSources}
+          {' '}{sourcesToReview.distinctSources===1?'fonte':'fontes'} para
+          {' '}{sourcesToReview.totalFixtures} jogos
+        </summary>
+        <p className="muted">Agrupamento por <strong>página oficial e campeonato</strong>:
+          uma referência pode listar vários jogos. A Bundesliga, por exemplo,
+          pode ser conferida em uma única página da rodada, sem abrir nove links
+          separados. Consulte manualmente cada confronto na página.</p>
+        <p className="muted" role="status">
+          {sourcesToReview.totalExpired} horário(s) vencido(s) ·
+          {' '}{sourcesToReview.totalSoon} jogo(s) nas próximas 48h ·
+          {' '}{sourcesToReview.totalLater} demais ·
+          {' '}{sourcesToReview.excludedUnsafe} link(s) inseguro(s) excluído(s).
+        </p>
+        <button type="button" className="text-button"
+          onClick={downloadSourceReviewChecklist}>
+          Exportar checklist de fontes oficiais (CSV)
+        </button>
+        <p className="muted">Uma linha por página oficial no arquivo CSV,
+          com todos os confrontos e verificações anteriores. A coluna
+          de reconferência permanece <strong>PENDENTE</strong>.
+          Exportar, abrir o link ou consultar esta tela <strong>não confirma
+          a programação, não atualiza a data de conferência</strong> e não
+          altera o Radar nem os resultados.</p>
+        <ul className="official-recheck-list">
+          {sourcesToReview.groups.slice(0,8).map(group=><li key={group.key}>
+            <b>{group.competition}</b>
+            <span> · {group.count} jogo(s) · {group.expired} horário(s) N/D
+              {' '}· última(s) consulta(s): {group.checkedDates.join(', ')}
+              {' '}· reconferência {group.reviewStatus}</span>
+            {' · '}<a href={group.sourceUrl} target="_blank"
+              rel="noopener noreferrer">Abrir página oficial do grupo</a>
+            <small> · {group.fixtures.map(e=>e.item.fixture.home+
+              ' × '+e.item.fixture.away).join(' | ')}</small>
+          </li>)}
+        </ul>
+        {sourcesToReview.groups.length>8&&<p className="muted">
+          Mais {sourcesToReview.groups.length-8} fonte(s) no checklist CSV.
+          Use o filtro de campeonato para diminuir a lista exibida.
+        </p>}
+      </details>}
       {urgentReview.length>0&&<div className="calendar-review-queue"
         role="region" aria-label="Prioridades de reconferência da agenda oficial">
         <h5>Conferência prioritária da programação</h5>
