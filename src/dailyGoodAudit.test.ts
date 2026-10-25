@@ -92,6 +92,28 @@ describe('Etapa 38 — auditoria prospectiva das Boas do Dia',()=>{
   expect(a.rows[0].markets[0].v3).toBe('N/D');
   expect(a.leagues[0]).toMatchObject({scoredMarkets:0,missingMarkets:1,picks:{hits:0,observed:0}});
  });
+ it('contabiliza a fila prospectiva por liga, sem transformar exclusões em acerto',()=>{
+  const waiting={...rec(),key:'outro',home:'Time C',away:'Time D',matchAt:'2026-10-25T21:00:00'};
+  const late={...rec(),key:'tardio',home:'Time E',away:'Time F',
+    savedAt:'2026-10-26T00:05:00.000Z'};
+  const invalid={...rec(),key:'invalido',home:'Time G',away:'Time H',
+    goodPicks:{...rec().goodPicks!,sourceUrl:'https://example.com/unsupported'}};
+  const p=auditDailyGoodPicks(data([result()]),[rec(),waiting,late,invalid],when);
+  expect(p).toMatchObject({attributed:4,scoredFixtures:1});
+  expect(p.leagues[0]).toMatchObject({snapshots:4,scoredFixtures:1,
+    statusCounts:{scored:1,waiting:1,late:1,invalid:1,future:0,
+      ambiguous:0,source_missing:0}});
+  expect(p.leagues[0].picks.observed).toBe(1);
+  expect(p.leagues[0].statusCounts.scored+
+    p.leagues[0].statusCounts.waiting+
+    p.leagues[0].statusCounts.late+
+    p.leagues[0].statusCounts.invalid).toBe(4);
+ });
+ it('aceita origem da Premier League validada em HTTPS para análise futura',()=>{
+  const record={...rec(),goodPicks:{...rec().goodPicks!,
+    sourceUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november'}};
+  expect(auditDailyGoodPicks(data([result()]),[record],when).rows[0].status).toBe('scored');
+ });
  it('não pontua CSV registrado antes do término do jogo',()=>{
   const m=result();
   m.research!.importedAt='2026-10-25T23:20:00Z';
