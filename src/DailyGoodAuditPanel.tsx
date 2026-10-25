@@ -58,7 +58,7 @@ export default function DailyGoodAuditPanel({data,records}:{
    </table></div>}
   <p className="muted">Para avaliar um eventual ajuste por campeonato, o protocolo exige pelo menos
    30 confrontos prospectivos distintos com resultados conferidos também na fonte externa.
-   A tabela acima contém somente registros locais; **não** comprova essa meta,
+   A tabela acima contém somente registros locais; <strong>não</strong> comprova essa meta,
    nem a qualidade preditiva dos modelos. Não existe acompanhamento automático em segundo plano.</p>
   {report.attributed>0&&<details className="fpl-pilot-disclosure">
    <summary>Conferir cada indicação registrada ({report.attributed})</summary>
