@@ -2,12 +2,15 @@ import type {DailyGoodResult,DailyGoodFixture} from './dailyGoodSignals';
 import type {ScheduledFixture} from './calendar';
 import type {SavedRadarRecord} from './radarRecords';
 import {savedGoodPickMatch} from './dailyGoodSavedMatch';
+import type {NextGoodQueue} from './dailyGoodNextWeek';
+import {safeOfficialFixtureUrl} from './officialSourceTrust';
 
 const fmt=(n:number)=>n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 /** Informational shortlist; no auto-save, bet slip, odds or external action. */
-export default function DailyGoodPicks({result,onSelect,records,onViewSaved}:{
+export default function DailyGoodPicks({result,onSelect,records,onViewSaved,nextWeek,onPreview}:{
   result:DailyGoodResult;onSelect:(fixture:ScheduledFixture,selected:DailyGoodFixture)=>void;
   records:readonly SavedRadarRecord[];onViewSaved:(key:string|null)=>void;
+  nextWeek:NextGoodQueue;onPreview:(fixture:ScheduledFixture)=>void;
 }){
   return <section className="daily-good-picks" aria-label="As Boas do Dia — leitura experimental">
     <div className="daily-good-head">
@@ -58,6 +61,57 @@ export default function DailyGoodPicks({result,onSelect,records,onViewSaved}:{
           </button>
         </article>})}
       </div>}
+    <details className="daily-good-next-week" aria-label="Preparar análises dos próximos sete dias">
+      <summary>Preparar próximos 7 dias · {nextWeek.preview} com prévia possível;
+        {' '}{nextWeek.needsHistory+nextWeek.needsRecheck+nextWeek.conflicts} para revisar
+      </summary>
+      <p className="muted">Planejamento de {nextWeek.dateFrom} a {nextWeek.dateThrough},
+        somente com referências da agenda oficial cadastradas. <strong>Não são
+        indicações de As Boas, probabilidades nem previsões registradas.</strong>
+        A lista “As Boas” só avalia jogos futuros do próprio dia com horários recentes,
+        V2/V3 convergentes e histórico suficiente.</p>
+      {nextWeek.entries.length===0
+       ?<p className="muted">Nenhum confronto futuro cadastrado nesta janela.
+          Isso não confirma que não existem partidas.</p>
+       :<>
+        <p className="muted" role="status">{nextWeek.preview} com histórico básico e
+          horário recente · {nextWeek.needsHistory} precisando de histórico ·
+          {' '}{nextWeek.needsRecheck} exigindo reconferir fonte ·
+          {' '}{nextWeek.conflicts} com horários oficiais divergentes.</p>
+        <ul className="daily-good-next-week-list">
+          {nextWeek.entries.slice(0,6).map(item=><li key={item.fixture.id}>
+            <b>{item.fixture.home} × {item.fixture.away}</b>
+            <small>{' · '}{item.fixture.date} · {item.fixture.time??'horário N/D'}
+              {' '}(Brasília) · {item.fixture.competition}</small>
+            <p className="muted">
+              {item.state==='preview'
+               ?'Prévia possível — não é indicação'
+               :item.state==='needs_history'?'Histórico insuficiente'
+               :item.state==='needs_recheck'?'Fonte ou horário a reconfirmar'
+               :'Horário divergente — revisar'}
+              {' · '}{item.reason}
+              {item.homeCount!==null&&item.awayCount!==null
+               ?' · '+item.homeCount+' jogos do mandante / '+
+                 item.awayCount+' do visitante':' · dados N/D'}
+            </p>
+            {safeOfficialFixtureUrl(item.fixture.sourceUrl)&&
+             <p><a href={item.fixture.sourceUrl} target="_blank"
+              rel="noopener noreferrer">Consultar referência oficial</a></p>}
+            {item.state==='preview'&&<button type="button" className="text-button"
+              onClick={()=>onPreview(item.fixture)}>
+              Abrir prévia no Radar (sem indicação)
+            </button>}
+          </li>)}
+        </ul>
+        {nextWeek.entries.length>6&&<p className="muted">
+          Outros {nextWeek.entries.length-6} jogos aparecem na agenda oficial completa
+          ao escolher 7 dias.</p>}
+       </>}
+      <p className="muted">A verificação de fonte caduca em dois dias.
+        Abrir um link não renova a verificação. Prévia no Radar utiliza somente
+        jogos anteriores da mesma competição e não atribui a previsão a “As Boas”.
+        Não há consulta automática nem atualização de resultados.</p>
+    </details>
     <details className="daily-good-readiness" aria-label="Diagnóstico de elegibilidade por campeonato">
       <summary>Por que alguns jogos ainda não recebem indicações?</summary>
       <p className="muted">Este controle explica a elegibilidade de confrontos futuros,
