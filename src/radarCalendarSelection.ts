@@ -16,6 +16,12 @@ export function resolveCalendarFixture(
 ):SelectedCalendarFixture|null {
   if(!/^\d{4}-\d{2}-\d{2}$/.test(fixture.date)||
     (fixture.time!==null&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(fixture.time)))return null;
+  // Do not expose untrusted local-calendar URLs as clickable links.
+  try {
+    const source=new URL(fixture.sourceUrl);
+    if(source.protocol!=='https:'||source.username||source.password||
+      !source.hostname.includes('.'))return null;
+  }catch{return null;}
   const teams=teamsInCompetition(data,fixture.competition);
   const homeMatches=teams.filter(t=>normalizeTeam(t.name)===normalizeTeam(fixture.home));
   const awayMatches=teams.filter(t=>normalizeTeam(t.name)===normalizeTeam(fixture.away));
