@@ -124,6 +124,40 @@ describe('Etapa 38 — auditoria prospectiva das Boas do Dia',()=>{
     sourceUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november'}};
   expect(auditDailyGoodPicks(data([result()]),[record],when).rows[0].status).toBe('scored');
  });
+ it('não pontua fonte CSV com ID reutilizado em outro jogo mesmo fora da liga',()=>{
+  const a=result();
+  const duplicate={...result(),id:'partida-alheia',competition:'Outra liga',
+    date:'2026-10-24',home:'outro-id',away:'outro-time'};
+  const input=data([a,duplicate]),saved=rec();
+  const before=JSON.stringify({input,saved});
+  const audit=auditDailyGoodPicks(input,[saved],when);
+  expect(audit).toMatchObject({attributed:1,scoredFixtures:0});
+  expect(audit.rows[0]).toMatchObject({status:'ambiguous',
+    sourceUrl:null,markets:[]});
+  expect(audit.rows[0].reason).toContain('ID da fonte CSV reutilizado');
+  expect(audit.leagues[0]).toMatchObject({scoredMarkets:0,
+    statusCounts:{ambiguous:1,scored:0}});
+  expect(JSON.stringify({input,saved})).toBe(before);
+ });
+ it('recusa importação CSV datada no futuro, mesmo após o fim da partida',()=>{
+  const m=result();m.research!.importedAt='2026-10-30T12:00:00Z';
+  const audit=auditDailyGoodPicks(data([m]),[rec()],when);
+  expect(audit).toMatchObject({scoredFixtures:0});
+  expect(audit.rows[0]).toMatchObject({
+   status:'source_missing',sourceUrl:null,markets:[]
+  });
+  expect(audit.rows[0].reason).toContain('data futura');
+  expect(audit.leagues[0].picks).toEqual({hits:0,observed:0});
+ });
+ it('resultados íntegros e IDs distintos preservam o comportamento existente',()=>{
+  const r=rec(),a=result(),b={...result(),id:'outro-resultado',
+    competition:'Outra liga',home:'fora',away:'casa',
+    research:{...result().research!,sourceId:'game-002',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=game-002'}};
+  const audit=auditDailyGoodPicks(data([a,b]),[r],when);
+  expect(audit.rows[0]).toMatchObject({status:'scored',sourceUrl:source});
+  expect(audit.scoredFixtures).toBe(1);
+ });
  it('não pontua CSV registrado antes do término do jogo',()=>{
   const m=result();
   m.research!.importedAt='2026-10-25T23:20:00Z';

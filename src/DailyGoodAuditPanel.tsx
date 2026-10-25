@@ -24,6 +24,10 @@ export default function DailyGoodAuditPanel({data,records}:{
 }){
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
  const independentQueue=buildIndependentReviewQueue(records,report);
+ const duplicatedSources=report.rows.filter(r=>
+  r.status==='ambiguous'&&r.reason.includes('ID da fonte CSV reutilizado')).length;
+ const futureImports=report.rows.filter(r=>
+  r.status==='source_missing'&&r.reason.includes('data futura')).length;
  const [documentary,setDocumentary]=useState<DocumentaryComparison|null>(null);
  const [documentarySource,setDocumentarySource]=useState<ExternalEvidence|null>(null);
  const [dossierNotice,setDossierNotice]=useState('');
@@ -131,6 +135,15 @@ export default function DailyGoodAuditPanel({data,records}:{
   <p className="muted">{report.attributed} registro(s) com identificação da lista ·
    {' '}{report.scoredFixtures} confronto(s) com resultado e ao menos um indicador informado.
    {' '}Ausência de amostra aparece como N/D, nunca como taxa de acerto.</p>
+  {(duplicatedSources>0||futureImports>0)&&<div className="daily-good-data-warnings"
+   role="status" aria-label="Resultados locais bloqueados por procedência">
+    <strong>Resultados locais não utilizados na avaliação</strong>
+    <p className="muted">{duplicatedSources} resultado(s) bloqueado(s) por
+      ID de fonte CSV reutilizado · {futureImports} resultado(s) com
+      data de importação futura. Esses registros não entram nas taxas nem
+      autorizam comparação de segunda fonte. Confira os arquivos de
+      origem; o FutStats não altera nem exclui os dados originais.</p>
+  </div>}
   {report.attributed>0&&<div className="daily-good-ledger">
    <button type="button" className="text-button" onClick={exportLedger}>
     Exportar controle das indicações (CSV)
