@@ -39,7 +39,7 @@ export type PickAuditReport={
 
 const zero=():PickScore=>({hits:0,observed:0});
 const validNumber=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)&&n>=0;
-const officialHost=new Set(['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com']);
+const officialHost=new Set(['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com','www.premierleague.com']);
 const safeOfficialUrl=(s:string)=>{
  try{const url=new URL(s);return url.protocol==='https:'&&!url.username&&!url.password&&officialHost.has(url.hostname.toLowerCase());}
  catch{return false;}
