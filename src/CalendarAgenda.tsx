@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,normalizeTeam,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
+import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
 
 const KEY='futstats-calendar-csv-v1';
 function readSaved(): ScheduledFixture[] {
@@ -13,12 +13,12 @@ function readSaved(): ScheduledFixture[] {
   }catch{return [];}
 }
 
-export default function CalendarAgenda({onSelect,availableTeams}:{
+export default function CalendarAgenda({onSelect,canAnalyzeFixture}:{
   onSelect:(fixture:ScheduledFixture)=>void;
-  availableTeams:string[];
+  canAnalyzeFixture:(fixture:ScheduledFixture)=>boolean;
 }) {
   const [calendar,setCalendar]=useState(readSaved);
-  const [window,setWindow]=useState<CalendarWindow>('week');
+  const [window,setWindow]=useState<CalendarWindow>('today');
   const [error,setError]=useState('');
   const [notice,setNotice]=useState('');
   // Preserve user-imported agenda entries; show the verified round as a fallback.
@@ -36,19 +36,10 @@ export default function CalendarAgenda({onSelect,availableTeams}:{
       setNotice('Agenda: '+merged.added+' novos jogos; '+merged.duplicates+' duplicatas ignoradas. Datas e horários em Brasília.');
     }catch(e){setError(e instanceof Error?e.message:'Erro ao importar agenda.');}
   }
-  function matchesTeams(f:ScheduledFixture) {
-    return availableTeams.some(name=>normalizeTeam(name)===normalizeTeam(f.home))&&
-      availableTeams.some(name=>normalizeTeam(name)===normalizeTeam(f.away));
-  }
   const now=brasiliaDate();
   return <section className="calendar-agenda" aria-label="Agenda experimental">
-    <h3>Agenda de confrontos · rodada 32 disponível</h3>
-    <p className="muted">Já incluímos os 10 confrontos da 32ª rodada (23–26/10/2026), conforme a tabela divulgada pela CBF em 27/09/2026. Veja os jogos em “7 dias” e toque em “Analisar jogo”. Datas e horários podem mudar; confira a fonte antes de registrar. Não há atualização automática.</p>
-    <p className="muted">Para outras datas, também é possível importar um calendário CSV. Horários seguem Brasília; N/D indica desconhecido.</p>
-    <label>Importar calendário CSV
-      <input aria-label="Importar calendário CSV" type="file" accept=".csv,text/csv" onChange={e=>{void load(e.currentTarget.files?.[0]);e.currentTarget.value='';}}/>
-    </label>
-    <p className="muted">Colunas: data, horario_brasilia, competicao, mandante, visitante, url_fonte. Uma linha por confronto, com o link HTTPS da fonte.</p>
+    <h3>Jogos do dia · selecione para analisar</h3>
+    <p className="muted">Agenda local, não atualizada ao vivo. Inclui uma referência antiga da rodada 32 (23–26/10/2026) e jogos importados por você. Confira datas, horários e fonte antes de salvar qualquer previsão.</p>
     {error&&<p role="alert" className="alert">{error}</p>}
     {notice&&<p role="status" className="notice">{notice}</p>}
     <div className="segment calendar-windows" role="group" aria-label="Período da agenda">
@@ -56,18 +47,26 @@ export default function CalendarAgenda({onSelect,availableTeams}:{
         <button key={key} type="button" aria-pressed={window===key} className={window===key?'selected':''} onClick={()=>setWindow(key)}>{label}</button>
       )}
     </div>
-    <p className="muted">{visible.length} jogos futuros nesta janela · referência: Brasília {now.date} {now.time}</p>
-    {visible.length===0?<p className="empty compact">Nenhum jogo futuro disponível neste período. Escolha “7 dias” ou “30 dias”, ou importe uma agenda CSV.</p>:<div className="calendar-list">
+    <p className="muted">{visible.length} {visible.length===1?'jogo':'jogos'} na agenda desta janela · Brasília: {now.date} {now.time}</p>
+    {visible.length===0?<p className="empty compact">Nenhum confronto cadastrado para este período. Isso não significa que não existam jogos hoje. Consulte “7 dias” ou “30 dias”, ou adicione uma agenda.</p>:<div className="calendar-list">
       {visible.slice(0,100).map(f=><article key={f.id} className="calendar-fixture">
         <div><b>{f.home} × {f.away}</b>
           <small>{f.date} · {f.time??'Horário N/D'} (Brasília) · {f.competition}</small>
           <small><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">Conferir fonte</a></small>
         </div>
-        <button type="button" className="text-button" disabled={!f.time||!matchesTeams(f)||!isUpcoming(f)} onClick={()=>onSelect(f)}>
-          {matchesTeams(f)&&f.time?'Analisar jogo':'Histórico ou horário indisponível'}
+        <button type="button" className="text-button" disabled={!canAnalyzeFixture(f)||!isUpcoming(f)} onClick={()=>onSelect(f)}>
+          {!canAnalyzeFixture(f)?'Sem histórico nesta liga':f.time?'Analisar jogo':'Ver prévia · confirmar horário'}
         </button>
       </article>)}
     </div>}
-    <p className="muted">Somente partidas com horário e equipes cadastradas podem ser transferidas para o Radar. Confira datas, horários, nomes e fontes antes de analisar.</p>
+    <p className="muted">Escolher um confronto preenche as equipes e a data; o horário será preenchido somente se estiver disponível na agenda. Sem horário confirmado, a prévia pode ser consultada, mas a previsão não pode ser salva.</p>
+    <details className="calendar-import-extra">
+      <summary>Adicionar outros campeonatos e datas (CSV)</summary>
+      <p className="muted">O FutStats não pesquisa automaticamente uma agenda atualizada. Use um CSV de calendário com fonte conferível.</p>
+      <label>Importar calendário CSV
+        <input aria-label="Importar calendário CSV" type="file" accept=".csv,text/csv" onChange={e=>{void load(e.currentTarget.files?.[0]);e.currentTarget.value='';}}/>
+      </label>
+      <p className="muted">Colunas: data, horario_brasilia, competicao, mandante, visitante, url_fonte.</p>
+    </details>
   </section>;
 }

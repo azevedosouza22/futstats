@@ -795,3 +795,28 @@ html{scroll-behavior:smooth}
 .premium .radar-line-explorer{border-color:#365166;background:rgba(13,30,42,.24)}
 .premium .radar-line-explorer h4{color:#f0f8fb}
 .premium .radar-line-saved>summary{color:#c9e2ed}
+
+/* FutStats IA: agenda first, accessible on narrow Android screens. */
+.premium .radar-agenda-first{margin:0 0 24px;min-width:0}
+.premium .radar-agenda-first .calendar-agenda{background:#152b39;border:1px solid #476c80;border-radius:14px;padding:18px}
+.premium .radar-agenda-first .calendar-fixture{background:#1d3543;border-color:#3d5b6b;align-items:center}
+.premium .radar-agenda-first .calendar-fixture a{color:#9bd1ff}
+.premium .radar-agenda-first .calendar-fixture button:disabled{opacity:.65}
+.premium .radar-agenda-first .calendar-fixture button:not(:disabled){background:#285c70;color:#f4fbff;border-radius:8px;padding:10px 12px}
+.premium .radar-agenda-first .calendar-fixture button:not(:disabled):hover{background:#34768a}
+.premium .calendar-import-extra{margin:6px 0 0;padding:10px;border-top:1px solid #36596a}
+.premium .calendar-import-extra>summary{cursor:pointer;font-weight:650}
+.premium .calendar-import-extra label{display:grid;gap:8px;margin-top:14px;font-size:12px}
+.premium .calendar-import-extra input{max-width:100%}
+.premium .radar-selected-fixture{display:flex;flex-wrap:wrap;gap:8px 16px;padding:14px;border:1px solid #4b7580;border-radius:10px;background:#1d3e48;color:#d5f1f4;margin:14px 0}
+.premium .radar-selected-fixture>*{flex:1 1 210px;min-width:0}
+.premium .radar-selected-fixture strong{flex-basis:100%;font-size:14px}
+.premium .radar-selected-fixture span{font-size:12px}
+.premium .radar-selected-fixture a{color:#9fd6ff}
+.premium .radar-selected-fixture button{border:1px solid #7196a6;border-radius:8px;padding:7px 10px;color:#e3f2fa;text-align:center}
+@media(max-width:580px){
+ .premium .radar-agenda-first .calendar-agenda{padding:12px}
+ .premium .radar-agenda-first .calendar-fixture{align-items:stretch}
+ .premium .radar-agenda-first .calendar-fixture button{width:100%;max-width:none}
+ .premium .radar-selected-fixture>*{flex-basis:100%}
+}
