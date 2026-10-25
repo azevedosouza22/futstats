@@ -46,7 +46,7 @@ const create=(source:CoverageSource,competition:string):Acc=>({
 });
 const dateOk=(date:string,beforeDate:string)=>
   /^\d{4}-\d{2}-\d{2}$/.test(date)&&date<beforeDate;
-const fromMain=(m:Match):Observed=>{
+const fromMain=(m:Match,data:Data):Observed=>{
   const values={} as Observed['values'];
   for(const metric of COVERAGE_METRICS){
     values[metric]={} as Record<CoveragePeriod,boolean>;
@@ -56,7 +56,9 @@ const fromMain=(m:Match):Observed=>{
         stats(m,1,period)[metric]
       ]);
   }
-  return {id:m.id,date:m.date,label:m.home+' × '+m.away,values};
+  const home=data.teams.find(t=>t.id===m.home)?.name??m.home;
+  const away=data.teams.find(t=>t.id===m.away)?.name??m.away;
+  return {id:m.id,date:m.date,label:home+' × '+away,values};
 };
 const fromWork=(m:WorkAnalysisMatch):Observed=>{
   const values={} as Observed['values'];
@@ -106,7 +108,7 @@ export function auditMainLeagueCoverage(data:Data,beforeDate:string):CoverageRow
       (m.external&&!['FT','Match Finished'].includes(m.external.status))){
       a.review++;continue;
     }
-    a.games.push(fromMain(m));
+    a.games.push(fromMain(m,data));
   }
   return output([...byLeague.values()]);
 }
