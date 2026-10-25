@@ -104,6 +104,29 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await expect(audit).toContainText('1 registro(s) com identificação da lista');
   await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+
+  const verification=audit.getByRole('region',{
+    name:'Fila de verificação independente dos resultados'
+  });
+  await expect(verification).toContainText('1 aguardando jogo/finalização');
+  await verification.getByText(/Ver prioridades de verificação/).click();
+  await expect(verification).toContainText('Aguardar fim da partida');
+  await expect(verification).toContainText('PENDENTE');
+  const [queueFile]=await Promise.all([
+    page.waitForEvent('download'),
+    verification.getByRole('button',{name:'Exportar fila de conferência (CSV)'}).click()
+  ]);
+  expect(queueFile.suggestedFilename()).toBe('futstats-fila-verificacao-resultados.csv');
+  const queueCsv=await readFile((await queueFile.path())!,'utf-8');
+  expect(queueCsv.startsWith('\uFEFF"registro_id";')).toBe(true);
+  expect(queueCsv.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(queueCsv).toContain('"await_kickoff"');
+  expect(queueCsv).toContain('"PENDENTE"');
+  expect(queueCsv).not.toContain('"CONFIRMADO"');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+
+  await expect(page.locator('#radar-saved-forecasts')).toBeVisible();
   // The real UI exports a read-only ledger; it must not mutate the saved pick
   // or claim that synthetic/local CSV results were checked on the web.
   const [ledger]=await Promise.all([
