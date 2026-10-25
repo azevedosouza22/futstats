@@ -1,6 +1,6 @@
 import type {Data} from './model';
-import {normalizeTeam,type ScheduledFixture} from './calendar';
-import {teamsInCompetition} from './radarTeamFilters';
+import {type ScheduledFixture} from './calendar';
+import {resolveTeamInCompetition} from './radarTeamAliases';
 
 export type SelectedCalendarFixture={
   homeId:string;awayId:string;competition:string;date:string;time:string;
@@ -22,12 +22,10 @@ export function resolveCalendarFixture(
     if(source.protocol!=='https:'||source.username||source.password||
       !source.hostname.includes('.'))return null;
   }catch{return null;}
-  const teams=teamsInCompetition(data,fixture.competition);
-  const homeMatches=teams.filter(t=>normalizeTeam(t.name)===normalizeTeam(fixture.home));
-  const awayMatches=teams.filter(t=>normalizeTeam(t.name)===normalizeTeam(fixture.away));
-  if(homeMatches.length!==1||awayMatches.length!==1||
-    homeMatches[0].id===awayMatches[0].id)return null;
-  return {homeId:homeMatches[0].id,awayId:awayMatches[0].id,
+  const home=resolveTeamInCompetition(data,fixture.competition,fixture.home);
+  const away=resolveTeamInCompetition(data,fixture.competition,fixture.away);
+  if(!home||!away||home.id===away.id)return null;
+  return {homeId:home.id,awayId:away.id,
     competition:fixture.competition,date:fixture.date,
     time:fixture.time??'',hasKickoffTime:fixture.time!==null,
     sourceUrl:fixture.sourceUrl};
