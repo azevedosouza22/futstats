@@ -969,3 +969,29 @@ html{scroll-behavior:smooth}
 .premium .stat-supplement-result ul{font-size:11px;line-height:1.55;padding-left:18px}
 @media(max-width:560px){.premium .stat-supplement-preflight{padding:10px}
  .premium .stat-supplement-preflight>.text-button{width:100%;justify-self:stretch}}
+
+/* A read-only statistical shortlist, deliberately not a betting recommendation. */
+.premium .daily-good-picks{margin:16px 0 22px;padding:16px;display:grid;gap:12px;
+ border:1px solid #4e877c;border-radius:14px;background:#162c31;min-width:0}
+.premium .daily-good-head{display:grid;gap:5px}
+.premium .daily-good-head h4{font-size:18px;font-weight:800;color:#eafff3;margin:0}
+.premium .daily-good-head h4 small{font-size:11px;font-weight:550;color:#b7e5cd}
+.premium .daily-good-picks .muted{font-size:11px;line-height:1.65;margin:0}
+.premium .daily-good-empty{margin:0;padding:13px;border:1px dashed #6e9087;
+ border-radius:9px;color:#ddebe5;font-size:12px;line-height:1.65}
+.premium .daily-good-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.premium .daily-good-item{min-width:0;display:grid;align-content:start;gap:12px;
+ background:#203c3d;border:1px solid #457b6b;border-radius:12px;padding:13px}
+.premium .daily-good-item-head{display:grid;gap:4px}
+.premium .daily-good-item-head strong{font-size:13px;color:#f5fff9}
+.premium .daily-good-item-head small{font-size:10px;line-height:1.5;color:#b8d8d0}
+.premium .daily-good-signals{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.premium .daily-good-signals li{padding:9px;display:grid;gap:4px;border-radius:8px;
+ border:1px solid #4b726c;background:#263f40}
+.premium .daily-good-signals b{font-size:12px;color:#d9ffdf}
+.premium .daily-good-signals small{font-size:10px;line-height:1.5;color:#c6ddd8}
+.premium .daily-good-item .text-button{width:100%;border:1px solid #83baa2;
+ border-radius:9px;background:#285747;color:#f2fff7;padding:10px 12px}
+@media(max-width:950px){.premium .daily-good-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.premium .daily-good-picks{padding:11px}
+ .premium .daily-good-list{grid-template-columns:minmax(0,1fr)}}

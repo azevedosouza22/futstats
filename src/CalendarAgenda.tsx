@@ -4,6 +4,8 @@ import {buildRadarDailyOverview} from './radarDailyOverview';
 import {readBrowserWorkAnalysis,type WorkAnalysisRead} from './workAnalysis';
 import {workFixtureCoverage} from './workFixtureCoverage';
 import RadarDailyCard from './RadarDailyCard';
+import DailyGoodPicks from './DailyGoodPicks';
+import {selectDailyGoodSignals} from './dailyGoodSignals';
 import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
@@ -68,9 +70,12 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
     }
   }
   const identity=(f:ScheduledFixture)=>calendarIdentity(data,f);
+  const clock=new Date();
+  const officialAll=readOfficialCalendar(clock);
+  const dailyGood=selectDailyGoodSignals(data,officialAll,clock);
   // Source-linked, manually confirmed snapshots have priority over an old
   // calendar row for the same fixture, without modifying saved/imported data.
-  const officialVisible=readOfficialCalendar().filter(item=>
+  const officialVisible=officialAll.filter(item=>
     calendarWindow([item.fixture],window).length>0);
   const officialListed=officialVisible.slice(0,20).map(item=>({
     ...item,overview:buildRadarDailyOverview(data,item.fixture),work:lookupWork(item.fixture),
@@ -98,7 +103,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       setNotice('Agenda: '+merged.added+' novos jogos; '+merged.duplicates+' duplicatas ignoradas. Datas e horários em Brasília.');
     }catch(e){setError(e instanceof Error?e.message:'Erro ao importar agenda.');}
   }
-  const now=brasiliaDate();
+  const now=brasiliaDate(clock);
   return <section className="calendar-agenda" aria-label="Agenda experimental">
     <h3>Visão diária · jogos disponíveis para análise</h3>
     <p className="muted">Agenda em três níveis: fontes oficiais datadas, calendário local e candidatos comunitários. Os cartões indicam os dados disponíveis no Histórico principal e, quando existirem, na pesquisa Work separada. Nenhuma fonte é uma agenda ao vivo confirmada.</p>
@@ -110,6 +115,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         <button key={key} type="button" aria-pressed={window===key} className={window===key?'selected':''} onClick={()=>setWindow(key)}>{label}</button>
       )}
     </div>
+    <DailyGoodPicks result={dailyGood} onSelect={onSelect}/>
     <section className="official-calendar" aria-label="Jogos com referências oficiais">
       <h4>Confrontos com referência oficial</h4>
       <p className="muted">Datas e horários foram conferidos manualmente em páginas das competições. A programação pode mudar. Quando a conferência tiver mais de dois dias, o horário não será usado automaticamente.</p>
