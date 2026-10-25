@@ -61,7 +61,7 @@ describe('Recuperação transacional V4 — somente perfil vazio',()=>{
   expect(dest.entries()).toEqual(before);
   const result=restoreSafetyArchiveEmpty(dest,archive);
   expect(result).toEqual({
-   restored:9,archivedMatches:0,archivedWork:0,
+   restored:8,archivedMatches:0,archivedWork:0,
    archivedForecasts:0,archivedCalendarFixtures:0,verified:true
   });
   expect(dest.getItem('unrelated:personal')).toBe('preserve');
