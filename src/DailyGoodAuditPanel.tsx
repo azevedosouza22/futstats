@@ -2,6 +2,7 @@ import {useMemo} from 'react';
 import type {Data} from './model';
 import type {SavedRadarRecord} from './radarRecords';
 import {auditDailyGoodPicks} from './dailyGoodAudit';
+import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -19,6 +20,21 @@ export default function DailyGoodAuditPanel({data,records}:{
  data:Data;records:readonly SavedRadarRecord[];
 }){
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
+ function exportLedger(){
+  if(report.attributed===0)return;
+  const text=exportDailyGoodEvidenceCsv(records,report);
+  const url=URL.createObjectURL(new Blob([text],{
+   type:'text/csv;charset=utf-8'
+  }));
+  try{
+   const link=document.createElement('a');
+   link.href=url;
+   link.download='futstats-as-boas-acompanhamento.csv';
+   document.body.appendChild(link);
+   link.click();
+   link.remove();
+  }finally{URL.revokeObjectURL(url);}
+ }
  return <section aria-label="Validação prospectiva As Boas do Dia" className="daily-good-audit">
   <h4>Validação de “As Boas do Dia” · experimental</h4>
   <p className="muted">Somente escolhas feitas na própria lista e salvas antes do início
@@ -27,6 +43,16 @@ export default function DailyGoodAuditPanel({data,records}:{
   <p className="muted">{report.attributed} registro(s) com identificação da lista ·
    {' '}{report.scoredFixtures} confronto(s) com resultado e ao menos um indicador informado.
    {' '}Ausência de amostra aparece como N/D, nunca como taxa de acerto.</p>
+  {report.attributed>0&&<div className="daily-good-ledger">
+   <button type="button" className="text-button" onClick={exportLedger}>
+    Exportar controle das indicações (CSV)
+   </button>
+   <p className="muted">Arquivo local de acompanhamento: inclui a previsão salva,
+    a origem datada e os motivos de exclusão ou espera. Um resultado com fonte
+    CSV é apenas um registro local; a coluna “verificação externa independente”
+    permanece <strong>PENDENTE</strong> até conferência real. Este CSV não restaura
+    previsões: conserve também o backup JSON integral.</p>
+  </div>}
   {report.leagues.length===0?<p className="daily-good-empty">
     Sem registros prospectivos atribuíveis a “As Boas do Dia” até agora.
     Os registros antigos continuam preservados, mas não podem comprovar o desempenho da lista.
