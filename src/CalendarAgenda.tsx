@@ -4,7 +4,8 @@ import {buildRadarDailyOverview} from './radarDailyOverview';
 import RadarDailyCard from './RadarDailyCard';
 import {readOfficialCalendar} from './officialCalendar';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
-import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,normalizeTeam,type CalendarWindow,type ScheduledFixture} from './calendar';
+import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
+import {calendarIdentity} from './radarTeamAliases';
 
 const KEY='futstats-calendar-csv-v1';
 function readSaved(): ScheduledFixture[] {
@@ -54,8 +55,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
       if(!controller.signal.aborted)setFreeLoading(false);
     }
   }
-  const identity=(f:ScheduledFixture)=>[f.date,f.competition,
-    normalizeTeam(f.home),normalizeTeam(f.away)].join('|');
+  const identity=(f:ScheduledFixture)=>calendarIdentity(data,f);
   // Source-linked, manually confirmed snapshots have priority over an old
   // calendar row for the same fixture, without modifying saved/imported data.
   const officialVisible=readOfficialCalendar().filter(item=>
