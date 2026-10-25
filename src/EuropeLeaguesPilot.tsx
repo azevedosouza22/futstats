@@ -191,6 +191,7 @@ export default function EuropeLeaguesPilot(){
        <div><small>Gols completos</small><strong>{pair(g.full??enriched.entries.find(x=>x.europeId===g.id)?.full.goals??null)}</strong></div>
        <div><small>1º tempo</small><strong>{pair(g.half??enriched.entries.find(x=>x.europeId===g.id)?.first.goals??null)}</strong></div>
        <div><small>2º tempo</small><strong>{pair(g.second??enriched.entries.find(x=>x.europeId===g.id)?.second.goals??null)}</strong></div>
+       <div><small>Escanteios · jogo completo</small><strong>{pair(enriched.entries.find(x=>x.europeId===g.id)?.full.corners??null)}</strong></div>
        <div><small>Chutes/escanteios por tempo</small><strong>{enriched.entries.some(x=>x.europeId===g.id)?'Conferidos':'N/D'}</strong></div>
       </div>
       {enriched.entries.filter(x=>x.europeId===g.id).map(x=><details className="fpl-half-stat-details" key={x.sourceId}>
