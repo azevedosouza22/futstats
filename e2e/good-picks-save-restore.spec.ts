@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
 
 /**
  * Browser-level smoke test, with synthetic fixtures only. Does not query
@@ -103,7 +104,13 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await page.reload();
   await openTools(page);
   await page.getByText(/Recuperar cópia integral V4 \(somente em dispositivo vazio\)/).click();
-  await page.getByLabel('Escolher cópia integral V4').setInputFiles(archivePath!);
+  // Playwright's download.path() is a random, extensionless temporary name.
+  // The UI correctly requires *.json: upload the original suggested filename.
+  await page.getByLabel('Escolher cópia integral V4').setInputFiles({
+    name:download.suggestedFilename(),
+    mimeType:'application/json',
+    buffer:await readFile(archivePath!)
+  });
   await expect(page.getByText(/Arquivo V4 conferido, sem importar dados/)).toBeVisible();
   page.once('dialog',dialog=>dialog.accept());
   await page.getByRole('button',{name:'Restaurar cópia V4 neste perfil vazio'}).click();
