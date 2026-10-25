@@ -39,6 +39,35 @@ export default function DailyGoodPicks({result,onSelect}:{
           </button>
         </article>)}
       </div>}
+    <details className="daily-good-readiness" aria-label="Diagnóstico de elegibilidade por campeonato">
+      <summary>Por que alguns jogos ainda não recebem indicações?</summary>
+      <p className="muted">Este controle explica a elegibilidade de confrontos futuros,
+        não mede resultados nem acertos. Uma referência oficial vencida exige nova
+        conferência real; abrir o link não atualiza o horário.</p>
+      {result.readiness.length===0?<p className="muted">Nenhuma referência oficial
+        futura cadastrada no período consultado. Isso não significa ausência de jogos.</p>:
+        <div className="radar-market-table"><table className="analysis-table">
+          <caption>Transparência da lista por campeonato · sem criar previsões</caption>
+          <thead><tr>
+            <th>Campeonato</th><th>Futuros</th><th>Fonte vencida / conferir</th>
+            <th>Outra data</th><th>Falta histórico</th>
+            <th>Sem sinal V2/V3</th><th>Qualificados / exibidos</th>
+          </tr></thead>
+          <tbody>{result.readiness.map(l=><tr key={l.competition}>
+            <th>{l.competition}</th>
+            <td>{l.scheduledFuture}</td>
+            <td>{l.needsRecheck}</td>
+            <td>{l.otherDates}</td>
+            <td>{l.insufficientHistory}</td>
+            <td>{l.noConsistentSignal}</td>
+            <td>{l.qualified} / {l.featured}</td>
+          </tr>)}</tbody>
+        </table></div>}
+      <p className="muted">As Boas exige partida futura de hoje, fonte oficial recente,
+        histórico anterior suficiente e critérios V2/V3 convergentes. No máximo
+        três jogos são exibidos. Os demais continuam apenas na agenda; nenhuma
+        indicação é salva sem confirmação no Radar.</p>
+    </details>
     <p className="muted">As indicações podem errar. O resultado depende da qualidade dos
       jogos históricos e de a programação permanecer correta. Confirme a fonte antes
       de registrar qualquer previsão; esta lista não salva nem publica automaticamente.</p>
