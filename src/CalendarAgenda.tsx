@@ -8,6 +8,7 @@ import DailyGoodPicks from './DailyGoodPicks';
 import {selectDailyGoodSignals,type DailyGoodFixture} from './dailyGoodSignals';
 import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
+import {officialRecheckQueue} from './officialRecheckQueue';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
 import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
 import {calendarIdentity} from './radarTeamAliases';
@@ -73,6 +74,8 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   // calendar row for the same fixture, without modifying saved/imported data.
   const officialVisible=officialAll.filter(item=>
     calendarWindow([item.fixture],window).length>0);
+  const recheck=officialRecheckQueue(officialVisible,clock);
+  const urgentReview=recheck.entries.filter(x=>x.reason!=='later');
   const officialListed=officialVisible.slice(0,20).map(item=>({
     ...item,overview:buildRadarDailyOverview(data,item.fixture),work:lookupWork(item.fixture),
   }));
@@ -124,6 +127,34 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         aguardando reconfirmação de horário:
         {' '}{officialVisible.filter(x=>!x.fresh||x.fixture.time===null).length}.
         Fontes cadastradas manualmente; a consulta não se renova sozinha.</p>
+      {urgentReview.length>0&&<div className="calendar-review-queue"
+        role="region" aria-label="Prioridades de reconferência da agenda oficial">
+        <h5>Conferência prioritária da programação</h5>
+        <p className="muted" role="status">
+          {recheck.expired} referência(s) com horário vencido ·
+          {' '}{recheck.soon} jogo(s) nas próximas 48 horas ·
+          {' '}{recheck.later} jogo(s) de datas posteriores.
+        </p>
+        <p className="muted">Abrir uma fonte ajuda a conferir possíveis alterações;
+          <strong> não renova automaticamente a data de verificação</strong>.
+          Uma referência vencida continua com horário N/D e não participa de
+          “As Boas do Dia” sem conferência independente e atualização do registro oficial.
+        </p>
+        <ul className="official-recheck-list">
+          {urgentReview.slice(0,6).map(({item,reason})=><li key={item.fixture.id}>
+            <b>{item.fixture.home} × {item.fixture.away}</b>
+            <span> · {item.fixture.date} · {reason==='expired'
+              ?'reconfirmar horário (N/D)':'próximo jogo · conferir horário'}</span>
+            {' · '}<a href={item.fixture.sourceUrl} target="_blank" rel="noopener noreferrer"
+              aria-label={'Conferir fonte oficial de '+item.fixture.home+' contra '+item.fixture.away}>
+              Abrir fonte oficial
+            </a>
+          </li>)}
+        </ul>
+        {urgentReview.length>6&&<p className="muted">
+          Mais {urgentReview.length-6} referência(s) nesta janela aparecem nos cartões completos abaixo.
+        </p>}
+      </div>}
       {officialVisible.length===0
         ?<p className="muted">Nenhuma referência oficial futura cadastrada para este período. Isso não significa que não existam jogos.</p>
         :<div className="calendar-list">

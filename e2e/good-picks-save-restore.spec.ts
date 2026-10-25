@@ -203,3 +203,20 @@ test('Android: percurso principal visível, áreas avançadas recolhidas e atalh
   await openTools(page);
   await expect(page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'})).toBeVisible();
 });
+
+test('Agenda: referência oficial vencida exige reconfirmação e não reativa As Boas',async({page})=>{
+  await page.clock.install({time:new Date('2026-10-31T12:00:00.000Z')});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  const queue=page.getByRole('region',{name:'Prioridades de reconferência da agenda oficial'});
+  await expect(queue).toBeVisible();
+  await expect(queue).toContainText('referência(s) com horário vencido');
+  await expect(queue).toContainText('reconfirmar horário (N/D)');
+  await expect(queue.getByRole('link',{name:/Conferir fonte oficial/}).first())
+    .toHaveAttribute('href',/^https:\/\/www\./);
+  const boas=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(boas).toContainText('Nenhuma indicação passou pelos critérios hoje');
+  await expect(boas.getByRole('button',{name:/Abrir Radar/})).toHaveCount(0);
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+});
