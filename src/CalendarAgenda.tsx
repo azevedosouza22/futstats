@@ -1,4 +1,7 @@
 import {useState} from 'react';
+import type {Data} from './model';
+import {buildRadarDailyOverview} from './radarDailyOverview';
+import RadarDailyCard from './RadarDailyCard';
 import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
 
 const KEY='futstats-calendar-csv-v1';
@@ -13,7 +16,8 @@ function readSaved(): ScheduledFixture[] {
   }catch{return [];}
 }
 
-export default function CalendarAgenda({onSelect,canAnalyzeFixture}:{
+export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
+  data:Data;
   onSelect:(fixture:ScheduledFixture)=>void;
   canAnalyzeFixture:(fixture:ScheduledFixture)=>boolean;
 }) {
@@ -24,6 +28,8 @@ export default function CalendarAgenda({onSelect,canAnalyzeFixture}:{
   // Preserve user-imported agenda entries; show the verified round as a fallback.
   // Never write bundled fixtures to localStorage without user action.
   const visible=calendarWindow(mergeCalendar(calendar,brasileiraoRound32).entries,window);
+  // Keep the overview bounded on mobile with many imported fixtures.
+  const listed=visible.slice(0,30).map(f=>({fixture:f,overview:buildRadarDailyOverview(data,f)}));
   async function load(file?:File) {
     setError('');setNotice('');
     if(!file)return;
@@ -38,7 +44,7 @@ export default function CalendarAgenda({onSelect,canAnalyzeFixture}:{
   }
   const now=brasiliaDate();
   return <section className="calendar-agenda" aria-label="Agenda experimental">
-    <h3>Jogos do dia · selecione para analisar</h3>
+    <h3>Visão diária · jogos disponíveis para análise</h3>
     <p className="muted">Agenda local, não atualizada ao vivo. Inclui uma referência antiga da rodada 32 (23–26/10/2026) e jogos importados por você. Confira datas, horários e fonte antes de salvar qualquer previsão.</p>
     {error&&<p role="alert" className="alert">{error}</p>}
     {notice&&<p role="status" className="notice">{notice}</p>}
@@ -48,18 +54,23 @@ export default function CalendarAgenda({onSelect,canAnalyzeFixture}:{
       )}
     </div>
     <p className="muted">{visible.length} {visible.length===1?'jogo':'jogos'} na agenda desta janela · Brasília: {now.date} {now.time}</p>
+    {visible.length>listed.length&&<p className="muted">Exibindo os primeiros {listed.length} jogos por data e horário para manter a consulta rápida no celular.</p>}
     {visible.length===0?<p className="empty compact">Nenhum confronto cadastrado para este período. Isso não significa que não existam jogos hoje. Consulte “7 dias” ou “30 dias”, ou adicione uma agenda.</p>:<div className="calendar-list">
-      {visible.slice(0,100).map(f=><article key={f.id} className="calendar-fixture">
-        <div><b>{f.home} × {f.away}</b>
-          <small>{f.date} · {f.time??'Horário N/D'} (Brasília) · {f.competition}</small>
-          <small><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">Conferir fonte</a></small>
+      {listed.map(({fixture:f,overview})=><article key={f.id} className="calendar-fixture radar-daily-fixture">
+        <div className="radar-daily-fixture-head">
+          <div className="radar-daily-fixture-title"><b>{f.home} × {f.away}</b>
+            <small>{f.date} · {f.time??'Horário N/D'} (Brasília) · {f.competition}</small>
+            <small><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">Conferir fonte do calendário</a></small>
+          </div>
+          <button type="button" className="text-button" disabled={!canAnalyzeFixture(f)||!isUpcoming(f)}
+            onClick={()=>onSelect(f)}>
+            {!canAnalyzeFixture(f)?'Sem histórico nesta liga':f.time?'Abrir Radar completo':'Ver prévia · confirmar horário'}
+          </button>
         </div>
-        <button type="button" className="text-button" disabled={!canAnalyzeFixture(f)||!isUpcoming(f)} onClick={()=>onSelect(f)}>
-          {!canAnalyzeFixture(f)?'Sem histórico nesta liga':f.time?'Analisar jogo':'Ver prévia · confirmar horário'}
-        </button>
+        <RadarDailyCard overview={overview}/>
       </article>)}
     </div>}
-    <p className="muted">Escolher um confronto preenche as equipes e a data; o horário será preenchido somente se estiver disponível na agenda. Sem horário confirmado, a prévia pode ser consultada, mas a previsão não pode ser salva.</p>
+    <p className="muted">A visão diária utiliza apenas os jogos anteriores à data do confronto e as competições correspondentes. Para analisar as linhas e salvar uma previsão, abra o Radar completo. Sem horário confirmado, a prévia pode ser consultada, mas nenhuma previsão é salva.</p>
     <details className="calendar-import-extra">
       <summary>Adicionar outros campeonatos e datas (CSV)</summary>
       <p className="muted">O FutStats não pesquisa automaticamente uma agenda atualizada. Use um CSV de calendário com fonte conferível.</p>
