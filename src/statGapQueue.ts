@@ -7,6 +7,7 @@ import {stats,type Data,type Match} from './model';
 import {COVERAGE_METRICS,COVERAGE_PERIODS,type CoverageMetric,type CoveragePeriod} from './leagueCoverageAudit';
 import type {WorkAnalysisMatch} from './workAnalysis';
 import {WORK_ANALYSIS_LEAGUES} from './workAnalysis';
+import {assessGapSource,type GapSourceStatus} from './statGapSource';
 
 export type GapSide='home'|'away';
 export type MissingField={metric:CoverageMetric;period:CoveragePeriod;side:GapSide};
@@ -18,6 +19,8 @@ export type GapQueueItem={
   missing:MissingField[];
   reviewReason:string|null;
   sourceUrl:string|null;
+  sourceId:string|null;
+  sourceStatus:GapSourceStatus;
 };
 const priorityRank:Record<GapPriority,number>={
   'corners-full':0,'corners-period':1,'source-review':2,'other':3
@@ -26,17 +29,6 @@ const dateOk=(value:string,beforeDate:string)=>
   /^\d{4}-\d{2}-\d{2}$/.test(value)&&value<beforeDate;
 const validNumber=(v:unknown):v is number=>
   typeof v==='number'&&Number.isSafeInteger(v)&&v>=0;
-
-/** Only use a source URL stored with that particular match. Never fabricate it. */
-const safeSource=(url:unknown):string|null=>{
-  if(typeof url!=='string')return null;
-  try{
-    const parsed=new URL(url);
-    return parsed.protocol==='https:'&&!parsed.username&&!parsed.password&&
-      ['flashscore.com','www.flashscore.com','flashscore.com.br','www.flashscore.com.br'].includes(parsed.hostname)
-      ?url:null;
-  }catch{return null;}
-};
 
 function missingCells(read:(metric:CoverageMetric,period:CoveragePeriod,side:0|1)=>unknown):MissingField[]{
   const result:MissingField[]=[];
@@ -67,6 +59,7 @@ function mainItem(m:Match,data:Data):GapQueueItem|null{
   // the absence of period metrics must not be mistaken for a finished game.
   const missing=review?[]:missingCells((metric,period,side)=>stats(m,side,period)[metric]);
   if(missing.length===0&&review===null)return null;
+  const evidence=assessGapSource(m.research?.sourceUrl,m.research?.sourceId,review!==null);
   const home=data.teams.find(t=>t.id===m.home)?.name??m.home;
   const away=data.teams.find(t=>t.id===m.away)?.name??m.away;
   return {
@@ -74,19 +67,20 @@ function mainItem(m:Match,data:Data):GapQueueItem|null{
     source:'main',competition:m.competition.trim(),
     matchId:m.id,date:m.date,label:home+' × '+away,
     priority:classified(missing,review),missing,reviewReason:review,
-    sourceUrl:safeSource(m.research?.sourceUrl)
+    sourceUrl:evidence.sourceUrl,sourceId:evidence.sourceId,sourceStatus:evidence.status
   };
 }
 function workItem(m:WorkAnalysisMatch,competition:string):GapQueueItem|null{
   const review=m.discrepancies.length?'Diferença documentada na pesquisa Work':null;
   const missing=review?[]:missingCells((metric,period,side)=>m[period]?.[metric]?.[side]);
   if(missing.length===0&&review===null)return null;
+  const evidence=assessGapSource(m.sourceUrl,m.sourceId,review!==null);
   return {
     key:'work|'+m.league+'|'+m.sourceId,
     source:'work',competition,
     matchId:m.sourceId,date:m.date,label:m.home+' × '+m.away,
     priority:classified(missing,review),missing,reviewReason:review,
-    sourceUrl:safeSource(m.sourceUrl)
+    sourceUrl:evidence.sourceUrl,sourceId:evidence.sourceId,sourceStatus:evidence.status
   };
 }
 
