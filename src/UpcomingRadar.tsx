@@ -4,6 +4,8 @@ import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledF
 import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming} from './radar';
 import {leagueNumericContext,type LeagueNumericMarket} from './radarNumericContext';
+import {compareRadarLines} from './radarLineExplorer';
+import RadarLineExplorer from './RadarLineExplorer';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
@@ -77,6 +79,8 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   const comparison=eligible?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
   const prospective=eligible&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
   const numericLeagueContext=eligible?leagueNumericContext(data,league,date):[];
+  const lineExplorationPreview=eligible&&home&&away?
+    compareRadarLines(data,{home:home.id,away:away.id,date,competition:league}):[];
   const settlements=saved.map(v=>settleVenuePredictions(data,v));
   const scores=scoreSettlements(settlements);
   const followup=summarizeRadarFollowup(saved,settlements);
@@ -101,7 +105,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     const fixture={home:h.id,away:a.id,date:f.date,competition:f.competition};
     const analysis=radarUpcoming(data,fixture);
     if(!analysis.homeHistory.length||!analysis.awayHistory.length)return [];
-    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture),leagueContext:leagueNumericContext(data,f.competition,f.date)}];
+    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture),leagueContext:leagueNumericContext(data,f.competition,f.date),lineExploration:compareRadarLines(data,fixture)}];
   });
   const bulkCount=Math.min(roundPlans.length,Math.max(0,50-saved.length));
   function registerRound(){
@@ -117,6 +121,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       homeCount:p.analysis.homeHistory.length,awayCount:p.analysis.awayHistory.length,
       venue:p.venue,
       leagueContext:p.leagueContext,
+      lineExploration:p.lineExploration,
       markets:p.analysis.markets.map(m=>({
         id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
@@ -153,6 +158,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       homeCount:comparison.homeHistory.length,awayCount:comparison.awayHistory.length,
       venue:prospective,
       leagueContext:numericLeagueContext,
+      lineExploration:lineExplorationPreview,
       markets:comparison.markets.map(m=>({
         id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
@@ -282,6 +288,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
         {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span></div><NumericReferences line={m.line} history={comparison.markets.find(x=>x.id===m.marketId)} league={numericLeagueContext.find(x=>x.id===m.marketId)} projected={m.projectedTotal}/></div>)}
         {comparison.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="forecast-line" key={m.id}><b>Escanteios · partida completa</b><span>Histórico disponível · sem sinal V2/V3 nesta versão</span><NumericReferences line={m.line} history={m} league={numericLeagueContext.find(x=>x.id===m.id)}/></div>)}
       </div>
+      <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
       <button type="button" className="primary" disabled={alreadySavedSelected} onClick={saveSnapshot}>{alreadySavedSelected?'Previsão já registrada':'Salvar previsão V2/V3 deste jogo'}</button>
@@ -409,6 +416,10 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
               <NumericReferences line={m.line} history={m}
                 league={v.leagueContext?.find(x=>x.id===m.id)} legacy={!v.leagueContext}/>
             </div>)}
+            {v.lineExploration?.length?<details className="radar-line-saved">
+              <summary>Comparar linhas históricas salvas antes do jogo</summary>
+              <RadarLineExplorer groups={v.lineExploration} frozen/>
+            </details>:<p className="muted">Comparador de linhas: N/D neste registro antigo, não reconstruído com jogos posteriores.</p>}
             <button type="button" className="radar-record-delete" aria-label={`Excluir apenas o registro pré-jogo ${v.home} × ${v.away} de ${v.matchAt.slice(0,10)}`} onClick={()=>removeSavedRecord(v)}>Excluir somente este registro</button>
           </li>;
         })}
