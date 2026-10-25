@@ -119,6 +119,7 @@ export default function WorkPreGame(){
      <h3>{sample.name} · {sample.side}</h3>
      <p className="muted">{periodNames[period]} · {venue==='match'?(sample.side==='Mandante'?'apenas em casa':'apenas fora'):'casa e fora'}. Amostra: {sample.five.count}/5 e {sample.ten.count}/10 partidas anteriores a {dateLabel(cutoff)}.</p>
      {sample.five.count<3&&<p className="muted">Amostra pequena. Compare com cautela: há menos de três jogos neste recorte.</p>}
+     <p className="muted"><strong>Escanteios a favor / contra:</strong> {format(sample.five.values.corners.for)} / {format(sample.five.values.corners.against)} (últimos 5) · {format(sample.ten.values.corners.for)} / {format(sample.ten.values.corners.against)} (últimos 10)</p>
      <table className="analysis-table">
       <caption>Médias a favor e contra por jogo</caption>
       <thead><tr><th>Estatística</th><th>Últimos 5</th><th>Últimos 10</th></tr></thead>
