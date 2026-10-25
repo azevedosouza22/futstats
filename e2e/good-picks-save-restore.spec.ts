@@ -268,3 +268,65 @@ test('Agenda: referência oficial vencida exige reconfirmação e não reativa A
   await expect(boas.getByRole('button',{name:/Abrir Radar/})).toHaveCount(0);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 45: comparação documental de segunda fonte, sem atestar resultado',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(data=>localStorage.setItem('futstats:v1',JSON.stringify(data)),base);
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(original).toHaveLength(1);
+  // These result values exist only in the isolated Playwright test profile.
+  base.matches.push({
+    id:'e2e-local-result',date:'2026-10-25',home:'barcelona',away:'real-madrid',
+    competition:COMPETITION,first:[stat(2,18,7,5),stat(1,14,5,6)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)],
+    research:{provider:'work-csv',source:'Flashscore',sourceId:'e2e-001',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=e2e-001',
+      importedAt:'2026-10-26T03:00:00.000Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]}
+  } as (typeof base.matches)[number]);
+  await page.evaluate(data=>localStorage.setItem('futstats:v1',JSON.stringify(data)),base);
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00.000Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
+  await expect(queue).toContainText('1 com CSV local para conferir');
+  await queue.getByText(/Ver prioridades de verificação/).click();
+  const [template]=await Promise.all([
+    page.waitForEvent('download'),
+    queue.getByRole('button',{name:'Modelo vazio para comparar este jogo'}).click()
+  ]);
+  const blank=JSON.parse(await readFile((await template.path())!,'utf-8'));
+  expect(blank).toMatchObject({recordKey:original[0].key,checkedAt:'',sourceUrl:''});
+  expect(blank.indicators.every((m:{actual:null})=>m.actual===null)).toBe(true);
+  const upload=audit.getByLabel('Carregar comparação de segunda fonte (JSON)');
+  await upload.setInputFiles({name:'modelo-vazio.json',
+    mimeType:'application/json',buffer:Buffer.from(JSON.stringify(blank))});
+  await expect(audit).toContainText('Identidade, data ou domínio da segunda fonte inválidos.');
+  const supplied={...blank,checkedAt:'2026-10-26T10:00:00.000Z',
+    sourceUrl:'https://www.sofascore.com/pt/futebol/jogo/barca-madrid/abc',
+    indicators:[{id:'goals-full-2.5',actual:3}]};
+  await upload.setInputFiles({name:'valores-informados.json',
+    mimeType:'application/json',buffer:Buffer.from(JSON.stringify(supplied))});
+  const comparison=audit.getByRole('region',{name:'Resultado da comparação documental'});
+  await expect(comparison).toContainText('DOCUMENTAÇÃO INFORMADA — NÃO VERIFICADA NA WEB');
+  await expect(comparison).toContainText('COINCIDE');
+  await expect(comparison).toContainText('N/D');
+  await expect(comparison).toContainText('PENDENTE');
+  await upload.setInputFiles({name:'divergencia.json',
+    mimeType:'application/json',buffer:Buffer.from(JSON.stringify({
+      ...supplied,indicators:[{id:'goals-full-2.5',actual:4}]
+    }))});
+  await expect(comparison).toContainText('DIVERGE');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY)).toEqual(original);
+});
