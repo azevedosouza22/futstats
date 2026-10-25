@@ -165,3 +165,30 @@ test('Sem histórico suficiente, abre agenda mas não oferece As Boas',async({pa
   await expect(boas.getByText(/Nenhuma indicação passou pelos critérios hoje/)).toBeVisible();
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
+
+
+test('Android: percurso principal visível, áreas avançadas recolhidas e atalhos utilizáveis',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  const nav=page.getByRole('navigation',{name:'Escolha o que fazer no Radar'});
+  const create=nav.getByRole('button',{name:/Criar previsão para um jogo futuro/});
+  const existing=nav.getByRole('button',{name:/Ver previsões já registradas/});
+  await expect(create).toBeVisible();
+  await expect(existing).toBeVisible();
+  const b=await existing.boundingBox();
+  expect(b?.height??0).toBeGreaterThanOrEqual(44);
+  const advanced=page.locator('.radar-extra-modes');
+  await expect(advanced).not.toHaveAttribute('open');
+  await expect(nav.getByRole('button',{name:/Radar Work/})).toBeHidden();
+  await advanced.locator('summary').click();
+  await expect(nav.getByRole('button',{name:/Radar Work/})).toBeVisible();
+  await existing.click();
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
+  await create.click();
+  await expect(page.getByRole('region',{name:/As Boas do Dia/})).toBeVisible();
+  await openTools(page);
+  await expect(page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'})).toBeVisible();
+});
