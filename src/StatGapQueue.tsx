@@ -1,6 +1,7 @@
 import {useMemo,useState} from 'react';
 import type {Data} from './model';
 import type {WorkAnalysisMatch} from './workAnalysis';
+import type {GapSourceStatus} from './statGapSource';
 import {
   prioritizeMainGaps,prioritizeWorkGaps,
   type GapQueueItem,type GapPriority,type MissingField
@@ -22,6 +23,12 @@ const priorityLabels:Record<GapPriority,string>={
 const priorityOrder:Record<GapPriority,number>={
   'corners-full':0,'corners-period':1,'source-review':2,other:3
 };
+const sourceLabels:Record<GapSourceStatus,string>={
+  'linked-unchecked':'Link cadastrado · consulta pendente',
+  'missing-source':'Fonte não cadastrada · manter N/D',
+  'invalid-source':'Link incompatível · corrigir origem',
+  'needs-review':'Fonte divergente · revisar antes de usar'
+};
 function Task({item}:{item:GapQueueItem}){
   const remaining=item.missing.length;
   return <article className="stat-gap-item">
@@ -31,6 +38,10 @@ function Task({item}:{item:GapQueueItem}){
     </header>
     <p className="stat-gap-priority">
       {priorityLabels[item.priority]} · {item.source==='main'?'Histórico principal':'Pesquisa Work'}
+    </p>
+    <p className={'stat-gap-source-status stat-gap-source-'+item.sourceStatus}>
+      {sourceLabels[item.sourceStatus]}
+      {item.sourceId?' · Fonte ID '+item.sourceId:''}
     </p>
     {item.reviewReason&&<p className="stat-gap-review">
       {item.reviewReason}. Confira o registro original antes de qualquer correção.
@@ -44,9 +55,14 @@ function Task({item}:{item:GapQueueItem}){
     </>}
     {item.sourceUrl
       ?<a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
-        Conferir fonte Flashscore já cadastrada
+        Abrir referência cadastrada (dados ainda não confirmados)
       </a>
-      :<p className="muted">Sem link Flashscore confiável cadastrado. Localizar a fonte antes de completar os dados.</p>}
+      :<p className="muted">Não há URL de origem utilizável neste registro.
+        {item.sourceStatus==='invalid-source'
+          ?' A URL não coincide com o ID ou a origem permitida; confira os metadados antes de pesquisar.'
+          :' Localize e confira uma referência real antes de qualquer correção.'}
+        {' '}Estatísticas ausentes continuam N/D.
+      </p>}
   </article>;
 }
 
@@ -59,6 +75,7 @@ export default function StatGapQueue({data,workMatches,today}:{
 }){
   const [origin,setOrigin]=useState<'all'|'main'|'work'>('all');
   const [focus,setFocus]=useState<'corners'|'review'|'all'>('corners');
+  const [sourceFilter,setSourceFilter]=useState<'all'|'linked'|'review'|'unlinked'>('all');
   const tasks=useMemo(()=>{
     const main=prioritizeMainGaps(data,today);
     const work=workMatches?prioritizeWorkGaps(workMatches,today):[];
@@ -68,19 +85,28 @@ export default function StatGapQueue({data,workMatches,today}:{
   },[data,workMatches,today]);
   const corners=tasks.filter(t=>
     t.priority==='corners-full'||t.priority==='corners-period').length;
-  const reviews=tasks.filter(t=>t.priority==='source-review').length;
+  const reviews=tasks.filter(t=>t.reviewReason!==null).length;
+  const linked=tasks.filter(t=>t.sourceStatus==='linked-unchecked').length;
+  const unlinked=tasks.filter(t=>t.sourceStatus==='missing-source'||
+    t.sourceStatus==='invalid-source').length;
   const filtered=tasks.filter(t=>
     (origin==='all'||t.source===origin)&&
-    (focus==='all'||(focus==='review'?t.priority==='source-review':
+    (sourceFilter==='all'||(sourceFilter==='linked'
+      ?t.sourceStatus==='linked-unchecked'
+      :sourceFilter==='review'
+        ?t.reviewReason!==null||t.sourceStatus==='invalid-source'
+        :t.sourceStatus==='missing-source'||t.sourceStatus==='invalid-source'))&&
+    (focus==='all'||(focus==='review'?t.reviewReason!==null:
       t.priority==='corners-full'||t.priority==='corners-period')));
   const shown=filtered.slice(0,25);
   return <section className="stat-gap-queue" aria-label="Fila de lacunas de estatísticas">
     <h4>Fila de conferência · partidas já cadastradas</h4>
     <p className="muted">{tasks.length} partidas com pendências na base disponível
-      {' '}· {corners} com falta de escanteios · {reviews} com fonte para revisão.</p>
+      {' '}· {corners} com falta de escanteios · {reviews} com divergências.</p>
+    <p className="muted">{linked} com link cadastrado não conferido · {unlinked} sem referência utilizável.</p>
     <p className="muted">Esta fila apenas identifica o que precisa ser pesquisado.
-      Não coleta, altera ou completa números automaticamente. Prioriza escanteios do jogo
-      completo, depois dos tempos e outras pendências.</p>
+      Não coleta, altera ou completa números automaticamente. A URL não prova que
+      os dados existam ou estejam acessíveis. Até conferência, manter N/D.</p>
     <div className="stat-gap-filters">
       <label>Origem da partida
         <select aria-label="Filtrar origem da pendência" value={origin}
@@ -96,6 +122,15 @@ export default function StatGapQueue({data,workMatches,today}:{
           <option value="corners">Escanteios primeiro</option>
           <option value="review">Revisar fontes</option>
           <option value="all">Todas as estatísticas</option>
+        </select>
+      </label>
+      <label>Conferência da fonte
+        <select aria-label="Filtrar conferência da fonte" value={sourceFilter}
+          onChange={e=>setSourceFilter(e.target.value as typeof sourceFilter)}>
+          <option value="all">Todas as referências</option>
+          <option value="linked">Links cadastrados sem conferência</option>
+          <option value="review">Divergências ou links incompatíveis</option>
+          <option value="unlinked">Sem URL utilizável</option>
         </select>
       </label>
     </div>
