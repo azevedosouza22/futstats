@@ -91,8 +91,10 @@ export function restoreSafetyArchiveEmpty(
     throw Error('O armazenamento não confirmou a integridade dos dados restaurados.');
   }
   const verified=inspectSafetyStorage(storage);
+  // Verify ALL protected keys, including those explicitly absent in the
+  // archive. A new unexpected value must not pass as a complete restoration.
   if(!verified.ok||verified.entries.some(e=>e.status==='invalid')||
-   written.some(key=>storage.getItem(key)!==data.stores[key as keyof SafetyArchive['stores']]))
+   SAFETY_KEYS.some(key=>storage.getItem(key)!==data.stores[key]))
    throw Error('A verificação após restauração falhou.');
   return {
    restored:written.length,

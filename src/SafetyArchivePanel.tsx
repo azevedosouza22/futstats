@@ -107,6 +107,7 @@ export default function SafetyArchivePanel(){
   </div><span className="tag">SOMENTE CÓPIA</span></div>
   <div className="analysis-content">
    <p className="muted">A conferência não altera, apaga ou importa nenhum jogo. O arquivo é gerado somente no seu dispositivo, sem enviar dados Work ao GitHub ou à Vercel.</p>
+   <p className="muted">Esta versão do backup protege os oito grupos listados, incluindo Histórico, previsões e Work. A agenda CSV local de confrontos ainda não pertence a esse formato: preserve também o CSV original. Uma cópia local não substitui a necessidade de guardá-la fora do dispositivo.</p>
    <div className="analysis-controls">
     <button type="button" onClick={refresh}>Conferir integridade dos dados</button>
     <button type="button" className="primary" onClick={exportArchive}>

@@ -107,11 +107,28 @@ export function inspectSafetyStorage(storage:Pick<Storage,'getItem'>):SafetyInsp
 export function createSafetyArchive(
  storage:Pick<Storage,'getItem'>,now=new Date()
 ):SafetyArchive{
- const inspection=inspectSafetyStorage(storage);
+ // Read one candidate snapshot and validate precisely THESE bytes. The old
+ // inspect-then-reread flow could export a changed value that wasn't inspected.
+ const stores={} as SafetyArchive['stores'];
+ for(const key of SAFETY_KEYS){
+  try{stores[key]=storage.getItem(key);}
+  catch{throw Error('Falha de leitura de '+key+'. Nenhum arquivo foi criado.');}
+ }
+ const inspection=inspectSafetyStorage({
+  getItem:(key:string)=>stores[key as SafetyKey]??null
+ });
  if(!inspection.ok)
   throw Error('Foi encontrado um dado local inconsistente. O arquivo integral não foi criado para evitar uma cópia incompleta. Confira os avisos abaixo.');
- const stores={} as SafetyArchive['stores'];
- for(const key of SAFETY_KEYS)stores[key]=storage.getItem(key);
+ // localStorage cannot promise a multi-key atomic read. A second pass detects
+ // a change while the snapshot was captured; never silently export stale or
+ // inconsistent bytes. The archive keeps the exact validated first pass.
+ for(const key of SAFETY_KEYS){
+  let current:string|null;
+  try{current=storage.getItem(key);}
+  catch{throw Error('A leitura de '+key+' mudou durante o backup. Nenhum arquivo foi criado.');}
+  if(current!==stores[key])
+   throw Error('Os dados locais mudaram durante o backup ('+key+'). Nenhum arquivo foi criado.');
+ }
  return {
   format:SAFETY_ARCHIVE_FORMAT,version:1,
   exportedAt:now.toISOString(),stores
