@@ -186,8 +186,8 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
         .find(x=>x.fixture.id===goodPickSelection.fixture.id&&
           x.fixture.date+'T'+x.fixture.time+':00'===matchAt&&
           x.fixture.competition===league&&
-          normalizeTeam(x.fixture.home)===normalizeTeam(home.name)&&
-          normalizeTeam(x.fixture.away)===normalizeTeam(away.name)&&
+          resolveCalendarFixture(data,x.fixture)?.homeId===home.id&&
+          resolveCalendarFixture(data,x.fixture)?.awayId===away.id&&
           x.verifiedAt===goodPickSelection.verifiedAt&&
           x.fixture.sourceUrl===goodPickSelection.fixture.sourceUrl&&
           JSON.stringify(x.signals)===JSON.stringify(goodPickSelection.signals));
