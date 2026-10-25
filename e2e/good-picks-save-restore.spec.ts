@@ -556,23 +556,23 @@ test('Etapa 51: ID de resultado duplicado e importação futura não viram acert
     await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
   };
   await page.clock.setFixedTime(new Date('2026-10-26T16:00:00.000Z'));
-  await saveBase();
-  let audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
-  await expect(audit).toContainText('0 confronto(s) com resultado');
-  await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
-    .toContainText('1 resultado(s) bloqueado(s) por');
-  await expect(audit).toContainText('ID de fonte CSV reutilizado');
-  let queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
-  await expect(queue).toContainText('1 excluído(s) da avaliação');
+  // The application's EXISTING global parser already rejects any research
+  // sourceId reused in separate matches; never bypass or relax this barrier.
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await expect(page.getByText(/Não foi possível ler os dados locais/)).toBeVisible();
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
 
   base.matches.pop(); // remove the unrelated fixture; only isolated synthetic data
   result.research.importedAt='2026-10-30T12:00:00.000Z';
   await saveBase();
-  audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  let audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
   await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
     .toContainText('1 resultado(s) com data de importação futura');
-  queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
+  let queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
   await expect(queue).toContainText('0 com CSV local para conferir');
 
   result.research.importedAt='2026-10-26T03:00:00.000Z';
