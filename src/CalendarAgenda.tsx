@@ -7,6 +7,7 @@ import {workFixtureCoverage} from './workFixtureCoverage';
 import RadarDailyCard from './RadarDailyCard';
 import DailyGoodPicks from './DailyGoodPicks';
 import {selectDailyGoodSignals,type DailyGoodFixture} from './dailyGoodSignals';
+import {nextGoodPreparationQueue} from './dailyGoodNextWeek';
 import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
 import {officialRecheckQueue} from './officialRecheckQueue';
@@ -72,6 +73,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   const clock=new Date();
   const officialAll=readOfficialCalendar(clock);
   const dailyGood=selectDailyGoodSignals(data,officialAll,clock);
+  const nextGood=nextGoodPreparationQueue(data,officialAll,clock);
   // Source-linked, manually confirmed snapshots have priority over an old
   // calendar row for the same fixture, without modifying saved/imported data.
   const officialVisible=officialAll.filter(item=>
@@ -120,7 +122,8 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       )}
     </div>
     <DailyGoodPicks result={dailyGood} onSelect={onSelect}
-      records={records} onViewSaved={onViewSaved}/>
+      records={records} onViewSaved={onViewSaved}
+      nextWeek={nextGood} onPreview={f=>onSelect(f)}/>
     <section className="official-calendar" aria-label="Jogos com referências oficiais">
       <h4>Confrontos com referência oficial</h4>
       <p className="muted">Datas e horários foram conferidos manualmente em páginas das competições. A programação pode mudar. Quando a conferência tiver mais de dois dias, o horário não será usado automaticamente.</p>

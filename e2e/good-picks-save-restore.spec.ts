@@ -380,3 +380,43 @@ test('Etapa 47: As Boas recupera registro existente em um toque sem duplicá-lo'
   expect(after).toEqual(before);
   expect(after).toHaveLength(1);
 });
+
+
+test('Etapa 48: preparar prévia em 7 dias sem registrar como Boa do Dia',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const data=syntheticHistory();
+  data.teams.push({id:'alaves',name:'Deportivo Alavés',color:'#123456'});
+  for(let i=0;i<5;i++)data.matches.push({
+    id:'alaves-away-'+i,date:'2026-10-'+String(14+i).padStart(2,'0'),
+    home:'opponent-'+i,away:'alaves',competition:COMPETITION,
+    first:[stat(1,10,4,5),stat(2,18,7,5)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)]
+  });
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),{key:DATA_KEY,data});
+  await page.reload();
+  await openRadar(page);
+  const shortlist=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(shortlist).toContainText('FC Barcelona × Real Madrid');
+  const next=shortlist.getByText(/Preparar próximos 7 dias/);
+  await expect(next).toContainText('com prévia possível');
+  await next.click();
+  const section=page.getByLabel('Preparar análises dos próximos sete dias');
+  await expect(section).toContainText('FC Barcelona × Deportivo Alavés');
+  await expect(section).toContainText('Prévia possível — não é indicação');
+  await expect(section).toContainText('Histórico insuficiente');
+  await section.getByRole('button',{name:'Abrir prévia no Radar (sem indicação)'}).first().click();
+  const fixture=page.locator('.radar-selected-fixture');
+  await expect(fixture).toContainText('FC Barcelona × Deportivo Alavés');
+  await expect(fixture).toContainText('2026-10-31');
+  const previously=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
+  expect(previously===null||previously==='[]').toBeTruthy();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(saved).toHaveLength(1);
+  expect(saved[0]).toMatchObject({competition:COMPETITION,
+    home:'Barcelona',away:'Deportivo Alavés',matchAt:'2026-10-31T17:00:00'});
+  expect(saved[0]).not.toHaveProperty('goodPicks');
+  expect(saved[0].markets.length).toBeGreaterThan(0);
+});
