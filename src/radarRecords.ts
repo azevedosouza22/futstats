@@ -2,6 +2,7 @@ import {normalizeTeam} from './calendar';
 import type {RadarMarketResult} from './radar';
 import type {SavedVenuePrediction} from './radarProspective';
 import type {LeagueNumericMarket} from './radarNumericContext';
+import {RADAR_LINE_METRICS,type RadarLineGroup} from './radarLineExplorer';
 
 export type SavedRadarRecord={
   key:string; savedAt:string; matchAt:string; competition:string;
@@ -10,6 +11,8 @@ export type SavedRadarRecord={
   venue?:SavedVenuePrediction[];
   /** Frozen at registration; absent in legacy records, never reconstructed later. */
   leagueContext?:LeagueNumericMarket[];
+  /** Only future registrations store this optional pre-match comparison. */
+  lineExploration?:RadarLineGroup[];
 };
 
 const obj=(v:unknown):v is Record<string,unknown>=>v!==null&&typeof v==='object'&&!Array.isArray(v);
@@ -29,6 +32,19 @@ const validMarket=(v:unknown):v is SavedRadarRecord['markets'][number]=>
 const validLeagueContext=(v:unknown):v is LeagueNumericMarket=>
   obj(v)&&text(v.id)&&optionalNumber(v.mean)&&
   Number.isSafeInteger(v.observed)&&Number(v.observed)>=0;
+const validLineGroup=(v:unknown):v is RadarLineGroup=>{
+  if(!obj(v)||!RADAR_LINE_METRICS.some(m=>m===v.metric)||!text(v.label)||
+    !Number.isSafeInteger(v.observed)||Number(v.observed)<0||
+    !optionalNumber(v.historicalMean)||!Array.isArray(v.lines)||
+    v.lines.length<1||v.lines.length>15)return false;
+  const seen=new Set<number>();
+  return v.lines.every((line:unknown)=>{
+    if(!obj(line)||!number(line.line)||!Number.isSafeInteger(line.overs)||
+      Number(line.overs)<0||Number(line.overs)>Number(v.observed)||
+      seen.has(line.line as number))return false;
+    seen.add(line.line as number);return true;
+  });
+};
 const validVenue=(v:unknown):v is SavedVenuePrediction=>
   obj(v)&&text(v.marketId)&&text(v.label)&&number(v.line)&&
   decision(v.v2)&&decision(v.v3)&&optionalNumber(v.projectedTotal)&&
@@ -50,7 +66,10 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       (value.venue!==undefined&&(!Array.isArray(value.venue)||value.venue.length>20||!value.venue.every(validVenue)))||
       (value.leagueContext!==undefined&&(!Array.isArray(value.leagueContext)||value.leagueContext.length>8||
         !value.leagueContext.every(validLeagueContext)||
-        new Set(value.leagueContext.map((x:LeagueNumericMarket)=>x.id)).size!==value.leagueContext.length))) {
+        new Set(value.leagueContext.map((x:LeagueNumericMarket)=>x.id)).size!==value.leagueContext.length))||
+      (value.lineExploration!==undefined&&(!Array.isArray(value.lineExploration)||
+        value.lineExploration.length>4||!value.lineExploration.every(validLineGroup)||
+        new Set(value.lineExploration.map((x:RadarLineGroup)=>x.metric)).size!==value.lineExploration.length))) {
       throw Error('Registro '+(i+1)+' inválido. Nenhuma previsão foi restaurada.');
     }
     if(seenKeys.has(value.key))throw Error('Arquivo contém identificadores repetidos. Nada foi restaurado.');
@@ -62,6 +81,7 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       markets:value.markets as SavedRadarRecord['markets'],
       ...(value.venue!==undefined?{venue:value.venue as SavedVenuePrediction[]}:{}),
       ...(value.leagueContext!==undefined?{leagueContext:value.leagueContext as LeagueNumericMarket[]}:{}),
+      ...(value.lineExploration!==undefined?{lineExploration:value.lineExploration as RadarLineGroup[]}:{}),
     };
   });
 }

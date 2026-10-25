@@ -782,3 +782,16 @@ html{scroll-behavior:smooth}
 .radar-numeric-details{display:flex;flex-wrap:wrap;gap:7px 16px;width:100%;flex-basis:100%;padding-top:8px;border-top:1px solid rgba(110,135,121,.18);font-size:11px;line-height:1.65;color:#566b61}
 .radar-numeric-details>span{min-width:145px;flex:1 1 180px}
 .premium .radar-numeric-details{color:#c7d8e3;border-top-color:#344956}
+
+/* FutStats IA · comparador descritivo de linhas para uso no celular. */
+.radar-line-explorer{border:1px solid rgba(99,127,111,.25);border-radius:12px;padding:14px;margin-top:16px;min-width:0}
+.radar-line-explorer h4{margin:0 0 12px;font-size:14px}
+.radar-line-explorer label{display:flex;gap:6px;flex-direction:column;max-width:330px;font-size:12px;margin-bottom:12px}
+.radar-line-explorer select{width:100%;max-width:330px;padding:9px;border-radius:8px}
+.radar-line-table-scroll{overflow-x:auto;max-width:100%}
+.radar-line-table-scroll .analysis-table{width:100%;min-width:340px}
+.radar-line-saved{width:100%;margin:8px 0}
+.radar-line-saved>summary{cursor:pointer;font-size:12px;padding:8px 0}
+.premium .radar-line-explorer{border-color:#365166;background:rgba(13,30,42,.24)}
+.premium .radar-line-explorer h4{color:#f0f8fb}
+.premium .radar-line-saved>summary{color:#c9e2ed}
