@@ -117,3 +117,42 @@ describe('Fila priorizada de dados incompletos, sem modificar registros',()=>{
   expect(prioritizeWorkGaps([work('good','2026-10-20')],'2026-10-25')).toEqual([]);
  });
 });
+
+describe('Integração da origem com a fila de lacunas',()=>{
+ it('mantém N/D e classifica link salvo apenas como referência não conferida',()=>{
+  const tasks=prioritizeMainGaps(base,'2026-10-25');
+  expect(tasks.find(t=>t.matchId==='needs-period')).toMatchObject({
+    sourceStatus:'linked-unchecked',sourceId:'source-v',
+    sourceUrl:'https://www.flashscore.com.br/?mid=source-v'
+  });
+  expect(tasks.find(t=>t.matchId==='needs-ft')).toMatchObject({
+    sourceStatus:'missing-source',sourceId:null,sourceUrl:null
+  });
+ });
+ it('bloqueia link divergente e preserva tarefa de revisão da fonte',()=>{
+  const item=prioritizeMainGaps(base,'2026-10-25')
+    .find(t=>t.matchId==='review-source')!;
+  expect(item.sourceStatus).toBe('invalid-source');
+  expect(item.reviewReason).toBe('Data divergente na fonte');
+  expect(item.sourceUrl).toBeNull();
+  expect(item.missing).toEqual([]);
+ });
+ it('separa Work com origem conferível de registros em divergência',()=>{
+  const candidates:WorkAnalysisMatch[]=[
+    work('valid','2026-10-18'),
+    {...work('incomplete','2026-10-19'),full:{
+      ...full,corners:[null,6] as unknown as [number,number]}},
+    work('review','2026-10-20','review',['Divergência'])
+  ];
+  const tasks=prioritizeWorkGaps(candidates,'2026-10-25');
+  expect(tasks.find(x=>x.matchId==='incomplete')).toMatchObject({
+    sourceStatus:'linked-unchecked',sourceId:'incomplete',
+    sourceUrl:'https://www.flashscore.com.br/?mid=incomplete'
+  });
+  expect(tasks.find(x=>x.matchId==='review')).toMatchObject({
+    priority:'source-review',sourceStatus:'needs-review',
+    sourceUrl:'https://www.flashscore.com.br/?mid=review'
+  });
+  expect(tasks.find(x=>x.matchId==='valid')).toBeUndefined();
+ });
+});
