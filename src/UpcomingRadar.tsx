@@ -2,6 +2,9 @@ import {useState,useRef,useEffect} from 'react';
 import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
+import DailyGoodAuditPanel from './DailyGoodAuditPanel';
+import {selectDailyGoodSignals,type DailyGoodFixture} from './dailyGoodSignals';
+import {readOfficialCalendar} from './officialCalendar';
 import {radarUpcoming} from './radar';
 import {leagueNumericContext,type LeagueNumericMarket} from './radarNumericContext';
 import {compareRadarLines} from './radarLineExplorer';
@@ -54,6 +57,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
   const [message,setMessage]=useState('');
   const [lastSavedKey,setLastSavedKey]=useState<string|null>(null);
   const [calendarSelection,setCalendarSelection]=useState('');
+  const [goodPickSelection,setGoodPickSelection]=useState<DailyGoodFixture|null>(null);
   const [calendarSource,setCalendarSource]=useState('');
   const [communityProvisional,setCommunityProvisional]=useState(false);
   const [officialReference,setOfficialReference]=useState(false);
@@ -67,12 +71,13 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
     savedSectionRef.current?.scrollIntoView({behavior:'instant',block:'start'});
   },[view]);
   const restoreInput=useRef<HTMLInputElement>(null);
-  function useCalendarFixture(f:ScheduledFixture){
+  function useCalendarFixture(f:ScheduledFixture,selected?:DailyGoodFixture){
     const selection=resolveCalendarFixture(data,f);
     if(!selection)return;
     setIds([selection.homeId,selection.awayId]);setLeague(selection.competition);
     setDate(selection.date);setTime(selection.time);
     setCalendarSelection(f.home+' × '+f.away);
+    setGoodPickSelection(selected??null);
     setCalendarSource(selection.sourceUrl);
     setCommunityProvisional(f.id.startsWith('community|'));
     setOfficialReference(f.id.startsWith('official|'));
@@ -169,11 +174,34 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
     if(latest.some(s=>s.matchAt.slice(0,10)===date&&s.competition===league&&normalizeTeam(s.home)===normalizeTeam(home.name)&&normalizeTeam(s.away)===normalizeTeam(away.name))){
       setMessage('Este confronto já possui uma previsão V2/V3 registrada. Ela permanecerá sem alterações.');return;
     }
+    if(goodPickSelection){
+      // A shortlist preview can expire between click and save. Recheck against
+      // the current official schedule and frozen policy; never fabricate origin.
+      const clock=new Date();
+      const matching=selectDailyGoodSignals(data,readOfficialCalendar(clock),clock).items
+        .find(x=>x.fixture.id===goodPickSelection.fixture.id&&
+          x.fixture.date+'T'+x.fixture.time+':00'===matchAt&&
+          x.fixture.competition===league&&
+          normalizeTeam(x.fixture.home)===normalizeTeam(home.name)&&
+          normalizeTeam(x.fixture.away)===normalizeTeam(away.name)&&
+          x.verifiedAt===goodPickSelection.verifiedAt&&
+          x.fixture.sourceUrl===goodPickSelection.fixture.sourceUrl&&
+          JSON.stringify(x.signals)===JSON.stringify(goodPickSelection.signals));
+      if(!matching){
+        setMessage('A indicação ou o horário oficial mudou. Volte à agenda e selecione novamente antes de registrar como Boa do Dia.');
+        return;
+      }
+    }
     const record:Saved={
       key:crypto.randomUUID(),savedAt:new Date().toISOString(),matchAt,
       competition:league,home:home.name,away:away.name,
       homeCount:comparison.homeHistory.length,awayCount:comparison.awayHistory.length,
       venue:prospective,
+      ...(goodPickSelection?{goodPicks:{
+        verifiedAt:goodPickSelection.verifiedAt,
+        sourceUrl:goodPickSelection.fixture.sourceUrl,
+        signals:goodPickSelection.signals.map(s=>({...s}))
+      }}:{}),
       leagueContext:numericLeagueContext,
       lineExploration:lineExplorationPreview,
       markets:comparison.markets.map(m=>({
@@ -277,7 +305,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Quando a origem é comunitária, confira também a data e o horário em fonte oficial antes de registrar.</p>
     <div className="analysis-controls radar-fixture-form">
       <label>1. Competição / temporada
-        <select aria-label="Competição futura" value={league} onChange={e=>{setLeague(e.target.value);setIds(['','']);setCalendarSelection('');setCalendarSource('');setTime('');setMessage('');}}>
+        <select aria-label="Competição futura" value={league} onChange={e=>{setLeague(e.target.value);setIds(['','']);setGoodPickSelection(null);setCalendarSelection('');setCalendarSource('');setTime('');setMessage('');}}>
           <option value="">Escolha primeiro a competição</option>{leagues.map(c=><option key={c} value={c}>{c}</option>)}
         </select>
       </label>
@@ -286,14 +314,14 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
         :'Escolha uma competição para liberar as equipes.'}</p>
       <label>2. Mandante
         <select aria-label="Mandante futuro" disabled={!league} value={home?.id??''}
-          onChange={e=>{setIds([e.target.value,ids[1]===e.target.value?'':ids[1]]);setCalendarSelection('');setCalendarSource('');setTime('');}}>
+          onChange={e=>{setIds([e.target.value,ids[1]===e.target.value?'':ids[1]]);setGoodPickSelection(null);setCalendarSelection('');setCalendarSource('');setTime('');}}>
           <option value="">Selecione o mandante</option>
           {leagueTeams.filter(t=>t.id!==ids[1]).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
       </label>
       <label>3. Visitante
         <select aria-label="Visitante futuro" disabled={!league} value={away?.id??''}
-          onChange={e=>{setIds([ids[0]===e.target.value?'':ids[0],e.target.value]);setCalendarSelection('');setCalendarSource('');setTime('');}}>
+          onChange={e=>{setIds([ids[0]===e.target.value?'':ids[0],e.target.value]);setGoodPickSelection(null);setCalendarSelection('');setCalendarSource('');setTime('');}}>
           <option value="">Selecione o visitante</option>
           {leagueTeams.filter(t=>t.id!==ids[0]).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
@@ -301,10 +329,10 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
       {(!calendarSelection||editSchedule)&&<>
         <label>4. Data do jogo
           <input aria-label="Data futura" type="date" value={date}
-            onChange={e=>{setDate(e.target.value);setTime('');}}/>
+            onChange={e=>{setDate(e.target.value);setGoodPickSelection(null);setTime('');}}/>
         </label>
         <label>5. Hora de Brasília (confirme na fonte)
-          <input aria-label="Hora futura" type="time" value={time} onChange={e=>setTime(e.target.value)}/>
+          <input aria-label="Hora futura" type="time" value={time} onChange={e=>{setTime(e.target.value);setGoodPickSelection(null);}}/>
         </label>
       </>}
     </div>
@@ -373,6 +401,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
           <div className="radar-saved" id="radar-saved-forecasts"
             ref={savedSectionRef} tabIndex={-1} aria-label="Previsões salvas e acompanhamento">
       <h4>2 · Previsões salvas e acompanhamento ({saved.length})</h4>
+      <DailyGoodAuditPanel data={data} records={saved}/>
        <p className="muted">Aqui ficam os testes registrados antes das partidas. Para criar um novo, use o primeiro atalho do topo.</p>
       <div className="radar-record-actions">
         {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
