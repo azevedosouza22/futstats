@@ -3,6 +3,7 @@ import type {Data} from './model';
 import type {SavedRadarRecord} from './radarRecords';
 import {auditDailyGoodPicks} from './dailyGoodAudit';
 import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
+import {buildIndependentReviewQueue,exportIndependentReviewQueueCsv} from './dailyGoodIndependentReview';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -20,6 +21,18 @@ export default function DailyGoodAuditPanel({data,records}:{
  data:Data;records:readonly SavedRadarRecord[];
 }){
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
+ const independentQueue=buildIndependentReviewQueue(records,report);
+ function exportReviewQueue(){
+  if(independentQueue.entries.length===0)return;
+  const csv=exportIndependentReviewQueueCsv(independentQueue);
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  try{
+   const a=document.createElement('a');
+   a.href=url;
+   a.download='futstats-fila-verificacao-resultados.csv';
+   document.body.appendChild(a);a.click();a.remove();
+  }finally{URL.revokeObjectURL(url);}
+ }
  function exportLedger(){
   if(report.attributed===0)return;
   const text=exportDailyGoodEvidenceCsv(records,report);
@@ -53,6 +66,46 @@ export default function DailyGoodAuditPanel({data,records}:{
     permanece <strong>PENDENTE</strong> até conferência real. Este CSV não restaura
     previsões: conserve também o backup JSON integral.</p>
   </div>}
+  {independentQueue.entries.length>0&&<section
+    className="daily-good-review" aria-label="Fila de verificação independente dos resultados">
+    <h5>Conferência independente · lista de trabalho</h5>
+    <p className="muted" role="status">
+      {independentQueue.checkExternal} com CSV local para conferir ·
+      {' '}{independentQueue.needLocalResult} aguardando dados locais ·
+      {' '}{independentQueue.awaitKickoff} aguardando jogo/finalização ·
+      {' '}{independentQueue.excluded} excluído(s) da avaliação.
+    </p>
+    <p className="muted">Nenhuma partida é considerada externamente conferida.
+      Ter resultado em CSV significa apenas que existe um registro local.
+      A conferência independente exige consultar uma segunda fonte e comparar
+      os indicadores; links e downloads <strong>não</strong> comprovam essa etapa.</p>
+    <button type="button" className="text-button" onClick={exportReviewQueue}>
+      Exportar fila de conferência (CSV)
+    </button>
+    <details className="daily-good-review-list">
+      <summary>Ver prioridades de verificação ({independentQueue.entries.length})</summary>
+      <ol>{independentQueue.entries.slice(0,8).map(e=><li key={e.key}>
+        <b>{e.home} × {e.away}</b>{' · '}{e.matchAt.replace('T',' · ')}
+        {' · '}<strong>{e.state==='check_external'
+          ?'Conferir resultado com outra fonte'
+          :e.state==='need_local_result'?'Resultado local pendente'
+          :e.state==='await_kickoff'?'Aguardar fim da partida'
+          :'Registro excluído da amostra'}</strong>
+        <p className="muted">{e.reason}. Verificação independente:
+          <strong> PENDENTE</strong>.</p>
+        {e.state!=='excluded'&&e.officialUrl&&<a href={e.officialUrl}
+          target="_blank" rel="noopener noreferrer">Ver referência oficial do jogo</a>}
+        {e.state==='check_external'&&e.csvSourceUrl&&<p><a href={e.csvSourceUrl}
+          target="_blank" rel="noopener noreferrer">Conferir origem do resultado CSV</a></p>}
+      </li>)}</ol>
+      {independentQueue.entries.length>8&&<p className="muted">
+        Outros {independentQueue.entries.length-8} registros estão no CSV exportável.
+      </p>}
+    </details>
+    <p className="muted">A fila é calculada somente ao abrir o Radar, sem consultar
+      fontes em segundo plano, gravar confirmações nem alterar previsões ou backups.
+      Estados inválidos e tardios permanecem excluídos.</p>
+  </section>}
   {report.leagues.length===0?<p className="daily-good-empty">
     Sem registros prospectivos atribuíveis a “As Boas do Dia” até agora.
     Os registros antigos continuam preservados, mas não podem comprovar o desempenho da lista.
