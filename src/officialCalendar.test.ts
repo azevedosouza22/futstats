@@ -73,7 +73,9 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{
     expect(officialCalendarItem(sample,new Date('2026-10-25T16:16:00Z'))).toBeNull();
     const october30=readOfficialCalendar(new Date('2026-10-30T00:00:00Z'));
-    expect(october30.every(x=>x.fixture.date>='2026-10-30')).toBe(true);
+    // 00:00Z de 30/10 ainda são 21:00 de 29/10 em Brasília.
+    expect(october30.every(x=>x.fixture.date>='2026-10-29')).toBe(true);
+    expect(october30.some(x=>x.fixture.home==='Grêmio')).toBe(true);
     expect(october30.some(x=>x.fixture.home==='Chelsea')).toBe(true);
     expect(readOfficialCalendar(new Date('2026-11-03T00:00:00Z'))).toEqual([]);
   });
