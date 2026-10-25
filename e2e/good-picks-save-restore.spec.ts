@@ -9,6 +9,7 @@ import {readFile} from 'node:fs/promises';
 const NOW='2026-10-25T15:00:00.000Z'; // 12:00 Brasília, before El Clásico
 const DATA_KEY='futstats:v1';
 const RADAR_KEY='futstats-radar-previews-v1';
+const CALENDAR_KEY='futstats-calendar-csv-v1';
 const COMPETITION='La Liga espanhola 2026/27';
 
 const stat=(goals:number,shots:number,target:number,corners:number)=>({
@@ -63,9 +64,16 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
   const fake=syntheticHistory();
-  await page.evaluate(({data,key})=>localStorage.setItem(key,JSON.stringify(data)),{
-    data:fake,key:DATA_KEY
-  });
+  const localCalendar=[{
+    id:'2026-10-29|la liga espanhola 2026/27|barcelona|real madrid',
+    date:'2026-10-29',time:'20:00',competition:COMPETITION,
+    home:'Barcelona',away:'Real Madrid',
+    sourceUrl:'https://www.laliga.com/juegos/ejemplo'
+  }];
+  await page.evaluate(({data,calendar})=>{
+    localStorage.setItem('futstats:v1',JSON.stringify(data));
+    localStorage.setItem('futstats-calendar-csv-v1',JSON.stringify(calendar));
+  },{data:fake,calendar:localCalendar});
   await page.reload();
   await openRadar(page);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
@@ -121,6 +129,9 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   expect(recovered).toEqual(saved);
   const recoveredData=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'{}'),DATA_KEY);
   expect(recoveredData).toEqual(fake);
+  const recoveredCalendar=await page.evaluate(key=>
+    JSON.parse(localStorage.getItem(key)??'[]'),CALENDAR_KEY);
+  expect(recoveredCalendar).toEqual(localCalendar);
   await page.getByRole('button',{name:/Agenda e Radar/}).click();
   await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
   await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
