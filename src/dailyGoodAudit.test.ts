@@ -82,6 +82,15 @@ describe('Etapa 38 — auditoria prospectiva das Boas do Dia',()=>{
   const duplicate={...rec(),key:'other'};
   expect(auditDailyGoodPicks(data([result()]),[rec(),duplicate],when).rows.every(r=>r.status==='ambiguous')).toBe(true);
  });
+ it('recusa verificação oficial já vencida no dia da previsão congelada',()=>{
+  const r=rec();
+  const older={...r,goodPicks:{...r.goodPicks!,verifiedAt:'2026-10-22'}};
+  const verifiedLater={...r,goodPicks:{...r.goodPicks!,verifiedAt:'2026-10-26'}};
+  const valid={...r,goodPicks:{...r.goodPicks!,verifiedAt:'2026-10-23'}};
+  expect(auditDailyGoodPicks(data([result()]),[older],when).rows[0].status).toBe('invalid');
+  expect(auditDailyGoodPicks(data([result()]),[verifiedLater],when).rows[0].status).toBe('invalid');
+  expect(auditDailyGoodPicks(data([result()]),[valid],when).rows[0].status).toBe('scored');
+ });
  it('N/D não vira zero e não entra no denominador de acertos',()=>{
   const missing=result();
   missing.research!.full[0].goals=null;

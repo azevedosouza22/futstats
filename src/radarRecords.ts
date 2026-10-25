@@ -1,4 +1,5 @@
 import {normalizeTeam} from './calendar';
+import {safeOfficialFixtureUrl} from './officialSourceTrust';
 import type {RadarMarketResult} from './radar';
 import type {SavedVenuePrediction} from './radarProspective';
 import type {DailyGoodSignal} from './dailyGoodSignals';
@@ -57,10 +58,7 @@ const validGoodPick=(v:unknown):boolean=>{
   if(!obj(v)||!text(v.verifiedAt,10)||!validDate(v.verifiedAt as string)||
     !text(v.sourceUrl,600)||!Array.isArray(v.signals)||
     v.signals.length<1||v.signals.length>3)return false;
-  try{const u=new URL(v.sourceUrl as string);
-    if(u.protocol!=='https:'||u.username||u.password||
-      !['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com'].includes(u.hostname.toLowerCase()))return false;
-  }catch{return false;}
+  if(!safeOfficialFixtureUrl(v.sourceUrl as string))return false;
   const ids=new Set<string>();
   return v.signals.every((s:unknown)=>{
     if(!obj(s)||!text(s.id)||!text(s.label)||!number(s.line)||s.line===0||

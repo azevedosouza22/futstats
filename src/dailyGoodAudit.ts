@@ -13,6 +13,7 @@ import {brasiliaDate,normalizeTeam} from './calendar';
 import {matchTotal} from './radar';
 import type {SavedRadarRecord} from './radarRecords';
 import {venueV2Markets} from './radarVenueV2';
+import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
 
 export type PickVerdict='Acertou'|'Errou'|'N/D';
 export type PickAuditStatus='legacy'|'invalid'|'late'|'future'|'waiting'|'ambiguous'|'source_missing'|'scored';
@@ -45,18 +46,14 @@ const emptyDisposition=():Record<AttributedPickStatus,number>=>({
  invalid:0,late:0,future:0,waiting:0,ambiguous:0,source_missing:0,scored:0
 });
 const validNumber=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)&&n>=0;
-const officialHost=new Set(['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com','www.premierleague.com']);
-const safeOfficialUrl=(s:string)=>{
- try{const url=new URL(s);return url.protocol==='https:'&&!url.username&&!url.password&&officialHost.has(url.hostname.toLowerCase());}
- catch{return false;}
-};
 function evidence(record:SavedRadarRecord):boolean{
  const proof=record.goodPicks;
- if(!proof||!safeOfficialUrl(proof.sourceUrl)||!/^\d{4}-\d{2}-\d{2}$/.test(proof.verifiedAt)||
+ if(!proof||!safeOfficialFixtureUrl(proof.sourceUrl)||!/^\d{4}-\d{2}-\d{2}$/.test(proof.verifiedAt)||
     !Array.isArray(proof.signals)||proof.signals.length<1||proof.signals.length>3||
     !record.venue||!record.leagueContext)return false;
  const saved=brasiliaDate(new Date(record.savedAt));
- if(proof.verifiedAt>saved.date||record.matchAt.slice(0,10)!==saved.date)return false;
+ if(!officialSnapshotFreshAt(proof.verifiedAt,saved.date)||
+    record.matchAt.slice(0,10)!==saved.date)return false;
  if(new Set(proof.signals.map(s=>s.id)).size!==proof.signals.length)return false;
  return proof.signals.every(s=>{
    const venue=record.venue!.find(m=>m.marketId===s.id);
