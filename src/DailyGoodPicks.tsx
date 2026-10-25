@@ -1,10 +1,10 @@
-import type {DailyGoodResult} from './dailyGoodSignals';
+import type {DailyGoodResult,DailyGoodFixture} from './dailyGoodSignals';
 import type {ScheduledFixture} from './calendar';
 
 const fmt=(n:number)=>n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 /** Informational shortlist; no auto-save, bet slip, odds or external action. */
 export default function DailyGoodPicks({result,onSelect}:{
-  result:DailyGoodResult;onSelect:(fixture:ScheduledFixture)=>void;
+  result:DailyGoodResult;onSelect:(fixture:ScheduledFixture,selected:DailyGoodFixture)=>void;
 }){
   return <section className="daily-good-picks" aria-label="As Boas do Dia — leitura experimental">
     <div className="daily-good-head">
@@ -34,7 +34,7 @@ export default function DailyGoodPicks({result,onSelect}:{
               <small>{m.historicalSample} jogos para o indicador · {m.leagueSample} observações na liga</small>
             </li>)}
           </ul>
-          <button type="button" onClick={()=>onSelect(item.fixture)} className="text-button">
+          <button type="button" onClick={()=>onSelect(item.fixture,item)} className="text-button">
             Abrir Radar e conferir análise
           </button>
         </article>)}

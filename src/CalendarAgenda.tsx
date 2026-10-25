@@ -5,7 +5,7 @@ import {readBrowserWorkAnalysis,type WorkAnalysisRead} from './workAnalysis';
 import {workFixtureCoverage} from './workFixtureCoverage';
 import RadarDailyCard from './RadarDailyCard';
 import DailyGoodPicks from './DailyGoodPicks';
-import {selectDailyGoodSignals} from './dailyGoodSignals';
+import {selectDailyGoodSignals,type DailyGoodFixture} from './dailyGoodSignals';
 import LeagueCoveragePanel from './LeagueCoveragePanel';
 import {readOfficialCalendar} from './officialCalendar';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
@@ -22,7 +22,7 @@ function readSaved(): ScheduledFixture[] {
 
 export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWork}:{
   data:Data;
-  onSelect:(fixture:ScheduledFixture)=>void;
+  onSelect:(fixture:ScheduledFixture,selected?:DailyGoodFixture)=>void;
   canAnalyzeFixture:(fixture:ScheduledFixture)=>boolean;
   onOpenWork:()=>void;
 }) {

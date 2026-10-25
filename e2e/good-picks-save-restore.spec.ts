@@ -91,7 +91,18 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
     matchAt:'2026-10-25T17:00:00',homeCount:5,awayCount:5
   });
   expect(saved[0].venue).toHaveLength(3);
+  expect(saved[0].goodPicks).toMatchObject({
+    // Preserve the source's actual dated verification, not the test clock.
+    verifiedAt:'2026-10-23',
+    sourceUrl:expect.stringContaining('laliga.com'),
+    signals:expect.arrayContaining([expect.objectContaining({
+      id:'goals-full-2.5',direction:'Over',historicalSample:10
+    })])
+  });
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  await expect(audit).toContainText('1 registro(s) com identificação da lista');
+  await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
   await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
   await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
