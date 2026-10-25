@@ -352,3 +352,31 @@ test('Etapa 45: comparação documental de segunda fonte, sem atestar resultado'
   await expect(audit).toContainText('integridade SHA-256 falhou');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY)).toEqual(original);
 });
+
+
+test('Etapa 47: As Boas recupera registro existente em um toque sem duplicá-lo',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await page.evaluate(data=>localStorage.setItem('futstats:v1',JSON.stringify(data)),syntheticHistory());
+  await page.reload();
+  await openRadar(page);
+  const boas=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(boas.getByRole('button',{name:'Abrir Radar e conferir análise'})).toHaveCount(1);
+  await boas.getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const before=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(before).toHaveLength(1);
+  await page.getByRole('button',{name:/Criar previsão para um jogo futuro/}).click();
+  const daily=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(daily).toContainText('Indicação já salva em As Boas');
+  await expect(daily.getByRole('button',{name:'Abrir Radar e conferir análise'})).toHaveCount(0);
+  await daily.getByRole('button',{name:'Ver previsão já registrada'}).click();
+  const selected=page.getByRole('listitem',{name:'Previsão salva Barcelona contra Real Madrid'});
+  await expect(selected).toBeVisible();
+  await expect(selected).toBeFocused();
+  await expect(selected).toContainText('Barcelona × Real Madrid');
+  const after=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(after).toEqual(before);
+  expect(after).toHaveLength(1);
+});

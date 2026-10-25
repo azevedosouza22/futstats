@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import type {Data} from './model';
+import type {SavedRadarRecord} from './radarRecords';
 import {buildRadarDailyOverview} from './radarDailyOverview';
 import {readBrowserWorkAnalysis,type WorkAnalysisRead} from './workAnalysis';
 import {workFixtureCoverage} from './workFixtureCoverage';
@@ -21,11 +22,12 @@ function readSaved(): ScheduledFixture[] {
   }catch{return [];}
 }
 
-export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWork}:{
+export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWork,records,onViewSaved}:{
   data:Data;
   onSelect:(fixture:ScheduledFixture,selected?:DailyGoodFixture)=>void;
   canAnalyzeFixture:(fixture:ScheduledFixture)=>boolean;
   onOpenWork:()=>void;
+  records:readonly SavedRadarRecord[];onViewSaved:(key:string|null)=>void;
 }) {
   const [calendar,setCalendar]=useState(readSaved);
   // Read private Work research once, without copying it into the main base.
@@ -117,7 +119,8 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         <button key={key} type="button" aria-pressed={window===key} className={window===key?'selected':''} onClick={()=>setWindow(key)}>{label}</button>
       )}
     </div>
-    <DailyGoodPicks result={dailyGood} onSelect={onSelect}/>
+    <DailyGoodPicks result={dailyGood} onSelect={onSelect}
+      records={records} onViewSaved={onViewSaved}/>
     <section className="official-calendar" aria-label="Jogos com referências oficiais">
       <h4>Confrontos com referência oficial</h4>
       <p className="muted">Datas e horários foram conferidos manualmente em páginas das competições. A programação pode mudar. Quando a conferência tiver mais de dois dias, o horário não será usado automaticamente.</p>

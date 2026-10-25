@@ -1,10 +1,13 @@
 import type {DailyGoodResult,DailyGoodFixture} from './dailyGoodSignals';
 import type {ScheduledFixture} from './calendar';
+import type {SavedRadarRecord} from './radarRecords';
+import {savedGoodPickMatch} from './dailyGoodSavedMatch';
 
 const fmt=(n:number)=>n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 /** Informational shortlist; no auto-save, bet slip, odds or external action. */
-export default function DailyGoodPicks({result,onSelect}:{
+export default function DailyGoodPicks({result,onSelect,records,onViewSaved}:{
   result:DailyGoodResult;onSelect:(fixture:ScheduledFixture,selected:DailyGoodFixture)=>void;
+  records:readonly SavedRadarRecord[];onViewSaved:(key:string|null)=>void;
 }){
   return <section className="daily-good-picks" aria-label="As Boas do Dia — leitura experimental">
     <div className="daily-good-head">
@@ -21,7 +24,9 @@ export default function DailyGoodPicks({result,onSelect}:{
         Isso pode significar ausência de jogos verificados, dados insuficientes ou
         divergência entre os modelos. O app não cria indicações para preencher a lista.</p>
       :<div className="daily-good-list">
-        {result.items.map(item=><article className="daily-good-item" key={item.fixture.id}>
+        {result.items.map(item=>{
+          const match=savedGoodPickMatch(item,records);
+          return <article className="daily-good-item" key={item.fixture.id}>
           <div className="daily-good-item-head">
             <strong>{item.fixture.home} × {item.fixture.away}</strong>
             <small>{item.fixture.time} (Brasília) · {item.fixture.competition}</small>
@@ -34,10 +39,24 @@ export default function DailyGoodPicks({result,onSelect}:{
               <small>{m.historicalSample} jogos para o indicador · {m.leagueSample} observações na liga</small>
             </li>)}
           </ul>
-          <button type="button" onClick={()=>onSelect(item.fixture,item)} className="text-button">
-            Abrir Radar e conferir análise
+          {match.state!=='not_saved'&&<p className="muted" role="status">
+            {match.state==='from_good_picks'
+              ?'Indicação já salva em As Boas · previsão original congelada'
+              :match.state==='from_radar'
+                ?'Confronto já registrado diretamente no Radar · não atribuído a As Boas'
+                :match.state==='duplicates'
+                  ?'Mais de um registro com a mesma identidade · revisar duplicações'
+                  :'Registro existente · confira horário e origem antes de qualquer nova previsão'}
+          </p>}
+          <button type="button"
+            onClick={()=>match.state==='not_saved'
+              ?onSelect(item.fixture,item):onViewSaved(match.recordKey)}
+            className="text-button">
+            {match.state==='not_saved'?'Abrir Radar e conferir análise'
+             :match.state==='duplicates'?'Revisar registros existentes'
+             :'Ver previsão já registrada'}
           </button>
-        </article>)}
+        </article>})}
       </div>}
     <details className="daily-good-readiness" aria-label="Diagnóstico de elegibilidade por campeonato">
       <summary>Por que alguns jogos ainda não recebem indicações?</summary>

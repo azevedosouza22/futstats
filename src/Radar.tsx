@@ -17,6 +17,7 @@ export default function Radar({data}: {data: Data}) {
   const [selectedFixtureId, setSelectedFixtureId] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
+  const [savedFocus,setSavedFocus]=useState<string|null>(null);
 
   const researchMatches = data.matches.filter(m => !!m.research);
   const competitions = [...new Set(researchMatches.map(m => m.competition).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
@@ -41,12 +42,12 @@ export default function Radar({data}: {data: Data}) {
       <p>Encontre um confronto, confira os indicadores e registre sua previsão. Depois, recupere-a em um toque.</p>
       <div className="radar-quick-actions">
         <button type="button" className="radar-quick-action radar-quick-action--create" aria-pressed={mode==='new'}
-          onClick={()=>setMode('new')}>
+          onClick={()=>{setSavedFocus(null);setMode('new');}}>
           <span aria-hidden="true">1</span><strong>Criar previsão para um jogo futuro</strong>
           <small>Nosso teste diário: escolha equipes, data e competição e salve V2/V3 antes do jogo.</small>
         </button>
         <button type="button" className="radar-quick-action radar-quick-action--saved" aria-pressed={mode==='saved'}
-          onClick={()=>setMode('saved')}>
+          onClick={()=>{setSavedFocus(null);setMode('saved');}}>
           <span aria-hidden="true">2</span><strong>Ver previsões já registradas</strong>
           <small>Consulte os testes já salvos, incluindo qualquer novo registro, e acompanhe os resultados.</small>
         </button>
@@ -69,7 +70,9 @@ export default function Radar({data}: {data: Data}) {
     </nav>
     <div className="radar-inner">
       {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}
-        onViewSaved={()=>setMode('saved')} onOpenWork={()=>setMode('work')}/>}
+        focusedSavedKey={savedFocus}
+        onViewSaved={key=>{setSavedFocus(key??null);setMode('saved');}}
+        onOpenWork={()=>setMode('work')}/>}
       {mode==='work'&&<WorkRadarPreview/>}
       {mode==='history'&&<>
       <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>
