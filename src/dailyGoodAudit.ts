@@ -58,7 +58,7 @@ function evidence(record:SavedRadarRecord):boolean{
    const league=record.leagueContext!.find(m=>m.id===s.id);
    return venue&&market&&league&&
     venue.v2===s.direction&&venue.v3===s.direction&&
-    s.direction!=='Sem sinal'&&venue.line===s.line&&market.line===s.line&&
+    venue.line===s.line&&market.line===s.line&&
     venue.projectedTotal===s.projection&&
     market.historicalMean===s.historicalMean&&market.observed===s.historicalSample&&
     league.observed===s.leagueSample&&s.historicalSample>=8&&s.leagueSample>=10&&
