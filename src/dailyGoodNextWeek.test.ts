@@ -84,12 +84,13 @@ describe('Etapa 48 — preparar os sete dias sem criar As Boas antecipadamente',
   expect(q.entries).toHaveLength(0);
  });
  it('ordena prévias antes dos impedimentos, mas mantém jogos sem histórico na agenda',()=>{
-  const old=official('2026-10-26');
+  const old={...official('2026-10-26'),fresh:false,
+   fixture:{...official('2026-10-26').fixture,time:null}};
   const qualified=official('2026-10-31');
   const extra={...qualified,fixture:{...qualified.fixture,id:'sem-historico',
    home:'Sem história',away:'Outro clube'}};
   const q=nextGoodPreparationQueue(data,[old,extra,qualified],at);
-  expect(q).toMatchObject({preview:1,needsHistory:2});
+  expect(q).toMatchObject({preview:1,needsHistory:1,needsRecheck:1});
   expect(q.entries[0]).toMatchObject({state:'preview'});
  });
 });
