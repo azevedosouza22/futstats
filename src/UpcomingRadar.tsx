@@ -174,6 +174,10 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
     if(latest.some(s=>s.matchAt.slice(0,10)===date&&s.competition===league&&normalizeTeam(s.home)===normalizeTeam(home.name)&&normalizeTeam(s.away)===normalizeTeam(away.name))){
       setMessage('Este confronto já possui uma previsão V2/V3 registrada. Ela permanecerá sem alterações.');return;
     }
+    if(latest.length>=50){
+      setMessage('Limite de 50 previsões atingido. Exporte uma cópia; nenhum registro antigo será substituído automaticamente.');
+      return;
+    }
     if(goodPickSelection){
       // A shortlist preview can expire between click and save. Recheck against
       // the current official schedule and frozen policy; never fabricate origin.
@@ -209,7 +213,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
       })),
     };
-    const next=[record,...latest].slice(0,50);
+    const next=[record,...latest];
     try{localStorage.setItem(KEY,JSON.stringify(next));setSaved(next);setLastSavedKey(record.key);setMessage('Análise prospectiva registrada neste navegador. Exporte o arquivo para conservar uma cópia.');}
     catch{setMessage('Não foi possível salvar no navegador. Libere espaço e tente novamente.');}
   }
