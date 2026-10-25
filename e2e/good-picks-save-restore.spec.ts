@@ -517,3 +517,73 @@ test('Etapa 50: nove jogos Bundesliga agrupados numa fonte com CSV PENDENTE',asy
   expect(oldCsv).not.toContain('14:30 Brasília');
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 51: ID de resultado duplicado e importação futura não viram acerto',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),{key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(saved).toHaveLength(1);
+  const result={
+    id:'local-source-001',date:'2026-10-25',
+    competition:COMPETITION,home:'barcelona',away:'real-madrid',
+    first:[stat(2,18,7,5),stat(1,14,5,6)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)],
+    research:{provider:'work-csv',source:'Flashscore',
+      sourceId:'local-source-001',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=local-source-001',
+      importedAt:'2026-10-26T03:00:00.000Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]}
+  };
+  const duplicate={...result,id:'other-unrelated-fixture',
+    date:'2026-10-24',home:'visitor-0',away:'opponent-0',
+    competition:'Liga sem relação'};
+  base.matches.push(result as (typeof base.matches)[number],
+    duplicate as (typeof base.matches)[number]);
+  const saveBase=async()=>{
+    await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+      {key:DATA_KEY,data:base});
+    await page.reload();
+    await openRadar(page);
+    await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  };
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00.000Z'));
+  await saveBase();
+  let audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  await expect(audit).toContainText('0 confronto(s) com resultado');
+  await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
+    .toContainText('1 resultado(s) bloqueado(s) por');
+  await expect(audit).toContainText('ID de fonte CSV reutilizado');
+  let queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
+  await expect(queue).toContainText('1 excluído(s) da avaliação');
+
+  base.matches.pop(); // remove the unrelated fixture; only isolated synthetic data
+  result.research.importedAt='2026-10-30T12:00:00.000Z';
+  await saveBase();
+  audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  await expect(audit).toContainText('0 confronto(s) com resultado');
+  await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
+    .toContainText('1 resultado(s) com data de importação futura');
+  queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
+  await expect(queue).toContainText('0 com CSV local para conferir');
+
+  result.research.importedAt='2026-10-26T03:00:00.000Z';
+  await saveBase();
+  audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  await expect(audit).toContainText('1 confronto(s) com resultado');
+  await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
+    .toHaveCount(0);
+  queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
+  await expect(queue).toContainText('1 com CSV local para conferir');
+  await expect(queue).toContainText('PENDENTE');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+});
