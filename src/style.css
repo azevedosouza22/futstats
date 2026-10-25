@@ -995,3 +995,47 @@ html{scroll-behavior:smooth}
 @media(max-width:950px){.premium .daily-good-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.premium .daily-good-picks{padding:11px}
  .premium .daily-good-list{grid-template-columns:minmax(0,1fr)}}
+
+/* Etapa 37: fluxo diário com dois atalhos e extras recolhidos, sem remover ferramentas. */
+.premium .radar-quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+.premium .radar-extra-modes{margin-top:12px;border:1px solid #496578;
+ background:#192c3a;border-radius:10px;color:#d1e3ef}
+.premium .radar-extra-modes>summary{padding:12px 14px;cursor:pointer;
+ font-size:12px;font-weight:700;min-height:44px;line-height:1.6}
+.premium .radar-extra-modes[open]>summary{border-bottom:1px solid #496578}
+.premium .radar-secondary-actions{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}
+.premium .radar-save-next{display:grid;gap:8px;margin:12px 0 18px;
+ padding:15px;background:#183d34;border:1px solid #74b99a;border-radius:12px}
+.premium .radar-save-next strong{font-size:14px;color:#caffdf}
+.premium .radar-save-next span{font-size:12px;color:#d0e6db;line-height:1.55}
+.premium .radar-save-next .primary{justify-self:start;min-height:44px}
+.premium #radar-saved-forecasts:focus{outline:2px solid #83c1ff;outline-offset:3px}
+.premium .round-tracker-disclosure{margin:12px 0;border:1px solid #4a6175;
+ border-radius:12px;background:#172736;padding:0}
+.premium .round-tracker-disclosure>summary{padding:13px 15px;cursor:pointer;
+ font-size:12px;color:#d4e4ed;font-weight:700;min-height:44px}
+.premium .round-tracker-disclosure .round-tracker{margin:0 10px 10px}
+.premium .mobile-safety-shortcut{min-height:44px;display:flex;align-items:center;
+ gap:7px;border:1px solid #497c6a;border-radius:9px;background:#234a3e;
+ color:#d9ffe8;padding:8px 11px;font-size:11px;font-weight:700;white-space:nowrap}
+.premium .backup-legacy-tools{font-size:11px;color:#c2d7df;border:1px solid #526b79;
+ border-radius:9px;width:100%;padding:8px 10px}
+.premium .backup-legacy-tools summary{cursor:pointer;padding:5px 0;font-weight:650}
+.premium .backup-legacy-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.premium .backup-legacy-actions button{min-height:44px}
+@media(max-width:1000px){
+ .premium .radar-quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium .radar-secondary-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:580px){
+ .premium .radar-quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium .radar-quick-action{grid-template-columns:1fr;justify-items:start;
+  min-width:0;min-height:96px;gap:5px;padding:10px}
+ .premium .radar-quick-action>span{width:27px;height:27px;font-size:11px}
+ .premium .radar-quick-action strong{font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+ .premium .radar-quick-action small{grid-column:1;font-size:10px;line-height:1.45}
+ .premium .radar-secondary-actions{grid-template-columns:1fr}
+ .premium .radar-save-next .primary{width:100%}
+ .premium .mobile-safety-shortcut{padding:8px;font-size:10px;gap:4px}
+ .premium .backup-legacy-actions{flex-direction:column}
+}

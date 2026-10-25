@@ -1,4 +1,4 @@
-import {useState,useRef} from 'react';
+import {useState,useRef,useEffect} from 'react';
 import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
@@ -44,7 +44,7 @@ function NumericReferences({line,history,league,projected,legacy=false}:{
   </div>;
 }
 
-export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'new'|'saved';onOpenWork:()=>void}) {
+export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:Data;view:'new'|'saved';onOpenWork:()=>void;onViewSaved:()=>void}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
   const [date,setDate]=useState(brasiliaDate().date);
   const [time,setTime]=useState('');
@@ -52,12 +52,20 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
   const [saved,setSaved]=useState(readSaved);
   const [recordFilter,setRecordFilter]=useState<FollowupFilter>('all');
   const [message,setMessage]=useState('');
+  const [lastSavedKey,setLastSavedKey]=useState<string|null>(null);
   const [calendarSelection,setCalendarSelection]=useState('');
   const [calendarSource,setCalendarSource]=useState('');
   const [communityProvisional,setCommunityProvisional]=useState(false);
   const [officialReference,setOfficialReference]=useState(false);
   const [editSchedule,setEditSchedule]=useState(false);
   const futureFormRef=useRef<HTMLHeadingElement>(null);
+  const savedSectionRef=useRef<HTMLDivElement>(null);
+  // Open the actual saved record list, not the former long round-32 dashboard.
+  useEffect(()=>{
+    if(view!=='saved')return;
+    savedSectionRef.current?.focus({preventScroll:true});
+    savedSectionRef.current?.scrollIntoView({behavior:'instant',block:'start'});
+  },[view]);
   const restoreInput=useRef<HTMLInputElement>(null);
   function useCalendarFixture(f:ScheduledFixture){
     const selection=resolveCalendarFixture(data,f);
@@ -69,8 +77,9 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
     setCommunityProvisional(f.id.startsWith('community|'));
     setOfficialReference(f.id.startsWith('official|'));
     setEditSchedule(!selection.hasKickoffTime);
-    setMessage('');
+    setMessage('');setLastSavedKey(null);
     // Preview selection is not a saved prediction.
+    futureFormRef.current?.focus({preventScroll:true});
     futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
   }
   const teams=data.teams;
@@ -173,7 +182,7 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
       })),
     };
     const next=[record,...latest].slice(0,50);
-    try{localStorage.setItem(KEY,JSON.stringify(next));setSaved(next);setMessage('Análise prospectiva registrada neste navegador. Exporte o arquivo para conservar uma cópia.');}
+    try{localStorage.setItem(KEY,JSON.stringify(next));setSaved(next);setLastSavedKey(record.key);setMessage('Análise prospectiva registrada neste navegador. Exporte o arquivo para conservar uma cópia.');}
     catch{setMessage('Não foi possível salvar no navegador. Libere espaço e tente novamente.');}
   }
   function removeSavedRecord(record:Saved){
@@ -323,6 +332,14 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
       <button type="button" className="primary" disabled={!eligible||alreadySavedSelected} onClick={saveSnapshot}>{alreadySavedSelected?'Previsão já registrada':!eligible?'Confirme o horário antes de salvar':'Salvar previsão V2/V3 deste jogo'}</button>
     </div>}
     {message&&<p role="status" className="notice">{message}</p>}
+    {lastSavedKey&&saved.some(r=>r.key===lastSavedKey)&&
+      <div className="radar-save-next" role="region" aria-label="Próximo passo após salvar">
+        <strong>Previsão guardada neste navegador.</strong>
+        <span>Agora você pode conferir o registro congelado, sem recalcular os sinais V2/V3.</span>
+        <button type="button" className="primary" onClick={onViewSaved}>
+          Ver previsão que acabei de salvar
+        </button>
+      </div>}
 
 
     </>}
@@ -334,7 +351,9 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
       <div className="radar-hero-stats"><span><strong>{data.matches.length}</strong> partidas na base</span><span><strong>{saved.length}</strong> registros pré-jogo</span></div>
     </div>
 
-          <section className="round-tracker" aria-label="Acompanhamento da rodada 32">
+          <details className="round-tracker-disclosure">
+            <summary>Acompanhamento opcional · rodada 32 de outubro de 2026</summary>
+            <section className="round-tracker" aria-label="Acompanhamento da rodada 32">
       <div className="round-tracker-head"><div><span className="quick-eyebrow">ACOMPANHAMENTO</span><h3>Rodada 32 · Seus resultados</h3></div><span className="round-tracker-date">23–26 OUT</span></div>
       <div className="round-tracker-metrics">
         <div><strong>{registered}/10</strong><span>Previsões registradas</span></div>
@@ -349,8 +368,10 @@ export default function UpcomingRadar({data,view,onOpenWork}:{data:Data;view:'ne
         </div>)}</div>
       </details>
     </section>
+          </details>
 
-          <div className="radar-saved" id="radar-saved-forecasts">
+          <div className="radar-saved" id="radar-saved-forecasts"
+            ref={savedSectionRef} tabIndex={-1} aria-label="Previsões salvas e acompanhamento">
       <h4>2 · Previsões salvas e acompanhamento ({saved.length})</h4>
        <p className="muted">Aqui ficam os testes registrados antes das partidas. Para criar um novo, use o primeiro atalho do topo.</p>
       <div className="radar-record-actions">

@@ -37,8 +37,8 @@ export default function Radar({data}: {data: Data}) {
       <p>Escolha uma tarefa abaixo. A nova previsão é feita antes do início do jogo.</p>
     </div></div>
     <nav className="radar-quick-nav" aria-label="Escolha o que fazer no Radar">
-      <h3>O que você quer fazer?</h3>
-      <p>Escolha uma ação. As três áreas abaixo têm funções diferentes.</p>
+      <h3>Seu caminho no Radar</h3>
+      <p>Encontre um confronto, confira os indicadores e registre sua previsão. Depois, recupere-a em um toque.</p>
       <div className="radar-quick-actions">
         <button type="button" className="radar-quick-action radar-quick-action--create" aria-pressed={mode==='new'}
           onClick={()=>setMode('new')}>
@@ -50,6 +50,10 @@ export default function Radar({data}: {data: Data}) {
           <span aria-hidden="true">2</span><strong>Ver previsões já registradas</strong>
           <small>Consulte os testes já salvos, incluindo qualquer novo registro, e acompanhe os resultados.</small>
         </button>
+      </div>
+      <details className="radar-extra-modes">
+        <summary>Outras análises · Histórico e Work</summary>
+        <div className="radar-secondary-actions">
         <button type="button" className="radar-quick-action radar-quick-action--history" aria-pressed={mode==='history'}
           onClick={()=>setMode('history')}>
           <span aria-hidden="true">3</span><strong>Analisar jogos que já terminaram</strong>
@@ -58,12 +62,14 @@ export default function Radar({data}: {data: Data}) {
         <button type="button" className="radar-quick-action radar-quick-action--work" aria-pressed={mode==='work'}
           onClick={()=>setMode('work')}>
           <span aria-hidden="true">4</span><strong>Radar Work · Teste com novas ligas</strong>
-          <small>Usa as 292 partidas pesquisadas em uma simulação separada, sem salvar previsões.</small>
+          <small>Analisa pesquisas Work disponíveis, separadas da base principal, sem salvar previsões.</small>
         </button>
-      </div>
+        </div>
+      </details>
     </nav>
     <div className="radar-inner">
-      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode} onOpenWork={()=>setMode('work')}/>}
+      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}
+        onViewSaved={()=>setMode('saved')} onOpenWork={()=>setMode('work')}/>}
       {mode==='work'&&<WorkRadarPreview/>}
       {mode==='history'&&<>
       <h3 id="radar-retrospective" tabIndex={-1}>3 · Analisar partidas já encerradas (simulação)</h3>

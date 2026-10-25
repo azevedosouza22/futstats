@@ -48,12 +48,10 @@ async function openRadar(page:Page){
   await expect(page.getByRole('region',{name:/As Boas do Dia/})).toBeVisible();
 }
 async function openTools(page:Page){
-  // The regular desktop sidebar is collapsed by CSS on some mobile widths.
-  // Trigger the same React navigation handler to test content without
-  // assuming an unimplemented mobile drawer.
-  await page.locator('button[data-area="tools"]').evaluate((button:HTMLButtonElement)=>{
-    button.click();
-  });
+  // Exercise a real visible control in both layouts; never bypass UI handlers.
+  const mobile=page.getByRole('button',{name:'Abrir backup integral V4'});
+  if(await mobile.isVisible())await mobile.click();
+  else await page.locator('button[data-area="tools"]').click();
 }
 
 test.use({serviceWorkers:'block'});
@@ -93,6 +91,10 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
     matchAt:'2026-10-25T17:00:00',homeCount:5,awayCount:5
   });
   expect(saved[0].venue).toHaveLength(3);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
   // A revisit must never silently duplicate or recalculate frozen entries.
   await page.reload();
   await page.getByRole('button',{name:/Agenda e Radar/}).click();
@@ -162,4 +164,31 @@ test('Sem histórico suficiente, abre agenda mas não oferece As Boas',async({pa
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas.getByText(/Nenhuma indicação passou pelos critérios hoje/)).toBeVisible();
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+});
+
+
+test('Android: percurso principal visível, áreas avançadas recolhidas e atalhos utilizáveis',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  const nav=page.getByRole('navigation',{name:'Escolha o que fazer no Radar'});
+  const create=nav.getByRole('button',{name:/Criar previsão para um jogo futuro/});
+  const existing=nav.getByRole('button',{name:/Ver previsões já registradas/});
+  await expect(create).toBeVisible();
+  await expect(existing).toBeVisible();
+  const b=await existing.boundingBox();
+  expect(b?.height??0).toBeGreaterThanOrEqual(44);
+  const advanced=page.locator('.radar-extra-modes');
+  await expect(advanced).not.toHaveAttribute('open');
+  await expect(nav.getByRole('button',{name:/Radar Work/})).toBeHidden();
+  await advanced.locator('summary').click();
+  await expect(nav.getByRole('button',{name:/Radar Work/})).toBeVisible();
+  await existing.click();
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
+  await create.click();
+  await expect(page.getByRole('region',{name:/As Boas do Dia/})).toBeVisible();
+  await openTools(page);
+  await expect(page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'})).toBeVisible();
 });
