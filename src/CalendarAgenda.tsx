@@ -30,7 +30,11 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
   const [freeError,setFreeError]=useState('');
   const [freeLoading,setFreeLoading]=useState(false);
   const queryController=useRef<AbortController|null>(null);
-  useEffect(()=>()=>queryController.current?.abort(),[]);
+  // One read-only lookup when this screen opens; no polling or background tasks.
+  useEffect(()=>{
+    void fetchCandidateFixtures();
+    return ()=>queryController.current?.abort();
+  },[]);
   async function fetchCandidateFixtures(){
     queryController.current?.abort();
     const controller=new AbortController();
