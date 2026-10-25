@@ -27,10 +27,13 @@ export type PickAuditRow={
  key:string;home:string;away:string;competition:string;matchAt:string;
  status:PickAuditStatus;reason:string;sourceUrl:string|null;markets:PickAuditMarket[];
 };
+export type AttributedPickStatus=Exclude<PickAuditStatus,'legacy'>;
 export type PickAuditLeague={
  league:string;snapshots:number;scoredFixtures:number;scoredMarkets:number;
  picks:PickScore;constantOver:PickScore;historicalBaseline:PickScore;
  missingMarkets:number;
+ /** Exhaustive snapshot disposition: pending, unavailable or excluded, never fake hits. */
+ statusCounts:Record<AttributedPickStatus,number>;
 };
 export type PickAuditReport={
  snapshots:number;attributed:number;scoredFixtures:number;
@@ -38,6 +41,9 @@ export type PickAuditReport={
 };
 
 const zero=():PickScore=>({hits:0,observed:0});
+const emptyDisposition=():Record<AttributedPickStatus,number>=>({
+ invalid:0,late:0,future:0,waiting:0,ambiguous:0,source_missing:0,scored:0
+});
 const validNumber=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)&&n>=0;
 const officialHost=new Set(['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com','www.premierleague.com']);
 const safeOfficialUrl=(s:string)=>{
@@ -159,10 +165,12 @@ export function auditDailyGoodPicks(
   let league=leagues.get(row.competition);
   if(!league){
    league={league:row.competition,snapshots:0,scoredFixtures:0,
-    scoredMarkets:0,picks:zero(),constantOver:zero(),historicalBaseline:zero(),missingMarkets:0};
+    scoredMarkets:0,picks:zero(),constantOver:zero(),historicalBaseline:zero(),
+    missingMarkets:0,statusCounts:emptyDisposition()};
    leagues.set(row.competition,league);
   }
   league.snapshots++;
+  league.statusCounts[row.status]++;
   if(row.status!=='scored')continue;
   if(row.markets.some(m=>m.actual!==null))league.scoredFixtures++;
   for(const market of row.markets){
