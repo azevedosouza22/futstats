@@ -849,3 +849,18 @@ html{scroll-behavior:smooth}
  .premium .radar-daily-values b{font-size:16px}
 }
 @media(max-width:365px){.premium .radar-daily-metrics{grid-template-columns:minmax(0,1fr)}}
+
+/* OpenFootball discovery is read-only, provisional and visually separate. */
+.premium .free-calendar-discovery{margin-top:22px;padding:16px;border:1px solid #567184;border-radius:12px;background:#122838;min-width:0;display:grid;gap:12px}
+.premium .free-calendar-discovery h4{margin:0;color:#f0f9ff;font-size:16px}
+.premium .free-calendar-discovery>.text-button{justify-self:start;padding:10px 13px;border:1px solid #7798a9;border-radius:9px;color:#eaf6fd}
+.premium .free-calendar-discovery>.text-button:disabled{opacity:.6}
+.premium .free-calendar-fixture{background:#26323a;border:1px solid #7a6670}
+.premium .free-calendar-fixture .radar-daily-fixture-title>small:first-child{font-weight:800;color:#ffd0a5;letter-spacing:.04em}
+.premium .free-calendar-errors{padding:8px;border:1px solid #806c65;border-radius:8px;font-size:11px;color:#f9dcc6}
+.premium .free-calendar-errors summary{cursor:pointer}
+.premium .free-calendar-errors ul{margin:8px 0 2px;padding-left:20px}
+@media(max-width:580px){
+ .premium .free-calendar-discovery{padding:11px}
+ .premium .free-calendar-discovery>.text-button{width:100%;justify-self:stretch}
+}
