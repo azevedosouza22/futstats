@@ -328,5 +328,27 @@ test('Etapa 45: comparação documental de segunda fonte, sem atestar resultado'
       ...supplied,indicators:[{id:'goals-full-2.5',actual:4}]
     }))});
   await expect(comparison).toContainText('DIVERGE');
+  const [dossier]=await Promise.all([
+    page.waitForEvent('download'),
+    audit.getByRole('button',{name:'Exportar dossiê local da comparação (JSON)'}).click()
+  ]);
+  expect(dossier.suggestedFilename()).toBe('futstats-dossie-comparacao-local.json');
+  const packet=JSON.parse(await readFile((await dossier.path())!,'utf-8'));
+  expect(packet).toMatchObject({
+    format:'futstats-dossie-comparacao-documental-v1',
+    independentVerification:'PENDENTE',
+    originalRecord:{key:original[0].key},
+    comparison:{disagreement:1}
+  });
+  expect(packet.sha256).toMatch(/^[a-f0-9]{64}$/);
+  const dossierUpload=audit.getByLabel('Conferir integridade do dossiê (JSON)');
+  await dossierUpload.setInputFiles({name:'dossie-legitimo.json',
+    mimeType:'application/json',buffer:Buffer.from(JSON.stringify(packet))});
+  await expect(audit).toContainText('Integridade SHA-256 consistente');
+  await expect(audit).toContainText('DOCUMENTAÇÃO NÃO VERIFICADA NA WEB');
+  const tampered={...packet,comparison:{...packet.comparison,disagreement:77}};
+  await dossierUpload.setInputFiles({name:'dossie-alterado.json',
+    mimeType:'application/json',buffer:Buffer.from(JSON.stringify(tampered))});
+  await expect(audit).toContainText('integridade SHA-256 falhou');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY)).toEqual(original);
 });
