@@ -11,6 +11,7 @@ import type {Data} from './model';
 import {brasiliaDate,type ScheduledFixture} from './calendar';
 import type {OfficialCalendarItem} from './officialCalendar';
 import {buildRadarDailyOverview} from './radarDailyOverview';
+import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
 
 export type DailyGoodSignal={
   id:string;label:string;line:number;direction:'Over'|'Under';
@@ -26,24 +27,13 @@ export type DailyGoodResult={
 };
 const validDate=(s:string)=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&
   !Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
-const officialHosts=new Set([
-  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
-  'www.premierleague.com'
-]);
 function verifiable(item:OfficialCalendarItem,today:string,clock:string){
  const f=item.fixture;
  if(!item.fresh||!validDate(item.verifiedAt)||!validDate(f.date)||
     f.date!==today||!f.time||!/^([01]\d|2[0-3]):[0-5]\d$/.test(f.time)||
     f.time<=clock)return false;
- const age=Math.floor((Date.parse(today+'T12:00:00Z')-
-    Date.parse(item.verifiedAt+'T12:00:00Z'))/86400000);
- if(age<0||age>2)return false;
- try{
-   const url=new URL(f.sourceUrl);
-   if(url.protocol!=='https:'||url.username||url.password||
-      !officialHosts.has(url.hostname.toLowerCase()))return false;
- }catch{return false;}
- return true;
+ return officialSnapshotFreshAt(item.verifiedAt,today)&&
+   safeOfficialFixtureUrl(f.sourceUrl);
 }
 const safeNumber=(n:number|null):n is number=>
  typeof n==='number'&&Number.isFinite(n)&&n>=0;
