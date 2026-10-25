@@ -42,6 +42,51 @@ const CBF_FIXTURES:readonly OfficialCalendarRecord[]=[
    timezone:'America/Sao_Paulo',utcKickoff:'2026-10-29T00:30:00Z',
    officialUrl:'https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-sao-paulo/832219?view=escala-de-arbitros',
    verifiedAt:'2026-10-25'},
+  {id:'cbf-atletico-cruzeiro-20261029',competition:'Brasileirão Série A',
+   home:'Atlético-MG',away:'Cruzeiro',localDate:'2026-10-29',localTime:'19:30',
+   timezone:'America/Sao_Paulo',utcKickoff:'2026-10-29T22:30:00Z',
+   officialUrl:'https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/atletico-mineiro-x-cruzeiro/832216',
+   verifiedAt:'2026-10-25'},
+  {id:'cbf-gremio-athletico-20261029',competition:'Brasileirão Série A',
+   home:'Grêmio',away:'Athletico-PR',localDate:'2026-10-29',localTime:'21:30',
+   timezone:'America/Sao_Paulo',utcKickoff:'2026-10-30T00:30:00Z',
+   officialUrl:'https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/gremio-x-athletico-paranaense/832217?view=escala-de-arbitros',
+   verifiedAt:'2026-10-25'},
+  {id:'cbf-corinthians-mirassol-20261030',competition:'Brasileirão Série A',
+   home:'Corinthians',away:'Mirassol',localDate:'2026-10-30',localTime:'20:00',
+   timezone:'America/Sao_Paulo',utcKickoff:'2026-10-30T23:00:00Z',
+   officialUrl:'https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/corinthians-x-mirassol/832214',
+   verifiedAt:'2026-10-25'},
+];
+
+const PREMIER_LEAGUE_FIXTURES:readonly OfficialCalendarRecord[]=[
+  // Times from the Premier League's revised UK fixture schedule. The UK is
+  // on GMT after the 25 October clock change; local times are not Brasilia.
+  {id:'pl-chelsea-manchester-united-20261031',competition:'Premier League inglesa 2026/27',
+   home:'Chelsea',away:'Manchester United',localDate:'2026-10-31',localTime:'12:30',
+   timezone:'Europe/London',utcKickoff:'2026-10-31T12:30:00Z',
+   officialUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+   verifiedAt:'2026-10-25'},
+  {id:'pl-tottenham-crystal-palace-20261031',competition:'Premier League inglesa 2026/27',
+   home:'Tottenham Hotspur',away:'Crystal Palace',localDate:'2026-10-31',localTime:'17:30',
+   timezone:'Europe/London',utcKickoff:'2026-10-31T17:30:00Z',
+   officialUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+   verifiedAt:'2026-10-25'},
+  {id:'pl-aston-villa-fulham-20261031',competition:'Premier League inglesa 2026/27',
+   home:'Aston Villa',away:'Fulham',localDate:'2026-10-31',localTime:'20:00',
+   timezone:'Europe/London',utcKickoff:'2026-10-31T20:00:00Z',
+   officialUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+   verifiedAt:'2026-10-25'},
+  {id:'pl-liverpool-arsenal-20261101',competition:'Premier League inglesa 2026/27',
+   home:'Liverpool',away:'Arsenal',localDate:'2026-11-01',localTime:'16:30',
+   timezone:'Europe/London',utcKickoff:'2026-11-01T16:30:00Z',
+   officialUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+   verifiedAt:'2026-10-25'},
+  {id:'pl-newcastle-everton-20261102',competition:'Premier League inglesa 2026/27',
+   home:'Newcastle United',away:'Everton',localDate:'2026-11-02',localTime:'20:00',
+   timezone:'Europe/London',utcKickoff:'2026-11-02T20:00:00Z',
+   officialUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+   verifiedAt:'2026-10-25'}
 ];
 
 const WORK_LEAGUES:Record<string,string>={
@@ -50,7 +95,8 @@ const WORK_LEAGUES:Record<string,string>={
   'ligue-1':'Ligue 1 francesa 2026/27',
 };
 const supportedHosts=new Set([
-  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com'
+  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
+  'www.premierleague.com'
 ]);
 const dateValid=(value:string)=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&
   !Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
@@ -104,7 +150,7 @@ export function officialCalendarItem(record:OfficialCalendarRecord,now=new Date(
 
 /** Only a few manually checked fixtures; NO network fetch or auto-refresh. */
 export function readOfficialCalendar(now=new Date()):OfficialCalendarItem[]{
-  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES];
+  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES,...PREMIER_LEAGUE_FIXTURES];
   for(const item of VERIFIED_EUROPE_FIXTURES){
     if(!fixtureWithOfficialTime(item,now))continue;
     const competition=WORK_LEAGUES[item.league];
