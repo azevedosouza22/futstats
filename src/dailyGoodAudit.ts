@@ -128,7 +128,9 @@ export function auditDailyGoodPicks(
   // A local/manual/demo score without traceable original-source metadata
   // must NEVER be treated as a verified real-world result.
   const source=match.research;
-  if(!source||validateMatch(match)||Date.parse(source.importedAt)<Date.parse(record.matchAt+'-03:00')){
+  // Require a post-match buffer: a score entered during play is not final evidence.
+  const minimumFinalAt=Date.parse(record.matchAt+'-03:00')+120*60*1000;
+  if(!source||validateMatch(match)||Date.parse(source.importedAt)<minimumFinalAt||now.getTime()<minimumFinalAt){
    row.status='source_missing';row.reason='Resultado sem procedência CSV válida posterior ao jogo';continue;
   }
   row.sourceUrl=source.sourceUrl;
