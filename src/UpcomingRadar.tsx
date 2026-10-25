@@ -3,6 +3,7 @@ import type {Data} from './model';
 import {brasiliaDate,normalizeTeam,brasileiraoRound32,isUpcoming,type ScheduledFixture} from './calendar';
 import CalendarAgenda from './CalendarAgenda';
 import {radarUpcoming} from './radar';
+import {leagueNumericContext,type LeagueNumericMarket} from './radarNumericContext';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
@@ -22,6 +23,23 @@ function readSaved(): Saved[] {
 const format=(v:number|null)=>v===null?'N/D':v.toLocaleString('pt-BR',{maximumFractionDigits:2});
 const percentage=(v:number|null)=>v===null?'N/D':(v*100).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%';
 const Signal = ({value}:{value:'Over'|'Under'|'Sem sinal'})=><span className={'signal signal--'+(value==='Over'?'over':value==='Under'?'under':'neutral')}>{value}</span>;
+
+// New observations are frozen with the prediction. Older records never receive
+// reconstructed league values from games that were played afterward.
+function NumericReferences({line,history,league,projected,legacy=false}:{
+  line:number;
+  history?:{historicalMean:number|null;observed:number};
+  league?:LeagueNumericMarket;
+  projected?:number|null;
+  legacy?:boolean;
+}){
+  return <div className="radar-numeric-details">
+    <span>Linha analisada: +{format(line)}</span>
+    <span>Média histórica das equipes: {format(history?.historicalMean??null)} ({history?.observed??0} jogos)</span>
+    <span>Média do campeonato: {legacy?'N/D (não registrada)':format(league?.mean??null)+' ('+(league?.observed??0)+' jogos)'}</span>
+    {projected!==undefined&&<span>Projeção V2: {format(projected)}</span>}
+  </div>;
+}
 
 export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
@@ -58,6 +76,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     normalizeTeam(record.away)===normalizeTeam(away.name));
   const comparison=eligible?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
   const prospective=eligible&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
+  const numericLeagueContext=eligible?leagueNumericContext(data,league,date):[];
   const settlements=saved.map(v=>settleVenuePredictions(data,v));
   const scores=scoreSettlements(settlements);
   const followup=summarizeRadarFollowup(saved,settlements);
@@ -82,7 +101,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     const fixture={home:h.id,away:a.id,date:f.date,competition:f.competition};
     const analysis=radarUpcoming(data,fixture);
     if(!analysis.homeHistory.length||!analysis.awayHistory.length)return [];
-    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture)}];
+    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture),leagueContext:leagueNumericContext(data,f.competition,f.date)}];
   });
   const bulkCount=Math.min(roundPlans.length,Math.max(0,50-saved.length));
   function registerRound(){
@@ -97,6 +116,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       competition:p.f.competition,home:p.home.name,away:p.away.name,
       homeCount:p.analysis.homeHistory.length,awayCount:p.analysis.awayHistory.length,
       venue:p.venue,
+      leagueContext:p.leagueContext,
       markets:p.analysis.markets.map(m=>({
         id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
@@ -132,6 +152,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       competition:league,home:home.name,away:away.name,
       homeCount:comparison.homeHistory.length,awayCount:comparison.awayHistory.length,
       venue:prospective,
+      leagueContext:numericLeagueContext,
       markets:comparison.markets.map(m=>({
         id:m.id,label:m.label,line:m.line,historyRate:m.historyRate,
         observed:m.observed,overs:m.overs,historicalMean:m.historicalMean,
@@ -258,8 +279,8 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       </table></div>
       <div className="radar-venue-prospective" aria-label="Previsões futuras V2 e V3">
         <h4>Previsão deste jogo · V2 e V3 (ainda não salva)</h4>
-        {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span><small>Projeção {format(m.projectedTotal)}</small></div></div>)}
-        {comparison.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="forecast-line" key={m.id}><b>Escanteios · partida completa</b><div><span>Linha ilustrativa {format(m.line)}</span><span>Média histórica {format(m.historicalMean)}</span><small>{m.observed} jogos válidos · sem sinal V2/V3 nesta versão</small></div></div>)}
+        {prospective.map(m=><div className="forecast-line" key={m.marketId}><b>{m.label}</b><div><span>V2 <Signal value={m.v2}/></span><span>V3 <Signal value={m.v3}/></span></div><NumericReferences line={m.line} history={comparison.markets.find(x=>x.id===m.marketId)} league={numericLeagueContext.find(x=>x.id===m.marketId)} projected={m.projectedTotal}/></div>)}
+        {comparison.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="forecast-line" key={m.id}><b>Escanteios · partida completa</b><span>Histórico disponível · sem sinal V2/V3 nesta versão</span><NumericReferences line={m.line} history={m} league={numericLeagueContext.find(x=>x.id===m.id)}/></div>)}
       </div>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
@@ -375,9 +396,19 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
             <p className="record-status" data-state={settled.status}>{status}</p>
             {v.venue?.map(m=>{
               const result=settled.markets.find(s=>s.marketId===m.marketId);
-              return <p className="saved-market" key={m.marketId}><b>{m.label}</b><span>V2 <Signal value={m.v2}/>{result?' · '+result.v2:''}</span><span>V3 <Signal value={m.v3}/>{result?' · '+result.v3:''}</span></p>;
+              return <div className="saved-market" key={m.marketId}>
+                <b>{m.label}</b><span>V2 <Signal value={m.v2}/>{result?' · '+result.v2:''}</span>
+                <span>V3 <Signal value={m.v3}/>{result?' · '+result.v3:''}</span>
+                <NumericReferences line={m.line} history={v.markets.find(x=>x.id===m.marketId)}
+                  league={v.leagueContext?.find(x=>x.id===m.marketId)} projected={m.projectedTotal}
+                  legacy={!v.leagueContext}/>
+              </div>;
             })}
-            {v.markets.filter(m=>m.id==='corners-full-8.5').map(m=><p className="saved-market" key={m.id}><b>Escanteios · referência histórica salva</b><span>Média {format(m.historicalMean)} · Linha {format(m.line)} · {m.observed} jogos · sem sinal V2/V3</span></p>)}
+            {v.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="saved-market" key={m.id}>
+              <b>Escanteios · partida completa</b><span>Histórico salvo · sem sinal V2/V3</span>
+              <NumericReferences line={m.line} history={m}
+                league={v.leagueContext?.find(x=>x.id===m.id)} legacy={!v.leagueContext}/>
+            </div>)}
             <button type="button" className="radar-record-delete" aria-label={`Excluir apenas o registro pré-jogo ${v.home} × ${v.away} de ${v.matchAt.slice(0,10)}`} onClick={()=>removeSavedRecord(v)}>Excluir somente este registro</button>
           </li>;
         })}

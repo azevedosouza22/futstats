@@ -777,3 +777,8 @@ html{scroll-behavior:smooth}
 .intelligence .auto-coverage-periods b{font-size:14px;white-space:nowrap}
 .intelligence .auto-coverage p{line-height:1.6;font-size:12px}
 .intelligence .auto-coverage p[role=alert]{color:#ffd19c}
+
+/* V4 Radar: numeric context stays legible in compact mobile cards. */
+.radar-numeric-details{display:flex;flex-wrap:wrap;gap:7px 16px;width:100%;flex-basis:100%;padding-top:8px;border-top:1px solid rgba(110,135,121,.18);font-size:11px;line-height:1.65;color:#566b61}
+.radar-numeric-details>span{min-width:145px;flex:1 1 180px}
+.premium .radar-numeric-details{color:#c7d8e3;border-top-color:#344956}
