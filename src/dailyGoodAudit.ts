@@ -164,7 +164,7 @@ export function auditDailyGoodPicks(
   }
   league.snapshots++;
   if(row.status!=='scored')continue;
-  league.scoredFixtures++;
+  if(row.markets.some(m=>m.actual!==null))league.scoredFixtures++;
   for(const market of row.markets){
    if(market.v3==='N/D'){league.missingMarkets++;continue;}
    league.scoredMarkets++;
