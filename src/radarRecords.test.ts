@@ -42,6 +42,25 @@ describe('recuperação segura dos registros pré-jogo',()=>{
   expect(()=>parseRadarRecords([{...withPick,goodPicks:{...withPick.goodPicks,
     sourceUrl:'http://site-falso.invalid'}}])).toThrow('inválido');
  });
+ it('conserva cópia da indicação de Serie A italiana e Premier League ao restaurar',()=>{
+  const base=record('italia');
+  const signals=[{id:'goals-full-2.5',label:'Gols',line:2.5,
+    direction:'Under' as const,projection:1.1,historicalMean:2,
+    historicalSample:10,leagueSample:20,relativeDistance:.56}];
+  const italian={...base,goodPicks:{
+    verifiedAt:'2026-10-25',
+    sourceUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',
+    signals}};
+  const premier={...record('premier','Chelsea'),away:'Manchester United',
+    goodPicks:{verifiedAt:'2026-10-25',
+      sourceUrl:'https://www.premierleague.com/en/news/4688862/fixture-amendments-for-premier-league-matches-in-october-and-november',
+      signals}};
+  const copy=JSON.parse(JSON.stringify([italian,premier]));
+  expect(parseRadarRecords(copy)).toEqual([italian,premier]);
+  expect(()=>parseRadarRecords([{...italian,goodPicks:{
+    ...italian.goodPicks,sourceUrl:'https://www.legaseriea.it.evil.invalid/x'
+  }}])).toThrow('inválido');
+ });
  it('respeita o limite do armazenamento e não remove previsões existentes',()=>{
   const existing=Array.from({length:50},(_,i)=>({...record('old-'+i,'Casa'+i),away:'Fora'+i}));
   const merged=mergeRadarRecords(existing,[record('new')]);
