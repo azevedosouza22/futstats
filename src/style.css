@@ -873,3 +873,16 @@ html{scroll-behavior:smooth}
 .premium .official-fixture .radar-daily-fixture-title a{color:#a6ddff}
 .premium .official-fixture .radar-daily-fixture-head>button:not(:disabled){background:#28595e;color:#edfaff;border-radius:9px;padding:10px 12px}
 @media(max-width:580px){.premium .official-calendar{padding:11px}}
+
+/* Strictly separate main historical metrics from locally saved Work research. */
+.premium .radar-work-coverage{margin-top:12px;padding:12px;border:1px dashed #647b9b;
+ border-radius:10px;background:#1b2e44;display:grid;gap:8px}
+.premium .radar-work-coverage>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 16px}
+.premium .radar-work-coverage b{font-size:12px;color:#d5e8ff}
+.premium .radar-work-coverage span,.premium .radar-work-coverage p,
+.premium .radar-work-coverage small{font-size:11px;line-height:1.55;color:#bfcee3}
+.premium .radar-work-coverage p{margin:0}
+.premium .radar-work-coverage button{justify-self:start;border:1px solid #7194b6;
+ border-radius:8px;padding:10px 12px;font-weight:650;color:#ecf7ff;background:#284762}
+.premium .radar-work-coverage button:hover{background:#365877}
+@media(max-width:580px){.premium .radar-work-coverage button{width:100%;justify-self:stretch}}
