@@ -1,8 +1,9 @@
-import {useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import type {Data} from './model';
 import {buildRadarDailyOverview} from './radarDailyOverview';
 import RadarDailyCard from './RadarDailyCard';
-import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
+import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
+import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,normalizeTeam,type CalendarWindow,type ScheduledFixture} from './calendar';
 
 const KEY='futstats-calendar-csv-v1';
 function readSaved(): ScheduledFixture[] {
@@ -25,11 +26,46 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
   const [window,setWindow]=useState<CalendarWindow>('today');
   const [error,setError]=useState('');
   const [notice,setNotice]=useState('');
+  const [free,setFree]=useState<FreeAgendaResult|null>(null);
+  const [freeError,setFreeError]=useState('');
+  const [freeLoading,setFreeLoading]=useState(false);
+  const queryController=useRef<AbortController|null>(null);
+  // One read-only lookup when this screen opens; no polling or background tasks.
+  useEffect(()=>{
+    void fetchCandidateFixtures();
+    return ()=>queryController.current?.abort();
+  },[]);
+  async function fetchCandidateFixtures(){
+    queryController.current?.abort();
+    const controller=new AbortController();
+    queryController.current=controller;
+    setFreeLoading(true);setFreeError('');
+    try{
+      const result=await consultFreeAgenda(new Date(),controller.signal);
+      if(controller.signal.aborted)return;
+      setFree(result);
+      if(result.candidates.length===0&&result.errors.length>0)
+        setFreeError('As fontes gratuitas estão indisponíveis nesta consulta.');
+    }catch(e){
+      if(controller.signal.aborted)return;
+      setFreeError(e instanceof Error?e.message:'Não foi possível consultar os calendários.');
+    }finally{
+      if(!controller.signal.aborted)setFreeLoading(false);
+    }
+  }
   // Preserve user-imported agenda entries; show the verified round as a fallback.
   // Never write bundled fixtures to localStorage without user action.
   const visible=calendarWindow(mergeCalendar(calendar,brasileiraoRound32).entries,window);
   // Keep the overview bounded on mobile with many imported fixtures.
   const listed=visible.slice(0,30).map(f=>({fixture:f,overview:buildRadarDailyOverview(data,f)}));
+  const identity=(f:ScheduledFixture)=>[f.date,f.competition,
+    normalizeTeam(f.home),normalizeTeam(f.away)].join('|');
+  const confirmedIdentities=new Set(visible.map(identity));
+  const freeVisible=free?calendarWindow(free.candidates.map(c=>c.fixture),window)
+    .filter(f=>!confirmedIdentities.has(identity(f))):[];
+  const freeListed=freeVisible.slice(0,20).map(f=>({
+    fixture:f,overview:buildRadarDailyOverview(data,f),
+  }));
   async function load(file?:File) {
     setError('');setNotice('');
     if(!file)return;
@@ -45,7 +81,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
   const now=brasiliaDate();
   return <section className="calendar-agenda" aria-label="Agenda experimental">
     <h3>Visão diária · jogos disponíveis para análise</h3>
-    <p className="muted">Agenda local, não atualizada ao vivo. Inclui uma referência antiga da rodada 32 (23–26/10/2026) e jogos importados por você. Confira datas, horários e fonte antes de salvar qualquer previsão.</p>
+    <p className="muted">Agenda local, não atualizada ao vivo. Inclui uma referência antiga da rodada 32 (23–26/10/2026) e jogos importados por você. Abaixo, você também pode consultar calendários gratuitos de ligas europeias, sem importar dados ou registrar previsões.</p>
     {error&&<p role="alert" className="alert">{error}</p>}
     {notice&&<p role="status" className="notice">{notice}</p>}
     <div className="segment calendar-windows" role="group" aria-label="Período da agenda">
@@ -71,6 +107,39 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture}:{
       </article>)}
     </div>}
     <p className="muted">A visão diária utiliza apenas os jogos anteriores à data do confronto e as competições correspondentes. Para analisar as linhas e salvar uma previsão, abra o Radar completo. Sem horário confirmado, a prévia pode ser consultada, mas nenhuma previsão é salva.</p>
+    <section className="free-calendar-discovery" aria-label="Consulta gratuita de calendários europeus">
+      <h4>Consultar jogos das ligas europeias</h4>
+      <p className="muted">Consulta pontual a calendários comunitários gratuitos de Premier League, Serie A italiana, La Liga e Ligue 1. Datas podem estar desatualizadas; horários de Brasília não são confirmados. Esses confrontos aparecem apenas como <strong>candidatos para pesquisa</strong>.</p>
+      <button type="button" className="text-button" disabled={freeLoading} onClick={()=>{void fetchCandidateFixtures();}}>
+        {freeLoading?'Consultando calendários…':free?'Atualizar consulta gratuita':'Consultar calendários gratuitos'}
+      </button>
+      {freeError&&<p className="alert" role="alert">{freeError}</p>}
+      {free&&<>
+        <p className="muted">Consulta feita em {new Date(free.consultedAt).toLocaleString('pt-BR')} · {freeVisible.length} candidatos nesta janela de datas. Nenhum calendário foi importado no histórico.</p>
+        {free.errors.length>0&&<details className="free-calendar-errors"><summary>{free.errors.length} fonte(s) não disponível(is) nesta consulta</summary>
+          <ul>{free.errors.map(e=><li key={e}>{e}</li>)}</ul>
+        </details>}
+        {freeVisible.length>freeListed.length&&<p className="muted">Exibindo os primeiros {freeListed.length} candidatos.</p>}
+        {freeVisible.length===0?<p className="muted">Nenhum candidato de jogo para esta janela, nas fontes consultadas. Isso não confirma ausência de jogos.</p>:<div className="calendar-list">
+          {freeListed.map(({fixture:f,overview})=><article key={f.id} className="calendar-fixture radar-daily-fixture free-calendar-fixture">
+            <div className="radar-daily-fixture-head">
+              <div className="radar-daily-fixture-title">
+                <small>CATÁLOGO COMUNITÁRIO · DATA PROVISÓRIA</small>
+                <b>{f.home} × {f.away}</b>
+                <small>Data na fonte: {f.date} · Horário Brasília: N/D · {f.competition}</small>
+                <small><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">Ver catálogo original</a> · confirme em fonte oficial</small>
+              </div>
+              <button type="button" className="text-button" disabled={!canAnalyzeFixture(f)}
+                onClick={()=>onSelect(f)}>
+                {canAnalyzeFixture(f)?'Analisar prévia · confirmar data/hora':'Histórico indisponível nesta liga'}
+              </button>
+            </div>
+            <RadarDailyCard overview={overview}/>
+          </article>)}
+        </div>}
+        <p className="muted">Consulta somente leitura. Estes candidatos não possuem horário confirmado e não podem ser salvos automaticamente como previsões. Não são jogos oficiais verificados.</p>
+      </>}
+    </section>
     <details className="calendar-import-extra">
       <summary>Adicionar outros campeonatos e datas (CSV)</summary>
       <p className="muted">O FutStats não pesquisa automaticamente uma agenda atualizada. Use um CSV de calendário com fonte conferível.</p>

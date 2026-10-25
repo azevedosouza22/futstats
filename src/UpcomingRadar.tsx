@@ -54,6 +54,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   const [message,setMessage]=useState('');
   const [calendarSelection,setCalendarSelection]=useState('');
   const [calendarSource,setCalendarSource]=useState('');
+  const [communityProvisional,setCommunityProvisional]=useState(false);
   const [editSchedule,setEditSchedule]=useState(false);
   const futureFormRef=useRef<HTMLHeadingElement>(null);
   const restoreInput=useRef<HTMLInputElement>(null);
@@ -64,6 +65,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     setDate(selection.date);setTime(selection.time);
     setCalendarSelection(f.home+' × '+f.away);
     setCalendarSource(selection.sourceUrl);
+    setCommunityProvisional(f.id.startsWith('community|'));
     setEditSchedule(!selection.hasKickoffTime);
     setMessage('');
     // Preview selection is not a saved prediction.
@@ -249,10 +251,16 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     {calendarSelection&&<div className="radar-selected-fixture" role="status">
       <strong>{calendarSelection}</strong>
       <span>{date} · {time||'horário N/D'} (Brasília) · {league}</span>
-      <span>Horário da agenda local, sujeito a alterações. <a href={calendarSource} target="_blank" rel="noopener noreferrer">Conferir fonte</a></span>
+      <span>{communityProvisional
+        ?'Confronto do catálogo comunitário: data provisória, horário não confirmado.'
+        :'Horário da agenda local, sujeito a alterações.'}
+        {' '}<a href={calendarSource} target="_blank" rel="noopener noreferrer">
+          {communityProvisional?'Consultar catálogo (não oficial)':'Conferir fonte'}
+        </a>
+      </span>
       {!editSchedule&&<button type="button" className="text-button" onClick={()=>setEditSchedule(true)}>Corrigir data ou horário</button>}
     </div>}
-    <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
+    <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Quando a origem é comunitária, confira também a data e o horário em fonte oficial antes de registrar.</p>
     <div className="analysis-controls radar-fixture-form">
       <label>1. Competição / temporada
         <select aria-label="Competição futura" value={league} onChange={e=>{setLeague(e.target.value);setIds(['','']);setCalendarSelection('');setCalendarSource('');setTime('');setMessage('');}}>
