@@ -48,12 +48,10 @@ async function openRadar(page:Page){
   await expect(page.getByRole('region',{name:/As Boas do Dia/})).toBeVisible();
 }
 async function openTools(page:Page){
-  // The regular desktop sidebar is collapsed by CSS on some mobile widths.
-  // Trigger the same React navigation handler to test content without
-  // assuming an unimplemented mobile drawer.
-  await page.locator('button[data-area="tools"]').evaluate((button:HTMLButtonElement)=>{
-    button.click();
-  });
+  // Exercise a real visible control in both layouts; never bypass UI handlers.
+  const mobile=page.getByRole('button',{name:'Abrir backup integral V4'});
+  if(await mobile.isVisible())await mobile.click();
+  else await page.locator('button[data-area="tools"]').click();
 }
 
 test.use({serviceWorkers:'block'});
@@ -93,6 +91,10 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
     matchAt:'2026-10-25T17:00:00',homeCount:5,awayCount:5
   });
   expect(saved[0].venue).toHaveLength(3);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  await expect(page.locator('.round-tracker-disclosure')).not.toHaveAttribute('open');
   // A revisit must never silently duplicate or recalculate frozen entries.
   await page.reload();
   await page.getByRole('button',{name:/Agenda e Radar/}).click();
