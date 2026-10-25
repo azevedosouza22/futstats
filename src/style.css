@@ -864,3 +864,12 @@ html{scroll-behavior:smooth}
  .premium .free-calendar-discovery{padding:11px}
  .premium .free-calendar-discovery>.text-button{width:100%;justify-self:stretch}
 }
+
+/* Manual official-source snapshots, clearly distinguished from unverified feeds. */
+.premium .official-calendar{margin:14px 0 22px;padding:16px;border:1px solid #3f7881;border-radius:12px;background:#172e37;display:grid;gap:12px;min-width:0}
+.premium .official-calendar h4{font-size:16px;line-height:1.5;margin:0;color:#e9fbff}
+.premium .official-calendar .calendar-fixture{background:#1a3842;border-color:#487984}
+.premium .official-fixture .radar-daily-fixture-title>small:first-child{font-weight:750;color:#9ee6c3;letter-spacing:.035em}
+.premium .official-fixture .radar-daily-fixture-title a{color:#a6ddff}
+.premium .official-fixture .radar-daily-fixture-head>button:not(:disabled){background:#28595e;color:#edfaff;border-radius:9px;padding:10px 12px}
+@media(max-width:580px){.premium .official-calendar{padding:11px}}
