@@ -92,7 +92,8 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   });
   expect(saved[0].venue).toHaveLength(3);
   expect(saved[0].goodPicks).toMatchObject({
-    verifiedAt:'2026-10-25',
+    // Preserve the source's actual dated verification, not the test clock.
+    verifiedAt:'2026-10-23',
     sourceUrl:expect.stringContaining('laliga.com'),
     signals:expect.arrayContaining([expect.objectContaining({
       id:'goals-full-2.5',direction:'Over',historicalSample:10
