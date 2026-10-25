@@ -235,19 +235,27 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   const evaluated=roundStatuses.filter(x=>x.status==='scored').length;
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     {view==='new'&&<>
+          <div className="radar-agenda-first">
+            <CalendarAgenda onSelect={useCalendarFixture}
+              canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}/>
+          </div>
           <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>
-     <p className="radar-form-help">Esta é a seção certa para nossos testes diários. <strong>Escolha primeiro o campeonato. Depois selecione mandante, visitante, data e hora.</strong> Os sinais V2 e V3 aparecerão abaixo; só serão salvos ao tocar no botão de confirmação.</p>
-     <p className="radar-form-help">A agenda opcional fica abaixo deste formulário. Para outras ligas, como a Bundesliga, selecione as equipes aqui e confira data e horário na fonte.</p>
+     <p className="radar-form-help">Toque em <strong>Analisar jogo</strong> na agenda acima para preencher campeonato, equipes, data e horário automaticamente. Se a partida não aparecer, selecione manualmente. A análise aparece abaixo, sem salvar nada antes de sua confirmação.</p>
      <details className="radar-v2v3-explain"><summary>O que significam V2, V3 e “Sem sinal”?</summary>
        <p><b>V2:</b> faz uma projeção utilizando jogos anteriores das equipes, respeitando mando de campo e temporada, e exige uma margem em relação à linha do indicador.</p>
        <p><b>V3:</b> verifica se o histórico de ambas as equipes confirma o sinal da V2. Se não confirmar, pode mostrar “Sem sinal”.</p>
        <p><b>Sem sinal:</b> não há informação suficiente ou as regras não indicam Over/Under com clareza. Isso não significa previsão errada, nem recomendação para apostar.</p>
      </details>
-    {calendarSelection&&<p role="status" className="notice">Jogo selecionado: {calendarSelection}. Confira abaixo as previsões V2/V3. Nada foi registrado ainda.</p>}
+    {calendarSelection&&<div className="radar-selected-fixture" role="status">
+      <strong>{calendarSelection}</strong>
+      <span>{date} · {time||'horário N/D'} (Brasília) · {league}</span>
+      <span>Horário da agenda local, sujeito a alterações. <a href={calendarSource} target="_blank" rel="noopener noreferrer">Conferir fonte</a></span>
+      {!editSchedule&&<button type="button" className="text-button" onClick={()=>setEditSchedule(true)}>Corrigir data ou horário</button>}
+    </div>}
     <p className="muted">Selecione um jogo que ainda não começou. As análises utilizam apenas partidas anteriores, sem saber o resultado do confronto. Os horários desta seção seguem Brasília.</p>
     <div className="analysis-controls radar-fixture-form">
       <label>1. Competição / temporada
-        <select aria-label="Competição futura" value={league} onChange={e=>{setLeague(e.target.value);setIds(['','']);setCalendarSelection('');setMessage('');}}>
+        <select aria-label="Competição futura" value={league} onChange={e=>{setLeague(e.target.value);setIds(['','']);setCalendarSelection('');setCalendarSource('');setTime('');setMessage('');}}>
           <option value="">Escolha primeiro a competição</option>{leagues.map(c=><option key={c} value={c}>{c}</option>)}
         </select>
       </label>
@@ -256,25 +264,29 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
         :'Escolha uma competição para liberar as equipes.'}</p>
       <label>2. Mandante
         <select aria-label="Mandante futuro" disabled={!league} value={home?.id??''}
-          onChange={e=>{setIds([e.target.value,ids[1]===e.target.value?'':ids[1]]);setCalendarSelection('');}}>
+          onChange={e=>{setIds([e.target.value,ids[1]===e.target.value?'':ids[1]]);setCalendarSelection('');setCalendarSource('');setTime('');}}>
           <option value="">Selecione o mandante</option>
           {leagueTeams.filter(t=>t.id!==ids[1]).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
       </label>
       <label>3. Visitante
         <select aria-label="Visitante futuro" disabled={!league} value={away?.id??''}
-          onChange={e=>{setIds([ids[0]===e.target.value?'':ids[0],e.target.value]);setCalendarSelection('');}}>
+          onChange={e=>{setIds([ids[0]===e.target.value?'':ids[0],e.target.value]);setCalendarSelection('');setCalendarSource('');setTime('');}}>
           <option value="">Selecione o visitante</option>
           {leagueTeams.filter(t=>t.id!==ids[0]).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
       </label>
-      <label>4. Data do jogo
-        <input aria-label="Data futura" type="date" value={date} onChange={e=>setDate(e.target.value)}/>
-      </label>
-      <label>5. Hora de Brasília
-        <input aria-label="Hora futura" type="time" value={time} onChange={e=>setTime(e.target.value)}/>
-      </label>
+      {(!calendarSelection||editSchedule)&&<>
+        <label>4. Data do jogo
+          <input aria-label="Data futura" type="date" value={date}
+            onChange={e=>{setDate(e.target.value);setTime('');}}/>
+        </label>
+        <label>5. Hora de Brasília (confirme na fonte)
+          <input aria-label="Hora futura" type="time" value={time} onChange={e=>setTime(e.target.value)}/>
+        </label>
+      </>}
     </div>
+    {readyToAnalyze&&!eligible&&<p className="notice">Horário de início não informado. Você pode consultar a prévia abaixo, mas precisa confirmar o horário na fonte antes de salvar.</p>}
     {alreadySavedSelected&&<p className="notice" role="status"><strong>Este confronto já tem uma previsão salva.</strong> Não registre novamente: consulte em “Ver previsões já registradas”. O registro anterior foi preservado.</p>}
     {league&&!leagueTeams.length&&<p className="alert">Ainda não há equipes desta competição na base. Importe jogos dessa temporada antes de registrar a análise.</p>}
     {comparison&&<div className="radar-future-results">
@@ -295,16 +307,11 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
-      <button type="button" className="primary" disabled={alreadySavedSelected} onClick={saveSnapshot}>{alreadySavedSelected?'Previsão já registrada':'Salvar previsão V2/V3 deste jogo'}</button>
+      <button type="button" className="primary" disabled={!eligible||alreadySavedSelected} onClick={saveSnapshot}>{alreadySavedSelected?'Previsão já registrada':!eligible?'Confirme o horário antes de salvar':'Salvar previsão V2/V3 deste jogo'}</button>
     </div>}
     {message&&<p role="status" className="notice">{message}</p>}
 
-      <details className="radar-extra-agenda">
-        <summary>Consultar agenda de jogos (opcional)</summary>
-        <p className="muted">Se o jogo ainda não estiver na agenda, use os campos da previsão acima.</p>
-            <CalendarAgenda onSelect={useCalendarFixture} availableTeams={teams.map(t=>t.name)}/>
 
-      </details>
     </>}
     {view==='saved'&&<>
           <div className="radar-hero">
