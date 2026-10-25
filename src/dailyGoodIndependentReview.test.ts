@@ -90,6 +90,17 @@ describe('Etapa 44 — fila de conferência independente sem resultados fabricad
   const q=buildIndependentReviewQueue([bad],report([rr]),now);
   expect(q.entries[0]).toMatchObject({officialUrl:null,csvSourceUrl:null,externalCheck:'PENDENTE'});
  });
+ it('registro com prova corrompida continua excluído, sem travar a tela',()=>{
+  const invalid={...record('corrupto'),goodPicks:{
+   ...record('corrupto').goodPicks!,signals:null
+  }} as unknown as SavedRadarRecord;
+  const r=row('corrupto','invalid');
+  const q=buildIndependentReviewQueue([invalid],report([r]),now);
+  expect(q).toMatchObject({excluded:1,checkExternal:0});
+  expect(q.entries[0]).toMatchObject({state:'excluded',indicators:'N/D',
+   externalCheck:'PENDENTE'});
+  expect(exportIndependentReviewQueueCsv(q)).toContain('"N/D"');
+ });
  it('protege CSV contra fórmulas, aspas e ponto e vírgula em nomes',()=>{
   const bad={...record('z'),home:'  =HYPERLINK("https://x";"y")',away:'Águia; "V" '};
   const q=buildIndependentReviewQueue([bad],report([row('z','waiting')]),now);
