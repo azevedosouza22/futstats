@@ -33,7 +33,8 @@ export default function SafetyArchivePanel(){
    const checked=inspectSafetyArchive(fromFile);
    if(!checked.ok||checked.matches!==before.matches||
     checked.workMatches!==before.workMatches||
-    checked.workForecasts!==before.workForecasts)
+    checked.workForecasts!==before.workForecasts||
+    checked.calendarFixtures!==before.calendarFixtures)
     throw Error('A conferência do arquivo integral falhou. Nenhum dado foi modificado.');
    const blob=new Blob([content],{type:'application/json'});
    const url=URL.createObjectURL(blob);
@@ -45,7 +46,8 @@ export default function SafetyArchivePanel(){
    setMessage('Cópia integral V4 gerada no dispositivo: '+description(checked.matches)+
     ' partidas do histórico, '+description(checked.workMatches)+
     ' pesquisas Work e '+description(checked.workForecasts)+
-    ' registros de previsão Work. Guarde o arquivo em local privado.');
+    ' registros de previsão Work e '+description(checked.calendarFixtures)+
+    ' confrontos da agenda CSV local. Guarde o arquivo em local privado.');
   }catch(e){
    setError(e instanceof Error?e.message:'Não foi possível gerar a cópia integral.');
   }
@@ -91,7 +93,8 @@ export default function SafetyArchivePanel(){
     ' grupos recuperados, '+description(result.archivedMatches)+
     ' jogos históricos, '+description(result.archivedWork)+
     ' pesquisas Work e '+description(result.archivedForecasts)+
-    ' previsões Work. Para recarregar a interface, toque em Reiniciar visualização.');
+    ' previsões Work e '+description(result.archivedCalendarFixtures)+
+    ' confrontos da agenda. Para recarregar a interface, toque em Reiniciar visualização.');
   }catch(e){
    setError(e instanceof Error?e.message:'Falha de recuperação; confira os dados antes de continuar.');
   }
@@ -107,7 +110,7 @@ export default function SafetyArchivePanel(){
   </div><span className="tag">SOMENTE CÓPIA</span></div>
   <div className="analysis-content">
    <p className="muted">A conferência não altera, apaga ou importa nenhum jogo. O arquivo é gerado somente no seu dispositivo, sem enviar dados Work ao GitHub ou à Vercel.</p>
-   <p className="muted">Esta versão do backup protege os oito grupos listados, incluindo Histórico, previsões e Work. A agenda CSV local de confrontos ainda não pertence a esse formato: preserve também o CSV original. Uma cópia local não substitui a necessidade de guardá-la fora do dispositivo.</p>
+   <p className="muted">O backup V4 v2 protege nove grupos: Histórico, previsões, Work e agenda CSV local. Backups V4 v1 de oito grupos continuam aceitos e não incluem agenda. A agenda oficial e comunitária consultada pela internet não é salva como dado próprio. Guarde o arquivo em local privado fora do dispositivo.</p>
    <div className="analysis-controls">
     <button type="button" onClick={refresh}>Conferir integridade dos dados</button>
     <button type="button" className="primary" onClick={exportArchive}>
@@ -121,10 +124,11 @@ export default function SafetyArchivePanel(){
      <div><strong>{description(report.matches)}</strong><span>Histórico original</span></div>
      <div><strong>{description(report.workMatches)}</strong><span>Pesquisas Work</span></div>
      <div><strong>{description(report.workForecasts)}</strong><span>Testes prospectivos Work</span></div>
+     <div><strong>{description(report.calendarFixtures)}</strong><span>Confrontos da agenda CSV</span></div>
      <div><strong>{report.invalid}</strong><span>Armazenamentos inconsistentes</span></div>
     </div>
     <details className="fpl-pilot-disclosure">
-     <summary>Verificar os oito grupos de dados no dispositivo</summary>
+     <summary>Verificar os nove grupos de dados no dispositivo</summary>
      <table className="analysis-table">
       <thead><tr><th>Grupo</th><th>Estado</th><th>Registros</th></tr></thead>
       <tbody>{report.entries.map(e=><tr key={e.key}>
@@ -142,7 +146,7 @@ export default function SafetyArchivePanel(){
    </>}
    <details className="fpl-pilot-disclosure" aria-label="Recuperação segura V4">
     <summary>Recuperar cópia integral V4 (somente em dispositivo vazio)</summary>
-    <p className="muted">A recuperação é permitida somente quando este navegador não contém nenhum dos oito grupos de dados FutStats. Se já existem jogos ou previsões, a operação é bloqueada para evitar qualquer substituição. O arquivo é lido e validado aqui mesmo, sem envio para servidores. O backup antigo continua com seu próprio botão de restauração e não aceita este formato.</p>
+    <p className="muted">A recuperação exige um navegador sem nenhum dos nove grupos protegidos, inclusive a agenda CSV. Arquivos V4 v1 antigos de oito grupos não restauram uma agenda inexistente. Se houver qualquer jogo, previsão, pesquisa Work ou agenda local, a restauração será bloqueada. O arquivo é validado neste dispositivo, sem envio a servidores. O backup antigo de Histórico + Radar usa outra opção de restauração.</p>
     <label>Selecionar arquivo de segurança V4
      <input type="file" accept=".json,application/json" aria-label="Escolher cópia integral V4"
       onChange={e=>{void chooseArchive(e.target.files?.[0]);e.currentTarget.value='';}}/>
@@ -152,6 +156,7 @@ export default function SafetyArchivePanel(){
       <div><strong>{description(restorePlan.inspection.matches)}</strong><span>Históricos no arquivo</span></div>
       <div><strong>{description(restorePlan.inspection.workMatches)}</strong><span>Pesquisas Work no arquivo</span></div>
       <div><strong>{description(restorePlan.inspection.workForecasts)}</strong><span>Previsões Work no arquivo</span></div>
+      <div><strong>{description(restorePlan.inspection.calendarFixtures)}</strong><span>Confrontos da agenda no arquivo</span></div>
       <div><strong>{restorePlan.existingKeys.length}</strong><span>Grupos já existentes neste aparelho</span></div>
      </div>
      <p className="muted" role="status">{restorePlan.reason}</p>
