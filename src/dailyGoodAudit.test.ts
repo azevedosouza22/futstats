@@ -162,7 +162,8 @@ describe('Etapa 43 — acompanhamento portátil de evidências prospectivas',()=
  });
  it('mantém pendências e excluídos, sem reconstruir estatística ausente',()=>{
   const waiting={...rec(),key:'sem-resultado'};
-  const late={...rec(),key:'depois-do-inicio',savedAt:'2026-10-25T23:10:00Z'};
+  const late={...rec(),key:'depois-do-inicio',home:'Outra Casa',away:'Outra Equipe',
+   savedAt:'2026-10-25T23:10:00Z'};
   const report=auditDailyGoodPicks(data(),[waiting,late],when);
   const csv=exportDailyGoodEvidenceCsv([waiting,late],report);
   expect(csv.split('\r\n').filter(Boolean)).toHaveLength(3);
