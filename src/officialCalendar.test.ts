@@ -12,9 +12,9 @@ const sample:OfficialCalendarRecord={
   verifiedAt:'2026-10-23'
 };
 describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
-  it('expõe 14 jogos futuros com fontes individuais e horários confirmados',()=>{
+  it('expõe 26 jogos futuros e horários confirmados em cinco campeonatos',()=>{
     const entries=readOfficialCalendar(now);
-    expect(entries).toHaveLength(14);
+    expect(entries).toHaveLength(26);
     expect(entries.some(x=>x.fixture.home==='SSC Napoli')).toBe(false);
     expect(entries.every(x=>x.fixture.id.startsWith('official|'))).toBe(true);
     expect(entries.every(x=>x.fixture.sourceUrl.startsWith('https://'))).toBe(true);
@@ -57,6 +57,31 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
     expect(entries.find(x=>x.fixture.home==='Grêmio')?.fixture.sourceUrl)
       .toContain('832217');
   });
+  it('inclui Serie A italiana após a mudança de fuso e descarta jogos iniciados',()=>{
+    const entries=readOfficialCalendar(now);
+    const roma=entries.find(x=>x.fixture.home==='AS Roma')!;
+    expect(roma.fixture).toMatchObject({
+      date:'2026-10-27',time:'16:45',competition:'Serie A italiana 2026/27'
+    });
+    const milan=entries.find(x=>x.fixture.home==='AC Milan'&&x.fixture.away==='Inter')!;
+    expect(milan.fixture).toMatchObject({date:'2026-10-31',time:'16:45'});
+    expect(milan.fixture.sourceUrl).toContain('legaseriea.it');
+    const afterRoma=readOfficialCalendar(new Date('2026-10-27T20:00:00Z'));
+    expect(afterRoma.find(x=>x.fixture.home==='AS Roma')).toBeUndefined();
+  });
+  it('inclui La Liga com fonte da liga e horário CET convertido para Brasília',()=>{
+    const entries=readOfficialCalendar(now);
+    const barca=entries.find(x=>x.fixture.away==='Deportivo Alavés')!;
+    expect(barca.fixture).toMatchObject({
+      date:'2026-10-31',time:'17:00',competition:'La Liga espanhola 2026/27'
+    });
+    const racing=entries.find(x=>x.fixture.home==='R. Racing Club')!;
+    expect(racing.fixture).toMatchObject({date:'2026-11-01',time:'12:15'});
+    const betis=entries.find(x=>x.fixture.home==='Real Betis')!;
+    expect(betis.fixture.time).toBe('14:30');
+    expect(entries.filter(x=>x.fixture.competition==='La Liga espanhola 2026/27'))
+      .toHaveLength(6); // 5 new games plus the earlier Barcelona vs Real Madrid
+  });
   it('converte horários CBF para Brasília sem virar o dia indevidamente',()=>{
     const entries=readOfficialCalendar(now);
     const bahia=entries.find(x=>x.fixture.home==='Bahia')!;
@@ -67,7 +92,7 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('quando a conferência envelhece, apaga a hora reutilizável em vez de mantê-la',()=>{
     const later=new Date('2026-10-28T12:00:00Z');
     const items=readOfficialCalendar(later);
-    expect(items).toHaveLength(10);
+    expect(items).toHaveLength(20);
     expect(items.every(x=>!x.fresh&&x.fixture.time===null)).toBe(true);
   });
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{
