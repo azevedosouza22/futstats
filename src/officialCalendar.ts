@@ -8,6 +8,7 @@
  */
 import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
 import {VERIFIED_EUROPE_FIXTURES,fixtureWithOfficialTime} from './verifiedEuropeWorkFixtures';
+import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
 
 export type OfficialCalendarRecord={
   id:string;competition:string;home:string;away:string;
@@ -89,15 +90,66 @@ const PREMIER_LEAGUE_FIXTURES:readonly OfficialCalendarRecord[]=[
    verifiedAt:'2026-10-25'}
 ];
 
+// Individual, manually checked league-issued schedule references, NOT a live feed.
+const SERIE_A_ITALIANA_FIXTURES:readonly OfficialCalendarRecord[]=[
+  {id:'it-roma-cagliari-20261027',competition:'Serie A italiana 2026/27',
+    home:'AS Roma',away:'Cagliari',localDate:'2026-10-27',localTime:'20:45',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-27T19:45:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-sassuolo-lazio-20261027',competition:'Serie A italiana 2026/27',
+    home:'Sassuolo',away:'Lazio',localDate:'2026-10-27',localTime:'18:30',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-27T17:30:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-milan-bologna-20261028',competition:'Serie A italiana 2026/27',
+    home:'AC Milan',away:'Bologna',localDate:'2026-10-28',localTime:'18:30',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-28T17:30:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-genoa-juventus-20261028',competition:'Serie A italiana 2026/27',
+    home:'Genoa',away:'Juventus',localDate:'2026-10-28',localTime:'20:45',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-28T19:45:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-fiorentina-atalanta-20261029',competition:'Serie A italiana 2026/27',
+    home:'Fiorentina',away:'Atalanta',localDate:'2026-10-29',localTime:'20:45',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-29T19:45:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-milan-inter-20261031',competition:'Serie A italiana 2026/27',
+    home:'AC Milan',away:'Inter',localDate:'2026-10-31',localTime:'20:45',
+    timezone:'Europe/Rome',utcKickoff:'2026-10-31T19:45:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+  {id:'it-juventus-napoli-20261101',competition:'Serie A italiana 2026/27',
+    home:'Juventus',away:'Napoli',localDate:'2026-11-01',localTime:'20:45',
+    timezone:'Europe/Rome',utcKickoff:'2026-11-01T19:45:00Z',
+    officialUrl:'https://www.legaseriea.it/serie-a/news/quando-si-gioca-anticipi-e-posticipi-fino-alla-12a-giornata',verifiedAt:'2026-10-25'},
+];
+const LA_LIGA_FIXTURES:readonly OfficialCalendarRecord[]=[
+  {id:'es-villarreal-espanyol-20261030',competition:'La Liga espanhola 2026/27',
+    home:'Villarreal CF',away:'RCD Espanyol',localDate:'2026-10-30',localTime:'21:00',
+    timezone:'Europe/Madrid',utcKickoff:'2026-10-30T20:00:00Z',
+    officialUrl:'https://www.laliga.com/es-MX/noticias/horarios-de-la-undecima-jornada-de-laliga-ea-sports-2026-27',verifiedAt:'2026-10-25'},
+  {id:'es-rayo-celta-20261031',competition:'La Liga espanhola 2026/27',
+    home:'Rayo Vallecano',away:'RC Celta',localDate:'2026-10-31',localTime:'16:15',
+    timezone:'Europe/Madrid',utcKickoff:'2026-10-31T15:15:00Z',
+    officialUrl:'https://www.laliga.com/clubes/rayo-vallecano/proximos-partidos',verifiedAt:'2026-10-25'},
+  {id:'es-betis-malaga-20261031',competition:'La Liga espanhola 2026/27',
+    home:'Real Betis',away:'Málaga CF',localDate:'2026-10-31',localTime:'18:30',
+    timezone:'Europe/Madrid',utcKickoff:'2026-10-31T17:30:00Z',
+    officialUrl:'https://www.laliga.com/clubes/real-betis/proximos-partidos',verifiedAt:'2026-10-25'},
+  {id:'es-barcelona-alaves-20261031',competition:'La Liga espanhola 2026/27',
+    home:'FC Barcelona',away:'Deportivo Alavés',localDate:'2026-10-31',localTime:'21:00',
+    timezone:'Europe/Madrid',utcKickoff:'2026-10-31T20:00:00Z',
+    officialUrl:'https://www.laliga.com/clubes/fc-barcelona/proximos-partidos',verifiedAt:'2026-10-25'},
+  {id:'es-racing-real-madrid-20261101',competition:'La Liga espanhola 2026/27',
+    home:'R. Racing Club',away:'Real Madrid',localDate:'2026-11-01',localTime:'16:15',
+    timezone:'Europe/Madrid',utcKickoff:'2026-11-01T15:15:00Z',
+    officialUrl:'https://www.laliga.com/clubes/real-madrid/proximos-partidos',verifiedAt:'2026-10-25'},
+];
+
 const WORK_LEAGUES:Record<string,string>={
   'serie-a':'Serie A italiana 2026/27',
   'la-liga':'La Liga espanhola 2026/27',
   'ligue-1':'Ligue 1 francesa 2026/27',
 };
-const supportedHosts=new Set([
-  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
-  'www.premierleague.com'
-]);
+
 const dateValid=(value:string)=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&
   !Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
 const timestamp=(value:string)=>/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(value)&&
@@ -110,22 +162,12 @@ const stamp=(when:Date,zone:string)=>{
   const part=(key:string)=>fields.find(v=>v.type===key)?.value??'';
   return part('year')+'-'+part('month')+'-'+part('day')+'T'+part('hour')+':'+part('minute');
 };
-const daysSinceVerification=(verifiedAt:string,today:string)=>
-  (Date.parse(today+'T00:00:00Z')-Date.parse(verifiedAt+'T00:00:00Z'))/86400000;
-
-function safeOfficialSource(url:string){
-  try {
-    const parsed=new URL(url);
-    return parsed.protocol==='https:'&&!parsed.username&&!parsed.password&&
-      supportedHosts.has(parsed.hostname);
-  }catch{return false;}
-}
 
 /** Pure projection of a reviewed reference. Null means malformed/past. */
 export function officialCalendarItem(record:OfficialCalendarRecord,now=new Date()):OfficialCalendarItem|null{
   if(!dateValid(record.localDate)||!dateValid(record.verifiedAt)||
     !timestamp(record.utcKickoff)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(record.localTime)||
-    !safeOfficialSource(record.officialUrl)||!record.competition.trim()||
+    !safeOfficialFixtureUrl(record.officialUrl)||!record.competition.trim()||
     !record.home.trim()||!record.away.trim()||
     normalizeTeam(record.home)===normalizeTeam(record.away))return null;
   const kickoff=new Date(record.utcKickoff);
@@ -134,9 +176,9 @@ export function officialCalendarItem(record:OfficialCalendarRecord,now=new Date(
     if(stamp(kickoff,record.timezone)!==record.localDate+'T'+record.localTime)return null;
   }catch{return null;}
   const br=brasiliaDate(kickoff);
-  const elapsed=daysSinceVerification(record.verifiedAt,brasiliaDate(now).date);
-  if(elapsed<0)return null;
-  const fresh=elapsed<=2;
+  const checkedOn=brasiliaDate(now).date;
+  if(record.verifiedAt>checkedOn)return null;
+  const fresh=officialSnapshotFreshAt(record.verifiedAt,checkedOn);
   return {
     fixture:{
       id:['official',record.id,br.date,
@@ -150,7 +192,8 @@ export function officialCalendarItem(record:OfficialCalendarRecord,now=new Date(
 
 /** Only a few manually checked fixtures; NO network fetch or auto-refresh. */
 export function readOfficialCalendar(now=new Date()):OfficialCalendarItem[]{
-  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES,...PREMIER_LEAGUE_FIXTURES];
+  const entries:OfficialCalendarRecord[]=[...CBF_FIXTURES,...PREMIER_LEAGUE_FIXTURES,
+    ...SERIE_A_ITALIANA_FIXTURES,...LA_LIGA_FIXTURES];
   for(const item of VERIFIED_EUROPE_FIXTURES){
     if(!fixtureWithOfficialTime(item,now))continue;
     const competition=WORK_LEAGUES[item.league];
