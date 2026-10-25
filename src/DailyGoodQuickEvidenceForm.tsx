@@ -4,10 +4,11 @@ import type {PickAuditReport} from './dailyGoodAudit';
 import {compareQuickEnteredSource} from './dailyGoodQuickEvidence';
 import type {DocumentaryComparison,ExternalEvidence} from './dailyGoodEvidenceCompare';
 
-export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onCompared}:{
+export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onCompared,onClear}:{
  records:readonly SavedRadarRecord[];report:PickAuditReport;
  readyKeys:ReadonlySet<string>;
  onCompared:(source:ExternalEvidence,comparison:DocumentaryComparison)=>void;
+ onClear:()=>void;
 }){
  const [key,setKey]=useState('');
  const [sourceUrl,setSourceUrl]=useState('');
@@ -23,10 +24,10 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
   row.markets.filter(m=>m.actual!==null):[];
  const changeRecord=(next:string)=>{
   setKey(next);setSourceUrl('');setCheckedAtBrasilia('');
-  setValues({});setAck(false);setError('');setSuccess('');
+  setValues({});setAck(false);setError('');setSuccess('');onClear();
  };
  const submit=(event:React.FormEvent<HTMLFormElement>)=>{
-  event.preventDefault();setError('');setSuccess('');
+  event.preventDefault();setError('');setSuccess('');onClear();
   if(!ack){setError('Confirme que você transcreveu os valores de outra página consultada.');return;}
   try{
    const result=compareQuickEnteredSource({
@@ -63,14 +64,14 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
         <input type="url" aria-label="URL da segunda fonte consultada"
           placeholder="https://www.sofascore.com/..."
           value={sourceUrl} onChange={e=>{setSourceUrl(e.currentTarget.value);
-          setSuccess('');}} required />
+          setSuccess('');onClear();}} required />
       </label>
       <label>Data e hora efetivas da consulta (Brasília)
         <input type="datetime-local" step="60"
           aria-label="Data e hora efetivas da consulta (Brasília)"
           value={checkedAtBrasilia}
           onChange={e=>{setCheckedAtBrasilia(e.currentTarget.value);
-            setSuccess('');}} required />
+            setSuccess('');onClear();}} required />
       </label>
       {markets.map(m=><label key={m.id}>
         {m.label} · valor da segunda fonte (vazio = N/D)
@@ -78,7 +79,7 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
           aria-label={'Valor da segunda fonte: '+m.label}
           value={values[m.id]??''}
           onChange={e=>{setValues(old=>({...old,[m.id]:e.currentTarget.value}));
-            setSuccess('');}}
+            setSuccess('');onClear();}}
           placeholder="N/D"/>
       </label>)}
       <label className="daily-good-quick-confirm">
