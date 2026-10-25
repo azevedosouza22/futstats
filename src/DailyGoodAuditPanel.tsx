@@ -1,9 +1,10 @@
-import {useMemo} from 'react';
+import {useMemo,useState} from 'react';
 import type {Data} from './model';
 import type {SavedRadarRecord} from './radarRecords';
 import {auditDailyGoodPicks} from './dailyGoodAudit';
 import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
 import {buildIndependentReviewQueue,exportIndependentReviewQueueCsv} from './dailyGoodIndependentReview';
+import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidence,type DocumentaryComparison} from './dailyGoodEvidenceCompare';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -22,6 +23,48 @@ export default function DailyGoodAuditPanel({data,records}:{
 }){
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
  const independentQueue=buildIndependentReviewQueue(records,report);
+ const [documentary,setDocumentary]=useState<DocumentaryComparison|null>(null);
+ const [documentationNotice,setDocumentationNotice]=useState('');
+ const readyForEvidence=new Set(independentQueue.entries
+  .filter(x=>x.state==='check_external').map(x=>x.key));
+ function downloadFile(name:string,content:string,type:string){
+  const url=URL.createObjectURL(new Blob([content],{type}));
+  try{
+   const a=document.createElement('a');
+   a.href=url;a.download=name;
+   document.body.appendChild(a);a.click();a.remove();
+  }finally{URL.revokeObjectURL(url);}
+ }
+ function downloadDocumentaryTemplate(key:string){
+  const record=records.find(r=>r.key===key);
+  if(!record||!readyForEvidence.has(key))return;
+  try{
+   const json=documentaryTemplate(record,report);
+   downloadFile('futstats-segunda-fonte-modelo.json',json,'application/json;charset=utf-8');
+   setDocumentationNotice('Modelo vazio gerado. Preencha somente após consultar outra fonte real.');
+  }catch(e){
+   setDocumentationNotice(e instanceof Error?e.message:'Modelo não disponível.');
+  }
+ }
+ async function loadDocumentary(file?:File){
+  setDocumentary(null);setDocumentationNotice('');
+  if(!file)return;
+  try{
+   if(file.size>200_000||!file.name.toLowerCase().endsWith('.json'))
+    throw Error('Selecione um JSON documental de até 200 KB.');
+   const input=JSON.parse(await file.text()) as unknown;
+   const comparison=reconcileDocumentaryEvidence(
+    parseDocumentaryEvidence(input),records,report
+   );
+   if(!readyForEvidence.has(comparison.recordKey))
+    throw Error('Partida ainda não liberada para comparação documental.');
+   setDocumentary(comparison);
+   setDocumentationNotice('Valores informados comparados apenas nesta tela, sem salvar ou verificar páginas na internet.');
+  }catch(e){
+   setDocumentationNotice(e instanceof Error?e.message:'Arquivo recusado; nenhuma previsão foi alterada.');
+  }
+ }
+
  function exportReviewQueue(){
   if(independentQueue.entries.length===0)return;
   const csv=exportIndependentReviewQueueCsv(independentQueue);
@@ -95,6 +138,12 @@ export default function DailyGoodAuditPanel({data,records}:{
           <strong> PENDENTE</strong>.</p>
         {e.state!=='excluded'&&e.officialUrl&&<a href={e.officialUrl}
           target="_blank" rel="noopener noreferrer">Ver referência oficial do jogo</a>}
+        {e.state==='check_external'&&<p>
+          <button type="button" className="text-button"
+            onClick={()=>downloadDocumentaryTemplate(e.key)}>
+            Modelo vazio para comparar este jogo
+          </button>
+        </p>}
         {e.state==='check_external'&&e.csvSourceUrl&&<p><a href={e.csvSourceUrl}
           target="_blank" rel="noopener noreferrer">Conferir origem do resultado CSV</a></p>}
       </li>)}</ol>
@@ -102,6 +151,36 @@ export default function DailyGoodAuditPanel({data,records}:{
         Outros {independentQueue.entries.length-8} registros estão no CSV exportável.
       </p>}
     </details>
+    {independentQueue.checkExternal>0&&<div className="daily-good-documentary-compare">
+      <h6>Comparação documental de segunda fonte</h6>
+      <p className="muted">Depois de conferir pessoalmente uma fonte independente,
+        complete o modelo JSON deste jogo com URL, horário UTC da consulta
+        e valores dos indicadores. O aplicativo compara os números, mas
+        <strong> não acessa nem autentica a página externa</strong>. Mesmo quando
+        coincidem, a verificação real permanece PENDENTE.</p>
+      <label>Carregar valores documentados de segunda fonte (JSON)
+        <input aria-label="Carregar comparação de segunda fonte (JSON)"
+          type="file" accept=".json,application/json"
+          onChange={e=>{void loadDocumentary(e.currentTarget.files?.[0]);e.currentTarget.value='';}}/>
+      </label>
+      {documentationNotice&&<p role="status" className="muted">{documentationNotice}</p>}
+      {documentary&&<div role="region" aria-label="Resultado da comparação documental">
+        <strong>{documentary.fixture}</strong>
+        <p className="muted">{documentary.conclusion} ·
+          {' '}{documentary.agreement} coincide(m),
+          {' '}{documentary.disagreement} diverge(m),
+          {' '}{documentary.unknown} N/D. Status: PENDENTE.</p>
+        <div className="radar-market-table"><table className="analysis-table">
+          <thead><tr><th>Indicador</th><th>CSV local</th>
+            <th>Segunda fonte informada</th><th>Comparação</th></tr></thead>
+          <tbody>{documentary.markets.map(m=><tr key={m.id}>
+            <th>{m.label}</th>
+            <td>{fmt(m.local)}</td><td>{fmt(m.reported)}</td>
+            <td>{m.status}</td>
+          </tr>)}</tbody>
+        </table></div>
+      </div>}
+    </div>}
     <p className="muted">A fila é calculada somente ao abrir o Radar, sem consultar
       fontes em segundo plano, gravar confirmações nem alterar previsões ou backups.
       Estados inválidos e tardios permanecem excluídos.</p>
