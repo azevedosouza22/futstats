@@ -1,7 +1,7 @@
 import {describe,expect,it} from 'vitest';
 import type {SavedRadarRecord} from './radarRecords';
 import type {PickAuditReport,PickAuditRow} from './dailyGoodAudit';
-import {compareQuickEnteredSource} from './dailyGoodQuickEvidence';
+import {compareQuickEnteredSource,type QuickEvidenceInput} from './dailyGoodQuickEvidence';
 
 const at=new Date('2026-10-26T15:00:00Z');
 const row:PickAuditRow={
@@ -29,7 +29,7 @@ const record:SavedRadarRecord={
  }]}
 };
 const report:PickAuditReport={rows:[row],snapshots:1,attributed:1,scoredFixtures:1,leagues:[]};
-const input=()=>({recordKey:'pick-1',checkedAtBrasilia:'2026-10-26T07:00',
+const input=():QuickEvidenceInput=>({recordKey:'pick-1',checkedAtBrasilia:'2026-10-26T07:00',
  sourceUrl:'https://www.sofascore.com/pt/futebol/jogo/casa-fora/abc',
  values:{'goals-full-2.5':'2'}});
 const check=(arg=input(),r=report,records=[record])=>
