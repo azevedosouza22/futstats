@@ -94,7 +94,7 @@ describe('Etapa 38 — auditoria prospectiva das Boas do Dia',()=>{
  });
  it('não pontua CSV registrado antes do término do jogo',()=>{
   const m=result();
-  m.research!.importedAt='2026-10-25T13:00:00Z';
+  m.research!.importedAt='2026-10-25T23:20:00Z';
   expect(auditDailyGoodPicks(data([m]),[rec()],when).rows[0].status).toBe('source_missing');
  });
 });
