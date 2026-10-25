@@ -99,9 +99,9 @@ describe('Arquivo V4 — integridade e retomada sem perda',()=>{
   expect(plan.canRestore).toBe(true);
   const result=restoreSafetyArchiveEmpty(destination,archive);
   expect(result).toMatchObject({
-   verified:true,restored:8,archivedMatches:659,archivedWork:1,archivedForecasts:1
+   verified:true,restored:8,archivedMatches:659,archivedWork:1,archivedForecasts:1,archivedCalendarFixtures:0
   });
-  for(const key of SAFETY_KEYS)expect(destination.getItem(key)).toBe(contents[key]);
+  for(const key of SAFETY_KEYS)expect(destination.getItem(key)).toBe(contents[key]??null);
   expect(destination.getItem('non-futstats')).toBe('untouched');
   expect(JSON.parse(destination.getItem(STORAGE)!)?.matches).toHaveLength(659);
   expect(JSON.parse(destination.getItem(RADAR_STORAGE)!)).toEqual(originalRadar);

@@ -51,7 +51,7 @@ const src=makeStore(samples);
 const archive=createSafetyArchive(src,new Date('2026-10-24T12:00:00Z'));
 
 describe('Recuperação transacional V4 — somente perfil vazio',()=>{
- it('recupera oito grupos em perfil vazio e verifica conteúdo exato',()=>{
+ it('recupera nove grupos em perfil vazio e verifica conteúdo exato',()=>{
   const dest=makeStore({'unrelated:personal':'preserve'});
   const before=dest.entries();
   const plan=planSafetyRestore(archive,dest);
@@ -62,10 +62,10 @@ describe('Recuperação transacional V4 — somente perfil vazio',()=>{
   const result=restoreSafetyArchiveEmpty(dest,archive);
   expect(result).toEqual({
    restored:8,archivedMatches:0,archivedWork:0,
-   archivedForecasts:0,verified:true
+   archivedForecasts:0,archivedCalendarFixtures:0,verified:true
   });
   expect(dest.getItem('unrelated:personal')).toBe('preserve');
-  for(const key of SAFETY_KEYS)expect(dest.getItem(key)).toBe(samples[key]);
+  for(const key of SAFETY_KEYS)expect(dest.getItem(key)).toBe(samples[key]??null);
   expect(inspectSafetyStorage(dest).ok).toBe(true);
  });
  it('recusa sobrescrever mesmo uma única chave FutStats existente sem escrever nada',()=>{

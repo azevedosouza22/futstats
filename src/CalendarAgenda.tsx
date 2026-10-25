@@ -11,16 +11,12 @@ import {readOfficialCalendar} from './officialCalendar';
 import {consultFreeAgenda,type FreeAgendaResult} from './freeCalendarDiscovery';
 import {brasiliaDate,calendarWindow,isUpcoming,mergeCalendar,parseCalendarCsv,brasileiraoRound32,type CalendarWindow,type ScheduledFixture} from './calendar';
 import {calendarIdentity} from './radarTeamAliases';
+import {CALENDAR_STORAGE,parseStoredCalendar} from './calendarStorage';
 
-const KEY='futstats-calendar-csv-v1';
+const KEY=CALENDAR_STORAGE;
 function readSaved(): ScheduledFixture[] {
   try {
-    const raw:unknown=JSON.parse(localStorage.getItem(KEY)??'[]');
-    if(!Array.isArray(raw))return [];
-    return raw.filter((x):x is ScheduledFixture=>!!x&&typeof x==='object'&&
-      typeof x.id==='string'&&typeof x.date==='string'&&
-      (x.time===null||typeof x.time==='string')&&typeof x.home==='string'&&
-      typeof x.away==='string'&&typeof x.competition==='string'&&typeof x.sourceUrl==='string').slice(0,1000);
+    return parseStoredCalendar(localStorage.getItem(KEY)??'[]');
   }catch{return [];}
 }
 
@@ -97,7 +93,10 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
     try {
       if(file.size>2_000_000||!file.name.toLowerCase().endsWith('.csv'))throw Error('Selecione um CSV de até 2 MB.');
       const entries=parseCalendarCsv(await file.text());
-      const merged=mergeCalendar(calendar,entries);
+      // Reread just before saving: reject corruption instead of overwriting
+      // an unreadable local calendar or a newer copy from another tab.
+      const current=parseStoredCalendar(localStorage.getItem(KEY)??'[]');
+      const merged=mergeCalendar(current,entries);
       localStorage.setItem(KEY,JSON.stringify(merged.entries));
       setCalendar(merged.entries);
       setNotice('Agenda: '+merged.added+' novos jogos; '+merged.duplicates+' duplicatas ignoradas. Datas e horários em Brasília.');
