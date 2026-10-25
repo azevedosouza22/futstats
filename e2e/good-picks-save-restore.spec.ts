@@ -420,3 +420,43 @@ test('Etapa 48: preparar prévia em 7 dias sem registrar como Boa do Dia',async(
   expect(saved[0]).not.toHaveProperty('goodPicks');
   expect(saved[0].markets.length).toBeGreaterThan(0);
 });
+
+
+test('Etapa 49: nove jogos oficiais Bundesliga acessíveis por filtro, vencendo em N/D',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  await page.getByRole('group',{name:'Período da agenda'})
+    .getByRole('button',{name:'7 dias'}).click();
+  const official=page.getByRole('region',{name:'Jogos com referências oficiais'});
+  await official.getByLabel('Filtrar campeonato na agenda oficial')
+    .selectOption('Bundesliga 2026/27');
+  const fixtures=official.locator('.official-fixture');
+  await expect(fixtures).toHaveCount(9);
+  await expect(official).toContainText('FC Bayern München × Borussia Dortmund');
+  await expect(official).toContainText('Bayer 04 Leverkusen × VfB Stuttgart');
+  await expect(official).toContainText('SV Elversberg × 1. FSV Mainz 05');
+  await expect(official).toContainText('Eintracht Frankfurt × Hamburger SV');
+  const derby=fixtures.filter({hasText:'FC Bayern München × Borussia Dortmund'});
+  await expect(derby).toContainText('2026-10-31 · 14:30 (Brasília)');
+  const opener=fixtures.filter({hasText:'SV Elversberg × 1. FSV Mainz 05'});
+  await expect(opener).toContainText('2026-10-30 · 16:30 (Brasília)');
+  await expect(fixtures.first().getByRole('link',{name:'Conferir programação oficial'}))
+    .toHaveAttribute('href','https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8');
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+
+  // No live recheck: after two Brasília days the source is stale on all 9.
+  await page.clock.setFixedTime(new Date('2026-10-29T12:00:00.000Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('group',{name:'Período da agenda'})
+    .getByRole('button',{name:'7 dias'}).click();
+  const stale=page.getByRole('region',{name:'Jogos com referências oficiais'});
+  await stale.getByLabel('Filtrar campeonato na agenda oficial')
+    .selectOption('Bundesliga 2026/27');
+  const listed=stale.locator('.official-fixture');
+  await expect(listed).toHaveCount(9);
+  await expect(listed).toContainText(Array(9).fill('horário N/D · reconfirmar').join('')); // each match refuses old kickoff
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+});
