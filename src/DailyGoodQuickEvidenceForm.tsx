@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type FormEvent} from 'react';
 import type {SavedRadarRecord} from './radarRecords';
 import type {PickAuditReport} from './dailyGoodAudit';
 import {compareQuickEnteredSource} from './dailyGoodQuickEvidence';
@@ -26,7 +26,7 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
   setKey(next);setSourceUrl('');setCheckedAtBrasilia('');
   setValues({});setAck(false);setError('');setSuccess('');onClear();
  };
- const submit=(event:React.FormEvent<HTMLFormElement>)=>{
+ const submit=(event:FormEvent<HTMLFormElement>)=>{
   event.preventDefault();setError('');setSuccess('');onClear();
   if(!ack){setError('Confirme que você transcreveu os valores de outra página consultada.');return;}
   try{
