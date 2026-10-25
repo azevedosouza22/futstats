@@ -12,9 +12,9 @@ const sample:OfficialCalendarRecord={
   verifiedAt:'2026-10-23'
 };
 describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
-  it('expõe seis jogos futuros manualmente conferidos e exclui Napoli passado',()=>{
+  it('expõe 14 jogos futuros com fontes individuais e horários confirmados',()=>{
     const entries=readOfficialCalendar(now);
-    expect(entries).toHaveLength(6);
+    expect(entries).toHaveLength(14);
     expect(entries.some(x=>x.fixture.home==='SSC Napoli')).toBe(false);
     expect(entries.every(x=>x.fixture.id.startsWith('official|'))).toBe(true);
     expect(entries.every(x=>x.fixture.sourceUrl.startsWith('https://'))).toBe(true);
@@ -31,6 +31,32 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
     expect(clasico?.fixture.time).toBe('17:00');
     expect(clasico?.fixture.date).toBe('2026-10-25');
   });
+  it('inclui Premier League com horário GMT correto após transição de outubro',()=>{
+    const entries=readOfficialCalendar(now);
+    const chelsea=entries.find(x=>x.fixture.home==='Chelsea')!;
+    expect(chelsea.fixture).toMatchObject({date:'2026-10-31',time:'09:30',
+      competition:'Premier League inglesa 2026/27'});
+    expect(chelsea.verifiedAt).toBe('2026-10-25');
+    expect(chelsea.fixture.sourceUrl).toContain('premierleague.com/en/news/4688862');
+    expect(entries.find(x=>x.fixture.home==='Tottenham Hotspur')?.fixture.time).toBe('14:30');
+    expect(entries.find(x=>x.fixture.home==='Liverpool')?.fixture.time).toBe('13:30');
+    expect(entries.find(x=>x.fixture.home==='Newcastle United')?.fixture.time).toBe('17:00');
+    const stale=readOfficialCalendar(new Date('2026-10-31T11:00:00Z'))
+      .find(x=>x.fixture.home==='Chelsea')!;
+    expect(stale.fresh).toBe(false);
+    expect(stale.fixture.time).toBeNull();
+  });
+  it('inclui novos jogos da rodada 33 com fontes próprias e respeita a virada UTC',()=>{
+    const entries=readOfficialCalendar(now);
+    expect(entries.find(x=>x.fixture.home==='Atlético-MG')?.fixture)
+      .toMatchObject({date:'2026-10-29',time:'19:30'});
+    expect(entries.find(x=>x.fixture.home==='Grêmio')?.fixture)
+      .toMatchObject({date:'2026-10-29',time:'21:30'});
+    expect(entries.find(x=>x.fixture.home==='Corinthians')?.fixture)
+      .toMatchObject({date:'2026-10-30',time:'20:00'});
+    expect(entries.find(x=>x.fixture.home==='Grêmio')?.fixture.sourceUrl)
+      .toContain('832217');
+  });
   it('converte horários CBF para Brasília sem virar o dia indevidamente',()=>{
     const entries=readOfficialCalendar(now);
     const bahia=entries.find(x=>x.fixture.home==='Bahia')!;
@@ -41,7 +67,7 @@ describe('Agenda com referências oficiais (sem consulta contínua)',()=>{
   it('quando a conferência envelhece, apaga a hora reutilizável em vez de mantê-la',()=>{
     const later=new Date('2026-10-28T12:00:00Z');
     const items=readOfficialCalendar(later);
-    expect(items).toHaveLength(2);
+    expect(items).toHaveLength(10);
     expect(items.every(x=>!x.fresh&&x.fixture.time===null)).toBe(true);
   });
   it('nunca retorna jogos depois do início e não forja tempo retrospectivo',()=>{
