@@ -722,7 +722,7 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
   const dossier=JSON.parse(await readFile((await download.path())!,'utf-8'));
   expect(dossier).toMatchObject({independentVerification:'PENDENTE',
     comparison:{disagreement:1}});
-  expect(dossier.source).toMatchObject({checkedAt:'2026-10-26T10:00:00.000Z'});
+  expect(dossier.secondarySource).toMatchObject({checkedAt:'2026-10-26T10:00:00.000Z'});
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(original);
 });
