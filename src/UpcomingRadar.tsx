@@ -47,7 +47,7 @@ function NumericReferences({line,history,league,projected,legacy=false}:{
   </div>;
 }
 
-export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:Data;view:'new'|'saved';onOpenWork:()=>void;onViewSaved:()=>void}) {
+export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedSavedKey}:{data:Data;view:'new'|'saved';onOpenWork:()=>void;onViewSaved:(key?:string)=>void;focusedSavedKey?:string|null}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
   const [date,setDate]=useState(brasiliaDate().date);
   const [time,setTime]=useState('');
@@ -67,9 +67,12 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
   // Open the actual saved record list, not the former long round-32 dashboard.
   useEffect(()=>{
     if(view!=='saved')return;
-    savedSectionRef.current?.focus({preventScroll:true});
-    savedSectionRef.current?.scrollIntoView({behavior:'instant',block:'start'});
-  },[view]);
+    const target=focusedSavedKey&&saved.some(r=>r.key===focusedSavedKey)
+      ?document.getElementById('radar-saved-record-'+focusedSavedKey):null;
+    const focus=target??savedSectionRef.current;
+    focus?.focus({preventScroll:true});
+    focus?.scrollIntoView({behavior:'instant',block:'start'});
+  },[view,focusedSavedKey]);
   const restoreInput=useRef<HTMLInputElement>(null);
   function useCalendarFixture(f:ScheduledFixture,selected?:DailyGoodFixture){
     const selection=resolveCalendarFixture(data,f);
@@ -282,7 +285,8 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
     {view==='new'&&<>
           <div className="radar-agenda-first">
             <CalendarAgenda data={data} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
-              canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}/>
+              canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}
+              records={saved} onViewSaved={key=>{setRecordFilter('all');onViewSaved(key??undefined);}}/>
           </div>
           <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>
      <p className="radar-form-help">Toque em <strong>Analisar jogo</strong> na agenda acima para preencher campeonato, equipes, data e horário automaticamente. Se a partida não aparecer, selecione manualmente. A análise aparece abaixo, sem salvar nada antes de sua confirmação.</p>
@@ -476,7 +480,9 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved}:{data:D
         {visibleSaved.map(({record:v,index:i})=>{
           const settled=settlements[i];
           const status={future:'Aguardando jogo',pending:'Aguardando resultado na base',ambiguous:'Resultado com data ou identidade ambígua',late:'Registro posterior ao início (não pontua)',legacy:'Registro antigo — sem V2/V3',complete:'Resultado disponível'}[settled.status];
-          return <li key={v.key}><b>{v.home} × {v.away}</b>
+          return <li key={v.key} id={'radar-saved-record-'+v.key} tabIndex={-1}
+             aria-label={'Previsão salva '+v.home+' contra '+v.away}>
+             <b>{v.home} × {v.away}</b>
             <small>{v.matchAt.replace('T',' ')} · {v.competition} · registrado {new Date(v.savedAt).toLocaleString('pt-BR')} · {v.homeCount}+{v.awayCount} jogos históricos</small>
             <p className="record-status" data-state={settled.status}>{status}</p>
             {v.venue?.map(m=>{
