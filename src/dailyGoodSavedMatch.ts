@@ -6,6 +6,7 @@
 import type {DailyGoodFixture} from './dailyGoodSignals';
 import type {SavedRadarRecord} from './radarRecords';
 import {normalizeTeam,brasiliaDate} from './calendar';
+import {canonicalTeamInCompetition} from './radarTeamAliases';
 import {officialSnapshotFreshAt} from './officialSourceTrust';
 
 export type GoodSavedState='not_saved'|'from_good_picks'|'from_radar'|'needs_review'|'duplicates';
@@ -18,8 +19,10 @@ export function savedGoodPickMatch(
  const found=records.filter(r=>
    r.matchAt.slice(0,10)===f.date&&
    normalizeTeam(r.competition)===normalizeTeam(f.competition)&&
-   normalizeTeam(r.home)===normalizeTeam(f.home)&&
-   normalizeTeam(r.away)===normalizeTeam(f.away));
+   canonicalTeamInCompetition(r.home,f.competition)===
+     canonicalTeamInCompetition(f.home,f.competition)&&
+   canonicalTeamInCompetition(r.away,f.competition)===
+     canonicalTeamInCompetition(f.away,f.competition));
  if(!found.length)return {state:'not_saved',recordKey:null};
  if(found.length!==1||!found[0].key||records.filter(r=>r.key===found[0].key).length!==1)
   return {state:'duplicates',recordKey:null};
