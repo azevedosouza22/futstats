@@ -6,6 +6,7 @@ import {exportDailyGoodEvidenceCsv} from './dailyGoodEvidenceExport';
 import {buildIndependentReviewQueue,exportIndependentReviewQueueCsv} from './dailyGoodIndependentReview';
 import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidence,type DocumentaryComparison,type ExternalEvidence} from './dailyGoodEvidenceCompare';
 import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDossier';
+import {buildProspectiveCohortPlan,exportProspectiveCohortCsv,MIN_EXTERNAL_FIXTURES_PER_LEAGUE} from './dailyGoodProspectiveCohorts';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -24,6 +25,7 @@ export default function DailyGoodAuditPanel({data,records}:{
 }){
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
  const independentQueue=buildIndependentReviewQueue(records,report);
+ const cohort=buildProspectiveCohortPlan(records,report,independentQueue);
  const duplicatedSources=report.rows.filter(r=>
   r.status==='ambiguous'&&r.reason.includes('ID da fonte CSV reutilizado')).length;
  const futureImports=report.rows.filter(r=>
@@ -112,6 +114,11 @@ export default function DailyGoodAuditPanel({data,records}:{
    document.body.appendChild(a);a.click();a.remove();
   }finally{URL.revokeObjectURL(url);}
  }
+ function exportCohort(){
+  const csv=exportProspectiveCohortCsv(cohort);
+  downloadFile('futstats-amostras-prospectivas-por-liga.csv',csv,
+    'text/csv;charset=utf-8');
+ }
  function exportLedger(){
   if(report.attributed===0)return;
   const text=exportDailyGoodEvidenceCsv(records,report);
@@ -135,6 +142,56 @@ export default function DailyGoodAuditPanel({data,records}:{
   <p className="muted">{report.attributed} registro(s) com identificação da lista ·
    {' '}{report.scoredFixtures} confronto(s) com resultado e ao menos um indicador informado.
    {' '}Ausência de amostra aparece como N/D, nunca como taxa de acerto.</p>
+  <section className="daily-good-cohorts"
+    aria-label="Controle de amostras prospectivas por campeonato">
+    <h5>Amostras prospectivas · por campeonato</h5>
+    <p className="muted" role="status">
+      {cohort.totalEligibleLocal} jogo(s) distinto(s) elegível(is) nos registros
+      locais pré-jogo · {cohort.totalLocalResults} com indicador do CSV local
+      para revisar · <strong>0 resultado(s) verificado(s) independentemente</strong>.
+      Qualidade preditiva: <strong>N/D</strong>.
+    </p>
+    <p className="muted">A meta de avaliação é pelo menos
+      {' '}{MIN_EXTERNAL_FIXTURES_PER_LEAGUE} partidas distintas,
+      com previsões realmente salvas antes do jogo e resultados confrontados
+      de forma independente, <strong>em cada campeonato</strong>.
+      Ter 30 registros no navegador, 30 CSVs locais ou arquivos de segunda fonte
+      apenas informados <strong>não completa essa meta</strong>.
+    </p>
+    <button type="button" className="text-button" onClick={exportCohort}>
+      Exportar acompanhamento por campeonato (CSV)
+    </button>
+    {cohort.leagues.length===0
+     ?<p className="muted">Nenhuma indicação prospectiva atribuída à lista neste
+        navegador. Amostra verificada: 0/30 por campeonato · desempenho N/D.
+        As previsões antigas do Radar não entram nessa contagem.</p>
+     :<div className="radar-market-table">
+       <table className="analysis-table">
+        <caption>Preparação da amostra · nunca comprovação de acurácia</caption>
+        <thead><tr>
+          <th>Campeonato</th><th>Registros locais elegíveis</th>
+          <th>Resultados locais para conferir</th>
+          <th>Confirmados externamente</th><th>Faltam verificar</th>
+        </tr></thead>
+        <tbody>{cohort.leagues.map(l=><tr key={l.league}>
+          <th>{l.league}
+            <small>{l.attributed} indicação(ões) · {l.excluded}
+              {' '}excluída(s) · {l.awaitKickoff} aguardando jogo ·
+              {' '}{l.needsLocalResult} aguardando dado local</small>
+          </th>
+          <td>{l.eligibleLocal}</td>
+          <td>{l.localResults} · PENDENTE</td>
+          <td>0/{MIN_EXTERNAL_FIXTURES_PER_LEAGUE} · N/D</td>
+          <td>{l.missingExternal}</td>
+        </tr>)}</tbody>
+       </table>
+      </div>}
+    <p className="muted">Este controle lê apenas registros e resultados deste
+      navegador. Não consulta sites externos, não atesta a veracidade de datas
+      gravadas localmente, não restaura arquivos e não altera previsões,
+      histórico ou backups. O status externo permanece <strong>PENDENTE</strong>.
+    </p>
+  </section>
   {(duplicatedSources>0||futureImports>0)&&<div className="daily-good-data-warnings"
    role="status" aria-label="Resultados locais bloqueados por procedência">
     <strong>Resultados locais não utilizados na avaliação</strong>
