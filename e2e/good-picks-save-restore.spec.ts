@@ -460,3 +460,60 @@ test('Etapa 49: nove jogos oficiais Bundesliga acessíveis por filtro, vencendo 
   expect((await listed.allTextContents()).every(v=>v.includes('horário N/D · reconfirmar'))).toBe(true);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 50: nove jogos Bundesliga agrupados numa fonte com CSV PENDENTE',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  await page.getByRole('group',{name:'Período da agenda'})
+    .getByRole('button',{name:'7 dias'}).click();
+  const official=page.getByRole('region',{name:'Jogos com referências oficiais'});
+  await official.getByLabel('Filtrar campeonato na agenda oficial')
+    .selectOption('Bundesliga 2026/27');
+  const batch=official.locator('details.official-source-review');
+  await expect(batch.locator('summary')).toContainText('1 fonte para 9 jogos');
+  await batch.locator('summary').click();
+  await expect(batch).toContainText('0 horário(s) vencido(s)');
+  await expect(batch.getByRole('link',{name:'Abrir página oficial do grupo'}))
+    .toHaveCount(1);
+  await expect(batch.getByRole('link',{name:'Abrir página oficial do grupo'}))
+    .toHaveAttribute('href','https://www.bundesliga.com/en/bundesliga/matchday/2026-2027/8');
+  const [first]=await Promise.all([
+    page.waitForEvent('download'),
+    batch.getByRole('button',{name:'Exportar checklist de fontes oficiais (CSV)'}).click()
+  ]);
+  expect(first.suggestedFilename()).toBe('futstats-reconferencia-fontes-oficiais.csv');
+  const csv=await readFile((await first.path())!,'utf-8');
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(csv).toContain('"PENDENTE"');
+  expect(csv).toContain('FC Bayern München x Borussia Dortmund');
+  expect(csv).toContain('SV Elversberg x 1. FSV Mainz 05');
+  expect(csv).not.toContain('"CONFIRMADO"');
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+
+  // Old snapshots are NOT silently renewed by a click or downloaded file.
+  await page.clock.setFixedTime(new Date('2026-10-29T12:00:00.000Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('group',{name:'Período da agenda'})
+    .getByRole('button',{name:'7 dias'}).click();
+  const expired=page.getByRole('region',{name:'Jogos com referências oficiais'});
+  await expired.getByLabel('Filtrar campeonato na agenda oficial')
+    .selectOption('Bundesliga 2026/27');
+  const oldBatch=expired.locator('details.official-source-review');
+  await expect(oldBatch.locator('summary')).toContainText('1 fonte para 9 jogos');
+  await oldBatch.locator('summary').click();
+  await expect(oldBatch).toContainText('9 horário(s) vencido(s)');
+  const [oldFile]=await Promise.all([
+    page.waitForEvent('download'),
+    oldBatch.getByRole('button',{name:'Exportar checklist de fontes oficiais (CSV)'}).click()
+  ]);
+  const oldCsv=await readFile((await oldFile.path())!,'utf-8');
+  expect(oldCsv.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(oldCsv).toContain('"PENDENTE"');
+  expect((oldCsv.match(/\(N\/D Brasília, expired\)/g)??[])).toHaveLength(9);
+  expect(oldCsv).not.toContain('14:30 Brasília');
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+});
