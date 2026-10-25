@@ -10,6 +10,7 @@ import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from '.
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
 import {teamsInCompetition} from './radarTeamFilters';
+import {resolveCalendarFixture} from './radarCalendarSelection';
 
 type Saved = SavedRadarRecord;
 const KEY='futstats-radar-previews-v1';
@@ -46,24 +47,26 @@ function NumericReferences({line,history,league,projected,legacy=false}:{
 export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
   const [date,setDate]=useState(brasiliaDate().date);
-  const [time,setTime]=useState('20:00');
+  const [time,setTime]=useState('');
   const [league,setLeague]=useState('');
   const [saved,setSaved]=useState(readSaved);
   const [recordFilter,setRecordFilter]=useState<FollowupFilter>('all');
   const [message,setMessage]=useState('');
   const [calendarSelection,setCalendarSelection]=useState('');
+  const [calendarSource,setCalendarSource]=useState('');
+  const [editSchedule,setEditSchedule]=useState(false);
   const futureFormRef=useRef<HTMLHeadingElement>(null);
   const restoreInput=useRef<HTMLInputElement>(null);
   function useCalendarFixture(f:ScheduledFixture){
-    const h=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.home));
-    const a=data.teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
-    if(!h||!a||!f.time)return;
-    const candidates=teamsInCompetition(data,f.competition);
-    if(!candidates.some(t=>t.id===h.id)||!candidates.some(t=>t.id===a.id))return;
-    setIds([h.id,a.id]);setLeague(f.competition);setDate(f.date);setTime(f.time);
-    setCalendarSelection(`${f.home} × ${f.away} · ${f.date} às ${f.time} (Brasília)`);
+    const selection=resolveCalendarFixture(data,f);
+    if(!selection)return;
+    setIds([selection.homeId,selection.awayId]);setLeague(selection.competition);
+    setDate(selection.date);setTime(selection.time);
+    setCalendarSelection(f.home+' × '+f.away);
+    setCalendarSource(selection.sourceUrl);
+    setEditSchedule(!selection.hasKickoffTime);
     setMessage('');
-    // Keep the user on the same page but bring the filled-in Radar controls into view.
+    // Preview selection is not a saved prediction.
     futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
   }
   const teams=data.teams;
@@ -71,15 +74,16 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   const leagueTeams=teamsInCompetition(data,league);
   const home=leagueTeams.find(t=>t.id===ids[0]);
   const away=leagueTeams.find(t=>t.id===ids[1]);
-  const eligible=!!home&&!!away&&home.id!==away.id&&!!league&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&/^\d{2}:\d{2}$/.test(time);
+  const readyToAnalyze=!!home&&!!away&&home.id!==away.id&&!!league&&/^\d{4}-\d{2}-\d{2}$/.test(date);
+  const eligible=readyToAnalyze&&/^([01]\d|2[0-3]):[0-5]\d$/.test(time);
   const alreadySavedSelected=!!home&&!!away&&saved.some(record=>
     record.matchAt.slice(0,10)===date&&record.competition.trim()===league.trim()&&
     normalizeTeam(record.home)===normalizeTeam(home.name)&&
     normalizeTeam(record.away)===normalizeTeam(away.name));
-  const comparison=eligible?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
-  const prospective=eligible&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
-  const numericLeagueContext=eligible?leagueNumericContext(data,league,date):[];
-  const lineExplorationPreview=eligible&&home&&away?
+  const comparison=readyToAnalyze?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
+  const prospective=readyToAnalyze&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
+  const numericLeagueContext=readyToAnalyze?leagueNumericContext(data,league,date):[];
+  const lineExplorationPreview=readyToAnalyze&&home&&away?
     compareRadarLines(data,{home:home.id,away:away.id,date,competition:league}):[];
   const settlements=saved.map(v=>settleVenuePredictions(data,v));
   const scores=scoreSettlements(settlements);
