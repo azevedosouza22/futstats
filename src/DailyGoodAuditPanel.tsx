@@ -43,6 +43,23 @@ export default function DailyGoodAuditPanel({data,records}:{
     </tr>)}</tbody>
    </table></div>
   </>}
+  {report.leagues.length>0&&<div className="radar-market-table"><table className="analysis-table">
+    <caption>Rastreio de todos os registros atribuídos — nenhum excluído vira acerto</caption>
+    <thead><tr><th>Campeonato</th><th>Jogo futuro</th><th>Aguardando resultado</th>
+      <th>Fonte/estatística pendente</th><th>Excluídos</th><th>Com resultado CSV documentado</th></tr></thead>
+    <tbody>{report.leagues.map(l=><tr key={l.league}>
+      <th>{l.league}</th>
+      <td>{l.statusCounts.future}</td>
+      <td>{l.statusCounts.waiting}</td>
+      <td>{l.statusCounts.source_missing}</td>
+      <td>{l.statusCounts.invalid+l.statusCounts.late+l.statusCounts.ambiguous}</td>
+      <td>{l.statusCounts.scored} registro(s); {l.scoredFixtures} com indicador disponível</td>
+    </tr>)}</tbody>
+   </table></div>}
+  <p className="muted">Para avaliar um eventual ajuste por campeonato, o protocolo exige pelo menos
+   30 confrontos prospectivos distintos com resultados conferidos também na fonte externa.
+   A tabela acima contém somente registros locais; **não** comprova essa meta,
+   nem a qualidade preditiva dos modelos. Não existe acompanhamento automático em segundo plano.</p>
   {report.attributed>0&&<details className="fpl-pilot-disclosure">
    <summary>Conferir cada indicação registrada ({report.attributed})</summary>
    {report.rows.filter(r=>r.status!=='legacy').map(row=><article key={row.key} className="fpl-pilot-game">
