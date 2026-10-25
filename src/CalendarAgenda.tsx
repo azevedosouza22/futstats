@@ -118,6 +118,12 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
     <section className="official-calendar" aria-label="Jogos com referências oficiais">
       <h4>Confrontos com referência oficial</h4>
       <p className="muted">Datas e horários foram conferidos manualmente em páginas das competições. A programação pode mudar. Quando a conferência tiver mais de dois dias, o horário não será usado automaticamente.</p>
+      <p className="muted" role="status">Referências oficiais futuras nesta janela:
+        {' '}{officialVisible.length} · horário conferido recentemente:
+        {' '}{officialVisible.filter(x=>x.fresh&&x.fixture.time!==null).length} ·
+        aguardando reconfirmação de horário:
+        {' '}{officialVisible.filter(x=>!x.fresh||x.fixture.time===null).length}.
+        Fontes cadastradas manualmente; a consulta não se renova sozinha.</p>
       {officialVisible.length===0
         ?<p className="muted">Nenhuma referência oficial futura cadastrada para este período. Isso não significa que não existam jogos.</p>
         :<div className="calendar-list">

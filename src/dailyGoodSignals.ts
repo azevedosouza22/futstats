@@ -27,7 +27,8 @@ export type DailyGoodResult={
 const validDate=(s:string)=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&
   !Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
 const officialHosts=new Set([
-  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com'
+  'www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com',
+  'www.premierleague.com'
 ]);
 function verifiable(item:OfficialCalendarItem,today:string,clock:string){
  const f=item.fixture;
