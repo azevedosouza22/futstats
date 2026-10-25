@@ -236,7 +236,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     {view==='new'&&<>
           <div className="radar-agenda-first">
-            <CalendarAgenda onSelect={useCalendarFixture}
+            <CalendarAgenda data={data} onSelect={useCalendarFixture}
               canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}/>
           </div>
           <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>

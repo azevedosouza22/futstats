@@ -820,3 +820,32 @@ html{scroll-behavior:smooth}
  .premium .radar-agenda-first .calendar-fixture button{width:100%;max-width:none}
  .premium .radar-selected-fixture>*{flex-basis:100%}
 }
+
+/* FutStats IA · agenda diária: cartões numéricos legíveis no Android. */
+.premium .calendar-fixture.radar-daily-fixture{display:flex;flex-direction:column;align-items:stretch;gap:13px;min-width:0;padding:15px}
+.premium .radar-daily-fixture-head{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
+.premium .radar-daily-fixture-title{display:grid;gap:5px;min-width:0}
+.premium .radar-daily-fixture-title b{font-size:15px;color:#f5fbff}
+.premium .radar-daily-fixture-title small{font-size:11px;color:#beced9}
+.premium .radar-daily-summary{width:100%;min-width:0;border-top:1px solid #375666;padding-top:10px}
+.premium .radar-daily-sample{margin:0 0 11px;color:#cfe3ee;font-size:11px;line-height:1.5}
+.premium .radar-daily-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.premium .radar-daily-metric{background:#142a37;border:1px solid #365363;border-radius:10px;padding:11px;min-width:0}
+.premium .radar-daily-metric-title{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 8px;margin-bottom:10px}
+.premium .radar-daily-metric-title strong{font-size:13px;color:#f2f9fd}
+.premium .radar-daily-metric-title span{font-size:10px;color:#a8cfec}
+.premium .radar-daily-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.premium .radar-daily-values>span{display:flex;flex-direction:column;gap:3px;font-size:10px;color:#a8c1cf}
+.premium .radar-daily-values b{font-size:18px;line-height:1.25;color:#f1f9ff;font-variant-numeric:tabular-nums}
+.premium .radar-daily-values small{font-size:10px;color:#95b6c8}
+.premium .radar-daily-models{display:flex;flex-direction:column;gap:5px;border-top:1px solid #314959;padding-top:8px;margin-top:10px;color:#c7e1eb;font-size:11px}
+.premium .radar-daily-no-signal{border-top:1px solid #314959;margin:10px 0 0;padding-top:8px;color:#aac1cf;font-size:10px;line-height:1.5}
+.premium .radar-daily-caution,.premium .radar-daily-empty{font-size:11px;line-height:1.6;color:#adc6d3;margin:10px 0 0}
+@media(max-width:1050px){.premium .radar-daily-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){
+ .premium .radar-daily-fixture-head{flex-direction:column;align-items:stretch}
+ .premium .radar-daily-fixture-head button{width:100%;max-width:100%}
+ .premium .radar-daily-metric{padding:9px}
+ .premium .radar-daily-values b{font-size:16px}
+}
+@media(max-width:365px){.premium .radar-daily-metrics{grid-template-columns:minmax(0,1fr)}}
