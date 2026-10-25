@@ -913,3 +913,27 @@ html{scroll-behavior:smooth}
 @media(max-width:940px){.premium .league-coverage-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:410px){.premium .league-coverage-panel{padding:11px}
  .premium .league-coverage-metrics{grid-template-columns:minmax(0,1fr)}}
+
+/* Read-only prioritized gap queue, intentionally separate from daily analysis. */
+.premium .stat-gap-queue{margin-top:20px;padding:14px;border:1px solid #657582;
+ border-radius:12px;background:#162c39;display:grid;gap:10px;min-width:0}
+.premium .stat-gap-queue>h4{font-size:14px;color:#f0f8ff;margin:0}
+.premium .stat-gap-queue .muted{font-size:11px;line-height:1.65;margin:0}
+.premium .stat-gap-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.premium .stat-gap-filters label{display:grid;gap:5px;font-size:11px;color:#c1d4df}
+.premium .stat-gap-filters select{width:100%;min-width:0;padding:9px;
+ border:1px solid #587788;border-radius:8px;background:#203a4c;color:#eef8ff}
+.premium .stat-gap-items{display:grid;gap:10px}
+.premium .stat-gap-item{padding:12px;border:1px solid #455f70;
+ background:#1c3646;border-radius:9px;min-width:0;display:grid;gap:6px}
+.premium .stat-gap-item header{display:grid;gap:4px}
+.premium .stat-gap-item header strong{font-size:13px;color:#f4fbff}
+.premium .stat-gap-item header small{font-size:10px;color:#adc5d4;overflow-wrap:anywhere}
+.premium .stat-gap-item .stat-gap-priority{font-size:11px;color:#f7dbad;
+ font-weight:700;margin:0}
+.premium .stat-gap-item .stat-gap-review{font-size:11px;color:#ffcfb6;margin:0}
+.premium .stat-gap-item ul{margin:0;padding-left:18px;display:grid;gap:3px;
+ font-size:11px;color:#d7e6ee}
+.premium .stat-gap-item a{font-size:11px;color:#9cdbff;overflow-wrap:anywhere}
+@media(max-width:520px){.premium .stat-gap-queue{padding:10px}
+ .premium .stat-gap-filters{grid-template-columns:minmax(0,1fr)}}
