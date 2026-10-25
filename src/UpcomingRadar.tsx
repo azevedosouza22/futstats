@@ -372,7 +372,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       <div className="radar-save-next" role="region" aria-label="Próximo passo após salvar">
         <strong>Previsão guardada neste navegador.</strong>
         <span>Agora você pode conferir o registro congelado, sem recalcular os sinais V2/V3.</span>
-        <button type="button" className="primary" onClick={onViewSaved}>
+        <button type="button" className="primary" onClick={()=>onViewSaved()}>
           Ver previsão que acabei de salvar
         </button>
       </div>}
