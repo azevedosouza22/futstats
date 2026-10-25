@@ -78,6 +78,7 @@ function calculateRadar(data: Data, fixture: RadarFixture, result?: Match) {
       shotsFor: teamAverage(homeAtHome, fixture.home, 'shots'),
       shotsAgainst: teamAverage(homeAtHome, fixture.home, 'shots', true),
       cornersFor: teamAverage(homeAtHome, fixture.home, 'corners'),
+      cornersAgainst: teamAverage(homeAtHome, fixture.home, 'corners', true),
       goalsFor: teamAverage(homeAtHome, fixture.home, 'goals'),
     },
     awayAtAway: {
@@ -85,6 +86,7 @@ function calculateRadar(data: Data, fixture: RadarFixture, result?: Match) {
       shotsFor: teamAverage(awayAtAway, fixture.away, 'shots'),
       shotsAgainst: teamAverage(awayAtAway, fixture.away, 'shots', true),
       cornersFor: teamAverage(awayAtAway, fixture.away, 'corners'),
+      cornersAgainst: teamAverage(awayAtAway, fixture.away, 'corners', true),
       goalsFor: teamAverage(awayAtAway, fixture.away, 'goals'),
     },
     markets,
