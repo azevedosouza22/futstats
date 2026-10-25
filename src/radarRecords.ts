@@ -1,6 +1,7 @@
 import {normalizeTeam} from './calendar';
 import type {RadarMarketResult} from './radar';
 import type {SavedVenuePrediction} from './radarProspective';
+import type {DailyGoodSignal} from './dailyGoodSignals';
 import type {LeagueNumericMarket} from './radarNumericContext';
 import {RADAR_LINE_METRICS,type RadarLineGroup} from './radarLineExplorer';
 
@@ -9,6 +10,8 @@ export type SavedRadarRecord={
   home:string; away:string; homeCount:number; awayCount:number;
   markets:Pick<RadarMarketResult,'id'|'label'|'line'|'historyRate'|'observed'|'overs'|'historicalMean'>[];
   venue?:SavedVenuePrediction[];
+  /** Present only for a shortlist selection explicitly saved before kickoff. */
+  goodPicks?:{verifiedAt:string;sourceUrl:string;signals:DailyGoodSignal[]};
   /** Frozen at registration; absent in legacy records, never reconstructed later. */
   leagueContext?:LeagueNumericMarket[];
   /** Only future registrations store this optional pre-match comparison. */
@@ -50,6 +53,25 @@ const validVenue=(v:unknown):v is SavedVenuePrediction=>
   decision(v.v2)&&decision(v.v3)&&optionalNumber(v.projectedTotal)&&
   Array.isArray(v.failedChecks)&&v.failedChecks.length<=25;
 
+const validGoodPick=(v:unknown):boolean=>{
+  if(!obj(v)||!text(v.verifiedAt,10)||!validDate(v.verifiedAt as string)||
+    !text(v.sourceUrl,600)||!Array.isArray(v.signals)||
+    v.signals.length<1||v.signals.length>3)return false;
+  try{const u=new URL(v.sourceUrl as string);
+    if(u.protocol!=='https:'||u.username||u.password||
+      !['www.cbf.com.br','www.laliga.com','www.lfp.fr','www.asroma.com'].includes(u.hostname.toLowerCase()))return false;
+  }catch{return false;}
+  const ids=new Set<string>();
+  return v.signals.every((s:unknown)=>{
+    if(!obj(s)||!text(s.id)||!text(s.label)||!number(s.line)||s.line===0||
+      (s.direction!=='Over'&&s.direction!=='Under')||!number(s.projection)||
+      !number(s.historicalMean)||!Number.isSafeInteger(s.historicalSample)||
+      Number(s.historicalSample)<8||!Number.isSafeInteger(s.leagueSample)||
+      Number(s.leagueSample)<10||!number(s.relativeDistance)||ids.has(s.id as string))return false;
+    ids.add(s.id as string);return true;
+  });
+};
+
 /** The existing exported format is a plain JSON array. Reject malformed or
  * unexpectedly large files rather than changing any saved forecast. */
 export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
@@ -64,6 +86,7 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       !Number.isSafeInteger(value.awayCount)||Number(value.awayCount)<0||
       !Array.isArray(value.markets)||value.markets.length>25||!value.markets.every(validMarket)||
       (value.venue!==undefined&&(!Array.isArray(value.venue)||value.venue.length>20||!value.venue.every(validVenue)))||
+      (value.goodPicks!==undefined&&!validGoodPick(value.goodPicks))||
       (value.leagueContext!==undefined&&(!Array.isArray(value.leagueContext)||value.leagueContext.length>8||
         !value.leagueContext.every(validLeagueContext)||
         new Set(value.leagueContext.map((x:LeagueNumericMarket)=>x.id)).size!==value.leagueContext.length))||
@@ -80,6 +103,7 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       homeCount:value.homeCount as number,awayCount:value.awayCount as number,
       markets:value.markets as SavedRadarRecord['markets'],
       ...(value.venue!==undefined?{venue:value.venue as SavedVenuePrediction[]}:{}),
+      ...(value.goodPicks!==undefined?{goodPicks:value.goodPicks as NonNullable<SavedRadarRecord['goodPicks']>}:{}),
       ...(value.leagueContext!==undefined?{leagueContext:value.leagueContext as LeagueNumericMarket[]}:{}),
       ...(value.lineExploration!==undefined?{lineExploration:value.lineExploration as RadarLineGroup[]}:{}),
     };
