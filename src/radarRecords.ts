@@ -1,12 +1,15 @@
 import {normalizeTeam} from './calendar';
 import type {RadarMarketResult} from './radar';
 import type {SavedVenuePrediction} from './radarProspective';
+import type {LeagueNumericMarket} from './radarNumericContext';
 
 export type SavedRadarRecord={
   key:string; savedAt:string; matchAt:string; competition:string;
   home:string; away:string; homeCount:number; awayCount:number;
   markets:Pick<RadarMarketResult,'id'|'label'|'line'|'historyRate'|'observed'|'overs'|'historicalMean'>[];
   venue?:SavedVenuePrediction[];
+  /** Frozen at registration; absent in legacy records, never reconstructed later. */
+  leagueContext?:LeagueNumericMarket[];
 };
 
 const obj=(v:unknown):v is Record<string,unknown>=>v!==null&&typeof v==='object'&&!Array.isArray(v);
@@ -23,6 +26,9 @@ const validMarket=(v:unknown):v is SavedRadarRecord['markets'][number]=>
   Number.isSafeInteger(v.observed)&&Number(v.observed)>=0&&
   Number.isSafeInteger(v.overs)&&Number(v.overs)>=0&&Number(v.overs)<=Number(v.observed)&&
   optionalNumber(v.historicalMean);
+const validLeagueContext=(v:unknown):v is LeagueNumericMarket=>
+  obj(v)&&text(v.id)&&optionalNumber(v.mean)&&
+  Number.isSafeInteger(v.observed)&&Number(v.observed)>=0;
 const validVenue=(v:unknown):v is SavedVenuePrediction=>
   obj(v)&&text(v.marketId)&&text(v.label)&&number(v.line)&&
   decision(v.v2)&&decision(v.v3)&&optionalNumber(v.projectedTotal)&&
@@ -41,7 +47,10 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       !Number.isSafeInteger(value.homeCount)||Number(value.homeCount)<0||
       !Number.isSafeInteger(value.awayCount)||Number(value.awayCount)<0||
       !Array.isArray(value.markets)||value.markets.length>25||!value.markets.every(validMarket)||
-      (value.venue!==undefined&&(!Array.isArray(value.venue)||value.venue.length>20||!value.venue.every(validVenue)))) {
+      (value.venue!==undefined&&(!Array.isArray(value.venue)||value.venue.length>20||!value.venue.every(validVenue)))||
+      (value.leagueContext!==undefined&&(!Array.isArray(value.leagueContext)||value.leagueContext.length>8||
+        !value.leagueContext.every(validLeagueContext)||
+        new Set(value.leagueContext.map((x:LeagueNumericMarket)=>x.id)).size!==value.leagueContext.length))) {
       throw Error('Registro '+(i+1)+' inválido. Nenhuma previsão foi restaurada.');
     }
     if(seenKeys.has(value.key))throw Error('Arquivo contém identificadores repetidos. Nada foi restaurado.');
@@ -52,6 +61,7 @@ export function parseRadarRecords(input:unknown):SavedRadarRecord[]{
       homeCount:value.homeCount as number,awayCount:value.awayCount as number,
       markets:value.markets as SavedRadarRecord['markets'],
       ...(value.venue!==undefined?{venue:value.venue as SavedVenuePrediction[]}:{}),
+      ...(value.leagueContext!==undefined?{leagueContext:value.leagueContext as LeagueNumericMarket[]}:{}),
     };
   });
 }
