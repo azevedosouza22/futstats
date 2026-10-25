@@ -57,6 +57,20 @@ describe('Etapa 47 — recuperar As Boas do Dia realmente salvas',()=>{
    .toBe('not_saved');
   expect(savedGoodPickMatch(fixture,[{...saved(),home:'Outro'}]).state).toBe('not_saved');
  });
+ it('recupera nomes de clubes com alias EXPLÍCITO da mesma liga, sem adivinhar',()=>{
+  const official={
+   ...fixture,
+   fixture:{...fixture.fixture,competition:'La Liga espanhola 2026/27',
+    home:'FC Barcelona',away:'Real Madrid CF'}
+  };
+  const stored={...saved(),competition:'La Liga espanhola 2026/27',
+   home:'Barcelona',away:'Real Madrid'};
+  expect(savedGoodPickMatch(official,[stored])).toEqual({
+   state:'from_good_picks',recordKey:'frozen-01'
+  });
+  expect(savedGoodPickMatch({...official,fixture:{...official.fixture,
+   competition:'Liga desconhecida'}},[stored]).state).toBe('not_saved');
+ });
  it('não escolhe arbitrariamente dois registros do mesmo confronto ou ID duplicado',()=>{
   const a=saved(),b={...saved(),key:'outro-registro'};
   expect(savedGoodPickMatch(fixture,[a,b])).toEqual({
