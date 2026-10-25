@@ -55,6 +55,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
   const [calendarSelection,setCalendarSelection]=useState('');
   const [calendarSource,setCalendarSource]=useState('');
   const [communityProvisional,setCommunityProvisional]=useState(false);
+  const [officialReference,setOfficialReference]=useState(false);
   const [editSchedule,setEditSchedule]=useState(false);
   const futureFormRef=useRef<HTMLHeadingElement>(null);
   const restoreInput=useRef<HTMLInputElement>(null);
@@ -66,6 +67,7 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
     setCalendarSelection(f.home+' × '+f.away);
     setCalendarSource(selection.sourceUrl);
     setCommunityProvisional(f.id.startsWith('community|'));
+    setOfficialReference(f.id.startsWith('official|'));
     setEditSchedule(!selection.hasKickoffTime);
     setMessage('');
     // Preview selection is not a saved prediction.
@@ -252,10 +254,13 @@ export default function UpcomingRadar({data,view}:{data:Data;view:'new'|'saved'}
       <strong>{calendarSelection}</strong>
       <span>{date} · {time||'horário N/D'} (Brasília) · {league}</span>
       <span>{communityProvisional
-        ?'Confronto do catálogo comunitário: data provisória, horário não confirmado.'
-        :'Horário da agenda local, sujeito a alterações.'}
+        ?'Confronto de catálogo comunitário: data provisória, horário não confirmado.'
+        :officialReference
+          ?'Confronto com referência oficial datada: confira a programação novamente antes de salvar.'
+          :'Horário da agenda local, sujeito a alterações.'}
         {' '}<a href={calendarSource} target="_blank" rel="noopener noreferrer">
-          {communityProvisional?'Consultar catálogo (não oficial)':'Conferir fonte'}
+          {communityProvisional?'Consultar catálogo (não oficial)'
+            :officialReference?'Consultar programação oficial':'Conferir fonte'}
         </a>
       </span>
       {!editSchedule&&<button type="button" className="text-button" onClick={()=>setEditSchedule(true)}>Corrigir data ou horário</button>}
