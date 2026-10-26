@@ -851,6 +851,10 @@ test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congel
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
   const history=syntheticHistory();
+  // syntheticHistory() usa os mesmos objetos Stats em vários jogos.
+  // Copie o par antes da mutação para NÃO corromper os 9 registros manuais.
+  history.matches[0].first=history.matches[0].first.map(stat=>({...stat})) as
+    typeof history.matches[0]['first'];
   // Lacunas reais são permitidas em pesquisa CSV, mas NÃO em registro
   // manual (que o validador global corretamente rejeitaria por inteiro).
   // A referência FT preserva escanteios; o primeiro tempo continua N/D.
