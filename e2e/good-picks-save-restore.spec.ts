@@ -77,6 +77,10 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas.getByText('FC Barcelona × Real Madrid')).toBeVisible();
   await expect(boas.getByText(/V2 e V3 concordam/).first()).toBeVisible();
+  const conflicts=boas.locator('details.daily-good-readiness');
+  await conflicts.locator('summary').click();
+  await expect(conflicts.getByRole('columnheader',{name:'Horários divergentes'})).toBeVisible();
+  await expect(conflicts.locator('.daily-good-kickoff-conflicts')).toHaveCount(0);
   await boas.getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
   await expect(page.locator('.radar-selected-fixture')).toContainText('FC Barcelona × Real Madrid');
   await expect(page.locator('.radar-selected-fixture')).toContainText('17:00');

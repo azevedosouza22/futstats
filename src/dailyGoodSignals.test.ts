@@ -114,7 +114,7 @@ describe('As Boas do Dia — filtro estatístico conservador',()=>{
    expect(r.readiness).toEqual([{
      competition:'Liga fictícia 2026/27',scheduledFuture:4,needsRecheck:1,
      otherDates:1,todayVerified:2,insufficientHistory:1,
-     noConsistentSignal:0,qualified:1,featured:1
+     noConsistentSignal:0,qualified:1,featured:1,conflictingKickoff:0
    }]);
    expect(JSON.stringify(entries)).toBe(original);
  });
@@ -126,6 +126,73 @@ describe('As Boas do Dia — filtro estatístico conservador',()=>{
    });
    expect(JSON.stringify(r)).not.toContain('winProbability');
    expect(JSON.stringify(r)).not.toContain('hitRate');
+ });
+ it('bloqueia As Boas se duas fontes oficiais atuais divergem no horário',()=>{
+   const a=official();
+   const b=official({...fixture,id:'segundo-site',time:'21:30',
+      sourceUrl:'https://www.laliga.com/partidas/casa-fora'});
+   const snapshot=JSON.stringify([a,b]);
+   for(const list of [[a,b],[b,a]]){
+     const r=selectDailyGoodSignals(data,list,now);
+     expect(r).toMatchObject({date:'2026-10-25',checked:0,
+       withAdequateHistory:0,items:[],
+       readiness:[{scheduledFuture:1,needsRecheck:1,conflictingKickoff:1,
+         todayVerified:0,qualified:0,featured:0}]});
+     expect(r.conflicts).toHaveLength(1);
+     expect(r.conflicts[0].fixture.time).toBeNull();
+     expect(r.conflicts[0].references.map(x=>x.time)).toEqual(['20:00','21:30']);
+     expect(r.conflicts[0].references.every(x=>
+       x.sourceUrl.startsWith('https://'))).toBe(true);
+   }
+   expect(JSON.stringify([a,b])).toBe(snapshot);
+ });
+ it('não escolhe um horário passado quando outro site recente informa futuro',()=>{
+   const past=official({...fixture,id:'antes',time:'11:00'});
+   const future=official({...fixture,id:'depois',time:'20:00',
+     sourceUrl:'https://www.laliga.com/calendario'});
+   const r=selectDailyGoodSignals(data,[past,future],now);
+   expect(r.readiness[0]).toMatchObject({scheduledFuture:1,
+     conflictingKickoff:1,needsRecheck:1,qualified:0});
+   expect(r.conflicts).toHaveLength(1);
+   expect(r.items).toEqual([]);
+ });
+ it('fontes vencidas e URLs impostoras não viram falsas contradições',()=>{
+   const one=official();
+   const old={...official({...fixture,id:'vencido',time:'22:00'}),
+     verifiedAt:'2026-10-22'};
+   const fake=official({...fixture,id:'fraude',time:'23:00',
+     sourceUrl:'https://www.cbf.com.br.evil.invalid/jogo'});
+   const invalid={...official({...fixture,id:'invalido',time:null}),fresh:false};
+   const r=selectDailyGoodSignals(data,[old,fake,invalid,one],now);
+   expect(r).toMatchObject({checked:1,conflicts:[],
+     readiness:[{scheduledFuture:1,needsRecheck:0,conflictingKickoff:0}],
+     items:[{fixture:{id:'official-game',time:'20:00'}}]});
+ });
+ it('duas URLs com a mesma hora são uma só indicação e preservam data mais recente',()=>{
+   const original={...official(),verifiedAt:'2026-10-23'};
+   const newer=official({...fixture,id:'fonte-mesma-hora',
+     sourceUrl:'https://www.laliga.com/partida/casa'});
+   const r=selectDailyGoodSignals(data,[original,newer],now);
+   expect(r).toMatchObject({checked:1,conflicts:[],
+      items:[{verifiedAt:'2026-10-25'}],
+      readiness:[{scheduledFuture:1,conflictingKickoff:0}]});
+   expect(r.items).toHaveLength(1);
+ });
+ it('aliases conhecidos da mesma liga revelam conflito sem misturar temporadas',()=>{
+   const today='La Liga espanhola 2026/27';
+   const officialA=official({...fixture,competition:today,home:'FC Barcelona',
+     away:'Real Madrid CF',time:'20:00'});
+   const officialB=official({...fixture,competition:today,
+     home:'Barcelona',away:'Real Madrid',time:'21:00',
+     sourceUrl:'https://www.laliga.com/partido/1'});
+   const r=selectDailyGoodSignals(data,[officialA,officialB],now);
+   expect(r).toMatchObject({checked:0,conflicts:[{fixture:{time:null}}],
+     readiness:[{scheduledFuture:1,conflictingKickoff:1}]});
+   const different={...officialB,fixture:{...officialB.fixture,
+     competition:'La Liga espanhola 2025/26'}};
+   const separated=selectDailyGoodSignals(data,[officialA,different],now);
+   expect(separated.conflicts).toEqual([]);
+   expect(separated.readiness).toHaveLength(2);
  });
  it('não recomenda quando o algoritmo não emite sinais',()=>{
    // Three games above and two below each line at BOTH venues. Neither

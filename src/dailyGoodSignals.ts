@@ -12,6 +12,7 @@ import {brasiliaDate,normalizeTeam,type ScheduledFixture} from './calendar';
 import type {OfficialCalendarItem} from './officialCalendar';
 import {buildRadarDailyOverview} from './radarDailyOverview';
 import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
+import {canonicalTeamInCompetition} from './radarTeamAliases';
 
 export type DailyGoodSignal={
   id:string;label:string;line:number;direction:'Over'|'Under';
@@ -25,11 +26,16 @@ export type DailyGoodFixture={
 export type DailyGoodLeagueReadiness={
   competition:string;scheduledFuture:number;needsRecheck:number;
   otherDates:number;todayVerified:number;insufficientHistory:number;
-  noConsistentSignal:number;qualified:number;featured:number;
+  noConsistentSignal:number;qualified:number;featured:number;conflictingKickoff:number;
+};
+export type DailyGoodKickoffConflict={
+  fixture:ScheduledFixture;
+  references:{time:string;verifiedAt:string;sourceUrl:string}[];
 };
 export type DailyGoodResult={
   date:string;checked:number;withAdequateHistory:number;
   items:DailyGoodFixture[];readiness:DailyGoodLeagueReadiness[];
+  conflicts:DailyGoodKickoffConflict[];
 };
 const validDate=(s:string)=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&
   !Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
@@ -55,14 +61,18 @@ export function selectDailyGoodSignals(
 ):DailyGoodResult{
  const {date,time}=brasiliaDate(now);
  const found:DailyGoodFixture[]=[];
- // Keep one official entry per fixture and prefer a usable, current reference.
- // This is a view over caller-owned data: never edit a source or saved record.
- const unique=new Map<string,OfficialCalendarItem>();
+ const conflicts:DailyGoodKickoffConflict[]=[];
+ // Canonical aliases are scoped to the exact competition/season. Do not
+ // select a convenient kickoff when equally current trusted URLs disagree.
+ // All of this is a read-only view of caller-owned snapshots.
+ const groups=new Map<string,OfficialCalendarItem[]>();
  for(const entry of official){
    const f=entry.fixture;
-   const id=[f.date,f.competition,normalizeTeam(f.home),normalizeTeam(f.away)].join('|');
-   const prior=unique.get(id);
-   if(!prior||(!verifiable(prior,date,time)&&verifiable(entry,date,time)))unique.set(id,entry);
+   const id=[f.date,normalizeTeam(f.competition),
+     canonicalTeamInCompetition(f.home,f.competition),
+     canonicalTeamInCompetition(f.away,f.competition)].join('|');
+   const group=groups.get(id)??[];
+   group.push(entry);groups.set(id,group);
  }
  const byLeague=new Map<string,DailyGoodLeagueReadiness>();
  const league=(competition:string)=>{
@@ -70,18 +80,44 @@ export function selectDailyGoodSignals(
    if(!item){
      item={competition,scheduledFuture:0,needsRecheck:0,otherDates:0,
        todayVerified:0,insufficientHistory:0,noConsistentSignal:0,
-       qualified:0,featured:0};
+       qualified:0,featured:0,conflictingKickoff:0};
      byLeague.set(competition,item);
    }
    return item;
  };
  let checked=0,withAdequateHistory=0;
- for(const entry of unique.values()){
+ for(const group of groups.values()){
+   // A stale/untrusted entry cannot contradict a genuinely fresh official
+   // observation. But two fresh observations with different clocks are a
+   // hard conflict, INCLUDING when one kickoff has already passed.
+   const trusted=group.filter(item=>
+     item.fresh&&validDate(item.verifiedAt)&&
+     officialSnapshotFreshAt(item.verifiedAt,date)&&
+     safeOfficialFixtureUrl(item.fixture.sourceUrl)&&
+     validDate(item.fixture.date)&&
+     item.fixture.time!==null&&
+     /^([01]\d|2[0-3]):[0-5]\d$/.test(item.fixture.time));
+   const trustedTimes=new Set(trusted.map(item=>item.fixture.time));
+   const entry=[...trusted].sort((a,b)=>b.verifiedAt.localeCompare(a.verifiedAt))[0]??group[0];
    const f=entry.fixture;
-   // Past fixtures are never counted as missing candidates.
-   if(f.date<date||(f.date===date&&f.time!==null&&f.time<=time))continue;
+   // Count a conflicting same-day schedule only if a candidate is still
+   // future, even when an alternate source reports a past kickoff.
+   const potentiallyFuture=group.some(item=>
+     item.fixture.date>date||
+     (item.fixture.date===date&&
+       (item.fixture.time===null||item.fixture.time>time)));
+   if(f.date<date||!potentiallyFuture)continue;
    const stat=league(f.competition);
    stat.scheduledFuture++;
+   if(trustedTimes.size>1){
+     stat.needsRecheck++;
+     stat.conflictingKickoff++;
+     conflicts.push({fixture:{...f,time:null},references:trusted.map(item=>({
+       time:item.fixture.time!,verifiedAt:item.verifiedAt,
+       sourceUrl:item.fixture.sourceUrl
+     })).sort((a,b)=>a.time.localeCompare(b.time)||a.sourceUrl.localeCompare(b.sourceUrl))});
+     continue;
+   }
    if(!entry.fresh||!f.time||
      !officialSnapshotFreshAt(entry.verifiedAt,date)||
      !safeOfficialFixtureUrl(f.sourceUrl)){
@@ -129,6 +165,6 @@ export function selectDailyGoodSignals(
    a.fixture.id.localeCompare(b.fixture.id));
  const featured=found.slice(0,3);
  for(const entry of featured)league(entry.fixture.competition).featured++;
- return {date,checked,withAdequateHistory,items:featured,
+ return {date,checked,withAdequateHistory,items:featured,conflicts,
    readiness:[...byLeague.values()].sort((a,b)=>a.competition.localeCompare(b.competition,'pt-BR'))};
 }
