@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {dryRunV4Restore,type DryRunResult} from './safetyRestoreDryRun';
+import {assessAndroidQaGate,exportAndroidQaGateCsv,type AndroidQaGate} from './androidReleaseQaGate';
 import {planSafetyRestore,restoreSafetyArchiveEmpty,type RestorePlan} from './safetyRestore';
 import {
  createSafetyArchive,inspectSafetyStorage,inspectSafetyArchive,
@@ -15,6 +16,7 @@ export default function SafetyArchivePanel(){
  const [candidate,setCandidate]=useState<unknown>(null);
  const [restoreDone,setRestoreDone]=useState(false);
  const [dryRun,setDryRun]=useState<DryRunResult|null>(null);
+ const [qaGate,setQaGate]=useState<AndroidQaGate|null>(null);
  function refresh(){
   setError('');setMessage('');
   try{
@@ -32,6 +34,33 @@ export default function SafetyArchivePanel(){
   }catch(e){
    setError(e instanceof Error?e.message:'Autoteste incompleto; nenhum dado foi restaurado.');
   }
+ }
+ function runAndroidPreflight(){
+  // Read the original storage only. The recovery trial uses a private Map.
+  // No claim of an actual Android-device test or successful file backup.
+  setError('');setQaGate(null);
+  try{
+    const inspection=inspectSafetyStorage(localStorage);
+    let recovery:DryRunResult|null=null;
+    try{recovery=dryRunV4Restore(localStorage);}catch{recovery=null;}
+    const gate=assessAndroidQaGate(inspection,recovery,{
+      viewportWidth:document.documentElement.clientWidth,
+      documentWidth:document.documentElement.scrollWidth,
+      randomUUID:typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function',
+      sha256:typeof crypto!=='undefined'&&!!crypto.subtle
+    });
+    setQaGate(gate);
+  }catch(e){setError(e instanceof Error?e.message:
+    'A conferência local falhou. Não liberar a versão experimental.');}
+ }
+ function exportQaGate(){
+  if(!qaGate)return;
+  const bytes=exportAndroidQaGateCsv(qaGate);
+  const url=URL.createObjectURL(new Blob([bytes],{type:'text/csv;charset=utf-8'}));
+  const anchor=document.createElement('a');
+  anchor.href=url;anchor.download='futstats-checklist-qa-android.csv';
+  document.body.appendChild(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
  }
  function exportArchive(){
   setError('');setMessage('');
@@ -133,10 +162,35 @@ export default function SafetyArchivePanel(){
     <button type="button" onClick={testRestoreWithoutWriting}>
       Testar recuperação V4 sem alterar dados
     </button>
+    <button type="button" onClick={runAndroidPreflight}>
+      Preparar testes Android e verificar bloqueios de liberação
+    </button>
     <button type="button" className="primary" onClick={exportArchive}>
      Criar cópia integral V4 (um único arquivo)
     </button>
    </div>
+   {qaGate&&<section className="safety-android-qa" role="region"
+     aria-label="Pré-check de liberação Android">
+     <h3>Preparação para testes no Android · NÃO LIBERADO PARA PRODUÇÃO</h3>
+     <p role="status" className="muted">
+      Verificações locais: <strong>{qaGate.localPassed}/{qaGate.localTotal}</strong>.
+      {' '}{qaGate.localStatus==='APTO_PARA_TESTE_FISICO'
+       ?'Apto a iniciar o teste físico, ainda NÃO realizado.'
+       :'Revisar os problemas locais antes de testar no aparelho.'}
+     </p>
+     <ul>{qaGate.checks.map(c=><li key={c.id}>
+      <strong>{c.status}</strong> · {c.label}.
+      <small>{c.detail}</small>
+     </li>)}</ul>
+     <p className="muted">Este relatório tem apenas contagens e estados,
+       nunca o conteúdo dos jogos ou previsões. Mesmo com 4/4 checagens locais,
+       continuam obrigatórios backup externo, testes físicos,
+       resultados verificados independentemente e integração autorizada.
+       Nenhuma atualização na produção foi realizada.</p>
+     <button type="button" onClick={exportQaGate}>
+       Baixar checklist de QA Android (CSV sem dados de partidas)
+     </button>
+    </section>}
    {error&&<p className="alert" role="alert">{error}</p>}
    {message&&<p className="notice" role="status">{message}</p>}
    {dryRun&&<section aria-label="Resultado do autoteste de recuperação V4"
