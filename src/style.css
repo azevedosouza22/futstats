@@ -1219,3 +1219,28 @@ html{scroll-behavior:smooth}
 .premium .radar-venue-table-scroll table{min-width:540px;width:100%}
 .premium .radar-venue-table-scroll th,.premium .radar-venue-table-scroll td{font-size:11px;padding:9px 7px;white-space:normal}
 .premium .radar-venue-table-scroll td small{display:block;color:#c1d3df}
+
+
+/* Etapa 60: trilha de amostras somente leitura, compacta no celular. */
+.premium .radar-venue-trail{
+  margin:14px 0;padding:12px;min-width:0;max-width:100%;
+  border:1px solid #607c86;border-radius:10px;background:#192f3a;
+}
+.premium .radar-venue-trail>summary{
+  min-height:44px;cursor:pointer;overflow-wrap:anywhere;
+  font-weight:700;color:#e7f4fb;line-height:1.7
+}
+.premium .radar-venue-trail button{
+  min-height:44px;max-width:100%;white-space:normal
+}
+.premium .radar-venue-trail-side ol{
+  margin:8px 0 16px;padding-left:23px;display:grid;gap:8px
+}
+.premium .radar-venue-trail-side li{
+  overflow-wrap:anywhere;font-size:11px;line-height:1.6
+}
+.premium .radar-venue-trail-side li small,
+.premium .radar-venue-trail-side li a{
+  display:block;font-size:11px;line-height:1.6
+}
+.premium .radar-venue-trail-side li a{color:#9ed6ff}
