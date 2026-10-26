@@ -39,7 +39,7 @@ export default function MainWorkSourceReview({data,work,today}:{
     {' '}0 resultado(s) confirmado(s) externamente.
    </p>
    <p className="muted">A mesma partida pode existir nas duas bases
-    separadas. **Isso não significa duas fontes independentes.**
+    separadas. <strong>Isso não significa duas fontes independentes.</strong>
     Coincidência de números locais não comprova placar nem valida
     “As Boas”. Nada será importado, mesclado ou corrigido.</p>
    <button type="button" className="text-button" onClick={download}>
