@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {dryRunV4Restore,type DryRunResult} from './safetyRestoreDryRun';
 import {planSafetyRestore,restoreSafetyArchiveEmpty,type RestorePlan} from './safetyRestore';
 import {
  createSafetyArchive,inspectSafetyStorage,inspectSafetyArchive,
@@ -13,12 +14,23 @@ export default function SafetyArchivePanel(){
  const [restorePlan,setRestorePlan]=useState<RestorePlan|null>(null);
  const [candidate,setCandidate]=useState<unknown>(null);
  const [restoreDone,setRestoreDone]=useState(false);
+ const [dryRun,setDryRun]=useState<DryRunResult|null>(null);
  function refresh(){
   setError('');setMessage('');
   try{
    setReport(inspectSafetyStorage(localStorage));
   }catch(e){
    setError(e instanceof Error?e.message:'Não foi possível conferir a base do dispositivo.');
+  }
+ }
+ function testRestoreWithoutWriting(){
+  setError('');setMessage('');setDryRun(null);
+  try{
+   const result=dryRunV4Restore(localStorage);
+   setDryRun(result);
+   setReport(inspectSafetyStorage(localStorage));
+  }catch(e){
+   setError(e instanceof Error?e.message:'Autoteste incompleto; nenhum dado foi restaurado.');
   }
  }
  function exportArchive(){
@@ -110,15 +122,36 @@ export default function SafetyArchivePanel(){
   </div><span className="tag">SOMENTE CÓPIA</span></div>
   <div className="analysis-content">
    <p className="muted">A conferência não altera, apaga ou importa nenhum jogo. O arquivo é gerado somente no seu dispositivo, sem enviar dados Work ao GitHub ou à Vercel.</p>
+   <p className="muted">O botão de autoteste reproduz a exportação e a
+     recuperação em um perfil fictício dentro da memória. Não apaga nem
+     restaura os dados deste aparelho; se encontrar inconsistências, bloqueia
+     o ensaio e informa o erro. Ao final, use “Criar cópia integral V4” para
+     salvar um arquivo privado de verdade.</p>
    <p className="muted">O backup V4 v2 protege nove grupos: Histórico, previsões, Work e agenda CSV local. Backups V4 v1 de oito grupos continuam aceitos e não incluem agenda. A agenda oficial e comunitária consultada pela internet não é salva como dado próprio. Guarde o arquivo em local privado fora do dispositivo.</p>
    <div className="analysis-controls">
     <button type="button" onClick={refresh}>Conferir integridade dos dados</button>
+    <button type="button" onClick={testRestoreWithoutWriting}>
+      Testar recuperação V4 sem alterar dados
+    </button>
     <button type="button" className="primary" onClick={exportArchive}>
      Criar cópia integral V4 (um único arquivo)
     </button>
    </div>
    {error&&<p className="alert" role="alert">{error}</p>}
    {message&&<p className="notice" role="status">{message}</p>}
+   {dryRun&&<section aria-label="Resultado do autoteste de recuperação V4"
+      role="status" className="notice">
+      <p><strong>Autoteste PASSOU — apenas memória isolada.</strong>
+       {' '}{dryRun.restored} de {dryRun.groups} grupos presentes recuperados,
+       {' '}{description(dryRun.matches)} partidas no Histórico,
+       {' '}{description(dryRun.radarForecasts)} previsões Radar V2/V3,
+       {' '}{description(dryRun.workMatches)} pesquisas Work,
+       {' '}{description(dryRun.workForecasts)} previsões Work e
+       {' '}{description(dryRun.calendarFixtures)} jogos da agenda CSV.
+       O armazenamento real permaneceu intacto durante o teste.
+       Este ensaio não grava um arquivo no dispositivo, não testa falhas do
+       sistema Android e não substitui manter o backup externo.</p>
+    </section>}
    {report&&<>
     <div className="fpl-pilot-numbers">
      <div><strong>{description(report.matches)}</strong><span>Histórico original</span></div>
