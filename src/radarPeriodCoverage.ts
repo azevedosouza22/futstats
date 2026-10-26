@@ -33,7 +33,7 @@ const total=(m:Match,metric:CoverageMetric,period:CoveragePeriod):number|null=>{
  const a=stats(m,0,period)[metric],b=stats(m,1,period)[metric];
  return a===null||b===null?null:a+b;
 };
-function metricValues(m:Match,metric:CoverageMetric):
+export function auditedRadarMetricValues(m:Match,metric:CoverageMetric):
  Record<CoveragePeriod,number|null>|null{
  const full=total(m,metric,'full'),first=total(m,metric,'first'),
   second=total(m,metric,'second');
@@ -73,7 +73,7 @@ export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
    [period,{period,valid:0,missing:0,conflicts:0,mean:null as number|null,subtotal:0}]
   )) as Record<CoveragePeriod,RadarPeriodCell&{subtotal:number}>;
   for(const match of unique){
-   const values=metricValues(match,metric);
+   const values=auditedRadarMetricValues(match,metric);
    if(values===null){
     for(const period of COVERAGE_PERIODS)counters[period].conflicts++;
     continue;
@@ -92,14 +92,14 @@ export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
   return {metric,label:labels[metric],cells};
  });
  const completeAll=unique.filter(m=>COVERAGE_METRICS.every(metric=>{
-  const values=metricValues(m,metric);
+  const values=auditedRadarMetricValues(m,metric);
   return values!==null&&COVERAGE_PERIODS.every(period=>values[period]!==null);
  })).length;
  const gaps:RadarPeriodGap[]=[];
  for(const match of unique){
   const problems:RadarPeriodGap['gaps']=[];
   for(const metric of COVERAGE_METRICS){
-   const values=metricValues(match,metric);
+   const values=auditedRadarMetricValues(match,metric);
    if(values===null){
     problems.push({metric,period:'full',kind:'conflict'});
    }else{
