@@ -1184,3 +1184,52 @@ test('Etapa 61: sem dados e com grupos inválidos não declara Android apto',asy
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY))
     .toBe('[{"ruim":true}]');
 });
+
+
+test('Etapa 63: linha inteira separa empate, períodos e não modifica previsão',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:history});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const original=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  const custom=page.locator('details.radar-custom-line');
+  await custom.locator('summary').click();
+  await custom.getByLabel('Indicador da linha personalizada').selectOption('goals');
+  await custom.getByLabel('Período da linha personalizada').selectOption('full');
+  await custom.getByLabel('Valor da linha personalizada').fill('3');
+  const results=custom.getByLabel('Contagens acima abaixo e igualdade');
+  await expect(results).toContainText('10/10');
+  await expect(results).toContainText('100%');
+  await expect(results.locator('div').nth(0)).toContainText('0/10');
+  await expect(results.locator('div').nth(1)).toContainText('0/10');
+  await expect(results.locator('div').nth(2)).toContainText('10/10');
+  await custom.getByLabel('Valor da linha personalizada').fill('3.5');
+  await expect(results.locator('div').nth(1)).toContainText('10/10');
+  await expect(results.locator('div').nth(2)).toContainText('0/10');
+  await custom.getByLabel('Período da linha personalizada').selectOption('second');
+  await custom.getByLabel('Valor da linha personalizada').fill('0');
+  await expect(results.locator('div').nth(2)).toContainText('10/10');
+  await custom.getByLabel('Valor da linha personalizada').fill('0.25');
+  await expect(custom.getByRole('alert')).toContainText('Linha inválida');
+  await expect(results).toHaveCount(0);
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])))).toEqual(original);
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const frozen=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(frozen).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(frozen);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth))
+    .toBeLessThanOrEqual(1);
+});

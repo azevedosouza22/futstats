@@ -1272,3 +1272,41 @@ html{scroll-behavior:smooth}
   min-height:44px;white-space:normal;max-width:100%;
   padding:10px 12px;border-radius:8px
 }
+
+
+/* Etapa 63: histórico comparável sem forçar largura maior que o celular. */
+.premium .radar-custom-line{
+  border:1px solid #526f7b;border-radius:11px;padding:10px;
+  background:#182e3b;margin:14px 0;min-width:0;max-width:100%
+}
+.premium .radar-custom-line>summary{
+  cursor:pointer;min-height:44px;padding:10px;color:#e3f7ed;
+  font-size:12px;line-height:1.5;font-weight:750
+}
+.premium .radar-custom-line p{font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.premium .radar-custom-line-controls{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));
+  gap:12px;padding:9px 0;min-width:0
+}
+.premium .radar-custom-line-controls label{
+  display:grid;gap:6px;font-size:11px;color:#d7eaf2;min-width:0
+}
+.premium .radar-custom-line-controls select,
+.premium .radar-custom-line-controls input{
+  width:100%;min-width:0;min-height:44px;padding:8px;
+  background:#102631;color:#e9f6fa;border:1px solid #688d91;border-radius:8px
+}
+.premium .radar-custom-line-results{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px
+}
+.premium .radar-custom-line-results>div{
+  min-width:0;padding:9px 5px;border:1px solid #527889;border-radius:9px
+}
+.premium .radar-custom-line-results strong,
+.premium .radar-custom-line-results span,
+.premium .radar-custom-line-results small{
+  display:block;text-align:center;overflow-wrap:anywhere;line-height:1.5
+}
+.premium .radar-custom-line-results strong{font-size:10px}
+.premium .radar-custom-line-results span{font-size:14px;font-weight:750}
+.premium .radar-custom-line-results small{font-size:11px}
