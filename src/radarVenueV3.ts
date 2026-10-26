@@ -1,5 +1,5 @@
 import {type Data} from './model';
-import {recentMatches} from './pregame';
+import {recentRadarMatches} from './radarFixtureUniqueness';
 import {matchTotal, type RadarFixture} from './radar';
 import {predictVenueV2,venueV2Markets,type VenueV2Decision} from './radarVenueV2';
 
@@ -36,9 +36,9 @@ export function predictVenueV3(
   data:Data,fixture:RadarFixture,market:(typeof venueV2Markets)[number],
 ):VenueV3Prediction {
   const v2=predictVenueV2(data,fixture,market);
-  const homeHistory=recentMatches(data.matches,fixture.home,10,fixture.date,{competition:fixture.competition})
+  const homeHistory=recentRadarMatches(data,fixture.home,10,fixture)
     .filter(m=>m.home===fixture.home);
-  const awayHistory=recentMatches(data.matches,fixture.away,10,fixture.date,{competition:fixture.competition})
+  const awayHistory=recentRadarMatches(data,fixture.away,10,fixture)
     .filter(m=>m.away===fixture.away);
   const home=summarize(homeHistory,market);
   const away=summarize(awayHistory,market);
