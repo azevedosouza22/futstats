@@ -113,7 +113,34 @@ export default function DailyGoodPicks({result,onSelect,records,onViewSaved,next
         Não há consulta automática nem atualização de resultados.</p>
     </details>
     <details className="daily-good-readiness" aria-label="Diagnóstico de elegibilidade por campeonato">
-      <summary>Por que alguns jogos ainda não recebem indicações?</summary>
+      <summary>Por que alguns jogos ainda não recebem indicações?
+        {result.conflicts.length>0&&<strong> · {result.conflicts.length}
+          {' '}horário(s) oficial(is) divergente(s)</strong>}
+      </summary>
+      {result.conflicts.length>0&&<div className="daily-good-kickoff-conflicts"
+        aria-label="Confrontos bloqueados por divergência de horário">
+        <p className="muted" role="status">
+          <strong>{result.conflicts.length} confronto(s) bloqueado(s)</strong>:
+          fontes oficiais recentes informam horários diferentes. Horário
+          confiável: <strong>N/D</strong>. Nenhuma indicação é gerada até
+          existir uma reconferência real e consistente.
+        </p>
+        <ul>{result.conflicts.slice(0,5).map(item=><li key={[
+            item.fixture.competition,item.fixture.date,
+            item.fixture.home,item.fixture.away].join('|')}>
+          <b>{item.fixture.home} × {item.fixture.away}</b>
+          {' · '}{item.fixture.competition} · {item.fixture.date}
+          <small>Horários conflitantes informados (Brasília), nenhum confirmado:</small>
+          <ul>{item.references.map((source,i)=><li key={i}>
+            {source.time} · referência datada {source.verifiedAt}
+            {' · '}<a href={source.sourceUrl} rel="noopener noreferrer"
+              target="_blank">Conferir fonte oficial</a>
+          </li>)}</ul>
+        </li>)}</ul>
+        {result.conflicts.length>5&&<p className="muted">Outros
+          {' '}{result.conflicts.length-5} confrontos conflitantes não
+          exibidos neste resumo.</p>}
+      </div>}
       <p className="muted">Este controle explica a elegibilidade de confrontos futuros,
         não mede resultados nem acertos. Uma referência oficial vencida exige nova
         conferência real; abrir o link não atualiza o horário.</p>
@@ -123,13 +150,14 @@ export default function DailyGoodPicks({result,onSelect,records,onViewSaved,next
           <caption>Transparência da lista por campeonato · sem criar previsões</caption>
           <thead><tr>
             <th>Campeonato</th><th>Futuros</th><th>Fonte vencida / conferir</th>
-            <th>Outra data</th><th>Falta histórico</th>
+            <th>Horários divergentes</th><th>Outra data</th><th>Falta histórico</th>
             <th>Sem sinal V2/V3</th><th>Qualificados / exibidos</th>
           </tr></thead>
           <tbody>{result.readiness.map(l=><tr key={l.competition}>
             <th>{l.competition}</th>
             <td>{l.scheduledFuture}</td>
             <td>{l.needsRecheck}</td>
+            <td>{l.conflictingKickoff}</td>
             <td>{l.otherDates}</td>
             <td>{l.insufficientHistory}</td>
             <td>{l.noConsistentSignal}</td>
