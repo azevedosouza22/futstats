@@ -1062,3 +1062,55 @@ test('Etapa 59: menos de 3 escanteios válidos em casa mantém média N/D',async
   await expect(golsFora.locator('td').nth(1)).toHaveText('1');
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 60: rastrear os dez jogos das médias por mando sem mudar previsões',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:history});
+  await page.reload();await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const before=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(k=>[k,localStorage.getItem(k)])));
+  const panel=page.getByRole('region',{name:'Comparação por mando de campo e períodos'});
+  await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
+  const trail=panel.getByRole('group',{name:'Rastrear partidas históricas das médias por mando'});
+  await trail.locator('summary').click();
+  await expect(trail).toContainText('Verificação externa: PENDENTE');
+  const mandante=trail.getByRole('region',{name:'Partidas da amostra: Barcelona (casa)'});
+  const visitante=trail.getByRole('region',{name:'Partidas da amostra: Real Madrid (fora)'});
+  await expect(mandante).toContainText('5/5 incluídos no mando');
+  await expect(visitante).toContainText('5/5 incluídos no mando');
+  await expect(mandante.locator('li')).toHaveCount(5);
+  await expect(visitante.locator('li')).toHaveCount(5);
+  await expect(mandante).toContainText('home-historical');
+  await expect(visitante).toContainText('away-historical');
+  const [download]=await Promise.all([
+    page.waitForEvent('download'),
+    trail.getByRole('button',{name:'Exportar rastro das amostras (CSV)'}).click()
+  ]);
+  expect(download.suggestedFilename()).toBe('futstats-rastro-amostras-mando.csv');
+  const csv=await readFile((await download.path())!,'utf-8');
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(11);
+  expect((csv.match(/"PENDENTE"/g)??[])).toHaveLength(10);
+  expect(csv).toContain('"home-historical-0"');
+  expect(csv).toContain('"away-historical-4"');
+  expect(csv).not.toContain('"CONFIRMADO"');
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(k=>[k,localStorage.getItem(k)])))).toEqual(before);
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)??'[]'),RADAR_KEY);
+  expect(saved).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)??'[]'),RADAR_KEY)).toEqual(saved);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-
+    document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
