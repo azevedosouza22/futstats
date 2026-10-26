@@ -655,3 +655,78 @@ test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',asy
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(original);
 });
+
+
+test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resultado externo',async({page})=>{
+  test.setTimeout(60000); // falhas de acessibilidade não devem travar 3 min por viewport
+  const runtimeErrors:string[]=[];
+  page.on('pageerror',error=>runtimeErrors.push(error.message));
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(original).toHaveLength(1);
+  base.matches.push({
+    id:'e2e-quick-result',date:'2026-10-25',home:'barcelona',away:'real-madrid',
+    competition:COMPETITION,first:[stat(2,18,7,5),stat(1,14,5,6)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)],
+    research:{provider:'work-csv',source:'Flashscore',sourceId:'e2e-quick-result',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=e2e-quick-result',
+      importedAt:'2026-10-26T03:00:00.000Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]}
+  } as (typeof base.matches)[number]);
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const form=audit.getByRole('region',{name:'Preencher comparação sem arquivo JSON'});
+  await expect(form).toBeVisible();
+  await form.getByLabel('Previsão a comparar').selectOption(original[0].key);
+  await form.getByLabel('URL da segunda fonte consultada')
+    .fill('https://www.sofascore.com.evil.invalid/fixture');
+  await form.getByLabel('Data e hora efetivas da consulta (Brasília)')
+    .fill('2026-10-26T07:00');
+  await form.getByLabel('Valor da segunda fonte: Gols').fill('3');
+  await form.getByLabel('Confirmar transcrição de fonte consultada').check({timeout:10000});
+  await form.getByRole('button',{name:'Comparar números informados (sem verificar site)'}).click();
+  await expect(form.getByRole('alert')).toContainText('segunda fonte inválidos');
+  await expect(audit.getByRole('region',{name:'Resultado da comparação documental'}))
+    .toHaveCount(0);
+  await form.getByLabel('URL da segunda fonte consultada')
+    .fill('https://www.sofascore.com/pt/futebol/jogo/barca-madrid/abc');
+  await form.getByRole('button',{name:'Comparar números informados (sem verificar site)'}).click();
+  await expect(form).toContainText('NÃO verificada na web');
+  let comparison=audit.getByRole('region',{name:'Resultado da comparação documental'});
+  await expect(comparison).toContainText('COINCIDE');
+  await expect(comparison).toContainText('PENDENTE');
+  await expect(audit.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'}))
+    .toContainText('0/30 · N/D');
+  await form.getByLabel('Valor da segunda fonte: Gols').fill('4');
+  await expect(audit.getByRole('region',{name:'Resultado da comparação documental'}))
+    .toHaveCount(0);
+  await form.getByRole('button',{name:'Comparar números informados (sem verificar site)'}).click();
+  comparison=audit.getByRole('region',{name:'Resultado da comparação documental'});
+  await expect(comparison).toContainText('DIVERGE');
+  const [download]=await Promise.all([
+    page.waitForEvent('download'),
+    audit.getByRole('button',{name:'Exportar dossiê local da comparação (JSON)'}).click()
+  ]);
+  const dossier=JSON.parse(await readFile((await download.path())!,'utf-8'));
+  expect(dossier).toMatchObject({independentVerification:'PENDENTE',
+    comparison:{disagreement:1}});
+  expect(dossier.secondarySource).toMatchObject({checkedAt:'2026-10-26T10:00:00.000Z'});
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(original);
+  expect(runtimeErrors).toEqual([]); // nenhum crash de estado React durante digitação
+});

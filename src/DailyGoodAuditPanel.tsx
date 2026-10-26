@@ -7,6 +7,7 @@ import {buildIndependentReviewQueue,exportIndependentReviewQueueCsv} from './dai
 import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidence,type DocumentaryComparison,type ExternalEvidence} from './dailyGoodEvidenceCompare';
 import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDossier';
 import {buildProspectiveCohortPlan,exportProspectiveCohortCsv,MIN_EXTERNAL_FIXTURES_PER_LEAGUE} from './dailyGoodProspectiveCohorts';
+import DailyGoodQuickEvidenceForm from './DailyGoodQuickEvidenceForm';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -260,6 +261,15 @@ export default function DailyGoodAuditPanel({data,records}:{
         e valores dos indicadores. O aplicativo compara os números, mas
         <strong> não acessa nem autentica a página externa</strong>. Mesmo quando
         coincidem, a verificação real permanece PENDENTE.</p>
+      <DailyGoodQuickEvidenceForm records={records} report={report}
+        readyKeys={readyForEvidence} onClear={()=>{
+          setDocumentary(null);setDocumentarySource(null);
+          setDossierNotice('');setDocumentationNotice('');
+        }} onCompared={(source,comparison)=>{
+          setDocumentarySource(source);setDocumentary(comparison);
+          setDossierNotice('');setDocumentationNotice(
+           'Comparação digitada nesta tela; nenhum site foi verificado automaticamente.');
+        }}/>
       <label>Carregar valores documentados de segunda fonte (JSON)
         <input aria-label="Carregar comparação de segunda fonte (JSON)"
           type="file" accept=".json,application/json"

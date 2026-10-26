@@ -1039,3 +1039,40 @@ html{scroll-behavior:smooth}
  .premium .mobile-safety-shortcut{padding:8px;font-size:10px;gap:4px}
  .premium .backup-legacy-actions{flex-direction:column}
 }
+
+
+/* Etapa 53: entrada de segunda fonte acessível em desktop e Android.
+   Checkbox permanece nativo, visível e com área tocável >= 44px. */
+.premium .daily-good-quick-source{
+  border:1px solid #4d6977;border-radius:12px;padding:16px;
+  background:#192b35;margin:18px 0;min-width:0
+}
+.premium .daily-good-quick-source h6{
+  font-size:14px;color:#dceff7;margin:0 0 8px
+}
+.premium .daily-good-quick-source form{display:grid;gap:14px}
+.premium .daily-good-quick-source label{
+  display:grid;gap:7px;color:#d7e9ed;font-size:12px;min-width:0
+}
+.premium .daily-good-quick-source select,
+.premium .daily-good-quick-source input:not([type=checkbox]){
+  width:100%;min-width:0;min-height:44px;max-width:100%;
+  background:#10212a;color:#eef7fa;border:1px solid #6a8693;border-radius:8px
+}
+.premium .daily-good-quick-source .daily-good-quick-confirm{
+  display:flex;align-items:center;gap:12px;line-height:1.6;
+  min-height:48px;cursor:pointer;flex-wrap:nowrap
+}
+.premium .daily-good-quick-confirm input[type=checkbox]{
+  appearance:auto;-webkit-appearance:checkbox;display:block;
+  width:22px;height:22px;min-height:22px;min-width:22px;
+  flex:0 0 22px;margin:0;opacity:1;position:static;
+  accent-color:#78ebb1;cursor:pointer
+}
+.premium .daily-good-quick-source .text-button{
+  min-height:44px;justify-content:center;border:1px solid #80b4ad;border-radius:8px
+}
+@media(max-width:580px){
+  .premium .daily-good-quick-source{padding:12px}
+  .premium .daily-good-quick-source .daily-good-quick-confirm{align-items:flex-start}
+}
