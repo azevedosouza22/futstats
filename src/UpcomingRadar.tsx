@@ -11,6 +11,8 @@ import {compareRadarLines} from './radarLineExplorer';
 import RadarLineExplorer from './RadarLineExplorer';
 import {radarPeriodCoverage} from './radarPeriodCoverage';
 import RadarPeriodCoveragePanel from './RadarPeriodCoveragePanel';
+import {comparePeriodRadarLines} from './radarPeriodLineComparison';
+import RadarPeriodLineComparePanel from './RadarPeriodLineComparePanel';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
@@ -105,6 +107,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
     normalizeTeam(record.away)===normalizeTeam(away.name));
   const comparison=readyToAnalyze?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
   const periodCoverage=readyToAnalyze&&home&&away?radarPeriodCoverage(data,{home:home.id,away:away.id,date,competition:league}):null;
+  const periodLineComparison=readyToAnalyze&&home&&away?comparePeriodRadarLines(data,{home:home.id,away:away.id,date,competition:league}):null;
   const prospective=readyToAnalyze&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
   const numericLeagueContext=readyToAnalyze?leagueNumericContext(data,league,date):[];
   const lineExplorationPreview=readyToAnalyze&&home&&away?
@@ -366,6 +369,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
         {comparison.markets.filter(m=>m.id==='corners-full-8.5').map(m=><div className="forecast-line" key={m.id}><b>Escanteios · partida completa</b><span>Histórico disponível · sem sinal V2/V3 nesta versão</span><NumericReferences line={m.line} history={m} league={numericLeagueContext.find(x=>x.id===m.id)}/></div>)}
       </div>
       {periodCoverage&&<RadarPeriodCoveragePanel report={periodCoverage}/>}
+      {periodLineComparison&&<RadarPeriodLineComparePanel report={periodLineComparison}/>}
       <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
