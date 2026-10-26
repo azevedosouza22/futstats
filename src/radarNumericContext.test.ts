@@ -36,7 +36,7 @@ describe('leagueNumericContext',()=>{
   it('refuses unfinished external matches and conflicting source dates',()=>{
     const old=game('a','2026-10-10',league,stat(1,10,2,3),stat(2,11,2,4));
     const external:Match={...old,id:'b',date:'2026-10-12',external:{provider:'thesportsdb',id:'ext',importedAt:'2026-10-11',status:'Not Started',full:[stat(1,20,4,5),stat(2,20,4,5)]}};
-    const research:Match={...old,id:'c',research:{
+    const research:Match={...old,id:'c',date:'2026-10-13',research:{
       provider:'work-csv',source:'Flashscore',sourceId:'abc',sourceUrl:'https://www.flashscore.com/?mid=abc',
       importedAt:'2026-10-11',full:[stat(1,20,4,5),stat(2,20,4,5)],
       titleDate:'2026-10-25',dateDiscrepancy:true,
