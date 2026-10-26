@@ -831,7 +831,7 @@ test('Etapa 55: telas compactas de 320 e 360px, atalhos acessíveis e sem barra 
       expect(box?.height??0).toBeGreaterThanOrEqual(44);
     }
     const advanced=page.locator('.radar-extra-modes');
-    if(!(await advanced.getAttribute('open'))){
+    if((await advanced.getAttribute('open'))===null){
       await advanced.locator('summary').click();
     }
     await nav.getByRole('button',{name:'Testar interface e armazenamento neste dispositivo'}).click();
