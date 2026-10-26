@@ -1076,3 +1076,30 @@ html{scroll-behavior:smooth}
   .premium .daily-good-quick-source{padding:12px}
   .premium .daily-good-quick-source .daily-good-quick-confirm{align-items:flex-start}
 }
+
+
+/* Etapa 55 — diagnóstico sob demanda do Radar, sem alterar dados. */
+.premium .radar-device-check{
+  padding:12px;margin:0 12px 12px;border:1px solid #526c7a;
+  border-radius:10px;background:#172b39;min-width:0
+}
+.premium .radar-device-check>button{
+  min-height:44px;max-width:100%;width:100%;
+  padding:10px 12px;color:#e7fff4;
+  background:#285748;border:1px solid #79bba0;
+  border-radius:9px;white-space:normal;text-align:center
+}
+.premium .radar-device-check .muted{
+  font-size:11px;line-height:1.55;overflow-wrap:anywhere
+}
+.premium .radar-device-check-result{
+  margin-top:12px;padding:12px;color:#e7f4fb;
+  border:1px solid #6b9ca1;background:#203c47;
+  border-radius:10px;overflow-wrap:anywhere;min-width:0
+}
+.premium .radar-device-check-result strong{display:block;line-height:1.5}
+.premium .radar-device-check-result ul{
+  list-style:none;margin:10px 0;padding:0;display:grid;gap:7px
+}
+.premium .radar-device-check-result li{font-size:11px;line-height:1.55}
+.premium .radar-device-check-result p{font-size:11px;line-height:1.6}
