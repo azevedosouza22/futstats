@@ -924,3 +924,58 @@ test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congel
   }));
   expect(sizes.scroll-sizes.viewport).toBeLessThanOrEqual(1);
 });
+
+
+test('Etapa 58: linhas Over e Under por tempo distinguem N/D, sem reescrever Radar',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const data=syntheticHistory();
+  // One synthetic CSV has full-time corners but lacks the first-half total.
+  // The other 9 histories remain valid and independent.
+  data.matches[0].first=data.matches[0].first.map(s=>({...s})) as typeof data.matches[0]['first'];
+  Object.assign(data.matches[0],{research:{
+    provider:'work-csv',source:'Flashscore',sourceId:'half-gap-e2e',
+    sourceUrl:'https://www.flashscore.com.br/jogo/?mid=half-gap-e2e',
+    importedAt:'2026-10-24T08:00:00Z',dateDiscrepancy:false,
+    full:[stat(2,18,7,5),stat(1,14,5,6)]
+  }});
+  data.matches[0].first[0].corners=null;
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data});
+  await page.reload();await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const explorer=page.locator('details.radar-period-line-comparison');
+  await expect(explorer.locator('summary')).toContainText('Comparar Over e Under');
+  const before=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  await explorer.locator('summary').click();
+  await expect(explorer).toContainText('10/10 jogos com dados válidos');
+  await explorer.getByLabel('Período Over e Under').selectOption('first');
+  await expect(explorer).toContainText('9/10 jogos com dados válidos');
+  await expect(explorer).toContainText('1 N/D');
+  const table=explorer.getByRole('table');
+  await expect(table.getByRole('columnheader',{name:'Over'})).toBeVisible();
+  await expect(table.getByRole('columnheader',{name:'Under'})).toBeVisible();
+  await expect(table.getByRole('row',{name:/2,5/})).toContainText('9/9');
+  await expect(table.getByRole('row',{name:/2,5/})).toContainText('0/9');
+  await explorer.getByLabel('Indicador Over e Under').selectOption('goals');
+  await explorer.getByLabel('Período Over e Under').selectOption('second');
+  await expect(explorer).toContainText('10/10 jogos com dados válidos');
+  await expect(table.getByRole('row',{name:/0,5/})).toContainText('0/10');
+  await expect(table.getByRole('row',{name:/0,5/})).toContainText('10/10');
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])))).toEqual(before);
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const frozen=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(frozen).toHaveLength(1);
+  expect(frozen[0].lineExploration).toHaveLength(4); // legacy full only
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(frozen); // no retroactive first/second signals or samples
+});
