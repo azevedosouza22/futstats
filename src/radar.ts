@@ -1,5 +1,5 @@
 import {stats, type Data, type Match, type Metric, type Period} from './model';
-import {recentMatches} from './pregame';
+import {recentRadarMatches,radarSelectedDuplicateCount} from './radarFixtureUniqueness';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
 type Market = {
@@ -52,8 +52,8 @@ export type RadarFixture = Pick<Match, 'home' | 'away' | 'date' | 'competition'>
 function calculateRadar(data: Data, fixture: RadarFixture, result?: Match) {
   // Do not use the selected fixture, same-day matches, or any matches from later dates.
   // Restrict both teams to their own last five matches in this competition.
-  const homeHistory = recentMatches(data.matches, fixture.home, 5, fixture.date, {competition: fixture.competition});
-  const awayHistory = recentMatches(data.matches, fixture.away, 5, fixture.date, {competition: fixture.competition});
+  const homeHistory = recentRadarMatches(data,fixture.home,5,fixture);
+  const awayHistory = recentRadarMatches(data,fixture.away,5,fixture);
   const unique = [...new Map([...homeHistory, ...awayHistory].map(m => [m.id, m])).values()];
   const homeAtHome = homeHistory.filter(m => m.home === fixture.home);
   const awayAtAway = awayHistory.filter(m => m.away === fixture.away);
@@ -76,6 +76,9 @@ function calculateRadar(data: Data, fixture: RadarFixture, result?: Match) {
 
   return {
     homeHistory, awayHistory, distinctHistoryCount: unique.length,
+    excludedDuplicateFixtureRows:
+      radarSelectedDuplicateCount(data,fixture.home,5,fixture)+
+      radarSelectedDuplicateCount(data,fixture.away,5,fixture),
     homeAtHome: {
       count: homeAtHome.length,
       shotsFor: teamAverage(homeAtHome, fixture.home, 'shots'),
