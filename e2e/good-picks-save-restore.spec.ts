@@ -1080,7 +1080,7 @@ test('Etapa 60: rastrear os dez jogos das médias por mando sem mudar previsões
       .map(k=>[k,localStorage.getItem(k)])));
   const panel=page.getByRole('region',{name:'Comparação por mando de campo e períodos'});
   await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
-  const trail=panel.getByRole('group',{name:'Rastrear partidas históricas das médias por mando'});
+  const trail=panel.locator('details.radar-venue-trail');
   await trail.locator('summary').click();
   await expect(trail).toContainText('Verificação externa: PENDENTE');
   const mandante=trail.getByRole('region',{name:'Partidas da amostra: Barcelona (casa)'});
