@@ -1484,3 +1484,36 @@ test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte 
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(frozen);
 });
+
+
+test('Etapa 70: placar real de duas fontes nao vira acerto ou previsao criada',async({page})=>{
+  await page.clock.install({time:new Date('2026-10-26T23:00:00.000Z')});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const storageBefore=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  await openRadar(page);
+  await page.getByRole('navigation',{name:'Escolha o que fazer no Radar'})
+    .getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const pilot=audit.locator('details.daily-good-public-pilot');
+  await pilot.locator('summary').click();
+  await expect(pilot).toContainText('PLACAR CONCORDANTE EM DUAS PÁGINAS');
+  await expect(pilot).toContainText('Final: 1 × 2');
+  await expect(pilot).toContainText('intervalo: 0 × 1');
+  await expect(pilot).toContainText('2º tempo: 1 × 1');
+  await expect(pilot).toContainText('Finalizações: N/D');
+  await expect(pilot).toContainText('Chutes no alvo: N/D');
+  await expect(pilot).toContainText('Escanteios: N/D');
+  await expect(pilot).toContainText('NÃO É PREVISÃO SALVA');
+  await expect(pilot.getByRole('link')).toHaveCount(2);
+  await expect(audit.getByRole('region',{
+    name:'Controle de amostras prospectivas por campeonato'
+  })).toContainText('0 resultado(s) verificado(s) independentemente');
+  const storageAfter=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  expect(storageAfter).toEqual(storageBefore);
+  expect(await page.evaluate(k=>localStorage.getItem(k),RADAR_KEY)).toBeNull();
+});

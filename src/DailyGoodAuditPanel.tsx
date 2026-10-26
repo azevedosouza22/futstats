@@ -9,6 +9,8 @@ import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDos
 import {buildProspectiveCohortPlan,exportProspectiveCohortCsv,MIN_EXTERNAL_FIXTURES_PER_LEAGUE} from './dailyGoodProspectiveCohorts';
 import DailyGoodQuickEvidenceForm from './DailyGoodQuickEvidenceForm';
 import {traceFrozenResults,exportFrozenResultTraceCsv} from './dailyGoodFrozenResultTrace';
+import {checkPublicResultPair} from './publicResultCrosscheck';
+import {PUBLIC_RESULT_PILOT} from './publicResultPilot';
 import {prepareOutcomeReviewBatch,exportOutcomeReviewBatchJson} from './dailyGoodOutcomeReviewBatch';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
@@ -30,6 +32,10 @@ export default function DailyGoodAuditPanel({data,records}:{
  const independentQueue=buildIndependentReviewQueue(records,report);
  const cohort=buildProspectiveCohortPlan(records,report,independentQueue);
  const frozenTraces=traceFrozenResults(data,records,report);
+ // Historical source-review CASE, independent of all saved predictions.
+ // Never display it before the actual manually documented review date.
+ const publicPilot=new Date().toISOString().slice(0,10)>='2026-10-26'
+  ?checkPublicResultPair(PUBLIC_RESULT_PILOT):null;
  const duplicatedSources=report.rows.filter(r=>
   r.status==='ambiguous'&&r.reason.includes('ID da fonte CSV reutilizado')).length;
  const futureImports=report.rows.filter(r=>
@@ -166,6 +172,34 @@ export default function DailyGoodAuditPanel({data,records}:{
   <p className="muted">{report.attributed} registro(s) com identificação da lista ·
    {' '}{report.scoredFixtures} confronto(s) com resultado e ao menos um indicador informado.
    {' '}Ausência de amostra aparece como N/D, nunca como taxa de acerto.</p>
+  {publicPilot&&<details className="daily-good-public-pilot"
+     aria-label="Exemplo real de placar conferido em duas páginas">
+    <summary>Exemplo real de conferência · Barcelona × Real Madrid (25/10)</summary>
+    <p className="muted"><strong>{publicPilot.status==='COINCIDE_DOCUMENTADO'
+      ?'PLACAR CONCORDANTE EM DUAS PÁGINAS CONSULTADAS EM 26/10'
+      :'PLACAR DIVERGENTE — REVISAR'}</strong>.
+      {' '}Caso histórico para demonstrar conferência, não é previsão sua,
+      não importa CSV e <strong>não acrescenta acertos ao Radar</strong>.</p>
+    {publicPilot.full!==null&&<p>
+      <strong>Final: {publicPilot.full[0]} × {publicPilot.full[1]}</strong>
+      {' · '}intervalo: {publicPilot.half?.join(' × ')??'N/D'}
+      {' · '}2º tempo: {publicPilot.second?.join(' × ')??'N/D'}
+      {' '}({publicPilot.secondPeriodMethod==='SUBTRACAO_ARITMETICA'
+       ?'diferença entre final e intervalo':'N/D'})
+    </p>}
+    <p className="muted">Finalizações: N/D · Chutes no alvo: N/D ·
+      Escanteios: N/D. Esses números não foram conferidos;
+      não usar gols como substitutos de outros indicadores.</p>
+    <p className="muted">Fontes públicas examinadas pontualmente:
+      {' '}{publicPilot.sources.map((source,i)=><span key={source.url}>
+        {i>0?' · ':''}<a href={source.url} target="_blank"
+          rel="noopener noreferrer">{source.name}</a>
+      </span>)}.</p>
+    <p className="muted"><strong>{publicPilot.warning}</strong>.
+      {' '}Nenhum registro pré-jogo comprovado foi associado a este placar.
+      Este teste de referências externas não comprova qualidade preditiva;
+      a amostra de previsões externamente avaliadas continua 0/30 por liga.</p>
+  </details>}
   <section className="daily-good-cohorts"
     aria-label="Controle de amostras prospectivas por campeonato">
     <h5>Amostras prospectivas · por campeonato</h5>
