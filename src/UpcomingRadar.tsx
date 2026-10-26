@@ -367,7 +367,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
         identificadores diferentes. Nenhuma cópia foi usada nas médias,
         no V2 ou no V3. Os jogos não foram apagados nem substituídos
         automaticamente por partidas mais antigas.
-      </p>
+      </p>}
       <div className="radar-market-table"><table className="analysis-table">
         <thead><tr><th>Mercado hipotético</th><th>Frequência Over</th><th>Média</th><th>Amostra válida</th></tr></thead>
         <tbody>{comparison.markets.map(m=><tr key={m.id}>
