@@ -86,7 +86,7 @@ describe('Etapa 66 — barreira estrutural em TODOS os cálculos atuais do Radar
   const good=imported(match('zero','2026-10-20','a','c',0));
   expect(radarMetricIntegrity(good,'shots')).toBe('ok');
   expect(matchTotal(good,'shots','full')).toBe(6);
-  good.research.full[1].shots=null;
+  good.research!.full[1].shots=null;
   expect(matchTotal(good,'shots','full')).toBeNull();
   expect(matchTotal(good,'shots','first')).toBe(3);
  });
