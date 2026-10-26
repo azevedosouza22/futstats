@@ -41,7 +41,7 @@ function SourceTrail({group,club}:{group:VenueTrailGroup;club:string}){
      {m.disposition==='included'?'INCLUÍDO':
       m.disposition==='different_venue'?'FORA DO MANDO':'EXCLUÍDO'}
     </strong>
-    <small>{m.reason}</small>
+    <small>{m.reason} · ID local: {m.matchId}</small>
     {m.disposition==='included'&&<small>
       {m.missingCells} campo(s) N/D · {m.conflictingMetrics} indicador(es) em conflito
     </small>}
