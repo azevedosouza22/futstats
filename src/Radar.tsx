@@ -6,6 +6,8 @@ import RadarVenueV2 from './RadarVenueV2';
 import RadarVenueV3 from './RadarVenueV3';
 import WorkRadarPreview from './WorkRadarPreview';
 import type {Data} from './model';
+import {inspectSafetyStorage} from './safetyArchive';
+import {analyzeRadarDevice,type RadarDeviceReport} from './radarDevicePreflight';
 
 const number = (n: number | null) =>
   n === null ? 'N/D' : n.toLocaleString('pt-BR', {maximumFractionDigits: 2});
@@ -18,6 +20,31 @@ export default function Radar({data}: {data: Data}) {
   const [showResults, setShowResults] = useState(false);
   const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
   const [savedFocus,setSavedFocus]=useState<string|null>(null);
+  const [deviceCheck,setDeviceCheck]=useState<RadarDeviceReport|null>(null);
+  function checkThisDevice(){
+    // No writing to storage; no network, tracking or access to OS hardware.
+    let storageReadable=false,invalidStorageGroups=0;
+    try{
+      const inspection=inspectSafetyStorage(localStorage);
+      storageReadable=true;invalidStorageGroups=inspection.invalid;
+    }catch{storageReadable=false;invalidStorageGroups=1;}
+    const rect=(selector:string)=>{
+      const el=document.querySelector<HTMLElement>(selector);
+      if(!el)return null;
+      const box=el.getBoundingClientRect();
+      return {width:box.width,height:box.height};
+    };
+    setDeviceCheck(analyzeRadarDevice({
+      viewportWidth:document.documentElement.clientWidth,
+      documentWidth:document.documentElement.scrollWidth,
+      createButton:rect('.radar-quick-action--create'),
+      savedButton:rect('.radar-quick-action--saved'),
+      storageReadable,invalidStorageGroups,
+      randomUUIDAvailable:typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function',
+      sha256Available:typeof crypto!=='undefined'&&!!crypto.subtle
+    }));
+  }
+
 
   const researchMatches = data.matches.filter(m => !!m.research);
   const competitions = [...new Set(researchMatches.map(m => m.competition).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
@@ -65,6 +92,26 @@ export default function Radar({data}: {data: Data}) {
           <span aria-hidden="true">4</span><strong>Radar Work · Teste com novas ligas</strong>
           <small>Analisa pesquisas Work disponíveis, separadas da base principal, sem salvar previsões.</small>
         </button>
+        </div>
+        <div className="radar-device-check">
+          <button type="button" className="text-button"
+            onClick={checkThisDevice}>Testar interface e armazenamento neste dispositivo</button>
+          <p className="muted">Conferência local, somente leitura. Não salva
+            previsões, não altera dados e não comprova teste Android físico.</p>
+          {deviceCheck&&<section aria-label="Diagnóstico local do Radar"
+            role="status" className="radar-device-check-result">
+            <strong>{deviceCheck.status==='APTO_PARA_TESTE'
+             ?'Diagnóstico local: APTO PARA TESTE'
+             :'Diagnóstico local: REVISAR'} — {deviceCheck.passed}/{deviceCheck.total}
+              {' '}verificações</strong>
+            <ul>{deviceCheck.checks.map(c=><li key={c.id}>
+              {c.ok?'OK':'REVISAR'} · {c.label}. {c.reason}
+            </li>)}</ul>
+            <p>DIAGNÓSTICO LOCAL — NÃO É TESTE FÍSICO ANDROID.
+              Este resultado mostra apenas as condições medidas nesta tela.
+              Não prova funcionamento offline, persistência no Android,
+              precisão das previsões ou fontes externas.</p>
+          </section>}
         </div>
       </details>
     </nav>
