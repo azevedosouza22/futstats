@@ -1207,3 +1207,15 @@ html{scroll-behavior:smooth}
 @media(max-width:360px){
  .premium .radar-period-line-filters{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* Etapa 59: comparação histórica por mando e tempo, com rolagem interna. */
+.premium .radar-venue-period{max-width:100%;min-width:0;border:1px solid #5d7d87;border-radius:12px;background:#152d39;padding:12px;margin:14px 0}
+.premium .radar-venue-period>button{min-height:44px;width:100%;max-width:100%;text-align:left;white-space:normal;line-height:1.6}
+.premium .radar-venue-period .muted{font-size:11px;line-height:1.65;overflow-wrap:anywhere}
+.premium .radar-venue-side{max-width:100%;min-width:0;padding:8px 0}
+.premium .radar-venue-side h6{font-size:13px;color:#d8eaf4;margin:8px 0}
+.premium .radar-venue-table-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.premium .radar-venue-table-scroll table{min-width:540px;width:100%}
+.premium .radar-venue-table-scroll th,.premium .radar-venue-table-scroll td{font-size:11px;padding:9px 7px;white-space:normal}
+.premium .radar-venue-table-scroll td small{display:block;color:#c1d3df}
