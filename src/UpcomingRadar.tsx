@@ -361,6 +361,13 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
     {league&&!leagueTeams.length&&<p className="alert">Ainda não há equipes desta competição na base. Importe jogos dessa temporada antes de registrar a análise.</p>}
     {comparison&&<div className="radar-future-results">
       <p><b>Histórico disponível:</b> {comparison.homeHistory.length}/5 do mandante e {comparison.awayHistory.length}/5 do visitante; {comparison.distinctHistoryCount} partidas únicas.</p>
+      {comparison.excludedDuplicateFixtureRows>0&&<p className="notice" role="status">
+        <strong>Histórico em revisão:</strong> {comparison.excludedDuplicateFixtureRows}
+        {' '}entrada(s) do recorte recente repetem um confronto com
+        identificadores diferentes. Nenhuma cópia foi usada nas médias,
+        no V2 ou no V3. Os jogos não foram apagados nem substituídos
+        automaticamente por partidas mais antigas.
+      </p>
       <div className="radar-market-table"><table className="analysis-table">
         <thead><tr><th>Mercado hipotético</th><th>Frequência Over</th><th>Média</th><th>Amostra válida</th></tr></thead>
         <tbody>{comparison.markets.map(m=><tr key={m.id}>
