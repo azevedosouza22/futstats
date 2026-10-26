@@ -68,11 +68,22 @@ export function prepareOutcomeReviewBatch(
     trace.key!==r.key||trace.matchAt!==r.matchAt||
     trace.competition!==r.competition||trace.home!==r.home||trace.away!==r.away||
     entry.matchAt!==r.matchAt||entry.competition!==r.competition||
-    entry.home!==r.home||entry.away!==r.away||
+    entry.home!==r.home||entry.away!==r.away||entry.savedAt!==r.savedAt||
+    trace.originUrl!==r.goodPicks.sourceUrl||
+    trace.originVerifiedAt!==r.goodPicks.verifiedAt||
     trace.resultUrl!==row.sourceUrl||!trace.resultSourceId||
     !trace.resultImportedAt||!trace.resultMatchId||!trace.resultProvider||
     !r.goodPicks.sourceUrl||!r.goodPicks.verifiedAt)
    reject('partida ou procedência CSV inconsistente');
+  // A structurally authorized provider URL must reference that exact source ID.
+  // This is provenance consistency, NOT evidence that the URL was fetched.
+  try{
+    const url=new URL(trace.resultUrl!);
+    if(url.protocol!=='https:'||url.username||url.password||
+      !['www.flashscore.com.br','flashscore.com.br','www.flashscore.com','flashscore.com']
+        .includes(url.hostname)||url.searchParams.get('mid')!==trace.resultSourceId)
+      reject('ID da fonte CSV não corresponde ao link original');
+  }catch{reject('link do resultado local inválido');}
   // Local timestamps are only declarations, never proof of real chronology.
   const kickoff=Date.parse(r.matchAt+'-03:00');
   const saved=Date.parse(r.savedAt);
