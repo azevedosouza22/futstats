@@ -84,7 +84,7 @@ export function reconcileMainWorkSources(
   overlaps.push({key:r.sourceId+'|'+m.id,sourceId:r.sourceId,
    competition:m.competition,mainId:m.id,workId:workMatch.id,
    date:m.date,home:mainHome,away:mainAway,state,conflicts,unavailable,
-   sourceUrl:mainSource.mayOpenSource&&workSource.mayOpenSource?
+   sourceUrl:aligned&&mainSource.mayOpenSource&&workSource.mayOpenSource?
     mainSource.sourceUrl:null,verification:'PENDENTE'});
  }
  overlaps.sort((a,b)=>stateOrder[a.state]-stateOrder[b.state]||
