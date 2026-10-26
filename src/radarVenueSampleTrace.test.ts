@@ -51,7 +51,7 @@ describe('Etapa 60 — origem rastreável das amostras por mando',()=>{
   m.research={provider:'work-csv',source:'Flashscore',sourceId:'trace-001',
    sourceUrl:'https://www.flashscore.com.br/jogo/?mid=trace-001',
    importedAt:'2026-10-24T09:00:00Z',dateDiscrepancy:false,
-   full:[st(3,5),st(2,4)]};
+   full:[{...st(3,5),shots:16,target:6},{...st(2,4),shots:16,target:6}]};
   m.first[0].corners=null;
   let r=report(d);
   expect(r).toMatchObject({consistent:true,home:{included:5}});
