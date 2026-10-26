@@ -877,6 +877,20 @@ test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congel
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
       .map(key=>[key,localStorage.getItem(key)])));
   await panel.locator('summary').click();
+  const queue=panel.getByRole('region',{name:'Pendências de dados por partida'});
+  await expect(queue).toContainText('1 partida(s) com campos N/D');
+  await expect(queue).toContainText('corners / first (N/D)');
+  await expect(queue.getByRole('link',{name:'Consultar fonte CSV cadastrada'}))
+    .toHaveAttribute('href','https://www.flashscore.com.br/jogo/?mid=period-missing-0');
+  const [reviewCsv]=await Promise.all([
+    page.waitForEvent('download'),
+    queue.getByRole('button',{name:'Exportar pendências desta prévia (CSV)'}).click()
+  ]);
+  expect(reviewCsv.suggestedFilename()).toBe('futstats-pendencias-indicadores-periodos.csv');
+  const raw=await readFile((await reviewCsv.path())!,'utf8');
+  expect(raw.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(raw).toContain('"corners";"first";"N/D"');
+  expect(raw).toContain('"PENDENTE"');
   const table=panel.getByRole('table');
   await expect(table.getByRole('row')).toHaveCount(5); // header + 4 indicadores
   for(const name of ['Gols','Finalizações','Chutes no alvo','Escanteios'])
