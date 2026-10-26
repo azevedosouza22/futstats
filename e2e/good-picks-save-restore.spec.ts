@@ -1316,3 +1316,36 @@ test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',a
   expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY))
     .toBe(snapshot[DATA_KEY]);
 });
+
+
+test('Etapa 66: As Boas não usa data CSV conflitante para criar sinal V2/V3',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  const m=history.matches[0];
+  // CSV estruturalmente válido, com data do título divergente, não
+  // um placar real ou importação externa.
+  Object.assign(m,{research:{
+    provider:'work-csv',source:'Flashscore',sourceId:'ambiguous-date-66',
+    sourceUrl:'https://www.flashscore.com.br/jogo/?mid=ambiguous-date-66',
+    importedAt:'2026-10-24T10:00:00.000Z',dateDiscrepancy:true,
+    titleDate:'2026-10-09',
+    full:[stat(2,18,7,5),stat(1,14,5,6)]
+  }});
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:history});
+  await page.reload();
+  await expect(page.getByText('Não foi possível ler os dados locais.')).toHaveCount(0);
+  await openRadar(page);
+  const good=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(good).toContainText('Nenhuma indicação passou pelos critérios hoje');
+  await expect(good.locator('.daily-good-item')).toHaveCount(0);
+  await expect(good).toContainText('1 com histórico mínimo');
+  const saved=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
+  expect(saved===null||saved==='[]').toBe(true);
+  const snapshot=await page.evaluate(key=>localStorage.getItem(key),DATA_KEY);
+  expect(JSON.parse(snapshot!).matches[0].research.dateDiscrepancy).toBe(true);
+  // Read-only protection: source CSV stays untouched and no forecast is saved.
+  expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY)).toBe(snapshot);
+});
