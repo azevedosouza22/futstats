@@ -65,7 +65,7 @@ export function prepareOutcomeReviewBatch(
     trace.status!=='scored'||trace.localStatus!=='CSV_LOCAL_DOCUMENTADO'||
     entry.auditStatus!=='scored'||entry.externalCheck!=='PENDENTE'||
     trace.independentVerification!=='PENDENTE'||
-    trace.key!==r.key||trace.matchAt!==r.matchAt||
+    trace.key!==r.key||trace.savedAt!==r.savedAt||trace.matchAt!==r.matchAt||
     trace.competition!==r.competition||trace.home!==r.home||trace.away!==r.away||
     entry.matchAt!==r.matchAt||entry.competition!==r.competition||
     entry.home!==r.home||entry.away!==r.away||entry.savedAt!==r.savedAt||
