@@ -730,3 +730,52 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
     .toEqual(original);
   expect(runtimeErrors).toEqual([]); // nenhum crash de estado React durante digitação
 });
+
+
+test('Etapa 54: autoteste V4 em memória confere previsão e não toca no celular',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const prior=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  const frozen=JSON.parse(prior[RADAR_KEY]);
+  expect(frozen).toHaveLength(1);
+
+  await openTools(page);
+  const panel=page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'});
+  await panel.getByRole('button',{name:'Testar recuperação V4 sem alterar dados'}).click();
+  const outcome=panel.getByRole('status',{name:'Resultado do autoteste de recuperação V4'});
+  await expect(outcome).toContainText('Autoteste PASSOU');
+  await expect(outcome).toContainText('1 previsões Radar V2/V3');
+  await expect(outcome).toContainText('10 partidas no Histórico');
+  await expect(outcome).toContainText('armazenamento real permaneceu intacto');
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])))).toEqual(prior);
+  await page.reload();
+  await openTools(page);
+  await page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'})
+    .getByRole('button',{name:'Conferir integridade dos dados'}).click();
+  await expect(page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'}))
+    .toContainText('1');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(frozen);
+
+  // Deliberate corruption exists ONLY in isolated Playwright localStorage.
+  await page.evaluate(key=>localStorage.setItem(key,'[{"incorreto":true}]'),RADAR_KEY);
+  const corrupted=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
+  await panel.getByRole('button',{name:'Testar recuperação V4 sem alterar dados'}).click();
+  await expect(panel.getByRole('alert')).toContainText('inconsistente');
+  await expect(panel.getByRole('status',{name:'Resultado do autoteste de recuperação V4'}))
+    .toHaveCount(0);
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBe(corrupted);
+});
