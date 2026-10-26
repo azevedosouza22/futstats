@@ -1103,3 +1103,43 @@ html{scroll-behavior:smooth}
 }
 .premium .radar-device-check-result li{font-size:11px;line-height:1.55}
 .premium .radar-device-check-result p{font-size:11px;line-height:1.6}
+
+
+/* Etapa 56 — matriz 4×3 histórica. Rolagem apenas da tabela em telas estreitas. */
+.premium .radar-period-coverage{
+ margin:14px 0;border:1px solid #55788c;border-radius:12px;
+ background:#152c3a;padding:0;min-width:0;max-width:100%
+}
+.premium .radar-period-coverage>summary{
+ cursor:pointer;min-height:44px;padding:12px 14px;
+ color:#e5f4ff;font-size:12px;font-weight:750;line-height:1.65;
+ overflow-wrap:anywhere
+}
+.premium .radar-period-coverage[open]>summary{
+ border-bottom:1px solid #55788c
+}
+.premium .radar-period-coverage>.muted{
+ margin:12px 14px;font-size:11px;line-height:1.65
+}
+.premium .radar-period-table-scroll{
+ max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ padding:0 10px 8px
+}
+.premium .radar-period-table-scroll table{
+ min-width:540px;width:100%;border-collapse:collapse
+}
+.premium .radar-period-table-scroll th,
+.premium .radar-period-table-scroll td{
+ padding:10px 8px;text-align:left;vertical-align:top;
+ font-size:11px;white-space:normal
+}
+.premium .radar-period-table-scroll td strong{
+ display:block;font-size:13px;color:#dcf7e8
+}
+.premium .radar-period-table-scroll td small{
+ display:block;font-size:10px;line-height:1.55;color:#c2d5dd
+}
+.premium .radar-period-table-scroll caption{
+ caption-side:top;text-align:left;padding:9px 5px;
+ font-size:11px;color:#c2d5dd
+}
