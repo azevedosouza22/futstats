@@ -84,7 +84,7 @@ describe('Etapa 70 — pacote mínimo para conferir várias previsões em lote',
     prepareOutcomeReviewBatch([r],audit,q,t,at);
   expect(()=>run({...queue,checkExternal:0})).toThrow('quantidade');
   expect(()=>run(queue,[{...trace[0],resultSourceId:'outro'}]))
-   .not.toThrow(); // sourceId alone is supplied by local CSV; still PENDENTE
+   .toThrow('ID da fonte CSV');
   expect(()=>run(queue,[{...trace[0],resultUrl:'https://invalid.example/'}]))
    .toThrow('procedência CSV');
   expect(()=>run({...queue,entries:[]})).toThrow('divergentes');
