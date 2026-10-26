@@ -979,3 +979,86 @@ test('Etapa 58: linhas Over e Under por tempo distinguem N/D, sem reescrever Rad
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(frozen); // no retroactive first/second signals or samples
 });
+
+
+test('Etapa 59: comparar mandante em casa e visitante fora, preservando previsão',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const data=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data});
+  await page.reload();await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const original=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  const panel=page.getByRole('region',{name:'Comparação por mando de campo e períodos'});
+  await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
+  const casa=panel.getByRole('region',{name:'Barcelona · mandante em casa'});
+  const fora=panel.getByRole('region',{name:'Real Madrid · visitante fora'});
+  await expect(casa).toContainText('5/5 jogos do mando');
+  await expect(fora).toContainText('5/5 jogos do mando');
+  await expect(casa.getByRole('table').getByRole('row')).toHaveCount(13);
+  await expect(fora.getByRole('table').getByRole('row')).toHaveCount(13);
+  const golsCasa=casa.getByRole('row',{name:/Gols Jogo completo/});
+  const golsFora=fora.getByRole('row',{name:/Gols Jogo completo/});
+  await expect(golsCasa.locator('td').nth(1)).toHaveText('2');
+  await expect(golsCasa.locator('td').nth(2)).toHaveText('1');
+  await expect(golsFora.locator('td').nth(1)).toHaveText('1');
+  await expect(golsFora.locator('td').nth(2)).toHaveText('2');
+  await expect(panel).toContainText(/não reconstruímos períodos ausentes/i);
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])))).toEqual(original);
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(saved).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+});
+test('Etapa 59: menos de 3 escanteios válidos em casa mantém média N/D',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const data=syntheticHistory();
+  // Preserve the five home fixtures and the V2/V3 goals shortlist.
+  // Introduce partial real CSV-shaped data in three unique synthetic matches
+  // without mutating the shared Stats objects of other records.
+  for(let i=0;i<3;i++){
+    const m=data.matches[i];
+    m.first=m.first.map(x=>({...x})) as typeof m.first;
+    Object.assign(m,{research:{
+      provider:'work-csv',source:'Flashscore',sourceId:'venue-gap-59-'+i,
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=venue-gap-59-'+i,
+      importedAt:'2026-10-24T09:00:00Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]
+    }});
+    m.first[0].corners=null;
+  }
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data});
+  await page.reload();await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const panel=page.getByRole('region',{name:'Comparação por mando de campo e períodos'});
+  await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
+  const casa=panel.getByRole('region',{name:'Barcelona · mandante em casa'});
+  const fora=panel.getByRole('region',{name:'Real Madrid · visitante fora'});
+  await expect(casa).toContainText('5/5 jogos do mando');
+  const escanteios=casa.getByRole('row',{name:/Escanteios 1º tempo/});
+  await expect(escanteios.locator('td').nth(1)).toHaveText('N/D');
+  await expect(escanteios.locator('td').nth(2)).toHaveText('N/D');
+  await expect(escanteios.locator('td').nth(3)).toContainText('2/5');
+  await expect(escanteios.locator('td').nth(3)).toContainText('3 N/D');
+  const golsCasa=casa.getByRole('row',{name:/Gols Jogo completo/});
+  await expect(golsCasa.locator('td').nth(1)).toHaveText('2');
+  const golsFora=fora.getByRole('row',{name:/Gols Jogo completo/});
+  await expect(golsFora.locator('td').nth(1)).toHaveText('1');
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+});
