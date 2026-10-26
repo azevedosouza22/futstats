@@ -658,6 +658,7 @@ test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',asy
 
 
 test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resultado externo',async({page})=>{
+  test.setTimeout(60000); // falhas de acessibilidade não devem travar 3 min por viewport
   await page.clock.install({time:new Date(NOW)});
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
@@ -695,7 +696,7 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
   await form.getByLabel('Data e hora efetivas da consulta (Brasília)')
     .fill('2026-10-26T07:00');
   await form.getByLabel('Valor da segunda fonte: Gols').fill('3');
-  await form.getByRole('checkbox').check();
+  await form.getByLabel('Confirmar transcrição de fonte consultada').check({timeout:10000});
   await form.getByRole('button',{name:'Comparar números informados (sem verificar site)'}).click();
   await expect(form.getByRole('alert')).toContainText('segunda fonte inválidos');
   await expect(audit.getByRole('region',{name:'Resultado da comparação documental'}))
