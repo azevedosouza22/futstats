@@ -843,3 +843,58 @@ test('Etapa 55: telas compactas de 320 e 360px, atalhos acessíveis e sem barra 
   }
   expect(await page.evaluate(k=>localStorage.getItem(k),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congelada',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  // Uma informação ausente não pode aparecer como zero em nenhum tempo.
+  history.matches[0].first[0].corners=null;
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:history});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  const panel=page.locator('details.radar-period-coverage');
+  await expect(panel.locator('summary')).toContainText('9/10 jogos completos');
+  const before=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  await panel.locator('summary').click();
+  const table=panel.getByRole('table');
+  await expect(table.getByRole('row')).toHaveCount(5); // header + 4 indicadores
+  for(const name of ['Gols','Finalizações','Chutes no alvo','Escanteios'])
+    await expect(table.getByRole('row',{name:new RegExp(name)})).toBeVisible();
+  await expect(table.getByRole('columnheader',{name:'1º tempo'})).toBeVisible();
+  await expect(table.getByRole('columnheader',{name:'2º tempo'})).toBeVisible();
+  const corners=table.getByRole('row',{name:/Escanteios/});
+  await expect(corners).toContainText('9/10 jogos válidos');
+  await expect(corners).toContainText('1 N/D');
+  const goals=table.getByRole('row',{name:/Gols/});
+  await expect(goals).toContainText('10/10 jogos válidos');
+  await expect(goals).toContainText('0'); // período sem gols é zero válido
+  await expect(panel).toContainText('não preenche automaticamente');
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])))).toEqual(before);
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
+
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const frozen=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(frozen).toHaveLength(1);
+  expect(frozen[0].lineExploration).toHaveLength(4);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  // Nenhum valor de período é incluído retroativamente nos sinais congelados.
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(frozen);
+  const sizes=await page.evaluate(()=>({
+    viewport:document.documentElement.clientWidth,
+    scroll:document.documentElement.scrollWidth
+  }));
+  expect(sizes.scroll-sizes.viewport).toBeLessThanOrEqual(1);
+});
