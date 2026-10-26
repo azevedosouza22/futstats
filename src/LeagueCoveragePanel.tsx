@@ -3,6 +3,7 @@ import type {Data} from './model';
 import type {WorkAnalysisMatch} from './workAnalysis';
 import {brasiliaDate} from './calendar';
 import StatGapQueue from './StatGapQueue';
+import MainWorkSourceReview from './MainWorkSourceReview';
 import {
   auditMainLeagueCoverage,auditWorkLeagueCoverage,COVERAGE_METRICS,
   type CoverageRow,type CoverageMetric
@@ -77,6 +78,8 @@ export default function LeagueCoveragePanel({data,workMatches,workError=false}:{
             {work.map(row=><CoverageLeague key={row.competition} row={row}/>)}
           </div>
         </>}
+      {workMatches!==null&&!workError&&<MainWorkSourceReview
+        data={data} work={workMatches} today={today}/>}
       <StatGapQueue data={data} workMatches={workMatches} today={today}/>
       <p className="muted">As pendências mostram o que falta nos registros disponíveis.
         Para ampliar a cobertura real ainda precisamos encontrar e validar novos jogos em fontes confiáveis.

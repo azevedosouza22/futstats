@@ -1310,3 +1310,21 @@ html{scroll-behavior:smooth}
 .premium .radar-custom-line-results strong{font-size:10px}
 .premium .radar-custom-line-results span{font-size:14px;font-weight:750}
 .premium .radar-custom-line-results small{font-size:11px}
+
+
+/* Etapa 64 — sobreposição entre bases em leitura apenas. */
+.premium .cross-store-review{margin:14px 0;padding:0 12px 12px;
+ border:1px solid #567f88;border-radius:11px;min-width:0;max-width:100%;
+ background:#172d39;overflow-wrap:anywhere}
+.premium .cross-store-review>summary{cursor:pointer;min-height:44px;
+ padding:11px 0;color:#e4f5ed;font-size:12px;font-weight:700;line-height:1.65}
+.premium .cross-store-review .muted{font-size:11px;line-height:1.65}
+.premium .cross-store-review>button{min-height:44px;max-width:100%;
+ padding:9px 12px;white-space:normal}
+.premium .cross-store-list{list-style:none;padding:0;
+ margin:12px 0;display:grid;gap:10px}
+.premium .cross-store-list li{border:1px solid #527487;
+ padding:10px;border-radius:9px;min-width:0}
+.premium .cross-store-list strong,.premium .cross-store-list small,
+.premium .cross-store-list span,.premium .cross-store-list a{
+ display:block;line-height:1.55;overflow-wrap:anywhere;font-size:11px}
