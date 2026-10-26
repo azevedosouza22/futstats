@@ -58,9 +58,11 @@ export function prepareOutcomeReviewBatch(
  const fixtureIds=new Set<string>(),sourceIds=new Set<string>();
  for(const entry of queue.entries){
   if(entry.state!=='check_external')continue;
-  const paired=byRecord.get(entry.key),trace=byTrace.get(entry.key);
+  // The runtime guard remains mandatory. Non-null types after this guard
+  // avoid TypeScript widening them inside an unrelated URL parsing catch.
+  const paired=byRecord.get(entry.key)!,trace=byTrace.get(entry.key)!;
   if(!paired||!trace)reject('resultado sem previsão congelada');
-  const {r,row}=paired!;
+  const {r,row}=paired;
   if(!r.goodPicks||r.key!==row.key||row.status!=='scored'||
     trace.status!=='scored'||trace.localStatus!=='CSV_LOCAL_DOCUMENTADO'||
     entry.auditStatus!=='scored'||entry.externalCheck!=='PENDENTE'||
@@ -96,7 +98,7 @@ export function prepareOutcomeReviewBatch(
   const csvId=trace.resultProvider+'|'+trace.resultSourceId;
   if(sourceIds.has(csvId))reject('mesmo ID de resultado reutilizado');
   sourceIds.add(csvId);
-  const signals=r.goodPicks.signals.map(s=>{
+  const signals=r.goodPicks!.signals.map(s=>{
    const local=trace.markets.find(m=>m.id===s.id);
    if(!local||local.direction!==s.direction||local.line!==s.line)
     reject('mercado congelado divergente');
@@ -107,7 +109,7 @@ export function prepareOutcomeReviewBatch(
    reject('nenhum indicador local pontuável');
   exported.push({recordKey:r.key,competition:r.competition,home:r.home,
    away:r.away,matchAtBrasilia:r.matchAt,savedAtUtc:r.savedAt,
-   calendarSource:{url:r.goodPicks.sourceUrl,verifiedAt:r.goodPicks.verifiedAt},
+   calendarSource:{url:r.goodPicks!.sourceUrl,verifiedAt:r.goodPicks!.verifiedAt},
    localCsv:{matchId:trace.resultMatchId!,providerSourceId:trace.resultSourceId!,
     provider:trace.resultProvider!,importedAtUtc:trace.resultImportedAt!,
     url:trace.resultUrl!},
