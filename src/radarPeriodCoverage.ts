@@ -10,6 +10,7 @@
 import {stats,type Match} from './model';
 import {radarUpcoming,type RadarFixture} from './radar';
 import {assessGapSource,type GapSourceStatus} from './statGapSource';
+import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 import {COVERAGE_METRICS,COVERAGE_PERIODS,type CoverageMetric,type CoveragePeriod} from './leagueCoverageAudit';
 export {COVERAGE_METRICS,COVERAGE_PERIODS};
 export type RadarPeriodCell={period:CoveragePeriod;valid:number;missing:number;conflicts:number;mean:number|null};
@@ -37,14 +38,9 @@ export function auditedRadarMetricValues(m:Match,metric:CoverageMetric):
  Record<CoveragePeriod,number|null>|null{
  const full=total(m,metric,'full'),first=total(m,metric,'first'),
   second=total(m,metric,'second');
- // Compare HOME and AWAY independently. Comparing only the combined total
- // could accidentally cancel a +1 error on home with a -1 error on away.
- for(const side of [0,1] as const){
-  const f=stats(m,side,'full')[metric],a=stats(m,side,'first')[metric],
-    b=stats(m,side,'second')[metric];
-  if(f!==null&&a!==null&&b!==null&&f!==a+b)
-   return null;
- }
+ // The main Radar, the league means and this descriptive matrix now share
+ // one conservative, per-side FT/period integrity gate.
+ if(radarMetricIntegrity(m,metric)!=='ok')return null;
  if(full!==null&&first!==null&&second!==null&&full!==first+second)
   return null;
  return {full,first,second};

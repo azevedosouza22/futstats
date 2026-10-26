@@ -1,6 +1,7 @@
 import {stats, type Data, type Metric} from './model';
 import {recentMatches} from './pregame';
 import {radarMarkets, type RadarFixture} from './radar';
+import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
 // Exploratory, fixed heuristic. Do not choose margins after viewing holdout outcomes.
 export const VENUE_V2_LAST_GAMES = 10;
@@ -23,7 +24,9 @@ export type VenueV2Prediction = {
 };
 
 function venuePair(matches: Data['matches'], side: 0 | 1, metric: Metric) {
-  const values = matches.map(m => [stats(m,side,'full')[metric],stats(m,1-side,'full')[metric]])
+  const values = matches.map(m => radarMetricIntegrity(m,metric)==='ok'
+    ? [stats(m,side,'full')[metric],stats(m,1-side,'full')[metric]]
+    : [null,null])
     .filter((pair):pair is [number,number] => pair[0] !== null && pair[1] !== null);
   const valid = values.length;
   return {

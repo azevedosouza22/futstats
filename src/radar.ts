@@ -1,5 +1,6 @@
 import {stats, type Data, type Match, type Metric, type Period} from './model';
 import {recentMatches} from './pregame';
+import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
 type Market = {
   id: string;
@@ -19,6 +20,7 @@ export const radarMarkets: readonly Market[] = [
 ];
 
 export function matchTotal(match: Match, metric: Metric, period: Period): number | null {
+  if(radarMetricIntegrity(match,metric)!=='ok')return null;
   const a = stats(match, 0, period)[metric];
   const b = stats(match, 1, period)[metric];
   return a === null || b === null ? null : a + b;
@@ -26,6 +28,7 @@ export function matchTotal(match: Match, metric: Metric, period: Period): number
 
 function teamAverage(matches: Match[], team: string, metric: Metric, conceded = false): {mean: number | null; valid: number} {
   const numbers = matches.map(m => {
+    if(radarMetricIntegrity(m,metric)!=='ok')return null;
     const side = m.home === team ? 0 : 1;
     return stats(m, conceded ? 1 - side : side, 'full')[metric];
   }).filter((n): n is number => n !== null);
