@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/**'
       - 'e2e/**'
+      - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'
       - 'playwright.config.ts'
@@ -13,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: futstats-e2e-${{ github.event.pull_request.number || github.ref }}
@@ -37,6 +39,16 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Compilação e testes unitários
         run: npm run build
+      - name: Testes locais do auditor de PRs (sem rede)
+        run: node --test scripts/stackedPrAudit.test.mjs
+      - name: Conferir cadeia DRAFT e ancestralidade dos commits
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CURRENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+          CURRENT_PR_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/check-stacked-prs.mjs
       - name: Fluxo de usuário real no navegador
         run: npx playwright test e2e/good-picks-save-restore.spec.ts
       - name: Guardar artefatos somente em falhas
