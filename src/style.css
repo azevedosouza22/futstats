@@ -1143,3 +1143,26 @@ html{scroll-behavior:smooth}
  caption-side:top;text-align:left;padding:9px 5px;
  font-size:11px;color:#c2d5dd
 }
+
+
+/* Etapa 57: lista de revisão pontual, sem empurrar a viewport Android. */
+.premium .radar-period-gaps{
+  margin:10px 12px 14px;padding:12px;
+  border:1px solid #587b8a;border-radius:10px;
+  background:#1c3440;min-width:0;overflow-wrap:anywhere
+}
+.premium .radar-period-gaps h5{font-size:12px;margin:0 0 8px;color:#dff3fa}
+.premium .radar-period-gaps .muted{font-size:11px;line-height:1.6}
+.premium .radar-period-gaps .text-button{min-height:44px;
+  max-width:100%;white-space:normal;text-align:center
+}
+.premium .radar-period-gaps ul{padding-left:17px;margin:8px 0;
+  display:grid;gap:12px
+}
+.premium .radar-period-gaps li{font-size:11px;line-height:1.6;
+  overflow-wrap:anywhere
+}
+.premium .radar-period-gaps li small{display:block;color:#bcd4df}
+.premium .radar-period-gaps li a{display:inline-block;margin-top:4px;
+  overflow-wrap:anywhere
+}
