@@ -851,7 +851,15 @@ test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congel
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
   const history=syntheticHistory();
-  // Uma informação ausente não pode aparecer como zero em nenhum tempo.
+  // Lacunas reais são permitidas em pesquisa CSV, mas NÃO em registro
+  // manual (que o validador global corretamente rejeitaria por inteiro).
+  // A referência FT preserva escanteios; o primeiro tempo continua N/D.
+  Object.assign(history.matches[0],{research:{
+    provider:'work-csv',source:'Flashscore',sourceId:'period-missing-0',
+    sourceUrl:'https://www.flashscore.com.br/jogo/?mid=period-missing-0',
+    importedAt:'2026-10-24T09:00:00Z',dateDiscrepancy:false,
+    full:[stat(2,18,7,5),stat(1,14,5,6)]
+  }});
   history.matches[0].first[0].corners=null;
   await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
     {key:DATA_KEY,data:history});
