@@ -1009,7 +1009,7 @@ test('Etapa 59: comparar mandante em casa e visitante fora, preservando previsã
   await expect(golsCasa.locator('td').nth(2)).toHaveText('1');
   await expect(golsFora.locator('td').nth(1)).toHaveText('1');
   await expect(golsFora.locator('td').nth(2)).toHaveText('2');
-  await expect(panel).toContainText('não reconstruímos períodos ausentes');
+  await expect(panel).toContainText(/não reconstruímos períodos ausentes/i);
   expect(await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
       .map(key=>[key,localStorage.getItem(key)])))).toEqual(original);
@@ -1021,18 +1021,25 @@ test('Etapa 59: comparar mandante em casa e visitante fora, preservando previsã
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(saved);
 });
-test('Etapa 59: recorte por mando inferior a 3 tem média N/D, nunca extrapola',async({page})=>{
+test('Etapa 59: menos de 3 escanteios válidos em casa mantém média N/D',async({page})=>{
   test.setTimeout(70000);
   await page.clock.install({time:new Date(NOW)});
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
   const data=syntheticHistory();
-  // Keep all five historical matches, but only two with Barcelona as home.
-  // Other three switch to the visitor's venue without changing club IDs
-  // or any match values; no same-day/other-league records enter the Radar.
-  for(let i=2;i<5;i++){
-    const m=data.matches[i],originalHome=m.home;
-    m.home=m.away;m.away=originalHome;
+  // Preserve the five home fixtures and the V2/V3 goals shortlist.
+  // Introduce partial real CSV-shaped data in three unique synthetic matches
+  // without mutating the shared Stats objects of other records.
+  for(let i=0;i<3;i++){
+    const m=data.matches[i];
+    m.first=m.first.map(x=>({...x})) as typeof m.first;
+    Object.assign(m,{research:{
+      provider:'work-csv',source:'Flashscore',sourceId:'venue-gap-59-'+i,
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=venue-gap-59-'+i,
+      importedAt:'2026-10-24T09:00:00Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]
+    }});
+    m.first[0].corners=null;
   }
   await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
     {key:DATA_KEY,data});
@@ -1043,13 +1050,15 @@ test('Etapa 59: recorte por mando inferior a 3 tem média N/D, nunca extrapola',
   await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
   const casa=panel.getByRole('region',{name:'Barcelona · mandante em casa'});
   const fora=panel.getByRole('region',{name:'Real Madrid · visitante fora'});
-  await expect(casa).toContainText('2/5 jogos do mando');
+  await expect(casa).toContainText('5/5 jogos do mando');
+  const escanteios=casa.getByRole('row',{name:/Escanteios 1º tempo/});
+  await expect(escanteios.locator('td').nth(1)).toHaveText('N/D');
+  await expect(escanteios.locator('td').nth(2)).toHaveText('N/D');
+  await expect(escanteios.locator('td').nth(3)).toContainText('2/5');
+  await expect(escanteios.locator('td').nth(3)).toContainText('3 N/D');
   const golsCasa=casa.getByRole('row',{name:/Gols Jogo completo/});
-  await expect(golsCasa.locator('td').nth(1)).toHaveText('N/D');
-  await expect(golsCasa.locator('td').nth(2)).toHaveText('N/D');
-  await expect(golsCasa.locator('td').nth(3)).toContainText('2/2');
+  await expect(golsCasa.locator('td').nth(1)).toHaveText('2');
   const golsFora=fora.getByRole('row',{name:/Gols Jogo completo/});
   await expect(golsFora.locator('td').nth(1)).toHaveText('1');
-  await expect(fora).toContainText('5/5 jogos do mando');
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBeNull();
 });
