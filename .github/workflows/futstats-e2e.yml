@@ -51,6 +51,8 @@ jobs:
         run: node scripts/check-stacked-prs.mjs
       - name: Fluxo de usuário real no navegador
         run: npx playwright test e2e/good-picks-save-restore.spec.ts
+      - name: PWA offline real em Chromium isolado (sem Android físico)
+        run: npx playwright test e2e/offline-pwa-recovery.spec.ts
       - name: Guardar artefatos somente em falhas
         uses: actions/upload-artifact@v4
         if: failure()
