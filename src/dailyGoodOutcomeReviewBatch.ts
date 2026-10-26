@@ -77,13 +77,15 @@ export function prepareOutcomeReviewBatch(
    reject('partida ou procedência CSV inconsistente');
   // A structurally authorized provider URL must reference that exact source ID.
   // This is provenance consistency, NOT evidence that the URL was fetched.
-  try{
-    const url=new URL(trace.resultUrl!);
-    if(url.protocol!=='https:'||url.username||url.password||
-      !['www.flashscore.com.br','flashscore.com.br','www.flashscore.com','flashscore.com']
-        .includes(url.hostname)||url.searchParams.get('mid')!==trace.resultSourceId)
-      reject('ID da fonte CSV não corresponde ao link original');
-  }catch{reject('link do resultado local inválido');}
+  let url:URL;
+  try{url=new URL(trace.resultUrl!);}
+  catch{reject('link do resultado local inválido');}
+  // Check outside try/catch: a failed provenance assertion must not be
+  // accidentally reclassified as an URL parsing error.
+  if(url!.protocol!=='https:'||url!.username||url!.password||
+    !['www.flashscore.com.br','flashscore.com.br','www.flashscore.com','flashscore.com']
+      .includes(url!.hostname)||url!.searchParams.get('mid')!==trace.resultSourceId)
+    reject('ID da fonte CSV não corresponde ao link original');
   // Local timestamps are only declarations, never proof of real chronology.
   const kickoff=Date.parse(r.matchAt+'-03:00');
   const saved=Date.parse(r.savedAt);
