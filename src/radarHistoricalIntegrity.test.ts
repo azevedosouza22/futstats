@@ -16,7 +16,7 @@ const match=(id:string,date:string,home:string,away:string,shots=18):Match=>({
  first:[st(Math.floor(shots/2)),st(3,0)],
  second:[st(shots-Math.floor(shots/2),0),st(3,0)]
 });
-function imported(m:Match){
+function imported(m:Match):Match{
  return {...m,research:{provider:'work-csv' as const,source:'Flashscore' as const,
   sourceId:'history-'+m.id,sourceUrl:'https://www.flashscore.com.br/jogo/?mid=history-'+m.id,
   importedAt:'2026-10-20T10:00:00Z',dateDiscrepancy:false,
@@ -32,7 +32,7 @@ const shotsMarket=venueV2Markets.find(m=>m.id==='shots-full-24.5')!;
 describe('Etapa 66 — barreira estrutural em TODOS os cálculos atuais do Radar',()=>{
  it('bloqueia data de origem contraditória mesmo que o jogo seja antigo',()=>{
   const m=imported(match('source-conflict','2026-10-18','a','c'));
-  m.research.titleDate='2026-10-19';m.research.dateDiscrepancy=true;
+  m.research!.titleDate='2026-10-19';m.research!.dateDiscrepancy=true;
   expect(radarMetricIntegrity(m,'shots')).toBe('date_conflict');
   expect(matchTotal(m,'shots','full')).toBeNull();
   const context=leagueNumericContext(data(m),comp,'2026-10-25');
@@ -45,7 +45,7 @@ describe('Etapa 66 — barreira estrutural em TODOS os cálculos atuais do Radar
  });
  it('conflito FT/1T/2T de um lado desativa só a métrica, inclusive para o V2/V3',()=>{
   const m=imported(match('bad-period','2026-10-19','a','c',18));
-  m.research.full[0].shots=36; // 18 registered in periods, but FT=36
+  m.research!.full[0].shots=36; // 18 registered in periods, but FT=36
   expect(radarMetricIntegrity(m,'shots')).toBe('period_conflict');
   expect(radarMetricIntegrity(m,'goals')).toBe('ok');
   expect(matchTotal(m,'shots','full')).toBeNull();
@@ -60,8 +60,8 @@ describe('Etapa 66 — barreira estrutural em TODOS os cálculos atuais do Radar
  });
  it('dados de lados que cancelariam o erro no total agregado também são recusados',()=>{
   const m=imported(match('cancel','2026-10-19','a','c',18));
-  m.research.full[0].shots=(m.research.full[0].shots??0)+2;
-  m.research.full[1].shots=(m.research.full[1].shots??0)-2;
+  m.research!.full[0].shots=(m.research!.full[0].shots??0)+2;
+  m.research!.full[1].shots=(m.research!.full[1].shots??0)-2;
   expect(radarMetricIntegrity(m,'shots')).toBe('period_conflict');
   expect(matchTotal(m,'shots','full')).toBeNull();
  });
@@ -71,8 +71,8 @@ describe('Etapa 66 — barreira estrutural em TODOS os cálculos atuais do Radar
   const all=[...home,...away];
   const original=predictVenueV2(data(...all),fixture,shotsMarket);
   expect(original).toMatchObject({homeAtHomeValid:4,awayAtAwayValid:4,decision:'Under'});
-  home[0].research.dateDiscrepancy=true;home[0].research.titleDate='2026-09-30';
-  home[1].research.full[0].shots=50;
+  home[0].research!.dateDiscrepancy=true;home[0].research!.titleDate='2026-09-30';
+  home[1].research!.full[0].shots=50;
   const snapshot=JSON.stringify(all);
   const v2=predictVenueV2(data(...all),fixture,shotsMarket);
   const v3=predictVenueV3(data(...all),fixture,shotsMarket);
