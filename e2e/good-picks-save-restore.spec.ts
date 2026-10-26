@@ -958,8 +958,8 @@ test('Etapa 58: linhas Over e Under por tempo distinguem N/D, sem reescrever Rad
   await expect(explorer).toContainText('9/10 jogos com dados válidos');
   await expect(explorer).toContainText('1 N/D');
   const table=explorer.getByRole('table');
-  await expect(table.getByRole('columnheader',{name:'Over'})).toBeVisible();
-  await expect(table.getByRole('columnheader',{name:'Under'})).toBeVisible();
+  await expect(table.getByRole('columnheader',{name:'Over',exact:true})).toBeVisible();
+  await expect(table.getByRole('columnheader',{name:'Under',exact:true})).toBeVisible();
   await expect(table.getByRole('row',{name:/2,5/})).toContainText('9/9');
   await expect(table.getByRole('row',{name:/2,5/})).toContainText('0/9');
   await explorer.getByLabel('Indicador Over e Under').selectOption('goals');
