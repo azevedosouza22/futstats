@@ -83,9 +83,10 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
           placeholder="N/D"/>
       </label>)}
       <label className="daily-good-quick-confirm">
-        <input type="checkbox" checked={ack} onChange={e=>setAck(e.currentTarget.checked)} />
-        Transcrevi os valores de uma página externa que consultei e
-        informei a data e hora reais dessa consulta.
+        <input type="checkbox" aria-label="Confirmar transcrição de fonte consultada"
+          checked={ack} onChange={e=>setAck(e.currentTarget.checked)} />
+        <span>Transcrevi os valores de uma página externa que consultei e
+          informei a data e hora reais dessa consulta.</span>
       </label>
       <button type="submit" className="text-button">
         Comparar números informados (sem verificar site)
