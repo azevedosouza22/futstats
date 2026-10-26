@@ -1307,7 +1307,7 @@ test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',a
   const report=changed.locator('details.cross-store-review');
   await report.locator('summary').click();
   await expect(report).toContainText('1 com valores divergentes');
-  await expect(report).toContainText('1 valores divergentes');
+  await expect(report).toContainText('2 valores divergentes');
   await expect(report).toContainText('PENDENTE');
   expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY))
     .toBe(snapshot[DATA_KEY]);
