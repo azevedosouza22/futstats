@@ -1,5 +1,5 @@
 import {stats, type Data, type Metric} from './model';
-import {recentMatches} from './pregame';
+import {recentRadarMatches} from './radarFixtureUniqueness';
 import {radarMarkets, type RadarFixture} from './radar';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
@@ -37,8 +37,8 @@ function venuePair(matches: Data['matches'], side: 0 | 1, metric: Metric) {
 }
 
 export function predictVenueV2(data: Data, fixture: RadarFixture, market: (typeof venueV2Markets)[number]): VenueV2Prediction {
-  const homeTen = recentMatches(data.matches,fixture.home,10,fixture.date,{competition:fixture.competition});
-  const awayTen = recentMatches(data.matches,fixture.away,10,fixture.date,{competition:fixture.competition});
+  const homeTen = recentRadarMatches(data,fixture.home,10,fixture);
+  const awayTen = recentRadarMatches(data,fixture.away,10,fixture);
   const home = venuePair(homeTen.filter(m=>m.home===fixture.home),0,market.metric);
   const away = venuePair(awayTen.filter(m=>m.away===fixture.away),1,market.metric);
   const margin = market.line*VENUE_V2_MARGIN_RATIO;
