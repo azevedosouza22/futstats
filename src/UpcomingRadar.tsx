@@ -12,6 +12,7 @@ import RadarLineExplorer from './RadarLineExplorer';
 import {radarPeriodCoverage} from './radarPeriodCoverage';
 import RadarPeriodCoveragePanel from './RadarPeriodCoveragePanel';
 import {comparePeriodRadarLines} from './radarPeriodLineComparison';
+import RadarCustomLinePanel from './RadarCustomLinePanel';
 import RadarPeriodLineComparePanel from './RadarPeriodLineComparePanel';
 import {compareVenuePeriodSamples} from './radarVenuePeriodProfile';
 import RadarVenuePeriodPanel from './RadarVenuePeriodPanel';
@@ -375,6 +376,8 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       </div>
       {periodCoverage&&<RadarPeriodCoveragePanel report={periodCoverage}/>}
       {periodLineComparison&&<RadarPeriodLineComparePanel report={periodLineComparison}/>}
+      {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={data}
+        fixture={{home:home.id,away:away.id,date,competition:league}}/>}
       {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name} trace={venueTrail} />}
       <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
