@@ -1412,6 +1412,9 @@ test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte 
   await expect(trace).toContainText('RESULTADO_PENDENTE');
   await expect(trace).toContainText('sourceId N/D');
   await expect(trace).toContainText('PENDENTE');
+  await expect(audit.getByRole('button',{
+    name:'Exportar lote para conferir em segunda fonte (JSON)'
+  })).toHaveCount(0); // No local result -> no packet to research
   const [beforeFile]=await Promise.all([
     page.waitForEvent('download'),
     trace.getByRole('button',{name:'Exportar vínculo da previsão e resultado (CSV)'}).click()
@@ -1455,6 +1458,29 @@ test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte 
   expect(csv).toContain('"result-trace-68"');
   expect(csv).toContain('"PENDENTE"');
   expect(csv).not.toContain('"CONFIRMADO"');
+  const [batchFile]=await Promise.all([
+    page.waitForEvent('download'),
+    updated.getByRole('button',{
+      name:'Exportar lote para conferir em segunda fonte (JSON)'
+    }).click()
+  ]);
+  expect(batchFile.suggestedFilename()).toBe('futstats-lote-conferencia-independente.json');
+  const batch=JSON.parse(await readFile((await batchFile.path())!,'utf8'));
+  expect(batch).toMatchObject({
+    format:'futstats-conferencia-independente-lote-v1',
+    count:1,externallyVerified:0,externalStatus:'PENDENTE',
+    minimumVerifiedFixturesPerLeague:30,
+    records:[{
+      recordKey:frozen[0].key,home:'Barcelona',away:'Real Madrid',
+      matchAtBrasilia:'2026-10-25T17:00:00',
+      localCsv:{matchId:'result-trace-68',providerSourceId:'provider-trace-68'},
+      externalVerification:'PENDENTE'
+    }]
+  });
+  expect(batch.records[0].frozenSignals.length).toBeGreaterThan(0);
+  expect(JSON.stringify(batch)).not.toContain('home-historical-0');
+  expect(JSON.stringify(batch)).not.toContain('visitor-0');
+  expect(JSON.stringify(batch)).not.toContain('"CONFIRMADO"');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(frozen);
 });

@@ -9,6 +9,7 @@ import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDos
 import {buildProspectiveCohortPlan,exportProspectiveCohortCsv,MIN_EXTERNAL_FIXTURES_PER_LEAGUE} from './dailyGoodProspectiveCohorts';
 import DailyGoodQuickEvidenceForm from './DailyGoodQuickEvidenceForm';
 import {traceFrozenResults,exportFrozenResultTraceCsv} from './dailyGoodFrozenResultTrace';
+import {prepareOutcomeReviewBatch,exportOutcomeReviewBatchJson} from './dailyGoodOutcomeReviewBatch';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -37,6 +38,7 @@ export default function DailyGoodAuditPanel({data,records}:{
  const [documentarySource,setDocumentarySource]=useState<ExternalEvidence|null>(null);
  const [dossierNotice,setDossierNotice]=useState('');
  const [documentationNotice,setDocumentationNotice]=useState('');
+ const [batchNotice,setBatchNotice]=useState('');
  const readyForEvidence=new Set(independentQueue.entries
   .filter(x=>x.state==='check_external').map(x=>x.key));
  function downloadFile(name:string,content:string,type:string){
@@ -110,6 +112,20 @@ export default function DailyGoodAuditPanel({data,records}:{
   if(!frozenTraces.length)return;
   downloadFile('futstats-vinculo-previsoes-resultados-locais.csv',
    exportFrozenResultTraceCsv(frozenTraces),'text/csv;charset=utf-8');
+ }
+ function exportForIndependentResearch(){
+  setBatchNotice('');
+  try{
+    const batch=prepareOutcomeReviewBatch(records,report,independentQueue,
+      frozenTraces);
+    if(batch.count===0)throw Error('Nenhuma partida pronta para conferir em segunda fonte.');
+    downloadFile('futstats-lote-conferencia-independente.json',
+      exportOutcomeReviewBatchJson(batch),'application/json;charset=utf-8');
+    setBatchNotice(batch.count+' partida(s) para pesquisa externa reunida(s) em um JSON. '
+      +'Nenhuma consulta externa foi efetuada ou validada pelo aplicativo.');
+  }catch(e){
+    setBatchNotice(e instanceof Error?e.message:'Não foi possível gerar o lote.');
+  }
  }
  function exportReviewQueue(){
   if(independentQueue.entries.length===0)return;
@@ -261,6 +277,22 @@ export default function DailyGoodAuditPanel({data,records}:{
     <button type="button" className="text-button" onClick={exportReviewQueue}>
       Exportar fila de conferência (CSV)
     </button>
+    {independentQueue.checkExternal>0&&<div className="daily-good-external-batch">
+      <button type="button" className="text-button"
+        onClick={exportForIndependentResearch}>
+        Exportar lote para conferir em segunda fonte (JSON)
+      </button>
+      <p className="muted">Um arquivo para várias partidas: inclui somente
+        previsões congeladas elegíveis, data original, indicadores e IDs/URLs
+        declarados dos resultados CSV locais. Não exporta o histórico de
+        659 jogos, backups, dados de conta ou resultados de partidas não
+        elegíveis. O arquivo pode ser fornecido voluntariamente para pesquisa
+        posterior, mas <strong>não é prova de resultado real</strong>.
+        Nenhum dado é enviado automaticamente; conferência externa:
+        <strong> PENDENTE</strong>.</p>
+      {batchNotice&&<p role="status" className="muted">{batchNotice}</p>}
+    </div>}
+
     <details className="daily-good-review-list">
       <summary>Ver prioridades de verificação ({independentQueue.entries.length})</summary>
       <ol>{independentQueue.entries.slice(0,8).map(e=><li key={e.key}>
