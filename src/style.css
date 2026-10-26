@@ -1166,3 +1166,44 @@ html{scroll-behavior:smooth}
 .premium .radar-period-gaps li a{display:inline-block;margin-top:4px;
   overflow-wrap:anywhere
 }
+
+
+/* Etapa 58: comparação Over/Under por tempo, rolável apenas dentro da tabela */
+.premium .radar-period-line-comparison{
+ margin:14px 0;padding:0;max-width:100%;min-width:0;
+ border:1px solid #4d778b;border-radius:12px;background:#162d3a
+}
+.premium .radar-period-line-comparison>summary{
+ padding:13px 14px;min-height:44px;cursor:pointer;
+ font-size:12px;font-weight:750;color:#e3f5fe;line-height:1.55;
+ overflow-wrap:anywhere
+}
+.premium .radar-period-line-comparison>.muted{
+ margin:12px 14px;line-height:1.6;font-size:11px;overflow-wrap:anywhere
+}
+.premium .radar-period-line-filters{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;padding:10px 14px;max-width:100%;min-width:0
+}
+.premium .radar-period-line-filters label{
+ display:grid;gap:6px;min-width:0;color:#d1e8ec;font-size:12px
+}
+.premium .radar-period-line-filters select{
+ min-width:0;width:100%;max-width:100%;min-height:44px;
+ background:#102a37;color:#f0fbff;border:1px solid #698c9a;
+ border-radius:7px
+}
+.premium .radar-period-line-scroll{
+ min-width:0;max-width:100%;overflow-x:auto;padding:0 10px 10px
+}
+.premium .radar-period-line-scroll table{min-width:510px;width:100%}
+.premium .radar-period-line-scroll th,
+.premium .radar-period-line-scroll td{
+ font-size:11px;padding:9px 7px;text-align:left;white-space:nowrap
+}
+.premium .radar-period-line-scroll caption{
+ text-align:left;color:#c3d7dd;font-size:11px;padding:8px 4px
+}
+@media(max-width:360px){
+ .premium .radar-period-line-filters{grid-template-columns:minmax(0,1fr)}
+}
