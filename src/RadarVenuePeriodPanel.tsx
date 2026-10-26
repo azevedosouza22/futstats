@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {COVERAGE_METRICS,COVERAGE_PERIODS} from './leagueCoverageAudit';
 import {MIN_VENUE_PERIOD_SAMPLE,type VenueTeamProfile,type VenuePeriodProfile}
  from './radarVenuePeriodProfile';
+import {exportVenueTrailCsv,type VenueTrailReport,type VenueTrailGroup} from './radarVenueSampleTrace';
 
 const periodLabel={full:'Jogo completo',first:'1º tempo',second:'2º tempo'};
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:2});
@@ -32,10 +33,41 @@ function TeamVenueTable({team,name}:{team:VenueTeamProfile;name:string}){
    </div>
  </section>;
 }
-export default function RadarVenuePeriodPanel({report,homeName,awayName}:{
+function SourceTrail({group,club}:{group:VenueTrailGroup;club:string}){
+ return <section className="radar-venue-trail-side" aria-label={'Partidas da amostra: '+club}>
+  <h6>{club} · {group.included}/{group.selected} incluídos no mando</h6>
+  <ol>{group.rows.map((m,i)=><li key={m.matchId+'-'+i}>
+   <b>{m.date}</b> · {m.opponents} · <strong>
+     {m.disposition==='included'?'INCLUÍDO':
+      m.disposition==='different_venue'?'FORA DO MANDO':'EXCLUÍDO'}
+    </strong>
+    <small>{m.reason} · ID local: {m.matchId}</small>
+    {m.disposition==='included'&&<small>
+      {m.missingCells} campo(s) N/D · {m.conflictingMetrics} indicador(es) em conflito
+    </small>}
+    {m.sourceUrl
+     ?<a href={m.sourceUrl} target="_blank" rel="noopener noreferrer">
+       Abrir referência Flashscore informada (não verificada)</a>
+     :<small>Fonte individual: N/D ou URL inválida</small>}
+   </li>)}</ol>
+ </section>;
+}
+export default function RadarVenuePeriodPanel({report,homeName,awayName,trace}:{
  report:VenuePeriodProfile;homeName:string;awayName:string;
+ trace:VenueTrailReport|null;
 }){
  const [expanded,setExpanded]=useState(false);
+ function exportTrace(){
+  if(!trace||!trace.consistent)return;
+  const value=exportVenueTrailCsv(trace);
+  const url=URL.createObjectURL(new Blob([value],{type:'text/csv;charset=utf-8'}));
+  try{
+   const link=document.createElement('a');link.href=url;
+   link.download='futstats-rastro-amostras-mando.csv';
+   document.body.appendChild(link);link.click();link.remove();
+  }finally{URL.revokeObjectURL(url);}
+ }
+
  return <section className="radar-venue-period" aria-label="Comparação por mando de campo e períodos">
    <button type="button" className="text-button" aria-expanded={expanded}
       onClick={()=>setExpanded(v=>!v)}>
@@ -49,6 +81,27 @@ export default function RadarVenuePeriodPanel({report,homeName,awayName}:{
        a média fica <strong>N/D</strong>, mesmo que a contagem exista.</p>
      <TeamVenueTable team={report.home} name={homeName+' · mandante em casa'}/>
      <TeamVenueTable team={report.away} name={awayName+' · visitante fora'}/>
+     {trace&&<details className="radar-venue-trail"
+        aria-label="Rastrear partidas históricas das médias por mando">
+       <summary>Conferir partidas usadas nas médias e exclusões</summary>
+       {!trace.consistent
+        ?<p role="alert">A amostra exibida diverge do cálculo: rastro e
+          exportação bloqueados para evitar informação incorreta.</p>
+        :<>
+          <p className="muted">Mesmos cinco jogos anteriores de cada clube
+            na competição. Cada partida mostra por que entrou ou ficou fora
+            do recorte de mando. Não procuramos outros jogos para
+            completar a amostra. Fonte individual é somente uma referência
+            cadastrada e não confirmação independente.</p>
+          <button type="button" className="text-button"
+           onClick={exportTrace}>Exportar rastro das amostras (CSV)</button>
+          <SourceTrail group={trace.home} club={homeName+' (casa)'}/>
+          <SourceTrail group={trace.away} club={awayName+' (fora)'}/>
+          <p className="muted">Verificação externa: PENDENTE.
+            Nenhum resultado de fonte foi conferido automaticamente;
+            o relatório não altera o histórico, os backups ou a previsão.</p>
+         </>}
+      </details>}
      <p className="muted">Os campos totais e dos tempos são independentes.
        Não reconstruímos períodos ausentes nem confundimos zero com N/D.
        Os jogos têm amostras separadas para cada clube. Nenhuma porcentagem

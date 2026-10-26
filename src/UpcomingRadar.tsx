@@ -15,6 +15,7 @@ import {comparePeriodRadarLines} from './radarPeriodLineComparison';
 import RadarPeriodLineComparePanel from './RadarPeriodLineComparePanel';
 import {compareVenuePeriodSamples} from './radarVenuePeriodProfile';
 import RadarVenuePeriodPanel from './RadarVenuePeriodPanel';
+import {traceVenueSamples} from './radarVenueSampleTrace';
 import {captureVenuePredictions,settleVenuePredictions,scoreSettlements} from './radarProspective';
 import {parseRadarRecords,mergeRadarRecords,type SavedRadarRecord} from './radarRecords';
 import {summarizeRadarFollowup,type FollowupFilter} from './radarFollowup';
@@ -111,6 +112,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
   const periodCoverage=readyToAnalyze&&home&&away?radarPeriodCoverage(data,{home:home.id,away:away.id,date,competition:league}):null;
   const periodLineComparison=readyToAnalyze&&home&&away?comparePeriodRadarLines(data,{home:home.id,away:away.id,date,competition:league}):null;
   const venuePeriod=readyToAnalyze&&home&&away?compareVenuePeriodSamples(data,{home:home.id,away:away.id,date,competition:league}):null;
+  const venueTrail=venuePeriod&&home&&away?traceVenueSamples(data,{home:home.id,away:away.id,date,competition:league},venuePeriod):null;
   const prospective=readyToAnalyze&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
   const numericLeagueContext=readyToAnalyze?leagueNumericContext(data,league,date):[];
   const lineExplorationPreview=readyToAnalyze&&home&&away?
@@ -373,7 +375,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       </div>
       {periodCoverage&&<RadarPeriodCoveragePanel report={periodCoverage}/>}
       {periodLineComparison&&<RadarPeriodLineComparePanel report={periodLineComparison}/>}
-      {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name}/>}
+      {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name} trace={venueTrail} />}
       <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
