@@ -14,7 +14,12 @@ const forecast=():SavedRadarRecord=>({
  key:'save-001',savedAt:'2026-10-25T15:00:00.000Z',
  matchAt:'2026-10-25T20:00:00',competition:'Liga X',
  home:'Casa',away:'Fora',homeCount:5,awayCount:5,
- markets:[],goodPicks:{verifiedAt:'2026-10-25',
+ markets:[{id:signal.id,label:'Gols',line:2.5,historyRate:0.3,
+   observed:10,overs:3,historicalMean:2.1}],
+ venue:[{marketId:signal.id,label:'Gols',line:2.5,
+   v2:'Under',v3:'Under',projectedTotal:1.4,failedChecks:[]}],
+ leagueContext:[{id:signal.id,mean:2,observed:20}],
+ goodPicks:{verifiedAt:'2026-10-25',
   sourceUrl:'https://www.cbf.com.br/jogos/fixture',
   signals:[signal]}
 });
