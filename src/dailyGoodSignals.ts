@@ -96,7 +96,7 @@ export function selectDailyGoodSignals(
      safeOfficialFixtureUrl(item.fixture.sourceUrl)&&
      validDate(item.fixture.date)&&
      item.fixture.time!==null&&
-     /^([01]\\d|2[0-3]):[0-5]\\d$/.test(item.fixture.time));
+     /^([01]\d|2[0-3]):[0-5]\d$/.test(item.fixture.time));
    const trustedTimes=new Set(trusted.map(item=>item.fixture.time));
    const entry=[...trusted].sort((a,b)=>b.verifiedAt.localeCompare(a.verifiedAt))[0]??group[0];
    const f=entry.fixture;
