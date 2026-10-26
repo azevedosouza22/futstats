@@ -1,5 +1,5 @@
-import {stats,type Data} from './model';
-import {radarMarkets} from './radar';
+import type {Data} from './model';
+import {radarMarkets,matchTotal} from './radar';
 
 /**
  * Observed full-match averages for the exact competition and season label.
@@ -16,6 +16,7 @@ export function leagueNumericContext(
   const seen=new Set<string>();
   const valid=data.matches.filter(m=>{
     if(m.competition.trim()!==competition.trim()||m.date>=beforeDate||
+      m.research?.dateDiscrepancy||
       (m.research?.titleDate!==undefined&&m.research.titleDate>=beforeDate)||
       (m.external&&!['FT','Match Finished'].includes(m.external.status))||
       seen.has(m.id))return false;
@@ -24,11 +25,8 @@ export function leagueNumericContext(
   });
   return radarMarkets.filter(m=>m.period==='full'&&
     ['goals','shots','target','corners'].includes(m.metric)).map(market=>{
-    const totals=valid.map(match=>{
-      const home=stats(match,0,'full')[market.metric];
-      const away=stats(match,1,'full')[market.metric];
-      return home===null||away===null?null:home+away;
-    }).filter((v):v is number=>v!==null);
+    const totals=valid.map(match=>matchTotal(match,market.metric,'full'))
+      .filter((v):v is number=>v!==null);
     return {
       id:market.id,
       mean:totals.length?totals.reduce((a,b)=>a+b,0)/totals.length:null,
