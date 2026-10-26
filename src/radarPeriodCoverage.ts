@@ -123,3 +123,21 @@ export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
  return {selectedHome:sample.homeHistory.length,selectedAway:sample.awayHistory.length,
   distinct:unique.length,duplicateIds,skippedAmbiguous,completeAll,rows,gaps};
 }
+
+/** A review checklist only. Never changes an original CSV, never verifies a
+ * third-party webpage, and never converts missing values into zero. */
+export function exportRadarPeriodGapCsv(report:RadarPeriodCoverage):string{
+ const cell=(value:string)=>{
+  const guarded=/^[\s\u0000-\u001f]*[=+\-@]/u.test(value)?"'"+value:value;
+  return '"'+guarded.replace(/"/g,'""')+'"';
+ };
+ const columns=['id_partida','data','confronto','indicador','periodo','situacao',
+  'id_fonte','url_fonte_permitida','revisao_externa'];
+ const rows=[columns.map(cell).join(';')];
+ for(const match of report.gaps)for(const gap of match.gaps){
+  rows.push([match.matchId,match.date,match.label,gap.metric,gap.period,
+    gap.kind==='missing'?'N/D':'SOMA_DIVERGENTE',match.sourceId??'N/D',
+    match.sourceUrl??'N/D','PENDENTE'].map(cell).join(';'));
+ }
+ return '\uFEFF'+rows.join('\r\n')+'\r\n';
+}
