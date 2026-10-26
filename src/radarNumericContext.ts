@@ -1,5 +1,6 @@
 import type {Data} from './model';
 import {radarMarkets,matchTotal} from './radar';
+import {duplicateRadarFixtureIds} from './radarFixtureUniqueness';
 
 /**
  * Observed full-match averages for the exact competition and season label.
@@ -13,13 +14,14 @@ export type LeagueNumericMarket = {id:string; mean:number|null; observed:number}
 export function leagueNumericContext(
   data:Data,competition:string,beforeDate:string
 ):LeagueNumericMarket[]{
+  const excluded=duplicateRadarFixtureIds(data.matches,competition,beforeDate);
   const seen=new Set<string>();
   const valid=data.matches.filter(m=>{
     if(m.competition.trim()!==competition.trim()||m.date>=beforeDate||
       m.research?.dateDiscrepancy||
       (m.research?.titleDate!==undefined&&m.research.titleDate>=beforeDate)||
       (m.external&&!['FT','Match Finished'].includes(m.external.status))||
-      seen.has(m.id))return false;
+      seen.has(m.id)||excluded.has(m.id))return false;
     seen.add(m.id);
     return true;
   });

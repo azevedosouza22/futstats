@@ -1349,3 +1349,43 @@ test('Etapa 66: As Boas não usa data CSV conflitante para criar sinal V2/V3',as
   // Read-only protection: source CSV stays untouched and no forecast is saved.
   expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY)).toBe(snapshot);
 });
+
+
+test('Etapa 67: dois IDs do mesmo confronto não dobram a amostra nem geram As Boas',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  const original=history.matches.find(m=>m.id==='home-historical-4')!;
+  history.matches.push({...original,id:'source-copy-etapa67',
+    research:{
+      provider:'work-csv',source:'Flashscore',sourceId:'source-copy-67',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=source-copy-67',
+      importedAt:'2026-10-24T10:00:00Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]
+    }
+  } as (typeof history.matches)[number]);
+  const originalBytes=JSON.stringify(history);
+  await page.evaluate(({key,data})=>localStorage.setItem(key,data),
+    {key:DATA_KEY,data:originalBytes});
+  await page.reload();
+  await expect(page.getByText('Não foi possível ler os dados locais.')).toHaveCount(0);
+  await openRadar(page);
+  const good=page.getByRole('region',{name:/As Boas do Dia/});
+  await expect(good).toContainText('Nenhuma indicação passou pelos critérios hoje');
+  await expect(good.locator('.daily-good-item')).toHaveCount(0);
+  await page.getByLabel('Competição futura').selectOption(COMPETITION);
+  await page.getByLabel('Mandante futuro').selectOption('barcelona');
+  await page.getByLabel('Visitante futuro').selectOption('real-madrid');
+  await page.getByLabel('Data futura').fill('2026-10-25');
+  await page.getByLabel('Hora futura').fill('17:00');
+  const preview=page.locator('.radar-future-results');
+  await expect(preview).toContainText('Histórico em revisão:');
+  await expect(preview).toContainText('2 entrada(s)');
+  await expect(preview).toContainText('3/5 do mandante');
+  await expect(preview).toContainText('5/5 do visitante');
+  await expect(preview).toContainText('não foram apagados');
+  const originalSaved=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
+  expect(originalSaved===null||originalSaved==='[]').toBeTruthy();
+  expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY)).toBe(originalBytes);
+});
