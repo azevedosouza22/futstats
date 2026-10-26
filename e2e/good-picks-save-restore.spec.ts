@@ -1233,3 +1233,82 @@ test('Etapa 63: linha inteira separa empate, períodos e não modifica previsão
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth))
     .toBeLessThanOrEqual(1);
 });
+
+
+test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const data=syntheticHistory();
+  data.teams.push({id:'liverpool',name:'Liverpool',color:'#445566'},
+    {id:'arsenal',name:'Arsenal',color:'#667788'});
+  const pFirst=[stat(1,6,3,2),stat(0,5,2,1)];
+  const pSecond=[stat(0,4,1,1),stat(1,6,2,2)];
+  const pFull=[stat(1,10,4,3),stat(1,11,4,3)];
+  data.matches.push({id:'historical-overlap',home:'liverpool',away:'arsenal',
+    date:'2026-10-20',competition:'Premier League inglesa 2026/27',
+    first:pFirst,second:pSecond,
+    research:{provider:'work-csv',source:'Flashscore',
+      sourceId:'source-overlap-001',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=source-overlap-001',
+      importedAt:'2026-10-21T10:00:00Z',dateDiscrepancy:false,full:pFull}
+  } as (typeof data.matches)[number]);
+  const work={
+    format:'futstats:fpl-work-research:v1',
+    entries:[{gameId:'26-27-prem-liverpool-arsenal-9',gw:9,
+      date:'2026-10-20',home:'Liverpool',away:'Arsenal',
+      sourceId:'source-overlap-001',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=source-overlap-001',
+      first:{goals:[1,0],shots:[6,5],target:[3,2],corners:[2,1]},
+      second:{goals:[0,1],shots:[4,6],target:[1,2],corners:[1,2]},
+      full:{goals:[1,1],shots:[10,11],target:[4,4],corners:[3,3]},
+      discrepancies:[],pilotUnprocessed:false
+    }]
+  };
+  const WORK_KEY='futstats:fpl-work-research:v1';
+  await page.evaluate(({data,work,key})=>{
+    localStorage.setItem('futstats:v1',JSON.stringify(data));
+    localStorage.setItem(key,JSON.stringify(work));
+  },{data,work,key:WORK_KEY});
+  await page.reload();
+  await openRadar(page);
+  const coverage=page.locator('details.league-coverage-panel');
+  await coverage.locator('summary').click();
+  const details=coverage.locator('details.cross-store-review');
+  await details.locator('summary').click();
+  await expect(details).toContainText('1 ID(s) Flashscore presentes em ambas as bases');
+  await expect(details).toContainText('1 coincidência(s) local(is)');
+  await expect(details).toContainText('0 resultado(s) confirmado(s) externamente');
+  await expect(details).toContainText('PENDENTE');
+  const snapshot=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(k=>[k,localStorage.getItem(k)])));
+  const [file]=await Promise.all([
+    page.waitForEvent('download'),
+    details.getByRole('button',{name:'Exportar confrontos compartilhados (CSV)'}).click()
+  ]);
+  const csv=await readFile((await file.path())!,'utf8');
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(2);
+  expect(csv).toContain('"same_values"');
+  expect(csv).toContain('"PENDENTE"');
+  expect(await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(k=>[k,localStorage.getItem(k)])))).toEqual(snapshot);
+
+  work.entries[0].second.corners=[2,2];
+  work.entries[0].full.corners=[4,3];
+  await page.evaluate(({key,work})=>localStorage.setItem(key,JSON.stringify(work)),
+    {key:WORK_KEY,work});
+  await page.reload();
+  await openRadar(page);
+  const changed=page.locator('details.league-coverage-panel');
+  await changed.locator('summary').click();
+  const report=changed.locator('details.cross-store-review');
+  await report.locator('summary').click();
+  await expect(report).toContainText('1 com valores divergentes');
+  await expect(report).toContainText('1 valores divergentes');
+  await expect(report).toContainText('PENDENTE');
+  expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY))
+    .toBe(snapshot[DATA_KEY]);
+});
