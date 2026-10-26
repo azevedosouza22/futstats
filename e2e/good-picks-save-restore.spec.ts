@@ -659,6 +659,8 @@ test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',asy
 
 test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resultado externo',async({page})=>{
   test.setTimeout(60000); // falhas de acessibilidade não devem travar 3 min por viewport
+  const runtimeErrors:string[]=[];
+  page.on('pageerror',error=>runtimeErrors.push(error.message));
   await page.clock.install({time:new Date(NOW)});
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
@@ -726,4 +728,5 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
   expect(dossier.secondarySource).toMatchObject({checkedAt:'2026-10-26T10:00:00.000Z'});
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
     .toEqual(original);
+  expect(runtimeErrors).toEqual([]); // nenhum crash de estado React durante digitação
 });
