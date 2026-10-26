@@ -97,7 +97,7 @@ describe('Etapa 58 — contagens Over/Under por período e integridade',()=>{
    sourceUrl:'https://www.flashscore.com.br/jogo/?mid=fl-3',
    importedAt:'2026-10-24T12:00:00Z',dateDiscrepancy:true,
    full:[st(1,8,3,2),st(0,6,2,3)]};
-  const future=match('future','2026-10-26'),good=match('good');
+  const future=match('future','2026-10-26'),good=match('good','2026-10-19');
   const d=result(bad,future,good),snapshot=JSON.stringify(d);
   const r=comparePeriodRadarLines(d,fixture);
   expect(group(r,'shots','full')).toMatchObject({observed:1,mean:14});
