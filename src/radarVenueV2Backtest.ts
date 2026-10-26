@@ -1,6 +1,7 @@
 import type {Data} from './model';
 import {matchTotal} from './radar';
 import {predictVenueV2,venueV2Markets,type VenueV2Decision} from './radarVenueV2';
+import {duplicateRadarFixtureIds} from './radarFixtureUniqueness';
 
 export type VenueV2Score={signals:number;correct:number;incorrect:number;over:number;under:number};
 export type VenueV2MarketReport={
@@ -15,6 +16,7 @@ export type VenueV2MarketReport={
 export type VenueV2Report={
  fixtureCount:number;
  excludedAmbiguousDates:number;
+ excludedDuplicateFixtureRows:number;
  developmentEnd:string|null;
  validationStart:string|null;
  markets:VenueV2MarketReport[];
@@ -27,7 +29,9 @@ function add(score:VenueV2Score,decision:Exclude<VenueV2Decision,'Sem sinal'>,ov
  if((decision==='Over')===over)score.correct++;else score.incorrect++;
 }
 export function evaluateVenueV2(data:Data,competition:string):VenueV2Report {
- const matches=data.matches.filter(m=>m.research&&m.competition===competition)
+ const suspicious=duplicateRadarFixtureIds(data.matches,competition,'9999-12-31');
+ const matches=data.matches.filter(m=>m.research&&m.competition===competition&&
+   !suspicious.has(m.id))
   .sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
  // Use a calendar-day split, so matches from the same day never straddle the boundary.
  const dates=[...new Set(matches.map(m=>m.date))];
@@ -78,5 +82,6 @@ export function evaluateVenueV2(data:Data,competition:string):VenueV2Report {
   }
  }
  return {fixtureCount:matches.length,excludedAmbiguousDates,
+  excludedDuplicateFixtureRows:suspicious.size,
   developmentEnd,validationStart:splitDate,markets:reports};
 }
