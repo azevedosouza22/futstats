@@ -9,14 +9,22 @@
  */
 import {stats,type Match} from './model';
 import {radarUpcoming,type RadarFixture} from './radar';
+import {assessGapSource,type GapSourceStatus} from './statGapSource';
 import {COVERAGE_METRICS,COVERAGE_PERIODS,type CoverageMetric,type CoveragePeriod} from './leagueCoverageAudit';
 export {COVERAGE_METRICS,COVERAGE_PERIODS};
 export type RadarPeriodCell={period:CoveragePeriod;valid:number;missing:number;conflicts:number;mean:number|null};
 export type RadarPeriodRow={metric:CoverageMetric;label:string;cells:Record<CoveragePeriod,RadarPeriodCell>};
+export type RadarPeriodGap={
+  matchId:string;date:string;label:string;
+  gaps:{metric:CoverageMetric;period:CoveragePeriod;kind:'missing'|'conflict'}[];
+  sourceUrl:string|null;sourceId:string|null;sourceStatus:GapSourceStatus;
+};
 export type RadarPeriodCoverage={
   selectedHome:number;selectedAway:number;distinct:number;
   skippedAmbiguous:number;duplicateIds:number;completeAll:number;
   rows:RadarPeriodRow[];
+  /** Only locally observed gaps; this is NOT a request to download data. */
+  gaps:RadarPeriodGap[];
 };
 const labels:Record<CoverageMetric,string>={
  goals:'Gols',shots:'Finalizações',target:'Chutes no alvo',corners:'Escanteios'
@@ -29,8 +37,16 @@ function metricValues(m:Match,metric:CoverageMetric):
  Record<CoveragePeriod,number|null>|null{
  const full=total(m,metric,'full'),first=total(m,metric,'first'),
   second=total(m,metric,'second');
+ // Compare HOME and AWAY independently. Comparing only the combined total
+ // could accidentally cancel a +1 error on home with a -1 error on away.
+ for(const side of [0,1] as const){
+  const f=stats(m,side,'full')[metric],a=stats(m,side,'first')[metric],
+    b=stats(m,side,'second')[metric];
+  if(f!==null&&a!==null&&b!==null&&f!==a+b)
+   return null;
+ }
  if(full!==null&&first!==null&&second!==null&&full!==first+second)
-  return null; // contradiction: ignore the metric for ALL 3 periods
+  return null;
  return {full,first,second};
 }
 export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
@@ -79,6 +95,31 @@ export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
   const values=metricValues(m,metric);
   return values!==null&&COVERAGE_PERIODS.every(period=>values[period]!==null);
  })).length;
+ const gaps:RadarPeriodGap[]=[];
+ for(const match of unique){
+  const problems:RadarPeriodGap['gaps']=[];
+  for(const metric of COVERAGE_METRICS){
+   const values=metricValues(match,metric);
+   if(values===null){
+    problems.push({metric,period:'full',kind:'conflict'});
+   }else{
+    for(const period of COVERAGE_PERIODS)
+     if(values[period]===null)problems.push({metric,period,kind:'missing'});
+   }
+  }
+  if(!problems.length)continue;
+  const source=assessGapSource(match.research?.sourceUrl,
+    match.research?.sourceId,false);
+  const home=data.teams.find(t=>t.id===match.home)?.name??match.home;
+  const away=data.teams.find(t=>t.id===match.away)?.name??match.away;
+  gaps.push({matchId:match.id,date:match.date,label:home+' × '+away,
+   gaps:problems,sourceUrl:source.sourceUrl,sourceId:source.sourceId,
+   sourceStatus:source.status});
+ }
+ gaps.sort((a,b)=>b.gaps.filter(g=>g.kind==='conflict').length-
+  a.gaps.filter(g=>g.kind==='conflict').length||
+  b.gaps.length-a.gaps.length||b.date.localeCompare(a.date)||
+  a.matchId.localeCompare(b.matchId));
  return {selectedHome:sample.homeHistory.length,selectedAway:sample.awayHistory.length,
-  distinct:unique.length,duplicateIds,skippedAmbiguous,completeAll,rows};
+  distinct:unique.length,duplicateIds,skippedAmbiguous,completeAll,rows,gaps};
 }
