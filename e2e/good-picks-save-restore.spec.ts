@@ -1114,3 +1114,73 @@ test('Etapa 60: rastrear os dez jogos das médias por mando sem mudar previsões
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-
     document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
+
+
+test('Etapa 61: pré-check Android em Segurança mantém release BLOQUEADO e backup intocado',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const synthetic=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:synthetic});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const snapshot=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  expect(JSON.parse(snapshot[RADAR_KEY])).toHaveLength(1);
+  await openTools(page);
+  const area=page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'});
+  await area.getByRole('button',{
+    name:'Preparar testes Android e verificar bloqueios de liberação'
+  }).click();
+  const qa=area.getByRole('region',{name:'Pré-check de liberação Android'});
+  await expect(qa).toContainText('NÃO LIBERADO PARA PRODUÇÃO');
+  await expect(qa.getByRole('status')).toContainText('4/4');
+  await expect(qa).toContainText('Apto a iniciar o teste físico, ainda NÃO realizado');
+  await expect(qa).toContainText('Teste em Android físico');
+  await expect(qa).toContainText('PENDENTE');
+  const [file]=await Promise.all([
+    page.waitForEvent('download'),
+    qa.getByRole('button',{
+      name:'Baixar checklist de QA Android (CSV sem dados de partidas)'
+    }).click()
+  ]);
+  expect(file.suggestedFilename()).toBe('futstats-checklist-qa-android.csv');
+  const contents=await readFile((await file.path())!,'utf8');
+  expect(contents.split('\r\n').filter(Boolean)).toHaveLength(10);
+  expect(contents).toContain('"NAO LIBERADO"');
+  expect(contents).toContain('Teste em Android físico');
+  expect(contents).not.toContain('Barcelona');
+  expect(contents).not.toContain('futstats:v1');
+  const after=await page.evaluate(()=>Object.fromEntries(
+    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+      .map(key=>[key,localStorage.getItem(key)])));
+  expect(after).toEqual(snapshot);
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(JSON.parse(snapshot[RADAR_KEY]));
+});
+test('Etapa 61: sem dados e com grupos inválidos não declara Android apto',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.goto('/');
+  await openTools(page);
+  const area=page.getByRole('region',{name:'Segurança e backup integral do FutStats V4'});
+  const run=area.getByRole('button',{
+    name:'Preparar testes Android e verificar bloqueios de liberação'
+  });
+  await run.click();
+  const qa=area.getByRole('region',{name:'Pré-check de liberação Android'});
+  await expect(qa.getByRole('status')).toContainText('2/4');
+  await expect(qa).toContainText('Revisar os problemas locais antes de testar');
+  await expect(qa).toContainText('NÃO LIBERADO PARA PRODUÇÃO');
+  await page.evaluate(key=>localStorage.setItem(key,'[{"ruim":true}]'),RADAR_KEY);
+  await run.click();
+  await expect(qa.getByRole('status')).toContainText('2/4');
+  await expect(qa).toContainText('Sem grupo V4 válido ou com dados ilegíveis');
+  await expect(qa).toContainText('NÃO LIBERADO PARA PRODUÇÃO');
+  expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY))
+    .toBe('[{"ruim":true}]');
+});

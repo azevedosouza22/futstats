@@ -1244,3 +1244,31 @@ html{scroll-behavior:smooth}
   display:block;font-size:11px;line-height:1.6
 }
 .premium .radar-venue-trail-side li a{color:#9ed6ff}
+
+
+/* Etapa 61: checklist de QA somente leitura e bloqueio visível de deploy. */
+.premium .safety-android-qa{
+  margin:16px 0;padding:14px;min-width:0;max-width:100%;
+  border:1px solid #9b8e63;border-radius:12px;background:#252f38;
+}
+.premium .safety-android-qa h3{
+  font-size:14px;line-height:1.65;margin:0 0 9px;color:#ffe0a4;
+  overflow-wrap:anywhere
+}
+.premium .safety-android-qa .muted{
+  font-size:11px;line-height:1.65;overflow-wrap:anywhere
+}
+.premium .safety-android-qa ul{
+  list-style:none;display:grid;gap:10px;margin:12px 0;padding:0
+}
+.premium .safety-android-qa li{
+  border-bottom:1px solid #42515e;padding-bottom:8px;
+  font-size:12px;line-height:1.55;overflow-wrap:anywhere
+}
+.premium .safety-android-qa li small{
+  display:block;font-size:11px;color:#bdd2dc;line-height:1.6
+}
+.premium .safety-android-qa>button{
+  min-height:44px;white-space:normal;max-width:100%;
+  padding:10px 12px;border-radius:8px
+}
