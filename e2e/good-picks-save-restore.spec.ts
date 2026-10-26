@@ -779,3 +779,67 @@ test('Etapa 54: autoteste V4 em memória confere previsão e não toca no celula
     .toHaveCount(0);
   expect(await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY)).toBe(corrupted);
 });
+
+
+test('Etapa 55: diagnóstico local da interface no Radar, sem alterar previsões',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const history=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+   {key:DATA_KEY,data:history});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const original=await page.evaluate(()=>Object.fromEntries(
+   Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+    .map(k=>[k,localStorage.getItem(k)])));
+  const radar=page.getByRole('navigation',{name:'Escolha o que fazer no Radar'});
+  await radar.getByText('Outras análises · Histórico e Work').click();
+  const check=radar.getByRole('button',{name:'Testar interface e armazenamento neste dispositivo'});
+  await expect(check).toBeVisible();
+  expect((await check.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+  await check.click();
+  const report=radar.getByRole('status',{name:'Diagnóstico local do Radar'});
+  await expect(report).toContainText('Diagnóstico local: APTO PARA TESTE');
+  await expect(report).toContainText('6/6');
+  await expect(report).toContainText('NÃO É TESTE FÍSICO ANDROID');
+  const source=await page.evaluate(()=>Object.fromEntries(
+   Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
+    .map(k=>[k,localStorage.getItem(k)])));
+  expect(source).toEqual(original);
+  await radar.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toContainText('Barcelona × Real Madrid');
+  expect(await page.evaluate(k=>localStorage.getItem(k),RADAR_KEY)).toBe(original[RADAR_KEY]);
+});
+test('Etapa 55: telas compactas de 320 e 360px, atalhos acessíveis e sem barra global',async({page})=>{
+  test.setTimeout(70000);
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  await openRadar(page);
+  for(const width of [320,360,390]){
+    await page.setViewportSize({width,height:844});
+    const nav=page.getByRole('navigation',{name:'Escolha o que fazer no Radar'});
+    for(const label of [/Criar previsão para um jogo futuro/,/Ver previsões já registradas/]){
+      const control=nav.getByRole('button',{name:label});
+      const box=await control.boundingBox();
+      expect(box?.width??0).toBeGreaterThanOrEqual(44);
+      expect(box?.height??0).toBeGreaterThanOrEqual(44);
+    }
+    const advanced=page.locator('.radar-extra-modes');
+    if(!(await advanced.getAttribute('open'))){
+      await advanced.locator('summary').click();
+    }
+    await nav.getByRole('button',{name:'Testar interface e armazenamento neste dispositivo'}).click();
+    const report=nav.getByRole('status',{name:'Diagnóstico local do Radar'});
+    await expect(report).toContainText('6/6');
+    await expect(report).toContainText('APTO PARA TESTE');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-
+      document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  }
+  expect(await page.evaluate(k=>localStorage.getItem(k),RADAR_KEY)).toBeNull();
+});
