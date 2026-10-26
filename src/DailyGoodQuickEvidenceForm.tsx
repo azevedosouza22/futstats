@@ -78,8 +78,13 @@ export default function DailyGoodQuickEvidenceForm({records,report,readyKeys,onC
         <input type="number" step="1" min="0" inputMode="numeric"
           aria-label={'Valor da segunda fonte: '+m.label}
           value={values[m.id]??''}
-          onChange={e=>{setValues(old=>({...old,[m.id]:e.currentTarget.value}));
-            setSuccess('');onClear();}}
+          onChange={e=>{
+            // Capture the value BEFORE the deferred React state updater runs:
+            // SyntheticEvent.currentTarget can be null after this callback.
+            const nextValue=e.currentTarget.value;
+            setValues(old=>({...old,[m.id]:nextValue}));
+            setSuccess('');onClear();
+          }}
           placeholder="N/D"/>
       </label>)}
       <label className="daily-good-quick-confirm">
