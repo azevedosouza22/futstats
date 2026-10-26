@@ -100,6 +100,6 @@ describe('Etapa 70 — pacote mínimo para conferir várias previsões em lote',
   const r=forecast(),d=data([match()]),{audit,queue,trace}=bundle([r],d);
   const bogus={...r,savedAt:'2026-10-26T00:00:00Z'};
   expect(()=>prepareOutcomeReviewBatch([bogus],audit,queue,trace,at))
-   .toThrow('previsão não anterior');
+   .toThrow('procedência CSV'); // a trilha original permanece congelada
  });
 });
