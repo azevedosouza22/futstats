@@ -8,6 +8,7 @@ import {documentaryTemplate,parseDocumentaryEvidence,reconcileDocumentaryEvidenc
 import {createDocumentaryDossier,inspectDocumentaryDossier} from './dailyGoodDossier';
 import {buildProspectiveCohortPlan,exportProspectiveCohortCsv,MIN_EXTERNAL_FIXTURES_PER_LEAGUE} from './dailyGoodProspectiveCohorts';
 import DailyGoodQuickEvidenceForm from './DailyGoodQuickEvidenceForm';
+import {traceFrozenResults,exportFrozenResultTraceCsv} from './dailyGoodFrozenResultTrace';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -27,6 +28,7 @@ export default function DailyGoodAuditPanel({data,records}:{
  const report=useMemo(()=>auditDailyGoodPicks(data,records),[data,records]);
  const independentQueue=buildIndependentReviewQueue(records,report);
  const cohort=buildProspectiveCohortPlan(records,report,independentQueue);
+ const frozenTraces=traceFrozenResults(data,records,report);
  const duplicatedSources=report.rows.filter(r=>
   r.status==='ambiguous'&&r.reason.includes('ID da fonte CSV reutilizado')).length;
  const futureImports=report.rows.filter(r=>
@@ -104,6 +106,11 @@ export default function DailyGoodAuditPanel({data,records}:{
   }
  }
 
+ function downloadFrozenTrace(){
+  if(!frozenTraces.length)return;
+  downloadFile('futstats-vinculo-previsoes-resultados-locais.csv',
+   exportFrozenResultTraceCsv(frozenTraces),'text/csv;charset=utf-8');
+ }
  function exportReviewQueue(){
   if(independentQueue.entries.length===0)return;
   const csv=exportIndependentReviewQueueCsv(independentQueue);
@@ -212,6 +219,32 @@ export default function DailyGoodAuditPanel({data,records}:{
     permanece <strong>PENDENTE</strong> até conferência real. Este CSV não restaura
     previsões: conserve também o backup JSON integral.</p>
   </div>}
+  {frozenTraces.length>0&&<details className="daily-good-result-trace"
+      aria-label="Vínculo da previsão congelada ao resultado CSV">
+    <summary>Conferir vínculo previsão → resultado CSV ({frozenTraces.length})</summary>
+    <p className="muted">Uma trilha por indicação salva. Mostra a data da previsão,
+      referência da agenda, ID da partida CSV e quando os dados foram importados.
+      <strong> CSV local documentado não comprova placar verdadeiro.</strong>
+      A conferência independente continua <strong>PENDENTE</strong>.</p>
+    <button type="button" className="text-button" onClick={downloadFrozenTrace}>
+      Exportar vínculo da previsão e resultado (CSV)
+    </button>
+    <ol>{frozenTraces.slice(0,8).map(t=><li key={t.key}>
+      <b>{t.home} × {t.away}</b> · {t.competition}
+      <p className="muted">Salva em: {t.savedAt} · início Brasília:
+        {' '}{t.matchAt} · estado: {t.localStatus} · {t.reason}.
+        {' '}Conferência externa: <strong>{t.independentVerification}</strong>.</p>
+      <p className="muted">Resultado local: ID {t.resultMatchId??'N/D'} ·
+        {' '}sourceId {t.resultSourceId??'N/D'} · importação
+        {' '}{t.resultImportedAt??'N/D'} ·
+        {' '}indicadores: {t.markets.map(m=>m.id+': '+
+          (m.actual===null?'N/D':m.actual)).join(' | ')}.</p>
+      {t.resultUrl&&<a href={t.resultUrl} target="_blank"
+        rel="noopener noreferrer">Abrir URL declarada do CSV</a>}
+    </li>)}</ol>
+    {frozenTraces.length>8&&<p className="muted">Demais registros no CSV,
+      sem limite de oito. Não altera nem reconstitui previsões antigas.</p>}
+  </details>}
   {independentQueue.entries.length>0&&<section
     className="daily-good-review" aria-label="Fila de verificação independente dos resultados">
     <h5>Conferência independente · lista de trabalho</h5>

@@ -1389,3 +1389,72 @@ test('Etapa 67: dois IDs do mesmo confronto não dobram a amostra nem geram As B
   expect(originalSaved===null||originalSaved==='[]').toBeTruthy();
   expect(await page.evaluate(key=>localStorage.getItem(key),DATA_KEY)).toBe(originalBytes);
 });
+
+
+test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte externa',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const frozen=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(frozen).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  let trace=audit.locator('details.daily-good-result-trace');
+  await trace.locator('summary').click();
+  await expect(trace).toContainText('RESULTADO_PENDENTE');
+  await expect(trace).toContainText('sourceId N/D');
+  await expect(trace).toContainText('PENDENTE');
+  const [beforeFile]=await Promise.all([
+    page.waitForEvent('download'),
+    trace.getByRole('button',{name:'Exportar vínculo da previsão e resultado (CSV)'}).click()
+  ]);
+  const before=await readFile((await beforeFile.path())!,'utf8');
+  expect(before).toContain('"RESULTADO_PENDENTE"');
+  expect(before).toContain('"N/D"');
+  expect(before).not.toContain('"CONFIRMADO"');
+
+  base.matches.push({
+    id:'result-trace-68',date:'2026-10-25',
+    home:'barcelona',away:'real-madrid',competition:COMPETITION,
+    first:[stat(2,18,7,5),stat(1,14,5,6)],
+    second:[stat(0,0,0,0),stat(0,0,0,0)],
+    research:{provider:'work-csv',source:'Flashscore',sourceId:'provider-trace-68',
+      sourceUrl:'https://www.flashscore.com.br/jogo/?mid=provider-trace-68',
+      importedAt:'2026-10-26T03:00:00Z',dateDiscrepancy:false,
+      full:[stat(2,18,7,5),stat(1,14,5,6)]}
+  } as (typeof base.matches)[number]);
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const updated=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  trace=updated.locator('details.daily-good-result-trace');
+  await trace.locator('summary').click();
+  await expect(trace).toContainText('CSV_LOCAL_DOCUMENTADO');
+  await expect(trace).toContainText('ID result-trace-68');
+  await expect(trace).toContainText('sourceId provider-trace-68');
+  await expect(trace).toContainText('2026-10-26T03:00:00Z');
+  await expect(trace).toContainText('PENDENTE');
+  const [file]=await Promise.all([
+    page.waitForEvent('download'),
+    trace.getByRole('button',{name:'Exportar vínculo da previsão e resultado (CSV)'}).click()
+  ]);
+  expect(file.suggestedFilename()).toBe('futstats-vinculo-previsoes-resultados-locais.csv');
+  const csv=await readFile((await file.path())!,'utf8');
+  expect(csv).toContain('"provider-trace-68"');
+  expect(csv).toContain('"result-trace-68"');
+  expect(csv).toContain('"PENDENTE"');
+  expect(csv).not.toContain('"CONFIRMADO"');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(frozen);
+});
