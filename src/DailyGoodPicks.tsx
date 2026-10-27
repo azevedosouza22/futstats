@@ -1,4 +1,6 @@
-import type {DailyGoodResult,DailyGoodFixture} from './dailyGoodSignals';
+import type {DailyGoodResult,DailyGoodFixture,DailyGoodSignal} from './dailyGoodSignals';
+import type {Data} from './model';
+import {reviewDailyGoodFourLenses} from './dailyGoodFourLensReview';
 import type {ScheduledFixture} from './calendar';
 import type {SavedRadarRecord} from './radarRecords';
 import {savedGoodPickMatch} from './dailyGoodSavedMatch';
@@ -6,9 +8,39 @@ import type {NextGoodQueue} from './dailyGoodNextWeek';
 import {safeOfficialFixtureUrl} from './officialSourceTrust';
 
 const fmt=(n:number)=>n.toLocaleString('pt-BR',{maximumFractionDigits:1});
+const maybe=(n:number|null)=>n===null?'N/D':fmt(n);
+const percent=(n:number|null)=>n===null?'N/D':(100*n).toLocaleString('pt-BR',{maximumFractionDigits:0})+'%';
+function FourLensEvidence({data,fixture,signal}:{
+ data:Data;fixture:ScheduledFixture;signal:DailyGoodSignal
+}){
+ const r=reviewDailyGoodFourLenses(data,fixture,signal);
+ const title=r.status==='aligned'?'Tendência histórica concorda'
+  :r.status==='divergent'?'Tendência histórica diverge'
+  :r.status==='insufficient'?'Amostra insuficiente':'Histórico indisponível';
+ const direction=signal.direction==='Over'?'over':'under';
+ return <details className="daily-good-context-review">
+  <summary>Comparação 4 contextos · {title}</summary>
+  <p className="muted">{r.note}</p>
+  {r.rows.length>0&&<ul>
+   {r.rows.map((row,i)=><li key={i}>
+    <strong>{row.label}</strong>
+    <small>Últimos 5: {row.count} jogo(s) · {direction==='over'
+      ?row.over:row.under}/{row.count} {signal.direction} ({percent(
+       direction==='over'?row.overRate:row.underRate)})</small>
+    <small>Últimos 10: {row.lastTenCount} jogo(s) · {signal.direction}
+      {' '}{percent(direction==='over'?row.lastTenOverRate:row.lastTenUnderRate)}
+      {' '}· média total {maybe(row.mean)}</small>
+   </li>)}
+  </ul>}
+  <p className="muted">Confrontos diretos em casa/fora são os mesmos jogos,
+   também presentes nas médias gerais; não são quatro amostras independentes.
+   Frequência observada não é chance futura. Esta conferência não altera
+   a indicação original V2/V3.</p>
+ </details>;
+}
 /** Informational shortlist; no auto-save, bet slip, odds or external action. */
-export default function DailyGoodPicks({result,onSelect,records,onViewSaved,nextWeek,onPreview}:{
-  result:DailyGoodResult;onSelect:(fixture:ScheduledFixture,selected:DailyGoodFixture)=>void;
+export default function DailyGoodPicks({data,result,onSelect,records,onViewSaved,nextWeek,onPreview}:{
+  data:Data;result:DailyGoodResult;onSelect:(fixture:ScheduledFixture,selected:DailyGoodFixture)=>void;
   records:readonly SavedRadarRecord[];onViewSaved:(key:string|null)=>void;
   nextWeek:NextGoodQueue;onPreview:(fixture:ScheduledFixture)=>void;
 }){
@@ -40,6 +72,7 @@ export default function DailyGoodPicks({result,onSelect,records,onViewSaved,next
               <b>{m.label}: {m.direction} {fmt(m.line)}</b>
               <small>V2 e V3 concordam · projeção V2 {fmt(m.projection)} · média histórica {fmt(m.historicalMean)}</small>
               <small>{m.historicalSample} jogos para o indicador · {m.leagueSample} observações na liga</small>
+              <FourLensEvidence data={data} fixture={item.fixture} signal={m}/>
             </li>)}
           </ul>
           {match.state!=='not_saved'&&<p className="muted" role="status">
