@@ -10,6 +10,7 @@ import {leagueNumericContext,type LeagueNumericMarket} from './radarNumericConte
 import {compareRadarLines} from './radarLineExplorer';
 import RadarLineExplorer from './RadarLineExplorer';
 import RadarFourLensesPanel from './RadarFourLensesPanel';
+import {demoFourContextData,demoFourContextFixture} from './radarFourLensesDemo';
 import {radarPeriodCoverage} from './radarPeriodCoverage';
 import RadarPeriodCoveragePanel from './RadarPeriodCoveragePanel';
 import {comparePeriodRadarLines} from './radarPeriodLineComparison';
@@ -71,6 +72,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
   const [communityProvisional,setCommunityProvisional]=useState(false);
   const [officialReference,setOfficialReference]=useState(false);
   const [editSchedule,setEditSchedule]=useState(false);
+  const [showFourLensDemo,setShowFourLensDemo]=useState(false);
   const futureFormRef=useRef<HTMLHeadingElement>(null);
   const savedSectionRef=useRef<HTMLDivElement>(null);
   // Open the actual saved record list, not the former long round-32 dashboard.
@@ -296,6 +298,22 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
   const evaluated=roundStatuses.filter(x=>x.status==='scored').length;
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
     {view==='new'&&<>
+      <section className="radar-line-explorer" aria-label="Demonstração da comparação inteligente">
+        <h3>Nova comparação inteligente · 4 contextos</h3>
+        <p>Veja na prática as médias e frequências Over/Under em casa, fora e nos
+          confrontos diretos. A experiência usa o mesmo painel do Radar.</p>
+        <button type="button" className="primary" onClick={()=>setShowFourLensDemo(v=>!v)}
+          aria-expanded={showFourLensDemo}>
+          {showFourLensDemo?'Fechar demonstração':'Ver demonstração Hoffenheim × Schalke'}
+        </button>
+        {showFourLensDemo&&<div role="region" aria-label="Dados fictícios de demonstração">
+          <p className="alert"><strong>DADOS FICTÍCIOS — SOMENTE PARA VISUALIZAR A TELA.</strong>
+          {' '}Esses jogos e números são exemplos simulados. Não são resultados reais,
+          não geram recomendações e não são salvos no aplicativo.</p>
+          <RadarFourLensesPanel data={demoFourContextData} fixture={demoFourContextFixture}
+            homeName="Hoffenheim (DEMO)" awayName="Schalke (DEMO)"/>
+        </div>}
+      </section>
           <div className="radar-agenda-first">
             <CalendarAgenda data={data} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
               canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}
