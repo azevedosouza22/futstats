@@ -5,6 +5,7 @@
  */
 import {stats,type Data,type Match,type Metric,type Period} from './model';
 import type {RadarFixture} from './radar';
+import {normalizeTeam} from './calendar';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
 export type FourLensMetric='goals'|'shots'|'target'|'corners';
@@ -66,12 +67,14 @@ function sample(values:readonly number[],line:number):LensSample{
     over,under,overRate:count?over/count:null,underRate:count?under/count:null
   };
 }
-function belongs(m:Match,fixture:RadarFixture,kind:LensKind):boolean{
+function belongs(m:Match,homeKey:string,awayKey:string,kind:LensKind,
+  teamKey:(id:string)=>string):boolean{
+  const h=teamKey(m.home),a=teamKey(m.away);
   switch(kind){
-    case 'home-any':return m.home===fixture.home;
-    case 'away-any':return m.away===fixture.away;
+    case 'home-any':return h===homeKey;
+    case 'away-any':return a===awayKey;
     case 'home-direct':
-    case 'away-direct':return m.home===fixture.home&&m.away===fixture.away;
+    case 'away-direct':return h===homeKey&&a===awayKey;
   }
 }
 
@@ -82,6 +85,11 @@ export function analyzeFourLenses(
   const previousCompetition=previousSeasonCompetition(fixture.competition);
   const validLine=Number.isFinite(line)&&line>0&&line%1===0.5;
   if(!validLine)throw Error('Linha inválida: utilize um limite positivo terminado em ,5.');
+  // The imported season may allocate different local team IDs to the same
+  // named club. Match only normalized names within the two selected leagues.
+  const teams=new Map(data.teams.map(t=>[t.id,normalizeTeam(t.name)]));
+  const teamKey=(id:string)=>teams.get(id)??normalizeTeam(id);
+  const homeKey=teamKey(fixture.home),awayKey=teamKey(fixture.away);
   const eligible=data.matches.filter(m=>
     (m.competition===fixture.competition||m.competition===previousCompetition)&&
     m.date<fixture.date&&
@@ -94,20 +102,20 @@ export function analyzeFourLenses(
   );
   // Different IDs claiming the same fixture/date are ALL excluded, not
   // preferentially selected or counted as independent evidence.
-  const repeats=new Map<string,Set<string>>();
+  const repeats=new Map<string,Match[]>();
   for(const m of eligible){
-    const key=[m.competition,m.date,m.home,m.away].join('|');
-    const ids=repeats.get(key)??new Set<string>();
-    ids.add(m.id);repeats.set(key,ids);
+    const key=[m.competition,m.date,teamKey(m.home),teamKey(m.away)].join('|');
+    const found=repeats.get(key)??[];
+    found.push(m);repeats.set(key,found);
   }
-  const blocked=new Set<string>();
-  for(const ids of repeats.values())if(ids.size>1)for(const id of ids)blocked.add(id);
-  const valid=eligible.filter(m=>!blocked.has(m.id))
+  const blocked=new Set<Match>();
+  for(const rows of repeats.values())if(rows.length>1)for(const row of rows)blocked.add(row);
+  const valid=eligible.filter(m=>!blocked.has(m))
     .sort((a,b)=>b.date.localeCompare(a.date)||a.id.localeCompare(b.id));
   const total=(m:Match)=>stats(m,0,period)[metric]!+stats(m,1,period)[metric]!;
   const kinds:LensKind[]=['home-any','home-direct','away-any','away-direct'];
   const lenses=kinds.map(id=>{
-    const rows=valid.filter(m=>belongs(m,fixture,id));
+    const rows=valid.filter(m=>belongs(m,homeKey,awayKey,id,teamKey));
     const recent=rows.slice(0,10),last5=recent.slice(0,5);
     return {
       id,label:label[id],
