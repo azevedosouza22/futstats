@@ -75,9 +75,10 @@ describe('Etapa 72 — pacote local original de previsões pré-jogo',()=>{
    .toThrow('duplicado');
  });
  it('não aceita tempo salvo no futuro perante o relógio da exportação',()=>{
-  const record={...forecast(),savedAt:'2026-10-27T15:00:00Z'};
-  const row=auditDailyGoodPicks(data,[record],before);
-  expect(()=>preparePrematchResearchPackage([record],row,before))
+  const record=forecast(); // salvo às 15:00 UTC, no futuro relativo à consulta
+  const early=new Date('2026-10-25T14:00:00Z');
+  const row=auditDailyGoodPicks(data,[record],early);
+  expect(()=>preparePrematchResearchPackage([record],row,early))
    .toThrow('Nada foi alterado');
  });
  it('pacote vazio é transparente e não apresenta resultados sintéticos como reais',()=>{
