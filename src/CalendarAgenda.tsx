@@ -141,7 +141,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         <button key={key} type="button" aria-pressed={window===key} className={window===key?'selected':''} onClick={()=>setWindow(key)}>{label}</button>
       )}
     </div>
-    <DailyGoodPicks result={dailyGood} onSelect={onSelect}
+    <DailyGoodPicks data={data} result={dailyGood} onSelect={onSelect}
       records={records} onViewSaved={onViewSaved}
       nextWeek={nextGood} onPreview={f=>onSelect(f)}/>
     <section className="official-calendar" aria-label="Jogos com referências oficiais">
