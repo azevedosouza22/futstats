@@ -85,6 +85,24 @@ describe('Etapa 78 — quatro recortes, frequências e temporadas sem vazamento'
     expect(r.historicalDirection).toBe('Sem consenso');
     expect(r.reason).toMatch(/contradizem/);
   });
+  it('reconhece clubes com IDs diferentes na temporada anterior sem misturar outras ligas',()=>{
+    const old=game('old','2025-10-01',previous,'H-OLD','S-OLD',24);
+    const d:Data={teams:[
+      {id:'H',name:'Hoffenheim',color:'#777'},
+      {id:'S',name:'Schalke',color:'#777'},
+      {id:'H-OLD',name:'Hoffenheim',color:'#777'},
+      {id:'S-OLD',name:'Schalke',color:'#777'}
+    ],matches:[old]};
+    const r=analyzeFourLenses(d,fixture,'shots','full',28.5);
+    expect(lens(r,'home-direct').last10).toMatchObject({count:1,mean:24});
+    expect(lens(r,'away-direct').last10.count).toBe(1);
+    expect(lens(r,'home-any').previousSeason.count).toBe(1);
+  });
+  it('também quarentena cópias duplicadas do MESMO ID local',()=>{
+    const m=game('repeated','2026-10-01',current,'H','S',25);
+    const r=analyzeFourLenses(data([m,m]),fixture,'shots','full',28.5);
+    expect(lens(r,'home-direct').last10.count).toBe(0);
+  });
   it('lida com períodos 1T/2T e campos ausentes sem inferir números',()=>{
     const m=game('m','2026-10-01',current,'H','Q',26);
     m.first[0].shots=null;
