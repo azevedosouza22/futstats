@@ -1517,3 +1517,56 @@ test('Etapa 70: placar real de duas fontes nao vira acerto ou previsao criada',a
   expect(storageAfter).toEqual(storageBefore);
   expect(await page.evaluate(k=>localStorage.getItem(k),RADAR_KEY)).toBeNull();
 });
+
+
+test('Etapa 72: exportar previsões pré-jogo sem CSV e sem criar taxa de acerto',async({page})=>{
+  await page.clock.install({time:new Date(NOW)});
+  await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
+  await page.goto('/');
+  const base=syntheticHistory();
+  await page.evaluate(({key,data})=>localStorage.setItem(key,JSON.stringify(data)),
+    {key:DATA_KEY,data:base});
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('region',{name:/As Boas do Dia/})
+    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
+  const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
+  expect(saved).toHaveLength(1);
+  await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  const panel=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const block=panel.getByRole('region',{name:'Levar previsões originais para pesquisa externa'});
+  await expect(block).toBeVisible();
+  const [dl]=await Promise.all([
+    page.waitForEvent('download'),
+    block.getByRole('button',{name:'Exportar previsões pré-jogo para pesquisa (JSON)'}).click()
+  ]);
+  expect(dl.suggestedFilename()).toBe('futstats-previsoes-originais-para-pesquisa.json');
+  const pkg=JSON.parse(await readFile((await dl.path())!,'utf8'));
+  expect(pkg).toMatchObject({total:1,externallyVerified:0,accuracy:'N/D',
+    entries:[{recordKey:saved[0].key,localDisposition:'future',
+      savedAtUtc:saved[0].savedAt,
+      externalResult:'N/D',externalCheck:'PENDENTE'}]});
+  expect(pkg.entries[0].frozenSignals).toHaveLength(saved[0].goodPicks.signals.length);
+  expect(JSON.stringify(pkg)).not.toContain('CONFIRMADO');
+  expect(JSON.stringify(pkg)).not.toContain('localCsv');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+
+  await page.clock.setFixedTime(new Date('2026-10-26T16:00:00Z'));
+  await page.reload();
+  await openRadar(page);
+  await page.getByRole('navigation',{name:'Escolha o que fazer no Radar'})
+    .getByRole('button',{name:/Ver previsões já registradas/}).click();
+  const block2=page.getByRole('region',{name:'Levar previsões originais para pesquisa externa'});
+  const [later]=await Promise.all([
+    page.waitForEvent('download'),
+    block2.getByRole('button',{name:'Exportar previsões pré-jogo para pesquisa (JSON)'}).click()
+  ]);
+  const pkg2=JSON.parse(await readFile((await later.path())!,'utf8'));
+  expect(pkg2).toMatchObject({total:1,externallyVerified:0,
+    entries:[{recordKey:saved[0].key,localDisposition:'waiting',externalResult:'N/D'}]});
+  expect(pkg2.entries[0].frozenSignals).toEqual(pkg.entries[0].frozenSignals);
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY))
+    .toEqual(saved);
+});
