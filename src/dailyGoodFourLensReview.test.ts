@@ -96,7 +96,7 @@ describe('Etapa 79 — As Boas exibe quatro contextos sem alterar V2/V3',()=>{
    status:'unavailable',rows:[]
   });
   expect(reviewDailyGoodFourLenses(d,fixture,{...signal,id:'corners-full-24.5'})).toMatchObject({
-   status:'insufficient',metric:'corners'
+   status:'divergent',metric:'corners'
   });
   expect(reviewDailyGoodFourLenses(d,fixture,{...signal,id:'shots-first-24.5'})).toMatchObject({
    status:'unavailable',rows:[]
