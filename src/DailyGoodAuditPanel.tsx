@@ -12,6 +12,7 @@ import {traceFrozenResults,exportFrozenResultTraceCsv} from './dailyGoodFrozenRe
 import {checkPublicResultPair} from './publicResultCrosscheck';
 import {PUBLIC_RESULT_PILOT} from './publicResultPilot';
 import {prepareOutcomeReviewBatch,exportOutcomeReviewBatchJson} from './dailyGoodOutcomeReviewBatch';
+import {preparePrematchResearchPackage,exportPrematchResearchPackageJson} from './dailyGoodPrematchResearch';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const ratio=(a:number,b:number)=>!b?'N/D':b<20?a+'/'+b+' (amostra pequena; taxa N/D)':a+'/'+b+' ('+(100*a/b).toLocaleString('pt-BR',{maximumFractionDigits:1})+'%)';
@@ -118,6 +119,19 @@ export default function DailyGoodAuditPanel({data,records}:{
   if(!frozenTraces.length)return;
   downloadFile('futstats-vinculo-previsoes-resultados-locais.csv',
    exportFrozenResultTraceCsv(frozenTraces),'text/csv;charset=utf-8');
+ }
+ function exportOriginalProspectiveForecasts(){
+  setBatchNotice('');
+  try{
+   const packet=preparePrematchResearchPackage(records,report);
+   if(packet.total===0)
+    throw Error('Nenhuma previsão original pré-jogo elegível neste navegador.');
+   downloadFile('futstats-previsoes-originais-para-pesquisa.json',
+    exportPrematchResearchPackageJson(packet),'application/json;charset=utf-8');
+   setBatchNotice(packet.total+' previsão(ões) originais exportada(s) para pesquisa. '+
+    'Horários locais não autenticados, resultados externos 0 e desempenho N/D. '+
+    'Nenhum dado foi importado ou alterado.');
+  }catch(e){setBatchNotice(e instanceof Error?e.message:'Exportação recusada.');}
  }
  function exportForIndependentResearch(){
   setBatchNotice('');
@@ -259,6 +273,24 @@ export default function DailyGoodAuditPanel({data,records}:{
       autorizam comparação de segunda fonte. Confira os arquivos de
       origem; o FutStats não altera nem exclui os dados originais.</p>
   </div>}
+  {report.attributed>0&&<section className="daily-good-prematch-export"
+     aria-label="Levar previsões originais para pesquisa externa">
+    <h5>Levar previsões originais para conferência</h5>
+    <p className="muted">Exporte, com um toque, os registros originais de
+      “As Boas” feitos antes do jogo neste navegador, mesmo quando ainda
+      não existe resultado CSV. Mantém data salva, fonte da agenda e
+      indicação congelada — sem reconstruir mercados após o jogo.
+      Registros antigos, tardios, ambíguos ou inválidos são excluídos.</p>
+    <button type="button" className="text-button"
+      onClick={exportOriginalProspectiveForecasts}>
+      Exportar previsões pré-jogo para pesquisa (JSON)
+    </button>
+    <p className="muted">Arquivo LOCAL e opcional, não enviado
+      automaticamente. A data salva no celular não tem carimbo de tempo
+      autenticado. Nenhum resultado é comprovado; conferência externa
+      continua PENDENTE e acurácia N/D. Não use este arquivo para restaurar
+      previsões; mantenha o backup V4 original.</p>
+  </section>}
   {report.attributed>0&&<div className="daily-good-ledger">
    <button type="button" className="text-button" onClick={exportLedger}>
     Exportar controle das indicações (CSV)
