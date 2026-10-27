@@ -9,6 +9,7 @@ import {radarUpcoming} from './radar';
 import {leagueNumericContext,type LeagueNumericMarket} from './radarNumericContext';
 import {compareRadarLines} from './radarLineExplorer';
 import RadarLineExplorer from './RadarLineExplorer';
+import RadarFourLensesPanel from './RadarFourLensesPanel';
 import {radarPeriodCoverage} from './radarPeriodCoverage';
 import RadarPeriodCoveragePanel from './RadarPeriodCoveragePanel';
 import {comparePeriodRadarLines} from './radarPeriodLineComparison';
@@ -386,6 +387,9 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={data}
         fixture={{home:home.id,away:away.id,date,competition:league}}/>}
       {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name} trace={venueTrail} />}
+      {home&&away&&<RadarFourLensesPanel data={data}
+        fixture={{home:home.id,away:away.id,date,competition:league}}
+        homeName={home.name} awayName={away.name}/>}
       <RadarLineExplorer groups={lineExplorationPreview}/>
       <p className="muted">Estas previsões só serão registradas ao confirmar. Depois de salvas, não serão recalculadas com resultados futuros.</p>
       <p className="muted">Frequências observadas em amostras pequenas; não são probabilidades de sucesso, nem indicações de apostar. Nenhuma odd foi consultada.</p>
