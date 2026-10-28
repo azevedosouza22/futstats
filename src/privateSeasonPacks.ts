@@ -16,6 +16,15 @@ const isObject=(x:unknown):x is Record<string,unknown>=>
  !!x&&typeof x==='object'&&!Array.isArray(x);
 type PrivatePack={format:'futstats-research-season-v1';version:1;competition:string;data:Data};
 const metrics=['goals','shots','target','corners'] as const;
+/** Exact 55-column FutStats contract, before any private write. */
+export function requireFutStats55Columns(csv:string):void{
+ const line=csv.replace(/^\uFEFF/,'').split(/\r?\n/,1)[0];
+ const headers=line.split(',').map(s=>s.trim().replace(/^"|"$/g,''));
+ if(headers.length!==55||new Set(headers).size!==55||
+    headers[0]!=='id_fonte'||headers[54]!=='observacoes')
+  throw Error('Este arquivo não segue o CSV FutStats original de 55 colunas.');
+}
+
 
 function assureFull(row:WorkResearchRow){
  for(const period of [row.full,row.first,row.second])
@@ -183,6 +192,7 @@ export async function loadPrivateSeasonResearch(
 export async function savePrivateSeasonCsv(
  csv:string,base:ResearchCatalog
 ):Promise<{added:number;skipped:number;total:number;competition:string}>{
+ requireFutStats55Columns(csv);
  const rows=parseWorkResearchCsv(csv);
  const incoming=createPrivateSeasonPack(rows,new Date().toISOString());
  const old=(await listPacks()).find(p=>p.competition===incoming.competition);
