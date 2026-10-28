@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import type {Data,Period} from './model';
 import {brasiliaDate} from './calendar';
 import {FOUR_LENS_LINES,FOUR_LENS_METRICS,type FourLensMetric} from './radarFourLenses';
@@ -6,6 +6,7 @@ import {
  availableSmartLeagues,smartLeagueOptions,calculateSmartLeagueComparison,BOTH_SEASONS
 } from './leagueSmartComparison';
 import {demoFourContextData} from './radarFourLensesDemo';
+import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const freq=(n:number,total:number)=>total
@@ -17,7 +18,22 @@ const metricLabel=(id:FourLensMetric)=>FOUR_LENS_METRICS.find(m=>m.id===id)?.lab
  * Never touches original matches, saved Radar records or browser storage.
  */
 export default function LeagueSmartComparison({data}:{data:Data}){
- const [demo,setDemo]=useState(false);
+ const [mode,setMode]=useState<'research'|'device'|'demo'>('research');
+ const [catalog,setCatalog]=useState<ResearchCatalog|null>(null);
+ const [catalogError,setCatalogError]=useState('');
+ const [loading,setLoading]=useState(true);
+ useEffect(()=>{
+   const controller=new AbortController();
+   void loadResearchCatalog(controller.signal).then(result=>{
+     if(controller.signal.aborted)return;
+     setCatalog(result);setCatalogError('');setLoading(false);
+   }).catch(e=>{
+     if(controller.signal.aborted)return;
+     setCatalogError(e instanceof Error?e.message:'Base de pesquisa indisponível.');
+     setLoading(false);
+   });
+   return ()=>controller.abort();
+ },[]);
  const [league,setLeague]=useState('');
  const [season,setSeason]=useState<string>(BOTH_SEASONS);
  const [homeId,setHomeId]=useState('');
@@ -26,9 +42,10 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const [metric,setMetric]=useState<FourLensMetric>('shots');
  const [period,setPeriod]=useState<Period>('full');
  const [line,setLine]=useState(24.5);
- const localLeagues=availableSmartLeagues(data);
- const useDemo=demo||localLeagues.length===0;
- const active=useDemo?demoFourContextData:data;
+
+ const useDemo=mode==='demo';
+ const active:Data=useDemo?demoFourContextData:
+   mode==='device'?data:catalog?.data??{teams:[],matches:[]};
  const leagues=availableSmartLeagues(active);
  const chosenLeague=leagues.includes(league)?league:(leagues[0]??'');
  const options=smartLeagueOptions(active,chosenLeague);
@@ -58,17 +75,43 @@ export default function LeagueSmartComparison({data}:{data:Data}){
   <p>Pesquise qualquer confronto da base: mandante em casa, visitante fora e
    confrontos diretos. Médias dos <b>totais das duas equipes</b> e frequência das linhas
    nos últimos 5 e 10 jogos.</p>
-  {localLeagues.length>0?<div>
-    <button type="button" className="text-button" onClick={()=>{
-      setDemo(v=>!v);setLeague('');setSeason(BOTH_SEASONS);
-      setHomeId('');setAwayId('');setSearch('');
-    }}>{demo?'Voltar aos dados reais deste dispositivo':'Ver exemplo fictício sem alterar minha base'}</button>
-  </div>:null}
+  <div className="analysis-controls">
+    <label>Base de dados para comparar
+      <select aria-label="Fonte de dados da comparação inteligente" value={mode}
+        onChange={e=>{
+          setMode(e.target.value as 'research'|'device'|'demo');
+          setLeague('');setSeason(BOTH_SEASONS);
+          setHomeId('');setAwayId('');setSearch('');
+        }}>
+        <option value="research">Pesquisa histórica real · 1.019 partidas</option>
+        <option value="device">Base do dispositivo · somente leitura</option>
+        <option value="demo">Demonstração fictícia</option>
+      </select>
+    </label>
+  </div>
+  {mode==='research'&&loading&&<p className="muted" role="status">
+    Carregando pesquisa histórica de 1.019 partidas, sem importação para o dispositivo…
+  </p>}
+  {mode==='research'&&!loading&&catalogError&&<p className="alert" role="alert">
+    Não foi possível abrir a pesquisa: {catalogError}. Nada foi alterado.
+    Selecione a base do dispositivo ou a demonstração para continuar.
+  </p>}
+  {mode==='research'&&catalog&&<p className="muted" role="status">
+    <strong>{catalog.total} partidas reais de pesquisa carregadas</strong> ·
+    {' '}{catalog.leagues.length} edições de liga em {new Set(catalog.leagues.map(
+      l=>l.competition.replace(/\\s20\\d\\d(?:\\/\\d\\d)?$/,'')
+    )).size} campeonatos · {catalog.dateConflicts} registros com datas divergentes,
+    identificados e excluídos dos cálculos. Somente leitura, separado do backup.
+  </p>}
+  {mode==='device'&&<p className="muted" role="status">
+    {data.matches.length} partidas presentes neste navegador. Não são copiadas,
+    substituídas ou mescladas com a base de pesquisa.
+  </p>}
   {useDemo&&<p className="alert" role="status">
     <strong>MODO DEMONSTRAÇÃO — DADOS FICTÍCIOS.</strong>
     {' '}A tabela utiliza partidas criadas apenas na memória para apresentar o
     funcionamento. Nenhuma partida é adicionada ao histórico.
-    {localLeagues.length===0?' Nesta prévia ainda não existem temporadas cadastradas.':''}
+    {' '}Os números são simulados; nenhuma partida é salva.
   </p>}
   <div className="analysis-controls">
     <label>Campeonato
@@ -129,7 +172,8 @@ export default function LeagueSmartComparison({data}:{data:Data}){
     Temporadas disponíveis: {seasonTitle.join(' e ')||'N/D'}.
     {' '}Partidas na seleção: {calculated?.matchCount??0}.
     {' '}Corte histórico: somente jogos anteriores a {chosenDate}.
-    {' '}Dados provenientes exclusivamente {useDemo?'da demonstração fictícia':'da base local deste navegador'}.
+    {' '}Origem: {mode==='demo'?'demonstração fictícia':
+       mode==='research'?'pesquisa histórica isolada':'base local do navegador'}.
   </p>
   {report&&home&&away?<section aria-label="Tabela comparativa de quatro contextos">
     <h3>{home.name} × {away.name}</h3>
