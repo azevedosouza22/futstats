@@ -4,6 +4,7 @@
  */
 import type {Data,Match,Period} from './model';
 import {normalizeTeam} from './calendar';
+import {analyzeTeamOnlyPeriods,type TeamOnlyReport} from './teamOnlyPeriods';
 import {leagueOptions,competitionParts,NO_SEASON} from './leagueCatalog';
 import {
  analyzeFourLenses,type FourLensMetric,type FourLensReport
@@ -52,21 +53,21 @@ export function smartLeagueOptions(data:Data,league:string):SmartLeagueOptions{
    dataCount:filtered.length};
 }
 export function calculateSmartLeagueComparison(data:Data,selection:LeagueComparisonSelection):
- {report:FourLensReport|null;matchCount:number;status:string}{
+ {report:FourLensReport|null;teamOnly:TeamOnlyReport|null;matchCount:number;status:string}{
  const options=smartLeagueOptions(data,selection.league);
  const home=options.teams.find(t=>t.id===selection.home);
  const away=options.teams.find(t=>t.id===selection.away);
  if(!options.seasons.length||!options.competition||
    !home||!away||home.key===away.key||
    (selection.season!==BOTH_SEASONS&&!options.seasons.includes(selection.season))){
-   return {report:null,matchCount:0,status:'Escolha liga, temporada e duas equipes diferentes com histórico.'};
+   return {report:null,teamOnly:null,matchCount:0,status:'Escolha liga, temporada e duas equipes diferentes com histórico.'};
  }
  if(!/^\d{4}-\d{2}-\d{2}$/.test(selection.date)){
-   return {report:null,matchCount:0,status:'Data de referência indisponível.'};
+   return {report:null,teamOnly:null,matchCount:0,status:'Data de referência indisponível.'};
  }
  if(!Number.isFinite(selection.line)||selection.line<0.5||selection.line>999.5||
    !Number.isInteger(selection.line-0.5)){
-   return {report:null,matchCount:0,status:'Informe uma linha positiva terminada em ,5.'};
+   return {report:null,teamOnly:null,matchCount:0,status:'Informe uma linha positiva terminada em ,5.'};
  }
  const subset:Match[]=data.matches.filter(m=>
    competitionParts(m.competition).league===selection.league&&
@@ -75,9 +76,10 @@ export function calculateSmartLeagueComparison(data:Data,selection:LeagueCompari
       competitionParts(m.competition).season===selection.season)&&
    m.date<selection.date
  );
- const report=analyzeFourLenses({...data,matches:subset},
-   {home:home.id,away:away.id,date:selection.date,
-    competition:options.competition},selection.metric,selection.period,selection.line);
- return {report,matchCount:subset.length,status:subset.length
+ const scoped={...data,matches:subset};
+ const fixture={home:home.id,away:away.id,date:selection.date,competition:options.competition};
+ const report=analyzeFourLenses(scoped,fixture,selection.metric,selection.period,selection.line);
+ const teamOnly=analyzeTeamOnlyPeriods(scoped,fixture,selection.metric);
+ return {report,teamOnly,matchCount:subset.length,status:subset.length
   ?'Histórico disponível na base deste navegador.':'Nenhum jogo anterior elegível para esta seleção.'};
 }

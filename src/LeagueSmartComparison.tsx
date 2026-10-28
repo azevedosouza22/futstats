@@ -9,6 +9,7 @@ import {
 import {demoFourContextData} from './radarFourLensesDemo';
 import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
 import SmartComparisonCards from './SmartComparisonCards';
+import TeamOnlyCards from './TeamOnlyCards';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const freq=(n:number,total:number)=>total
@@ -40,7 +41,6 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const [season,setSeason]=useState<string>(BOTH_SEASONS);
  const [homeId,setHomeId]=useState('');
  const [awayId,setAwayId]=useState('');
- const [search,setSearch]=useState('');
  const [metric,setMetric]=useState<FourLensMetric>('shots');
  const [period,setPeriod]=useState<Period>('full');
  const [lineDraft,setLineDraft]=useState('24,5');
@@ -71,22 +71,18 @@ export default function LeagueSmartComparison({data}:{data:Data}){
    date:chosenDate,metric,period,line
  }):null;
  const report=calculated?.report;
- const filtered=options.teams.filter(t=>
-   t.name.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR'))||
-   t.id===home?.id||t.id===away?.id);
- const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
+const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
  return <section className="radar-line-explorer" aria-label="Comparação inteligente por liga e temporada">
   <h2>Comparação Inteligente · por liga</h2>
-  <p>Pesquise qualquer confronto da base: mandante em casa, visitante fora e
-   confrontos diretos. Médias dos <b>totais das duas equipes</b> e frequência das linhas
-   nos últimos 5 e 10 jogos.</p>
+  <p>Escolha campeonato, temporada e equipes. Compare as médias individuais
+   por tempo e as finalizações, gols ou escanteios somados do confronto.</p>
   <div className="analysis-controls">
     <label>Base de dados para comparar
       <select aria-label="Fonte de dados da comparação inteligente" value={mode}
         onChange={e=>{
           setMode(e.target.value as 'research'|'device'|'demo');
           setLeague('');setSeason(BOTH_SEASONS);
-          setHomeId('');setAwayId('');setSearch('');
+          setHomeId('');setAwayId('');
         }}>
         <option value="research">Pesquisa histórica real · 1.019 partidas</option>
         <option value="device">Base do dispositivo · somente leitura</option>
@@ -122,7 +118,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
     <label>Campeonato
       <select aria-label="Campeonato da comparação inteligente" value={chosenLeague}
         onChange={e=>{setLeague(e.target.value);setSeason(BOTH_SEASONS);
-          setHomeId('');setAwayId('');setSearch('');}}>
+          setHomeId('');setAwayId('');}}>
         {leagues.map(l=><option key={l} value={l}>{l}</option>)}
       </select>
     </label>
@@ -135,20 +131,16 @@ export default function LeagueSmartComparison({data}:{data:Data}){
         </option>)}
       </select>
     </label>
-    <label>Buscar equipe pelo nome
-      <input type="search" aria-label="Buscar time na comparação inteligente"
-        placeholder="Digite o nome do time" value={search} onChange={e=>setSearch(e.target.value)}/>
-    </label>
-    <label>Time em casa (mandante)
+   <label>Time em casa (mandante)
       <select aria-label="Time mandante da comparação inteligente" value={home?.id??''}
         onChange={e=>setHomeId(e.target.value)}>
-        {filtered.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+        {options.teams.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
       </select>
     </label>
     <label>Adversário (visitante)
       <select aria-label="Time visitante da comparação inteligente" value={away?.id??''}
         onChange={e=>setAwayId(e.target.value)}>
-        {filtered.filter(t=>t.key!==home?.key).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+        {options.teams.filter(t=>t.key!==home?.key).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
       </select>
     </label>
     <label>Indicador
@@ -166,7 +158,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
         <option value="second">Segundo tempo</option>
       </select>
     </label>
-    <label>Linha Over/Under · personalizada
+    <label>Linha Over/Under · total dos dois times
       <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
         placeholder="Ex.: 21,5" value={lineDraft} onChange={e=>setLineDraft(e.target.value)}/>
       <small>Digite qualquer linha terminada em ,5. Ex.: 18,5 · 21,5 · 29,5.</small>
@@ -193,6 +185,12 @@ export default function LeagueSmartComparison({data}:{data:Data}){
       Linha próxima da média observada: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
       {' '}· usar esta linha
     </button>}
+    {calculated?.teamOnly&&<TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>}
+    <div className="smart-match-totals-intro">
+      <span className="smart-kicker">ESTATÍSTICAS DA PARTIDA</span>
+      <h3>Somatório dos dois times</h3>
+      <p>Inclui o que cada equipe faz e o que recebe do adversário.</p>
+    </div>
     <SmartComparisonCards report={report} home={home.name} away={away.name}/>
     <details className="smart-legacy-table">
       <summary>Ver tabela numérica completa</summary>
