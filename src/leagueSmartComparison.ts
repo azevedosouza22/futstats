@@ -14,7 +14,7 @@ export const BOTH_SEASONS='both' as const;
 export type LeagueTeamOption={id:string;name:string;key:string};
 export type SmartLeagueOptions={
  league:string;seasons:string[];competition:string;
- teams:LeagueTeamOption[];dataCount:number;
+ teams:LeagueTeamOption[];dataCount:number;archivedSeasons:string[];
 };
 export type LeagueComparisonSelection={
  league:string;season:string;home:string;away:string;
@@ -28,9 +28,11 @@ export function availableSmartLeagues(data:Data):string[]{
 }
 export function smartLeagueOptions(data:Data,league:string):SmartLeagueOptions{
  const all=data.matches.filter(m=>competitionParts(m.competition).league===league);
- const seasons=[...new Set(all.map(m=>competitionParts(m.competition).season)
-   .filter(s=>s!==NO_SEASON))].sort(latest).slice(0,2);
- const filtered=all.filter(m=>seasons.includes(competitionParts(m.competition).season));
+ const everySeason=[...new Set(all.map(m=>competitionParts(m.competition).season)
+   .filter(s=>s!==NO_SEASON))].sort(latest);
+ const seasons=everySeason.slice(0,2);
+ const archivedSeasons=everySeason.slice(2);
+ const filtered=all.filter(m=>everySeason.includes(competitionParts(m.competition).season));
  const current=filtered.find(m=>competitionParts(m.competition).season===seasons[0]);
  const competition=current?.competition??'';
  const byId=new Map(data.teams.map(t=>[t.id,t]));
@@ -48,7 +50,7 @@ export function smartLeagueOptions(data:Data,league:string):SmartLeagueOptions{
      names.set(key,{id:t.id,name:t.name,key});
    }
  }
- return {league,seasons,competition,
+ return {league,seasons,archivedSeasons,competition,
    teams:[...names.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')),
    dataCount:filtered.length};
 }
@@ -59,7 +61,8 @@ export function calculateSmartLeagueComparison(data:Data,selection:LeagueCompari
  const away=options.teams.find(t=>t.id===selection.away);
  if(!options.seasons.length||!options.competition||
    !home||!away||home.key===away.key||
-   (selection.season!==BOTH_SEASONS&&!options.seasons.includes(selection.season))){
+   (selection.season!==BOTH_SEASONS&&
+    ![...options.seasons,...options.archivedSeasons].includes(selection.season))){
    return {report:null,teamOnly:null,matchCount:0,status:'Escolha liga, temporada e duas equipes diferentes com histórico.'};
  }
  if(!/^\d{4}-\d{2}-\d{2}$/.test(selection.date)){
@@ -71,9 +74,9 @@ export function calculateSmartLeagueComparison(data:Data,selection:LeagueCompari
  }
  const subset:Match[]=data.matches.filter(m=>
    competitionParts(m.competition).league===selection.league&&
-   options.seasons.includes(competitionParts(m.competition).season)&&
-   (selection.season===BOTH_SEASONS||
-      competitionParts(m.competition).season===selection.season)&&
+   (selection.season===BOTH_SEASONS
+     ?options.seasons.includes(competitionParts(m.competition).season)
+     :competitionParts(m.competition).season===selection.season)&&
    m.date<selection.date
  );
  const scoped={...data,matches:subset};
