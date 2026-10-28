@@ -76,6 +76,8 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
   <h2>Comparação Inteligente · por liga</h2>
   <p>Escolha campeonato, temporada e equipes. Compare as médias individuais
    por tempo e as finalizações, gols ou escanteios somados do confronto.</p>
+  <details className="smart-advanced smart-source-settings">
+    <summary>Fonte dos dados · {mode==='research'?'Pesquisa de 1.019 jogos':mode==='device'?'Dados deste navegador':'Exemplo fictício'}</summary>
   <div className="analysis-controls">
     <label>Base de dados para comparar
       <select aria-label="Fonte de dados da comparação inteligente" value={mode}
@@ -114,7 +116,8 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
     funcionamento. Nenhuma partida é adicionada ao histórico.
     {' '}Os números são simulados; nenhuma partida é salva.
   </p>}
-  <div className="analysis-controls">
+  </details>
+  <div className="analysis-controls smart-main-filters">
     <label>Campeonato
       <select aria-label="Campeonato da comparação inteligente" value={chosenLeague}
         onChange={e=>{setLeague(e.target.value);setSeason(BOTH_SEASONS);
@@ -150,6 +153,10 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
         {FOUR_LENS_METRICS.map(m=><option key={m.id} value={m.id}>{m.label}</option>)}
       </select>
     </label>
+  </div>
+  <details className="smart-advanced smart-total-settings">
+    <summary>Opções do total da partida · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {fmt(line)}</summary>
+  <div className="analysis-controls">
     <label>Período
       <select aria-label="Período da comparação inteligente" value={period}
         onChange={e=>setPeriod(e.target.value as Period)}>
@@ -164,35 +171,35 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
       <small>Digite qualquer linha terminada em ,5. Ex.: 18,5 · 21,5 · 29,5.</small>
     </label>
   </div>
+  </details>
   {!validLine&&<p className="alert" role="alert">
     Informe uma linha positiva terminada em ,5 para analisar o Over e o Under.
   </p>}
-  <p className="muted" role="status">
-    Temporadas disponíveis: {seasonTitle.join(' e ')||'N/D'}.
-    {' '}Partidas na seleção: {calculated?.matchCount??0}.
-    {' '}Corte histórico: somente jogos anteriores a {chosenDate}.
-    {' '}Origem: {mode==='demo'?'demonstração fictícia':
-       mode==='research'?'pesquisa histórica isolada':'base local do navegador'}.
+  <p className="smart-selection-note" role="status">
+    {chosenSeason===BOTH_SEASONS?'Temporadas disponíveis: '+seasonTitle.join(' e '):'Temporada: '+chosenSeason}
+    {' '}· Jogos anteriores a {chosenDate}.
   </p>
   {report&&home&&away?<section aria-label="Tabela comparativa de quatro contextos">
-    <div className="smart-summary-bar">
-      <span>{metricLabel(metric)} · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'}</span>
-      <strong>Linha {fmt(line)}</strong>
-      <small>{chosenSeason===BOTH_SEASONS?'Atual + anterior':chosenSeason}</small>
+    <div className="smart-summary-bar smart-results-context">
+      <span>{home.name} × {away.name}</span>
+      <strong>{metricLabel(metric)}</strong>
+      <small>{chosenSeason===BOTH_SEASONS?'Temporada atual + anterior':chosenSeason}</small>
     </div>
-    {report.projection!==null&&<button className="smart-suggest-line" type="button"
-      onClick={()=>setLineDraft(String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',','))}>
-      Linha próxima da média observada: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
-      {' '}· usar esta linha
-    </button>}
     {calculated?.teamOnly&&<TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>}
-    <div className="smart-match-totals-intro">
-      <span className="smart-kicker">ESTATÍSTICAS DA PARTIDA</span>
-      <h3>Somatório dos dois times</h3>
-      <p>Inclui o que cada equipe faz e o que recebe do adversário.</p>
-    </div>
-    <SmartComparisonCards report={report} home={home.name} away={away.name}/>
-    <details className="smart-legacy-table">
+    <details className="smart-total-collapsible">
+      <summary>Ver total da partida · Over/Under {fmt(line)}</summary>
+      <p>Aqui somamos as ações dos dois times, em vez de analisar cada um separadamente.</p>
+      <div className="smart-match-totals-intro">
+        <span className="smart-kicker">TOTAL DO CONFRONTO</span>
+        <h3>Somatório dos dois times</h3>
+        <p>{period==='full'?'Jogo inteiro':period==='first'?'1º tempo':'2º tempo'} · Linha {fmt(line)}</p>
+      </div>
+      {report.projection!==null&&<button className="smart-suggest-line" type="button"
+        onClick={()=>setLineDraft(String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',','))}>
+        Usar linha próxima da média histórica: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
+      </button>}
+      <SmartComparisonCards report={report} home={home.name} away={away.name}/>
+      <details className="smart-legacy-table">
       <summary>Ver tabela numérica completa</summary>
     <div className="radar-line-table-scroll">
       <table className="analysis-table">
@@ -216,14 +223,17 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
         </tbody>
       </table>
     </div></details>
+    </details>
   </section>:<p className="muted">
     {validLine?(calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'):'Altere a linha para um valor terminado em ,5.'}
   </p>}
-  <p className="muted">
-    Os dois recortes diretos repetem os mesmos jogos e também podem aparecer nos recortes gerais.
-    Não devem ser somados como quatro votos diferentes.
-    Frequências históricas não são probabilidades futuras nem recomendações de aposta.
-    Sem importação automática, sem alteração de Radar V2/V3 ou As Boas do Dia.
-  </p>
+  <details className="smart-method-notes">
+    <summary>Como interpretar essas médias?</summary>
+    <p>As médias individuais mostram apenas o que a equipe produziu.
+      A seção de totais soma as duas equipes. Confrontos diretos também fazem parte
+      dos históricos gerais e não contam como evidências independentes.
+      Frequências passadas não são probabilidades futuras ou garantias de apostas.</p>
+    <p>Somente leitura: nenhuma previsão, backup ou partida é alterada.</p>
+  </details>
  </section>;
 }
