@@ -1514,3 +1514,78 @@ html{scroll-behavior:smooth}
  .team-period-compact-row{padding:9px 10px}
  .team-period-compact-frequencies{gap:6px 10px}
 }
+
+/* Etapa 93 — hierarquia por cor: azul individual, vermelho H2H,
+   amarelo mando. Cada cor mantém contraste legível no tema escuro. */
+.team-summary-panel{
+ background:#112b50;border:1px solid #456baf;border-left:4px solid #679ceb;
+ border-radius:14px;padding:12px;margin:11px 0 12px
+}
+.team-summary-panel .smart-kicker{color:#aaccff}
+.team-summary-panel .team-summary-heading{margin-bottom:10px}
+.team-summary-panel .team-summary-heading h3{font-size:17px;margin:4px 0}
+.team-summary-panel .team-summary-heading p{font-size:12px}
+.team-summary-panel .team-summary-window{margin-bottom:8px}
+.team-summary-panel .team-summary-card{
+ background:#193861;border-color:#4b6f9d
+}
+.team-summary-card{padding:10px 12px;border-radius:11px}
+.team-summary-title{font-size:15px;margin:0 0 5px}
+.team-summary-main{padding:5px 0 8px;gap:5px;border-bottom-color:#55718a}
+.team-summary-main strong{font-size:26px}
+.team-summary-main>small{font-size:11px}
+.team-summary-main>div{gap:1px}
+.team-summary-small-sample{margin:5px 0;font-size:11px}
+.team-individual-full-line{display:flex;align-items:flex-end;flex-wrap:wrap;gap:6px;margin:8px 0 6px}
+.team-individual-full-line label{display:flex;align-items:center;gap:8px;margin:0;font-size:11px;color:#d2e2ee}
+.team-individual-full-line input{width:68px;min-width:0;max-width:68px;
+ padding:6px;border-radius:7px;background:#122638;color:#f6fbff;
+ border:1px solid #608ba7;font-size:12px}
+.team-individual-full-line button{font-size:11px;border:1px solid #54748a;
+ padding:6px 8px;border-radius:7px;color:#e2eef2}
+.team-simple-frequency{margin:4px 0 5px}
+.team-simple-line{display:block;font-size:11px;color:#bdd6e7;margin-bottom:4px}
+.team-simple-pairs{display:flex;flex-wrap:wrap;gap:5px}
+.team-simple-pairs>span{flex:1 1 110px;display:flex;align-items:baseline;
+ justify-content:center;gap:4px;background:rgba(3,12,24,.22);
+ border:1px solid rgba(181,214,238,.13);padding:6px 4px;border-radius:7px;
+ font-size:12px;color:#deecf5}
+.team-simple-pairs b{color:#f4fcff;font-variant-numeric:tabular-nums}
+.team-simple-pairs em{font-size:11px;color:#a4e4bd;font-style:normal}
+.team-period-compact-list{gap:3px;margin-top:7px}
+.team-period-compact-row{padding:7px 8px;background:rgba(5,14,29,.22);
+ border-color:rgba(169,202,229,.18)}
+.team-period-compact-head{align-items:center}
+.team-period-compact-head strong{font-size:12px}
+.team-period-compact-head span{font-size:11px}
+.team-period-compact-row .team-simple-frequency{margin:4px 0 0}
+.team-period-compact-row .team-simple-line{margin-bottom:3px}
+.team-period-compact-row .team-simple-pairs>span{padding:4px 3px;font-size:11px}
+.team-summary-direct{
+ display:block;background:#3c202b;border:1px solid #a75b6f;border-left:4px solid #db6675;
+ border-radius:14px;padding:12px;margin:14px 0
+}
+.team-summary-direct h3{font-size:17px;color:#ffe3e7;margin:0 0 5px}
+.team-summary-direct>p{font-size:11px;color:#f1c2ce;margin:0 0 10px}
+.team-summary-direct .team-summary-card{background:#492a36;border-color:#925668}
+.team-summary-direct .team-simple-pairs>span{background:rgba(28,6,12,.28)}
+.team-summary-footnote{margin:6px 2px 14px}
+.smart-mando-section{
+ display:block;background:#39351d;border:1px solid #b4a454;border-left:4px solid #e3cf6a;
+ border-radius:14px;padding:12px;margin:14px 0
+}
+.smart-mando-section>summary{color:#fff2af;font-size:14px;font-weight:750}
+.smart-mando-section[open]>summary{border-bottom-color:#877d4b}
+.smart-mando-section .smart-lens-card{background:#393523;border-color:#8c8352}
+.smart-mando-section .smart-match-head p{color:#e1dac2}
+.smart-mando-section .smart-match-head h3{color:#fff6cc}
+.smart-mando-section .smart-kicker{color:#f5df86}
+.smart-mando-section .smart-freq-pair>div{background:#443e28}
+.smart-mando-section .smart-lens-caution{background:#574332;color:#ffddb0}
+@media(max-width:600px){
+ .team-summary-panel,.team-summary-direct,.smart-mando-section{padding:10px}
+ .team-summary-grid{gap:9px}
+ .team-summary-card{padding:9px 10px}
+ .team-summary-main strong{font-size:25px}
+ .team-individual-full-line label{flex-wrap:wrap;gap:4px}
+}
