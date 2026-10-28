@@ -6,6 +6,7 @@ import {validData,type Data,type Match,type Stats} from './model';
 import {competitionParts} from './leagueCatalog';
 import {normalizeTeam} from './calendar';
 import {loadResearchPacks} from './researchPacks';
+import {loadPrivateSeasonResearch} from './privateSeasonPacks';
 
 export const RESEARCH_COUNTS={consolidated:951,rounds:68,total:1019} as const;
 export type ResearchCatalog={
@@ -109,7 +110,7 @@ export function parseResearchCatalog(main:unknown,compact:string):ResearchCatalo
  return {data,total:matches.length,
    dateConflicts:matches.filter(m=>m.research?.dateDiscrepancy).length,leagues};
 }
-export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchCatalog>{
+export async function loadPublicResearchCatalog(signal?:AbortSignal):Promise<ResearchCatalog>{
  const base='/'; // FutStats V4 is served at site root in the preview.
  const [main,recent]=await Promise.all([
   fetch(base+'research/partidas-work-951-v1.json',{signal,cache:'no-store'}),
@@ -118,4 +119,9 @@ export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchC
  if(!main.ok||!recent.ok)throw Error('Arquivos de pesquisa indisponíveis.');
  const baseline=parseResearchCatalog(await main.json() as unknown,await recent.text());
  return loadResearchPacks(baseline,signal);
+}
+/** Extra seasons live only in this browser's separate private research store. */
+export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchCatalog>{
+ const publicBase=await loadPublicResearchCatalog(signal);
+ return loadPrivateSeasonResearch(publicBase,signal);
 }

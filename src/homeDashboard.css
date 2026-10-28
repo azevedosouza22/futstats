@@ -101,3 +101,22 @@
  .fs-home .fs-home-more{min-height:31px}
  .fs-home-fixture{gap:8px}
 }
+
+
+/* Private seasonal research is isolated from backup and app history. */
+.fs-home-private summary{cursor:pointer;font-size:15px;font-weight:800;color:#d8fff0}
+.fs-home-private[open] summary{margin-bottom:12px}
+.fs-home-private>p{font-size:12px;line-height:1.6}
+.private-season-import{display:grid;gap:12px;margin-top:15px}
+.private-season-import .muted,.private-season-note{font-size:12px;line-height:1.55;color:#bdd6d5;display:flex;align-items:flex-start;gap:7px}
+.private-season-import .muted svg,.private-season-note svg{flex:0 0 auto;color:#62dba9}
+.private-season-steps{display:grid;gap:10px}
+.private-season-picker{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:10px;border:1px dashed #68a99b;border-radius:11px;padding:13px;background:#17363f;color:#ddfdf2;font-weight:700;font-size:13px;cursor:pointer}
+.private-season-picker input{font-size:11px;min-width:0;max-width:100%;color:#e5f9f4}
+.private-season-preview{display:flex;align-items:flex-start;gap:10px;background:#173c39;border:1px solid #4d907b;border-radius:10px;padding:10px}
+.private-season-preview>svg{flex:0 0 auto;color:#7ce0b7}
+.private-season-preview strong,.private-season-preview small{display:block}
+.private-season-preview strong{font-size:13px}
+.private-season-preview small{font-size:11px;color:#bbd4cf;margin-top:4px;overflow-wrap:anywhere}
+.private-season-steps .primary{justify-self:start;display:inline-flex;align-items:center;gap:8px}
+.private-season-note{margin:0}

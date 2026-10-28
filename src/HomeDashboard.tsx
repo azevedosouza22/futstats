@@ -9,6 +9,8 @@ import {readOfficialCalendar} from './officialCalendar';
 import {selectDailyGoodSignals} from './dailyGoodSignals';
 import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
 import {homeHistoricalMarkets,homeLeagueCount} from './homeDashboardModel';
+import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
+import PrivateSeasonCsvImport from './PrivateSeasonCsvImport';
 
 type Focus='agenda'|'picks';
 type Props={
@@ -27,13 +29,17 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
  const [researchError,setResearchError]=useState('');
  useEffect(()=>{
   const controller=new AbortController();
-  void loadResearchCatalog(controller.signal).then(result=>{
-   if(!controller.signal.aborted){setResearch(result);setResearchError('');}
-  }).catch(err=>{
-   if(!controller.signal.aborted)
-    setResearchError(err instanceof Error?err.message:'Pesquisa indisponível.');
-  });
-  return ()=>controller.abort();
+  const reload=()=>{
+   void loadResearchCatalog(controller.signal).then(result=>{
+    if(!controller.signal.aborted){setResearch(result);setResearchError('');}
+   }).catch(err=>{
+    if(!controller.signal.aborted)
+     setResearchError(err instanceof Error?err.message:'Pesquisa indisponível.');
+   });
+  };
+  reload();
+  window.addEventListener(PRIVATE_PACK_EVENT,reload);
+  return ()=>{controller.abort();window.removeEventListener(PRIVATE_PACK_EVENT,reload);};
  },[]);
  const now=new Date();
  const today=brasiliaDate(now).date;
@@ -187,6 +193,13 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
       <strong>Histórico</strong><small>Suas partidas</small><ArrowUpRight size={17}/></button>
    </div>
   </section>
+
+  <details className="fs-home-panel fs-home-private">
+   <summary>Adicionar temporada histórica à pesquisa privada</summary>
+   <p className="muted">Os novos jogos aparecerão nas análises e frequências somente neste navegador.
+    Nenhuma atualização é feita na produção ou no backup pessoal.</p>
+   <PrivateSeasonCsvImport/>
+  </details>
 
   <div className="fs-home-footer">
     <div><Shield size={21}/><span><strong>Dados pessoais protegidos</strong>
