@@ -8,6 +8,7 @@ import {
 } from './leagueSmartComparison';
 import {demoFourContextData} from './radarFourLensesDemo';
 import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
+import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
 import SmartComparisonCards from './SmartComparisonCards';
 import TeamOnlyCards from './TeamOnlyCards';
 
@@ -27,15 +28,19 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const [loading,setLoading]=useState(true);
  useEffect(()=>{
    const controller=new AbortController();
-   void loadResearchCatalog(controller.signal).then(result=>{
-     if(controller.signal.aborted)return;
-     setCatalog(result);setCatalogError('');setLoading(false);
-   }).catch(e=>{
-     if(controller.signal.aborted)return;
-     setCatalogError(e instanceof Error?e.message:'Base de pesquisa indisponível.');
-     setLoading(false);
-   });
-   return ()=>controller.abort();
+   const reload=()=>{
+     void loadResearchCatalog(controller.signal).then(result=>{
+       if(controller.signal.aborted)return;
+       setCatalog(result);setCatalogError('');setLoading(false);
+     }).catch(e=>{
+       if(controller.signal.aborted)return;
+       setCatalogError(e instanceof Error?e.message:'Base de pesquisa indisponível.');
+       setLoading(false);
+     });
+   };
+   reload();
+   window.addEventListener(PRIVATE_PACK_EVENT,reload);
+   return ()=>{controller.abort();window.removeEventListener(PRIVATE_PACK_EVENT,reload);};
  },[]);
  const [league,setLeague]=useState('');
  const [season,setSeason]=useState<string>(BOTH_SEASONS);
