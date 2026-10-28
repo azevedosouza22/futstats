@@ -1,6 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import type {Data,Match,Stats} from './model';
 import {analyzeTeamOnlyPeriods} from './teamOnlyPeriods';
+import {individualWindowAvailability} from './TeamOnlyCards';
 import {calculateSmartLeagueComparison,BOTH_SEASONS} from './leagueSmartComparison';
 
 const comp='Liga fictícia 2026/27',prior='Liga fictícia 2025/26';
@@ -26,6 +27,23 @@ const row=(r:ReturnType<typeof analyzeTeamOnlyPeriods>,id:string,period:string)=
  r.lenses.find(l=>l.id===id)!.periods.find(p=>p.period===period)!;
 
 describe('Etapa 83 — médias do próprio time com 1T, 2T e jogo completo',()=>{
+ it('não oferece 10 jogos quando a base só possui 3 ou 4 registros por mando',()=>{
+  const report=analyzeTeamOnlyPeriods(data(base),fixture,'shots');
+  const coverage=individualWindowAvailability(report);
+  expect(coverage).toMatchObject({
+   homeCount:3,awayCount:4,hasExtendedSample:false
+  });
+  // O seletor deve manter a janela de 5; a média 10 seria a mesma por falta de jogos.
+  const home=report.lenses[0].periods.find(p=>p.period==='full')!;
+  expect(home.last5).toEqual(home.last10);
+ });
+ it('libera 10 jogos quando ao menos um clube possui mais de cinco jogos válidos',()=>{
+  const series=Array.from({length:7},(_,i)=>match('new'+i,
+   '2026-10-'+String(i+12).padStart(2,'0'),comp,'H','X',i+1,i+2,1,2));
+  const coverage=individualWindowAvailability(analyzeTeamOnlyPeriods(data(series),fixture,'shots'));
+  expect(coverage).toMatchObject({homeCount:7,awayCount:0,hasExtendedSample:true});
+ });
+
  it('não soma ao adversário; respeita casa e fora em todos os períodos',()=>{
   const source=data(base),frozen=JSON.stringify(source);
   const report=analyzeTeamOnlyPeriods(source,fixture,'shots');
