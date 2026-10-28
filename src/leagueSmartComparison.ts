@@ -6,7 +6,7 @@ import type {Data,Match,Period} from './model';
 import {normalizeTeam} from './calendar';
 import {leagueOptions,competitionParts,NO_SEASON} from './leagueCatalog';
 import {
- analyzeFourLenses,FOUR_LENS_LINES,type FourLensMetric,type FourLensReport
+ analyzeFourLenses,type FourLensMetric,type FourLensReport
 } from './radarFourLenses';
 
 export const BOTH_SEASONS='both' as const;
@@ -64,8 +64,9 @@ export function calculateSmartLeagueComparison(data:Data,selection:LeagueCompari
  if(!/^\d{4}-\d{2}-\d{2}$/.test(selection.date)){
    return {report:null,matchCount:0,status:'Data de referência indisponível.'};
  }
- if(!FOUR_LENS_LINES[selection.metric].includes(selection.line)){
-   return {report:null,matchCount:0,status:'Linha fora das opções disponíveis.'};
+ if(!Number.isFinite(selection.line)||selection.line<0.5||selection.line>999.5||
+   !Number.isInteger(selection.line-0.5)){
+   return {report:null,matchCount:0,status:'Informe uma linha positiva terminada em ,5.'};
  }
  const subset:Match[]=data.matches.filter(m=>
    competitionParts(m.competition).league===selection.league&&

@@ -1,5 +1,5 @@
 import {useState,useRef,useEffect,type FormEvent} from 'react';
-import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Target,Flag,Shield,Download,Upload,X,Trash2,Pencil,Check,Activity,ChevronRight,CalendarDays,Crosshair,Database,Radio,Wrench,ScanLine,CloudDownload} from 'lucide-react';
+import {LayoutDashboard,Users,ArrowLeftRight,History,Plus,ArrowUpRight,Goal,Target,Flag,Shield,Download,Upload,X,Trash2,Pencil,Check,Activity,ChevronRight,CalendarDays,Crosshair,Database,Radio,Wrench,ScanLine,CloudDownload,Home,Star,Menu} from 'lucide-react';
 import Integration from './Integration';
 import WorkCsvImport from './WorkCsvImport';
 import OpenFootballPilot from './OpenFootballPilot';
@@ -30,7 +30,15 @@ const tabs=[
  {name:'Pré-jogo',icon:CalendarDays,area:'pregame'},
  {name:'Radar V2 × V3',icon:Crosshair,area:'radar'},
  {name:'Ferramentas e testes',icon:Wrench,area:'tools'},
+ {name:'Mais opções',icon:Menu,area:'more'},
 ];
+const mainNav=[
+ {name:'Início',icon:Home,page:0,area:'home'},
+ {name:'Agenda',icon:CalendarDays,page:6,area:'agenda'},
+ {name:'Comparar',icon:ArrowLeftRight,page:2,area:'compare'},
+ {name:'As Boas',icon:Star,page:6,area:'picks'},
+ {name:'Mais',icon:Menu,page:8,area:'more'},
+] as const;
 export default function App(){
  const [data,setData]=useState<Data>(initial.data),[page,setPage]=useState(0),[period,setPeriod]=useState<'first'|'full'>('full'),[modal,setModal]=useState<'team'|'match'|null>(null),[error,setError]=useState(initial.error),[notice,setNotice]=useState(''),[edit,setEdit]=useState<string|null>(null),[teamName,setTeamName]=useState(''),[color,setColor]=useState('#23875b'),[match,setMatch]=useState<Match|null>(null),[compare,setCompare]=useState<[string,string]>(['','']),[search,setSearch]=useState(''),[detail,setDetail]=useState<Match|null>(null);
  const file=useRef<HTMLInputElement>(null);
@@ -41,6 +49,15 @@ export default function App(){
  const [seasonFilter,setSeasonFilter]=useState(ALL_LEAGUES);
  const [historyPage,setHistoryPage]=useState(1);
  const [toolPanel,setToolPanel]=useState<'image'|'sportsdb'|'live'|'api'>('image');
+ const [radarFocus,setRadarFocus]=useState<'agenda'|'picks'>('agenda');
+ const mainActive=page===6?(radarFocus==='picks'?'picks':'agenda'):
+   page===0?'home':page===2?'compare':'more';
+ function goTo(pageNumber:number,focus?:'agenda'|'picks'){
+   if(focus)setRadarFocus(focus);
+   setPage(pageNumber);setSearch('');setHistoryPage(1);
+   window.scrollTo({top:0,behavior:'auto'});
+ }
+
  const imageFieldOrigin=(k:keyof Stats,side:number)=>{const origin=detail?.image?.fields[detailPeriod]?.[k]?.[side];return origin?({recognized:'Reconhecido e revisado',corrected:'Corrigido pelo usuário',calculated:'Calculado'})[origin]:'';};
  useEffect(()=>{if(!modal&&!detail)return;const previous=document.activeElement as HTMLElement|null;const dialog=document.querySelector<HTMLElement>('[role="dialog"]');const focusable=()=>Array.from(dialog?.querySelectorAll<HTMLElement>('button,input,select,[href],[tabindex="0"]')??[]).filter(el=>!el.hasAttribute('disabled'));focusable()[0]?.focus();const handler=(e:KeyboardEvent)=>{if(e.key==='Escape'){setModal(null);setDetail(null);}if(e.key==='Tab'){const els=focusable();const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};document.addEventListener('keydown',handler);const overflow=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.removeEventListener('keydown',handler);document.body.style.overflow=overflow;previous?.focus();};},[modal,detail]);
 
@@ -114,15 +131,23 @@ export default function App(){
  function Badge({id}:{id:string}){const t=team(id);return <span className="badge" style={{background:t?.color??'#586b60'}}>{t?.name.slice(0,3).toUpperCase()??'?'}</span>;}
  function MatchRow({m}:{m:Match}){const a=stats(m,0,period),b=stats(m,1,period);return <button className="match-row" onClick={()=>{setDetailPeriod(period);setDetail(m);}}><span className="match-date">{dateLabel(m.date)}<small>{(m.competition||'Amistoso')+(m.external?' · TheSportsDB':m.image?' · Imagem revisada':m.research?' · Pesquisa CSV':'')}</small><small>Escanteios: {fmt(a.corners)} × {fmt(b.corners)}</small></span><span className="match-teams"><Badge id={m.home}/><span>{team(m.home)?.name}</span><b className="score">{fmt(a.goals)} <em>:</em> {fmt(b.goals)}</b><span>{team(m.away)?.name}</span><Badge id={m.away}/></span><ChevronRight size={18}/></button>;}
  const selected:[string,string]=[scopedTeams.find(t=>t.id===compare[0])?.id??scopedTeams[0]?.id??'',scopedTeams.find(t=>t.id===compare[1])?.id??scopedTeams[1]?.id??''];
- return <div className={page===7&&toolPanel==='api'?"app intelligence premium":"app premium"}><aside><a className="brand" href="#" onClick={()=>setPage(0)}><span className="brand-icon"><Activity size={24}/></span>Fut<span>Stats</span></a><div className="workspace-label">SEU CENTRO DE ESTATÍSTICAS</div><nav aria-label="Navegação principal">{tabs.slice(0,7).map((t,i)=><button type="button" data-area={t.area} className={page===i?'active':''} key={t.name} onClick={()=>{setPage(i);setSearch('');setHistoryPage(1);}}><t.icon size={20}/>{t.name}{page===i&&<span className="nav-dot"/>}</button>)}
- <div className="nav-tools-label">RECURSOS OPCIONAIS</div>
- <button type="button" data-area="tools" className={page===7?'active':''} onClick={()=>setPage(7)}><Wrench size={20}/>Ferramentas e testes{page===7&&<span className="nav-dot"/>}</button>
- </nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Histórico + Radar (backup antigo)</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
- <div className="main"><header><span>Futebol / <b>{tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button type="button" className="mobile-safety-shortcut" aria-label="Abrir backup integral V4" title="Cópia integral com Histórico, Radar, Work e agenda CSV" onClick={()=>setPage(7)}><Shield size={18}/><span>Backup V4</span></button></div></header><main>
+ return <div className={page===7&&toolPanel==='api'?"app intelligence premium":"app premium"}><aside><a className="brand" href="#" onClick={()=>setPage(0)}><span className="brand-icon"><Activity size={24}/></span>Fut<span>Stats</span></a><div className="workspace-label">SEU CENTRO DE ESTATÍSTICAS</div><nav aria-label="Navegação principal">{mainNav.map(t=>
+ <button type="button" data-area={t.area} className={mainActive===t.area?'active':''}
+   aria-current={mainActive===t.area?'page':undefined} key={t.area}
+   onClick={()=>goTo(t.page,t.area==='picks'?'picks':t.area==='agenda'?'agenda':undefined)}>
+   <t.icon size={20}/>{t.name}{mainActive===t.area&&<span className="nav-dot"/>}
+ </button>)}</nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Histórico + Radar (backup antigo)</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
+ <nav className="mobile-bottom-nav" aria-label="Menu principal do celular">
+ {mainNav.map(t=><button type="button" key={t.area} className={mainActive===t.area?'active':''}
+   aria-current={mainActive===t.area?'page':undefined}
+   onClick={()=>goTo(t.page,t.area==='picks'?'picks':t.area==='agenda'?'agenda':undefined)}>
+   <t.icon size={21}/><span>{t.name}</span>
+ </button>)}
+ </nav><div className="main"><header><span>Futebol / <b>{page===6?(radarFocus==='picks'?'As Boas do Dia':'Agenda'):tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button type="button" className="mobile-safety-shortcut" aria-label="Abrir backup integral V4" title="Cópia integral com Histórico, Radar, Work e agenda CSV" onClick={()=>setPage(7)}><Shield size={18}/><span>Backup V4</span></button></div></header><main>
  <div className="heading"><div><div className="eyebrow">FUTSTATS · CENTRO DE ANÁLISES</div><h1>{[
  'Seu futebol em números.','Equipes por campeonato.','Comparação Inteligente por liga.',
  'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.','Radar V2 × V3.',
- 'Ferramentas e testes opcionais.'
+ 'Ferramentas e testes opcionais.','Tudo organizado em um só lugar.'
  ][page]}</h1><p>{[
  'Acompanhe o desempenho e descubra o que os dados dizem.',
  'Filtre equipes por liga e temporada para não misturar médias.',
@@ -131,12 +156,13 @@ export default function App(){
  'Importe pesquisas CSV revisadas com segurança.',
  'Compare janelas recentes, com amostras e fontes claras.',
  'Registre análises antes de cada partida e avalie resultados reais.',
- 'OCR, TheSportsDB, consultas pontuais e outros testes experimentais.'
+ 'OCR, TheSportsDB, consultas pontuais e outros testes experimentais.',
+ 'Histórico, equipes, previsões e ferramentas continuam acessíveis.'
  ][page]}</p></div>
  {(page===0||page===1||page===3||page===6)&&<button className="primary" onClick={()=>page===6?document.querySelector('.calendar-agenda')?.scrollIntoView({behavior:'smooth',block:'start'}):page===1?openTeam():openMatch()}>{page===6?<CalendarDays size={18}/>:<Plus size={18}/>} {page===6?'Ver agenda':page===1?'Nova equipe':'Nova partida'}</button>}</div>
  {error&&<div className="alert" role="alert">{error}<button aria-label="Fechar aviso" onClick={()=>setError('')}><X size={16}/></button></div>}{notice&&<div className="notice" role="status"><Check size={17}/>{notice}<button aria-label="Fechar mensagem" onClick={()=>setNotice('')}><X size={16}/></button></div>}
  <div className="toolbar"><span><span className="online-dot"/> {page===1?`${scopedTeams.length} equipes nesta seleção`:[2,3].includes(page)?`${scopedMatches.length} partidas nesta seleção`:`${data.matches.length} partidas na sua base`}</span>{[0,1,2,3].includes(page)&&<div className="segment"><button className={period==='first'?'selected':''} onClick={()=>setPeriod('first')}>1º tempo</button><button className={period==='full'?'selected':''} onClick={()=>setPeriod('full')}>Partida completa</button></div>}</div>
- {[1,2,3].includes(page)&&leagueFilters}
+ {[1,3].includes(page)&&leagueFilters}
  {page===0&&<><section className="home-shortcuts" aria-label="Acesso rápido às análises">
   <div className="home-shortcuts-copy"><span className="quick-eyebrow">CENTRAL DE ANÁLISE</span><h2>Seu próximo jogo começa aqui.</h2><p>Acompanhe a agenda e veja os sinais dos Radares V2 e V3 em poucos toques.</p></div>
   <div className="quick-actions">
@@ -179,7 +205,22 @@ export default function App(){
  </section>}
  {page===4&&<><PwaUpdateStatus/><EuropeLeaguesPilot/><FplStatsPilot data={data}/><OpenFootballPilot/><WorkCsvImport data={data} save={commit}/></>}
  {page===5&&<><WorkPreGame/><PreGame data={data}/></>}
- {page===6&&<Radar data={data}/>}
+ {page===6&&<Radar data={data} focus={radarFocus}/>}
+ {page===8&&<section className="fut-more" aria-label="Mais ferramentas e históricos">
+ <h2>Seus recursos, organizados</h2>
+ <p className="muted">Nenhuma função foi apagada. Escolha o que deseja consultar.</p>
+ <div className="fut-more-grid">
+ {[
+  {page:1,title:'Equipes',help:'Médias por equipe e campeonato',icon:Users},
+  {page:3,title:'Histórico de partidas',help:'Consultar jogos registrados',icon:History},
+  {page:4,title:'Base de dados',help:'Fontes, importações e cobertura',icon:Database},
+  {page:5,title:'Pré-jogo',help:'Análises históricas detalhadas',icon:CalendarDays},
+  {page:6,title:'Radar V2/V3 e previsões',help:'Criar ou recuperar previsões salvas',icon:Crosshair},
+  {page:7,title:'Backups e ferramentas',help:'Segurança, testes e diagnósticos',icon:Shield},
+ ].map(item=><button type="button" key={item.title} onClick={()=>goTo(item.page,'agenda')}>
+  <item.icon size={22}/><span><strong>{item.title}</strong><small>{item.help}</small></span><ChevronRight size={19}/>
+ </button>)}</div>
+ </section>}
  {page===7&&<SafetyArchivePanel/>}
  {page===7&&<section className="tools-hub" aria-label="Ferramentas opcionais e experimentais">
    <div className="tools-hub-menu" role="group" aria-label="Selecionar ferramenta">

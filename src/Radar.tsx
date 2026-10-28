@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import {radarRetrospective} from './radar';
 import UpcomingRadar from './UpcomingRadar';
 import RadarBacktest from './RadarBacktest';
@@ -14,7 +14,17 @@ const number = (n: number | null) =>
 const percent = (n: number | null) =>
   n === null ? 'N/D' : (n * 100).toLocaleString('pt-BR', {maximumFractionDigits: 1}) + '%';
 
-export default function Radar({data}: {data: Data}) {
+export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'|'picks'}) {
+  // The two primary shortcuts share the existing Radar/Agenda engine.
+  // Focus its appropriate section; all existing saved predictions stay untouched.
+  useEffect(()=>{
+    setMode('new'); // Both primary destinations live in the future-game Radar.
+    const id=window.setTimeout(()=>{
+      document.querySelector(focus==='picks'?'.daily-good-picks':'.calendar-agenda')
+        ?.scrollIntoView({block:'start',behavior:'smooth'});
+    },120);
+    return ()=>window.clearTimeout(id);
+  },[focus]);
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedFixtureId, setSelectedFixtureId] = useState('');
   const [showResults, setShowResults] = useState(false);

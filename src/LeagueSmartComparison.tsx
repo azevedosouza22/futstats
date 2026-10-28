@@ -8,6 +8,7 @@ import {
 } from './leagueSmartComparison';
 import {demoFourContextData} from './radarFourLensesDemo';
 import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
+import SmartComparisonCards from './SmartComparisonCards';
 
 const fmt=(n:number|null)=>n===null?'N/D':n.toLocaleString('pt-BR',{maximumFractionDigits:1});
 const freq=(n:number,total:number)=>total
@@ -42,7 +43,10 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const [search,setSearch]=useState('');
  const [metric,setMetric]=useState<FourLensMetric>('shots');
  const [period,setPeriod]=useState<Period>('full');
- const [line,setLine]=useState(24.5);
+ const [lineDraft,setLineDraft]=useState('24,5');
+ const line=Number(lineDraft.trim().replace(',','.'));
+ const validLine=Number.isFinite(line)&&line>=0.5&&line<=999.5&&
+   Number.isInteger(line-0.5);
 
  const useDemo=mode==='demo';
  const active:Data=useDemo?demoFourContextData:
@@ -62,7 +66,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
      !!preferredAway&&t.name.toLocaleLowerCase('pt-BR').includes(preferredAway))
    ??options.teams.find(t=>t.key!==home?.key);
  const chosenDate=brasiliaDate().date;
- const calculated=home&&away?calculateSmartLeagueComparison(active,{
+ const calculated=home&&away&&validLine?calculateSmartLeagueComparison(active,{
    league:chosenLeague,season:chosenSeason,home:home.id,away:away.id,
    date:chosenDate,metric,period,line
  }):null;
@@ -150,7 +154,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
     <label>Indicador
       <select aria-label="Indicador da comparação inteligente" value={metric}
         onChange={e=>{const next=e.target.value as FourLensMetric;
-          setMetric(next);setLine(FOUR_LENS_LINES[next][2]);}}>
+          setMetric(next);setLineDraft(String(FOUR_LENS_LINES[next][2]).replace('.',','));}}>
         {FOUR_LENS_METRICS.map(m=><option key={m.id} value={m.id}>{m.label}</option>)}
       </select>
     </label>
@@ -162,13 +166,15 @@ export default function LeagueSmartComparison({data}:{data:Data}){
         <option value="second">Segundo tempo</option>
       </select>
     </label>
-    <label>Linha Over/Under
-      <select aria-label="Linha da comparação inteligente" value={line}
-        onChange={e=>setLine(Number(e.target.value))}>
-        {FOUR_LENS_LINES[metric].map(n=><option key={n} value={n}>{fmt(n)}</option>)}
-      </select>
+    <label>Linha Over/Under · personalizada
+      <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
+        placeholder="Ex.: 21,5" value={lineDraft} onChange={e=>setLineDraft(e.target.value)}/>
+      <small>Digite qualquer linha terminada em ,5. Ex.: 18,5 · 21,5 · 29,5.</small>
     </label>
   </div>
+  {!validLine&&<p className="alert" role="alert">
+    Informe uma linha positiva terminada em ,5 para analisar o Over e o Under.
+  </p>}
   <p className="muted" role="status">
     Temporadas disponíveis: {seasonTitle.join(' e ')||'N/D'}.
     {' '}Partidas na seleção: {calculated?.matchCount??0}.
@@ -177,10 +183,19 @@ export default function LeagueSmartComparison({data}:{data:Data}){
        mode==='research'?'pesquisa histórica isolada':'base local do navegador'}.
   </p>
   {report&&home&&away?<section aria-label="Tabela comparativa de quatro contextos">
-    <h3>{home.name} × {away.name}</h3>
-    <p><b>{metricLabel(metric)}</b> · linha {fmt(line)} ·
-      {' '}{period==='full'?'partida inteira':period==='first'?'1º tempo':'2º tempo'}
-      {' '}· {chosenSeason===BOTH_SEASONS?'duas temporadas':chosenSeason}</p>
+    <div className="smart-summary-bar">
+      <span>{metricLabel(metric)} · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'}</span>
+      <strong>Linha {fmt(line)}</strong>
+      <small>{chosenSeason===BOTH_SEASONS?'Atual + anterior':chosenSeason}</small>
+    </div>
+    {report.projection!==null&&<button className="smart-suggest-line" type="button"
+      onClick={()=>setLineDraft(String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',','))}>
+      Linha próxima da média observada: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
+      {' '}· usar esta linha
+    </button>}
+    <SmartComparisonCards report={report} home={home.name} away={away.name}/>
+    <details className="smart-legacy-table">
+      <summary>Ver tabela numérica completa</summary>
     <div className="radar-line-table-scroll">
       <table className="analysis-table">
         <caption>Comparação por mando e confrontos diretos — totais das duas equipes, não só do time escolhido</caption>
@@ -202,13 +217,9 @@ export default function LeagueSmartComparison({data}:{data:Data}){
           </tr>)}
         </tbody>
       </table>
-    </div>
-    <p className="muted" role="status">
-      Leitura conjunta dos mandos: <b>{report.historicalDirection}</b>.
-      {' '}{report.reason} Média descritiva de ambos os mandos: {fmt(report.projection)}.
-    </p>
+    </div></details>
   </section>:<p className="muted">
-    {calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'}
+    {validLine?(calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'):'Altere a linha para um valor terminado em ,5.'}
   </p>}
   <p className="muted">
     Os dois recortes diretos repetem os mesmos jogos e também podem aparecer nos recortes gerais.

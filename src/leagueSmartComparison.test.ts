@@ -61,7 +61,7 @@ describe('Etapa 80 — Comparação Inteligente por liga, temporada e mando',()=
   expect(calculateSmartLeagueComparison(demoFourContextData,
    selected('2023/24')).report).toBeNull();
   expect(calculateSmartLeagueComparison(demoFourContextData,
-   {...selected(BOTH_SEASONS),line:99.5}).report).toBeNull();
+   {...selected(BOTH_SEASONS),line:1000.5}).report).toBeNull();
  });
  it('não mistura outra liga nem inclui temporadas antigas além das duas mais recentes',()=>{
   const extra=demoFourContextData.matches[0];
