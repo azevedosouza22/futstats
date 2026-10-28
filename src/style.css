@@ -1419,3 +1419,44 @@ html{scroll-behavior:smooth}
  .team-period-cell{padding:10px 5px}
  .team-period-cell strong{font-size:23px}
 }
+
+
+/* Etapa 84 — progressive disclosure and honest sample-window labels. */
+.team-summary-panel{padding:16px;margin:14px 0 18px;background:#112832;border:1px solid #365969}
+.team-summary-heading{margin-bottom:16px}
+.team-summary-heading h3{font-size:19px;line-height:1.35;margin:6px 0;color:#effaf8}
+.team-summary-heading p{font-size:13px;line-height:1.5;color:#b7ccd6;margin:0}
+.team-summary-window{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 9px}
+.team-summary-window>span{font-size:12px;color:#c5d8df}
+.team-window-select button:disabled{opacity:.4;cursor:not-allowed}
+.team-window-note{font-size:12px;line-height:1.5;color:#c8dde6;padding:8px 11px;border:1px solid #3d6170;background:#19343f;border-radius:9px;margin:5px 0 15px}
+.team-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.team-summary-card{border:1px solid #385968;border-radius:13px;padding:15px;background:#1a3340;min-width:0}
+.team-summary-title{font-size:16px;font-weight:750;color:#eefaf7;line-height:1.4;overflow-wrap:anywhere}
+.team-summary-main{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid #375766;padding:15px 0 14px}
+.team-summary-main>div{display:flex;flex-direction:column;gap:4px}
+.team-summary-main span,.team-summary-main>small{color:#c0d5dc;font-size:12px}
+.team-summary-main strong{font-size:35px;font-variant-numeric:tabular-nums;line-height:1.12;color:#ecfcf5}
+.team-summary-small-sample{font-size:12px;color:#f0d0a6;line-height:1.5;margin:10px 0 0}
+.team-summary-times{margin-top:13px;border-radius:9px;border:1px solid #41616e;padding:7px 10px}
+.team-summary-times summary{cursor:pointer;font-size:12px;padding:4px 0;color:#d1eae2;font-weight:650}
+.team-summary-time-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.team-summary-time-grid>div{display:flex;flex-direction:column;gap:6px;background:#23404a;padding:10px;border-radius:8px}
+.team-summary-time-grid span,.team-summary-time-grid small{color:#bcdae3;font-size:11px}
+.team-summary-time-grid strong{color:#f1faf4;font-size:22px}
+.team-summary-direct{margin-top:13px;background:#182f3b;border:1px solid #3e6170;border-radius:11px;padding:11px 14px}
+.team-summary-direct summary{cursor:pointer;font-size:13px;font-weight:650;color:#d3ebe8}
+.team-summary-direct>.team-summary-grid{margin-top:14px}
+.team-summary-direct>p{font-size:12px;line-height:1.5;color:#b6cfda}
+.team-summary-footnote{font-size:11px;line-height:1.5;color:#b5cbd5;margin:12px 0 0}
+.smart-advanced,.smart-total-collapsible,.smart-method-notes{border-radius:12px;border:1px solid #365c6b;margin:13px 0;background:#162c38;padding:11px 13px}
+.smart-advanced>summary,.smart-total-collapsible>summary,.smart-method-notes>summary{font-size:13px;font-weight:650;cursor:pointer;color:#daecee;line-height:1.5}
+.smart-advanced[open]>summary,.smart-total-collapsible[open]>summary{padding-bottom:10px;border-bottom:1px solid #395966;margin-bottom:11px}
+.smart-total-collapsible>p,.smart-method-notes>p{font-size:12px;line-height:1.6;color:#bfced7}
+.smart-total-collapsible .smart-match-totals-intro{margin-top:3px;padding-top:10px}
+.smart-selection-note{font-size:11px;line-height:1.5;color:#adc5d0;margin:11px 0}
+.smart-results-context{margin:10px 0}
+@media(max-width:850px){
+ .team-summary-grid{grid-template-columns:1fr}
+ .team-summary-main strong{font-size:33px}
+}
