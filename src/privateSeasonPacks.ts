@@ -174,6 +174,39 @@ async function putPack(pack:PrivatePack):Promise<void>{
   tx.onabort=()=>reject(Error('A gravação privada foi interrompida.'));
  });}finally{db.close();}
 }
+/** Keep only private matches that are not already present in the published research.
+ * Raises an error on contradictory duplicates; never silently overwrites.
+ */
+export function unpublishedPrivatePacks(
+ base:ResearchCatalog,stored:readonly PrivatePack[]
+):PrivatePack[]{
+ const published=new Map(base.data.matches.filter(m=>m.research)
+  .map(m=>[m.research!.sourceId,m]));
+ // Compare semantic values, not JSON key order. Older CSV imports may carry
+ // extra optional N/D fields absent from the published lean research packs.
+ const samePair=(a:Match['first'],b:Match['first'])=>
+  a.every((side,i)=>['goals','shots','target','corners'].every(key=>
+   side[key as 'goals']===b[i][key as 'goals']));
+ const sameStats=(a:Match,b:Match)=>
+  a.date===b.date&&a.competition===b.competition&&
+  a.research?.sourceUrl===b.research?.sourceUrl&&
+  a.research?.dateDiscrepancy===b.research?.dateDiscrepancy&&
+  samePair(a.first,b.first)&&samePair(a.second,b.second)&&
+  !!a.research&&!!b.research&&samePair(a.research.full,b.research.full);
+ const extra:PrivatePack[]=[];
+ for(const file of stored){
+  checkPack(file);
+  const matches=file.data.matches.filter(m=>{
+   const existing=published.get(m.research!.sourceId);
+   if(!existing)return true;
+   if(!sameStats(existing,m))
+    throw Error('Conflito entre pesquisa pública e privada: '+m.research!.sourceId);
+   return false;
+  });
+  if(matches.length)extra.push({...file,data:{...file.data,matches}});
+ }
+ return extra;
+}
 export async function loadPrivateSeasonResearch(
  base:ResearchCatalog,signal?:AbortSignal
 ):Promise<ResearchCatalog>{
@@ -183,8 +216,11 @@ export async function loadPrivateSeasonResearch(
  try{stored=await listPacks();}catch{return base;}
  if(signal?.aborted)throw Error('Consulta cancelada.');
  if(!stored.length)return base;
- const files=stored.sort((a,b)=>a.competition.localeCompare(b.competition));
- for(const file of files)checkPack(file);
+ // A season may have been imported privately before it became part of the
+ // published research. Keep the browser copy, but do not count it twice.
+ const extra=unpublishedPrivatePacks(base,stored);
+ if(!extra.length)return base;
+ const files=extra.sort((a,b)=>a.competition.localeCompare(b.competition));
  return mergeResearchPacks(base,
   files.map((f,i)=>({file:'private_season_'+(i+1)+'.json',
    competition:f.competition,count:f.data.matches.length})),files);
