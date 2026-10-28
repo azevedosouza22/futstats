@@ -1491,3 +1491,26 @@ html{scroll-behavior:smooth}
  .team-hit-frequency.compact .team-hit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
  .team-hit-frequency.compact .team-hit-pair>div{display:flex;flex-direction:column;align-items:flex-start}
 }
+
+/* Etapa 92 — comparação compacta no Android: filtros do total em um único
+   painel; leitura individual por tempo sem cartões aninhados repetitivos. */
+.smart-total-collapsible{margin-top:15px}
+.smart-total-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 12px}
+.smart-total-controls label{min-width:0}
+.smart-total-controls small{display:block;font-size:11px;line-height:1.4}
+.smart-total-explanation{margin:8px 0;font-size:12px;line-height:1.5}
+.team-period-compact-list{display:grid;gap:8px;margin-top:10px}
+.team-period-compact-row{background:#1e3b47;border:1px solid #385b68;border-radius:9px;padding:10px 12px;min-width:0}
+.team-period-compact-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px}
+.team-period-compact-head strong{color:#eefcf5;font-size:14px}
+.team-period-compact-head span{color:#c3dbe2;font-size:12px}
+.team-period-compact-frequencies{display:flex;align-items:center;flex-wrap:wrap;gap:7px 13px;margin-top:7px;font-size:12px;color:#d4e8ed}
+.team-period-compact-line{color:#adccd4}
+.team-period-compact-frequencies b{color:#f3fcfa;font-variant-numeric:tabular-nums}
+.team-period-compact-frequencies small{color:#9fe0c3;font-size:11px}
+.team-period-compact-empty{display:block;color:#c6d5dc;margin-top:8px;font-size:11px}
+@media(max-width:630px){
+ .smart-total-controls{grid-template-columns:1fr}
+ .team-period-compact-row{padding:9px 10px}
+ .team-period-compact-frequencies{gap:6px 10px}
+}
