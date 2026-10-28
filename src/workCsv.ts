@@ -84,7 +84,8 @@ function pair(record: Record<string, string>, period: 'jogo' | '1t' | '2t', line
   return result;
 }
 
-export function parseWorkResearchCsv(text: string): WorkResearchRow[] {
+export function parseWorkResearchCsv(text: string, maxRows = 500): WorkResearchRow[] {
+  if (!Number.isSafeInteger(maxRows) || maxRows < 1 || maxRows > 1200) throw Error('Limite de importação inválido.');
   if (text.length > 2_000_000) throw Error('O CSV deve ter até 2 MB.');
   const lines = recordsFromCsv(text.replace(/^\uFEFF/, ''));
   if (lines.length < 2) throw Error('O CSV não contém partidas.');
@@ -93,7 +94,7 @@ export function parseWorkResearchCsv(text: string): WorkResearchRow[] {
     ...metricColumns.flatMap(([, prefix]) => [`${prefix}_mandante_jogo`, `${prefix}_visitante_jogo`])];
   if (headers.length !== new Set(headers).size || required.some(key => !headers.includes(key)))
     throw Error('Formato CSV incompatível. Utilize o modelo de pesquisa do Work com os campos obrigatórios.');
-  if (lines.length > 501) throw Error('Importe até 500 partidas por arquivo.');
+  if (lines.length > maxRows + 1) throw Error(`Importe até ${maxRows} partidas por arquivo.`);
   const seen = new Set<string>();
   return lines.slice(1).map((values, index) => {
     const line = index + 2;
