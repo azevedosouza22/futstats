@@ -109,7 +109,7 @@ export function parseResearchCatalog(main:unknown,compact:string):ResearchCatalo
    dateConflicts:matches.filter(m=>m.research?.dateDiscrepancy).length,leagues};
 }
 export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchCatalog>{
- const base=import.meta.env.BASE_URL||'/';
+ const base='/'; // FutStats V4 is served at site root in the preview.
  const [main,recent]=await Promise.all([
   fetch(base+'research/partidas-work-951-v1.json',{signal,cache:'no-store'}),
   fetch(base+'research/partidas-work-extras-68-v1.txt',{signal,cache:'no-store'})
