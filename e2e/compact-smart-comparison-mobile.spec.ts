@@ -2,53 +2,55 @@ import {test,expect} from '@playwright/test';
 
 test.use({viewport:{width:390,height:844},serviceWorkers:'block'});
 
-test('Comparação mobile: individuais por tempo preservados e filtros do total sem duplicação',async({page})=>{
+test('Comparação: equipe azul, diretos vermelhos e mando amarelo, sem toques extras',async({page})=>{
  await page.goto('/');
  await expect(page.getByText('1.779',{exact:true})).toBeVisible({timeout:45000});
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
- await expect(page.getByRole('heading',{name:/Comparação Inteligente/})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Comparação Inteligente/}).first()).toBeVisible();
+ await expect(page.locator('.toolbar .segment')).toHaveCount(0);
+ await expect(page.getByText('0 partidas nesta seleção')).toHaveCount(0);
 
- await page.getByLabel('Campeonato da comparação inteligente').selectOption('Serie A italiana');
- await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Parma'});
- await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Udinese'});
- await page.getByLabel('Indicador da comparação inteligente').selectOption('corners');
+ await page.getByLabel('Campeonato da comparação inteligente').selectOption('Brasileirão Série A');
+ await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Athletico-PR'});
+ await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Internacional'});
+ await page.getByLabel('Indicador da comparação inteligente').selectOption('shots');
 
  const individual=page.getByRole('region',{name:'Estatísticas individuais das equipes'});
- await expect(individual).toBeVisible();
- await expect(individual.getByText('Parma · em casa')).toBeVisible();
+ const teamPanel=page.getByRole('region',{name:'Médias somente das equipes'});
+ await expect(teamPanel).toBeVisible();
+ await expect(teamPanel.locator('.team-summary-card')).toHaveCount(2);
+ await expect(individual.getByText('Athletico-PR · em casa')).toBeVisible();
+ await expect(teamPanel.locator('.team-summary-times')).toHaveCount(0);
+ await expect(teamPanel.locator('.team-summary-edit-line')).toHaveCount(0);
+ await expect(teamPanel.locator('.team-period-compact-row')).toHaveCount(4);
+ const first=teamPanel.locator('.team-summary-card').first();
+ await expect(first.locator('.team-period-compact-row').first()).toContainText('1º tempo');
+ await expect(first.locator('.team-period-compact-row').last()).toContainText('2º tempo');
+ await expect(first.locator('.team-simple-frequency')).toHaveCount(3);
+ await expect(first.locator('input[aria-label^="Linha individual para"]')).toHaveCount(1);
 
- // Only one total-filter control panel exists, physically beside the
- // combined-market results rather than above the individual team cards.
- const totals=page.locator('.smart-total-collapsible');
+ const direct=page.getByRole('region',{name:'Confrontos diretos — equipes individuais'});
+ await expect(direct).toBeVisible();
+ await expect(direct.locator('.team-summary-card')).toHaveCount(2);
+ await expect(direct.locator('.team-period-compact-row')).toHaveCount(4);
+
+ const totals=page.locator('.smart-total-collapsible.smart-mando-section');
  await expect(totals).toHaveCount(1);
+ await expect(totals).toHaveAttribute('open','');
  await expect(page.locator('.smart-total-settings')).toHaveCount(0);
- await expect(page.getByLabel('Linha da comparação inteligente')).toBeHidden();
-
- const parma=individual.locator('.team-summary-card').first();
- await parma.locator('.team-summary-times > summary').click();
- await expect(parma.locator('.team-period-compact-row')).toHaveCount(2);
- await expect(parma.getByText('1º tempo')).toBeVisible();
- await expect(parma.getByText('2º tempo')).toBeVisible();
- await expect(parma.locator('.team-period-compact-frequencies')).toHaveCount(2);
-
- await totals.locator('summary').first().click();
  await expect(page.getByLabel('Período da comparação inteligente')).toBeVisible();
- await page.getByLabel('Período da comparação inteligente').selectOption('first');
+ await page.getByLabel('Período da comparação inteligente').selectOption('second');
  await page.getByLabel('Linha da comparação inteligente').fill('9,5');
- await expect(totals.locator('summary').first()).toContainText('1º tempo');
+ await expect(totals.locator('summary').first()).toContainText('2º tempo');
  await expect(totals.locator('summary').first()).toContainText('9,5');
- await expect(individual).toBeVisible();
- await expect(parma.locator('.team-period-compact-row')).toHaveCount(2);
-
- // An invalid total line must NOT erase the separate individual analytics
- // or trap the user outside the collapsed total editor.
+ await expect(page.locator('.smart-verdict')).toBeVisible();
+ await expect(page.locator('.smart-legacy-table')).toHaveCount(1);
  await page.getByLabel('Linha da comparação inteligente').fill('9');
  await expect(totals.getByRole('alert')).toBeVisible();
  await expect(individual).toBeVisible();
  await page.getByLabel('Linha da comparação inteligente').fill('8,5');
  await expect(totals.getByRole('alert')).toHaveCount(0);
- await expect(page.locator('local-storage-never-written')).toHaveCount(0);
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
 });
