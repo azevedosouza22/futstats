@@ -14,6 +14,12 @@ type PackFile={format:string;version:number;competition:string;data:Data};
 const indexPath='/research/packs/manifest-v1.json';
 const isObj=(x:unknown):x is Record<string,unknown>=>
  !!x&&typeof x==='object'&&!Array.isArray(x);
+/** Map spelling variants across La Liga editions to one persistent team identity. */
+const seasonTeamKey=(league:string,name:string)=>{
+ const normalized=normalizeTeam(name).replace(/\\./g,'');
+ if(league==='La Liga espanhola'&&normalized==='celta vigo')return 'celta de vigo';
+ return normalized;
+};
 const fingerprint=(m:Match,names:Map<string,string>)=>[
  m.competition,m.date,normalizeTeam(names.get(m.home)??''),
  normalizeTeam(names.get(m.away)??'')
@@ -48,7 +54,7 @@ export function mergeResearchPacks(
  const canonical=new Map(teams.map(t=>[
   competitionParts(
    baseline.data.matches.find(m=>m.home===t.id||m.away===t.id)?.competition??''
-  ).league+'|'+normalizeTeam(t.name),t.id
+  ).league+'|'+seasonTeamKey(competitionParts(baseline.data.matches.find(m=>m.home===t.id||m.away===t.id)?.competition??'').league,t.name),t.id
  ]));
  const matchIds=new Set(matches.map(m=>m.id));
  const sourceIds=new Set(matches.map(m=>m.research?.sourceId).filter(Boolean));
@@ -65,7 +71,8 @@ export function mergeResearchPacks(
   const fromNames=new Map(data.teams.map(t=>[t.id,t.name]));
   const idMap=new Map<string,string>();
   for(const t of data.teams){
-   const k=competitionParts(entry.competition).league+'|'+normalizeTeam(t.name);
+   const league=competitionParts(entry.competition).league;
+   const k=league+'|'+seasonTeamKey(league,t.name);
    if(!normalizeTeam(t.name))throw Error('Equipe sem nome no pacote.');
    let id=canonical.get(k);
    if(!id){
