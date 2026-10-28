@@ -16,7 +16,7 @@ const isObj=(x:unknown):x is Record<string,unknown>=>
  !!x&&typeof x==='object'&&!Array.isArray(x);
 /** Map spelling variants across La Liga editions to one persistent team identity. */
 const seasonTeamKey=(league:string,name:string)=>{
- const normalized=normalizeTeam(name).replace(/\\./g,'');
+ const normalized=normalizeTeam(name).replace(/\./g,'');
  if(league==='La Liga espanhola'&&normalized==='celta vigo')return 'celta de vigo';
  return normalized;
 };
