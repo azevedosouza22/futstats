@@ -2,7 +2,7 @@ import {useRef,useState} from 'react';
 import {Archive,CheckCircle2,CloudUpload,FileSpreadsheet,ShieldCheck} from 'lucide-react';
 import {parseWorkResearchCsv} from './workCsv';
 import {loadPublicResearchCatalog} from './researchCatalog';
-import {PRIVATE_PACK_EVENT,savePrivateSeasonCsv} from './privateSeasonPacks';
+import {PRIVATE_PACK_EVENT,requireFutStats55Columns,savePrivateSeasonCsv} from './privateSeasonPacks';
 
 /** The CSV never leaves the user's browser. Import is a separate PRIVATE research
  * cache for comparison, not the original FutStats history/backup or main branch.
@@ -23,6 +23,7 @@ export default function PrivateSeasonCsvImport(){
    if(file.size>2_000_000||!file.name.toLowerCase().endsWith('.csv'))
     throw Error('Selecione um CSV FutStats de até 2 MB.');
    const value=await file.text();
+   requireFutStats55Columns(value);
    const rows=parseWorkResearchCsv(value);
    const competitions=new Set(rows.map(r=>r.competition));
    if(competitions.size!==1)throw Error('Use um campeonato e uma temporada por arquivo.');
