@@ -47,6 +47,28 @@ function FrequencySummary({frequency,line,compact=false}:{
   </div>}
  </div>;
 }
+/** One compact row per half. The independent half-time line is preserved,
+ * but we do not repeat a full-size card, bar and nested panels for each half.
+ */
+function PeriodCompactRow({title,sample}:{title:string;sample:IndividualMean}){
+ const line=suggestedIndividualLine(sample.mean);
+ const frequency=line!==null?individualLineFrequency(sample,line):null;
+ return <div className="team-period-compact-row">
+   <div className="team-period-compact-head">
+     <strong>{title}</strong>
+     <span>Média {fmt(sample.mean)} · {sample.count} {sample.count===1?'jogo':'jogos'}</span>
+   </div>
+   {frequency&&line!==null?
+     <div className="team-period-compact-frequencies">
+       <span className="team-period-compact-line">Linha {fmt(line)}</span>
+       <span>Over <b>{frequency.count?frequency.over+'/'+frequency.count:'N/D'}</b>
+         {' '}<small>({pct(frequency.overRate)})</small></span>
+       <span>Under <b>{frequency.count?frequency.under+'/'+frequency.count:'N/D'}</b>
+         {' '}<small>({pct(frequency.underRate)})</small></span>
+     </div>:
+     <small className="team-period-compact-empty">Sem jogos válidos para a linha.</small>}
+ </div>;
+}
 function IndividualCard({lens,title,windowSize}:{lens:IndividualLens;title:string;windowSize:5|10}){
  const [lineDraft,setLineDraft]=useState('');
  const full=get(lens,'full',windowSize);
@@ -55,8 +77,6 @@ function IndividualCard({lens,title,windowSize}:{lens:IndividualLens;title:strin
  const suggestedLine=suggestedIndividualLine(get(lens,'full',10).mean);
  const changed=lineDraft.trim().length>0;
  const line=changed?readableLine(lineDraft):suggestedLine;
- const firstLine=suggestedIndividualLine(first.mean);
- const secondLine=suggestedIndividualLine(second.mean);
  return <article className="team-summary-card">
   <div className="team-summary-title">{title}</div>
   <div className="team-summary-main">
@@ -85,21 +105,13 @@ function IndividualCard({lens,title,windowSize}:{lens:IndividualLens;title:strin
      Não é odd nem recomendação de aposta.</small>
   </details>
   <details className="team-summary-times">
-   <summary>Ver 1º e 2º tempo</summary>
-   <div className="team-summary-time-grid">
-     <div><span>1º tempo</span><strong>{fmt(first.mean)}</strong>
-       <small>{first.count} jogos</small>
-       {firstLine!==null&&<FrequencySummary compact
-         frequency={individualLineFrequency(first,firstLine)} line={firstLine}/>}
-     </div>
-     <div><span>2º tempo</span><strong>{fmt(second.mean)}</strong>
-       <small>{second.count} jogos</small>
-       {secondLine!==null&&<FrequencySummary compact
-         frequency={individualLineFrequency(second,secondLine)} line={secondLine}/>}
-     </div>
+   <summary>Ver 1º e 2º tempo · linhas próprias da equipe</summary>
+   <div className="team-period-compact-list">
+     <PeriodCompactRow title="1º tempo" sample={first}/>
+     <PeriodCompactRow title="2º tempo" sample={second}/>
    </div>
-   <p className="team-times-note">Cada tempo utiliza sua própria linha de referência,
-     próxima da média histórica do período.</p>
+   <p className="team-times-note">Linhas individuais próximas da média de cada tempo;
+     não são alteradas pela configuração do total da partida.</p>
   </details>
  </article>;
 }
