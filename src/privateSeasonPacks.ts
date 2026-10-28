@@ -182,12 +182,17 @@ export function unpublishedPrivatePacks(
 ):PrivatePack[]{
  const published=new Map(base.data.matches.filter(m=>m.research)
   .map(m=>[m.research!.sourceId,m]));
+ // Compare semantic values, not JSON key order. Older CSV imports may carry
+ // extra optional N/D fields absent from the published lean research packs.
+ const samePair=(a:Match['first'],b:Match['first'])=>
+  a.every((side,i)=>['goals','shots','target','corners'].every(key=>
+   side[key as 'goals']===b[i][key as 'goals']));
  const sameStats=(a:Match,b:Match)=>
   a.date===b.date&&a.competition===b.competition&&
   a.research?.sourceUrl===b.research?.sourceUrl&&
   a.research?.dateDiscrepancy===b.research?.dateDiscrepancy&&
-  JSON.stringify([a.first,a.second,a.research?.full])===
-  JSON.stringify([b.first,b.second,b.research?.full]);
+  samePair(a.first,b.first)&&samePair(a.second,b.second)&&
+  !!a.research&&!!b.research&&samePair(a.research.full,b.research.full);
  const extra:PrivatePack[]=[];
  for(const file of stored){
   checkPack(file);
