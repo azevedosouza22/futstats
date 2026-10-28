@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import type {Data,Period} from './model';
 import {brasiliaDate} from './calendar';
+import {competitionParts} from './leagueCatalog';
 import {FOUR_LENS_LINES,FOUR_LENS_METRICS,type FourLensMetric} from './radarFourLenses';
 import {
  availableSmartLeagues,smartLeagueOptions,calculateSmartLeagueComparison,BOTH_SEASONS
@@ -99,7 +100,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
   {mode==='research'&&catalog&&<p className="muted" role="status">
     <strong>{catalog.total} partidas reais de pesquisa carregadas</strong> ·
     {' '}{catalog.leagues.length} edições de liga em {new Set(catalog.leagues.map(
-      l=>l.competition.replace(/\\s20\\d\\d(?:\\/\\d\\d)?$/,'')
+      l=>competitionParts(l.competition).league
     )).size} campeonatos · {catalog.dateConflicts} registros com datas divergentes,
     identificados e excluídos dos cálculos. Somente leitura, separado do backup.
   </p>}
