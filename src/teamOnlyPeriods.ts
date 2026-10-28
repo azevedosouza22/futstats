@@ -8,7 +8,26 @@ import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 import type {RadarFixture} from './radar';
 import type {FourLensMetric,LensKind} from './radarFourLenses';
 
-export type IndividualMean={count:number;mean:number|null};
+export type IndividualMean={count:number;mean:number|null;values:number[]};
+/** Historical occurrences only. No claim about future probability. */
+export type IndividualFrequency={
+ count:number;over:number;under:number;
+ overPercent:number|null;underPercent:number|null;
+};
+export function validIndividualLine(line:number):boolean{
+ return Number.isFinite(line)&&line>=0.5&&line<=999.5&&Number.isInteger(line-0.5);
+}
+export function individualLineFrequency(
+ sample:IndividualMean,line:number
+):IndividualFrequency|null{
+ if(!validIndividualLine(line))return null;
+ const count=sample.values.length;
+ const over=sample.values.filter(v=>v>line).length;
+ const under=sample.values.filter(v=>v<line).length;
+ return {count,over,under,
+  overPercent:count?Math.round(100*over/count):null,
+  underPercent:count?Math.round(100*under/count):null};
+}
 export type TeamPeriodRow={period:Period;last5:IndividualMean;last10:IndividualMean};
 export type IndividualLens={id:LensKind;periods:TeamPeriodRow[]};
 export type TeamOnlyReport={lenses:IndividualLens[];metric:FourLensMetric};
@@ -17,7 +36,8 @@ const periods:readonly Period[]=['first','second','full'];
 const kinds:readonly LensKind[]=['home-any','away-any','home-direct','away-direct'];
 function avg(values:number[]):IndividualMean{
  return {count:values.length,mean:values.length
-  ?values.reduce((sum,n)=>sum+n,0)/values.length:null};
+  ?values.reduce((sum,n)=>sum+n,0)/values.length:null,
+  values:[...values]};
 }
 export function analyzeTeamOnlyPeriods(data:Data,fixture:RadarFixture,metric:FourLensMetric):TeamOnlyReport{
  const teamNames=new Map(data.teams.map(t=>[t.id,normalizeTeam(t.name)]));
