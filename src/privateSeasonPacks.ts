@@ -21,7 +21,7 @@ function assureFull(row:WorkResearchRow){
  for(const period of [row.full,row.first,row.second])
   for(const side of period)
    for(const metric of metrics)
-    if(!Number.isSafeInteger(side[metric])||side[metric]===null)
+    if(typeof side[metric]!=='number'||!Number.isSafeInteger(side[metric]))
      throw Error('Estatísticas por tempo incompletas para '+row.home+' × '+row.away+'.');
 }
 
