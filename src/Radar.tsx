@@ -46,7 +46,7 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
     return ()=>{controller.abort();window.removeEventListener(PRIVATE_PACK_EVENT,reload);};
   },[]);
   const usePublicResearch=data.matches.length===0&&historicalResearch!==null;
-  const analysisData=usePublicResearch?historicalResearch.data:data;
+  const analysisData=usePublicResearch&&historicalResearch?historicalResearch.data:data;
   function checkThisDevice(){
     // No writing to storage; no network, tracking or access to OS hardware.
     let storageReadable=false,invalidStorageGroups=0;
