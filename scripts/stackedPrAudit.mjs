@@ -7,18 +7,25 @@ const shaOk=s=>typeof s==='string'&&/^[0-9a-f]{40}$/.test(s);
 const check=(ok,msg)=>{if(!ok)throw Error('Cadeia de PRs BLOQUEADA: '+msg);};
 export function validateStackedPrChain(pulls,comparisons,{
  firstNumber=48,lastNumber,anchorBase='feat/v4-good-picks-saved-return',
- headSha,repoFullName='azevedosouza22/futstats'
+ headSha,repoFullName='azevedosouza22/futstats',excludedNumbers=[]
 }={}){
  check(Number.isSafeInteger(lastNumber)&&lastNumber>=firstNumber,
   'faixa de PRs inválida');
- check(Array.isArray(pulls)&&pulls.length===lastNumber-firstNumber+1,
+ check(Array.isArray(excludedNumbers)&&excludedNumbers.every(n=>
+   Number.isSafeInteger(n)&&n>=firstNumber&&n<lastNumber),
+  'exclusão de PR inválida');
+ const excluded=new Set(excludedNumbers);
+ check(excluded.size===excludedNumbers.length,'exclusão de PR repetida');
+ const expectedNumbers=Array.from({length:lastNumber-firstNumber+1},
+  (_,i)=>firstNumber+i).filter(n=>!excluded.has(n));
+ check(Array.isArray(pulls)&&pulls.length===expectedNumbers.length,
   'a sequência tem PR faltante, adicional ou não encontrado');
  check(Array.isArray(comparisons)&&comparisons.length===pulls.length-1,
   'falta verificar ancestralidade de commits');
  let prior=null;
  const ids=new Set(),branches=new Set(),heads=new Set();
  for(let i=0;i<pulls.length;i++){
-  const p=pulls[i],expected=firstNumber+i;
+  const p=pulls[i],expected=expectedNumbers[i];
   check(p&&p.number===expected,'PR #'+expected+' ausente ou fora de ordem');
   check(!ids.has(p.number),'PR #'+expected+' repetido');ids.add(p.number);
   check(p.state==='open'&&p.draft===true&&!p.merged_at&&p.merged!==true,
@@ -38,7 +45,7 @@ export function validateStackedPrChain(pulls,comparisons,{
   if(prior){
    const cmp=comparisons[i-1];
    check(cmp?.base===prior.head.sha&&cmp?.head===p.head.sha,
-    'comparação de commits não corresponde a #'+(expected-1)+' → #'+expected);
+    'comparação de commits não corresponde a #'+prior.number+' → #'+expected);
    check(cmp.status==='ahead'&&Number.isSafeInteger(cmp.ahead_by)&&
     cmp.ahead_by>=1&&cmp.behind_by===0,
     'PR #'+expected+' não descende do SHA do PR anterior');
