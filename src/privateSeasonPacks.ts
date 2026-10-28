@@ -207,3 +207,73 @@ export async function savePrivateSeasonCsv(
  if(combination.added>0)await putPack(combination.pack);
  return {...combination,total:combined.total,competition:incoming.competition};
 }
+
+
+/**
+ * Stage multiple league/season files as one atomic private browser import.
+ * Existing rounds are preserved byte-for-byte on duplicate IDs.
+ */
+export function stagePrivateSeasonRows(
+ stored:readonly PrivatePack[],rows:readonly WorkResearchRow[],timestamp:string
+):{all:PrivatePack[];writes:PrivatePack[];added:number;skipped:number;
+    seasons:{competition:string;added:number;skipped:number;count:number}[]}{
+ if(!rows.length||rows.length>1200)throw Error('Limite de 1.200 partidas por pacote.');
+ const grouped=new Map<string,WorkResearchRow[]>();
+ const ids=new Set<string>();
+ for(const row of rows){
+  if(ids.has(row.sourceId))throw Error('ID repetido entre temporadas: '+row.sourceId);
+  ids.add(row.sourceId);
+  const group=grouped.get(row.competition)??[];
+  group.push(row);grouped.set(row.competition,group);
+ }
+ if(grouped.size>20)throw Error('Limite de 20 temporadas por arquivo.');
+ const byCompetition=new Map<string,PrivatePack>();
+ for(const pack of stored){
+  checkPack(pack);
+  if(byCompetition.has(pack.competition))throw Error('Temporada privada duplicada.');
+  byCompetition.set(pack.competition,pack);
+ }
+ const writes:PrivatePack[]=[];
+ const seasons:{competition:string;added:number;skipped:number;count:number}[]=[];
+ let added=0,skipped=0;
+ for(const [competition,items] of grouped){
+  const fresh=createPrivateSeasonPack(items,timestamp);
+  const combined=combinePrivateSeasonPacks(byCompetition.get(competition),fresh);
+  byCompetition.set(competition,combined.pack);
+  if(combined.added>0)writes.push(combined.pack);
+  seasons.push({competition,added:combined.added,skipped:combined.skipped,
+   count:combined.pack.data.matches.length});
+  added+=combined.added;skipped+=combined.skipped;
+ }
+ return {all:[...byCompetition.values()],writes,added,skipped,seasons};
+}
+async function putPacksAtomically(packs:readonly PrivatePack[]):Promise<void>{
+ if(!packs.length)return;
+ const db=await dbOpen();
+ try{return await new Promise<void>((resolve,reject)=>{
+  const tx=db.transaction(STORE,'readwrite');
+  for(const pack of packs)tx.objectStore(STORE).put(pack);
+  tx.oncomplete=()=>resolve();
+  tx.onerror=()=>reject(Error('Falha ao salvar temporadas privadas.'));
+  tx.onabort=()=>reject(Error('Nenhuma alteração parcial foi confirmada.'));
+ });}finally{db.close();}
+}
+/** Validate both leagues against the public 1,019 before a single IDB write. */
+export async function savePrivateSeasonsCsv(
+ csv:string,base:ResearchCatalog
+):Promise<{added:number;skipped:number;total:number;
+ seasons:{competition:string;added:number;skipped:number;count:number}[]}>{
+ requireFutStats55Columns(csv);
+ const rows=parseWorkResearchCsv(csv,1200);
+ const existing=await listPacks();
+ const staged=stagePrivateSeasonRows(existing,rows,new Date().toISOString());
+ const all=staged.all.sort((a,b)=>a.competition.localeCompare(b.competition));
+ const merged=mergeResearchPacks(base,
+  all.map((pack,i)=>({
+   file:'private_season_'+(i+1)+'.json',
+   competition:pack.competition,count:pack.data.matches.length
+  })),all);
+ await putPacksAtomically(staged.writes);
+ return {added:staged.added,skipped:staged.skipped,total:merged.total,
+  seasons:staged.seasons};
+}

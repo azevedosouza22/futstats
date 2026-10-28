@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {createPrivateSeasonPack,combinePrivateSeasonPacks} from './privateSeasonPacks';
+import {createPrivateSeasonPack,combinePrivateSeasonPacks,stagePrivateSeasonRows} from './privateSeasonPacks';
 import {mergeResearchPacks} from './researchPacks';
 import {parseWorkResearchCsv,type WorkResearchRow} from './workCsv';
 import type {Data,Stats} from './model';
@@ -74,5 +74,57 @@ describe('Etapa 88: inclusão privada por liga/temporada',()=>{
  });
  it('reutiliza a validação original de CSV do FutStats',()=>{
   expect(()=>parseWorkResearchCsv('id_fonte,fonte\\nabc,Flashscore')).toThrow();
+ });
+});
+
+describe('Etapa 89: duas temporadas em uma confirmação',()=>{
+ const seasons=[
+  row('pl001','2025-08-15','Liverpool','Bournemouth'),
+  row('pl002','2025-08-16','Arsenal','Chelsea'),
+  {...row('ll001','2025-08-15','Girona','Rayo Vallecano'),
+    competition:'La Liga espanhola 2025/26'},
+  {...row('ll002','2025-08-16','Barcelona','Valencia'),
+    competition:'La Liga espanhola 2025/26'}
+ ];
+ it('prepara duas ligas e quatro jogos sem gravar ou alterar a pesquisa inicial',()=>{
+  const before=JSON.stringify(seasons);
+  const first=stagePrivateSeasonRows([],seasons,label);
+  expect(first).toMatchObject({added:4,skipped:0});
+  expect(first.all).toHaveLength(2);
+  expect(first.writes).toHaveLength(2);
+  const combined=mergeResearchPacks(baseline,first.all.map((p,i)=>({
+   file:'private_season_'+i+'.json',competition:p.competition,count:p.data.matches.length
+  })),first.all);
+  expect(combined.total).toBe(4);
+  expect(JSON.stringify(seasons)).toBe(before);
+ });
+ it('é idempotente e mantém integridade com uma temporada já existente',()=>{
+  const original=stagePrivateSeasonRows([],seasons.slice(0,2),label);
+  const next=stagePrivateSeasonRows(original.all,seasons,label);
+  expect(next).toMatchObject({added:2,skipped:2});
+  expect(next.writes).toHaveLength(1);
+  const repeated=stagePrivateSeasonRows(next.all,seasons,label);
+  expect(repeated).toMatchObject({added:0,skipped:4});
+  expect(repeated.writes).toHaveLength(0);
+  expect(repeated.all.map(x=>x.data.matches.length).sort()).toEqual([2,2]);
+ });
+ it('rejeita ID repetido entre temporadas sem incorporar parcial',()=>{
+  const bad={...seasons[2],sourceId:'pl001'};
+  expect(()=>stagePrivateSeasonRows([],[seasons[0],bad],label)).toThrow(/ID repetido/);
+ });
+ it('limite antigo de 500 vale para importar manualmente, 760 vale para lote privado',()=>{
+  const cols=['id_fonte','fonte','url_fonte','data','data_titulo_fonte',
+   'mandante','visitante','competicao',
+   ...['gols','finalizacoes','chutes_no_alvo','escanteios'].flatMap(m=>
+    [m+'_mandante_jogo',m+'_visitante_jogo'])];
+  const lines=Array.from({length:760},(_,i)=>{
+   const id='id'+String(i).padStart(5,'0');
+   return [id,'Flashscore','https://www.flashscore.com.br/jogo/?mid='+id,
+    '2025-08-15','2025-08-15','Mandante '+i,'Visitante '+i,
+    'Premier League inglesa 2025/26',...Array(8).fill('0')].join(',');
+  });
+  const csv=[cols.join(','),...lines].join('\n');
+  expect(()=>parseWorkResearchCsv(csv)).toThrow(/500/);
+  expect(parseWorkResearchCsv(csv,1200)).toHaveLength(760);
  });
 });

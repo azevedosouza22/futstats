@@ -195,7 +195,7 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
   </section>
 
   <details className="fs-home-panel fs-home-private">
-   <summary>Adicionar temporada histórica à pesquisa privada</summary>
+   <summary>Adicionar temporadas históricas à pesquisa privada</summary>
    <p className="muted">Os novos jogos aparecerão nas análises e frequências somente neste navegador.
     Nenhuma atualização é feita na produção ou no backup pessoal.</p>
    <PrivateSeasonCsvImport/>
