@@ -18,6 +18,7 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
   // The two primary shortcuts share the existing Radar/Agenda engine.
   // Focus its appropriate section; all existing saved predictions stay untouched.
   useEffect(()=>{
+    setMode('new'); // Both primary destinations live in the future-game Radar.
     const id=window.setTimeout(()=>{
       document.querySelector(focus==='picks'?'.daily-good-picks':'.calendar-agenda')
         ?.scrollIntoView({block:'start',behavior:'smooth'});
