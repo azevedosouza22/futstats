@@ -55,7 +55,7 @@ describe('Etapa 88: inclusão privada por liga/temporada',()=>{
  it('recusa sobrescrever dados já existentes e dois IDs para o mesmo confronto',()=>{
   const first=createPrivateSeasonPack([row('match001','2025-08-15','Liverpool','Bournemouth')],label);
   const bad=row('match001','2025-08-15','Liverpool','Bournemouth');
-  bad.first=[st(2,6,3,2),b];
+  bad.sourceUrl+='&referencia=divergente';
   expect(()=>combinePrivateSeasonPacks(first,createPrivateSeasonPack([bad],label)))
    .toThrow(/Conflito/);
   const duplicated=createPrivateSeasonPack([
