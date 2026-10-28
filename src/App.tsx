@@ -136,7 +136,7 @@ export default function App(){
    aria-current={mainActive===t.area?'page':undefined} key={t.area}
    onClick={()=>goTo(t.page,t.area==='picks'?'picks':t.area==='agenda'?'agenda':undefined)}>
    <t.icon size={20}/>{t.name}{mainActive===t.area&&<span className="nav-dot"/>}
- </button>)}</nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Histórico + Radar (backup antigo)</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><small>FutStats · Visual V4 (teste)</small></div></aside>
+ </button>)}</nav><div className="sidebar-bottom"><div className="local-card"><span className="online-dot"/>Dados no seu dispositivo<p>Suas estatísticas, sempre com você.</p></div><button onClick={exportData}><Download size={17}/>Histórico + Radar (backup antigo)</button><button onClick={()=>file.current?.click()}><Upload size={17}/>Restaurar backup</button><button type="button" data-area="tools" onClick={()=>goTo(7)}><Wrench size={17}/>Segurança e ferramentas</button><small>FutStats · Visual V4 (teste)</small></div></aside>
  <nav className="mobile-bottom-nav" aria-label="Menu principal do celular">
  {mainNav.map(t=><button type="button" key={t.area} className={mainActive===t.area?'active':''}
    aria-current={mainActive===t.area?'page':undefined}
