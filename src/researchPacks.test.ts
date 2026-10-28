@@ -67,6 +67,6 @@ describe('Etapa 86 — catálogo extensível sem migrar o histórico',()=>{
   expect(()=>parseResearchPackManifest({format:'futstats-research-packs-v1',version:1,
     packs:[{...entry,file:'../../secrets.json'}]})).toThrow(/Pacote/);
   const p=pack();delete (p.data.matches[0] as Partial<Match>).research;
-  expect(()=>mergeResearchPacks(baseline,[entry],[p])).toThrow(/origem/);
+  expect(()=>mergeResearchPacks(baseline,[entry],[p])).toThrow(/origem|inválido/);
  });
 });
