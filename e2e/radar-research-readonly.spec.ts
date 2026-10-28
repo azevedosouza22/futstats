@@ -14,7 +14,8 @@ test('Radar e As Boas consultam pesquisa quando a base pessoal está vazia',asyn
  const shortcut=page.getByRole('button',{name:/Agenda e Radar/});
  await shortcut.click();
  await expect(page.getByText(/1.779 jogos de pesquisa/)).toBeVisible({timeout:45000});
- await expect(page.locator('.radar-hero-stats')).toContainText('1.779');
+ await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
+ await expect(page.locator('.radar-hero-stats')).toContainText('1779');
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
  expect(await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'))).toBeNull();
 });
