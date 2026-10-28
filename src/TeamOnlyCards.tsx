@@ -50,7 +50,7 @@ export default function TeamOnlyCards({report,home,away}:{
  return <section className="team-only-panel team-summary-panel" aria-label="Médias somente das equipes">
   <div className="team-summary-heading">
    <div><span className="smart-kicker">MÉDIAS INDIVIDUAIS</span>
-    <h3>Finalizações e ações de cada time</h3>
+    <h3>{({goals:'Gols',shots:'Finalizações',target:'Chutes no gol',corners:'Escanteios'} as const)[report.metric]} de cada time</h3>
     <p>Somente o que cada equipe fez, sem somar o adversário.</p></div>
   </div>
   <div className="team-summary-window">
