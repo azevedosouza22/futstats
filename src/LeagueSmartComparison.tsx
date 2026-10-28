@@ -185,7 +185,7 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
       <strong>{metricLabel(metric)}</strong>
       <small>{chosenSeason===BOTH_SEASONS?'Temporada atual + anterior':chosenSeason}</small>
     </div>
-    {calculated?.teamOnly&&<TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>}
+    {calculated?.teamOnly&&<TeamOnlyCards key={metric} report={calculated.teamOnly} home={home.name} away={away.name}/>}
     <details className="smart-total-collapsible">
       <summary>Ver total da partida · Over/Under {fmt(line)}</summary>
       <p>Aqui somamos as ações dos dois times, em vez de analisar cada um separadamente.</p>
