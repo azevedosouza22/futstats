@@ -1460,3 +1460,34 @@ html{scroll-behavior:smooth}
  .team-summary-grid{grid-template-columns:1fr}
  .team-summary-main strong{font-size:33px}
 }
+
+
+/* Etapa 85 — frequência observada por equipe, sem poluir a tela. */
+.team-hit-frequency{background:#193845;border:1px solid #345768;border-radius:11px;padding:11px;margin:11px 0 0}
+.team-hit-head{font-size:11px;color:#c9e0e7;margin-bottom:9px}
+.team-hit-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.team-hit-pair>div{display:flex;align-items:flex-start;flex-direction:column;gap:4px;border-radius:9px;background:#234451;padding:10px;min-width:0}
+.team-hit-pair small{font-size:11px;color:#bed6de;line-height:1.4}
+.team-hit-pair strong{font-size:18px;color:#f5fcf7;font-weight:800;font-variant-numeric:tabular-nums}
+.team-hit-pair span{font-size:13px;color:#a4e6c5;font-weight:750}
+.team-hit-track{height:6px;background:#526d78;border-radius:9px;overflow:hidden;margin-top:10px}
+.team-hit-track>div{height:100%;border-radius:9px;background:#45b58a}
+.team-summary-edit-line{padding:10px 0;border-bottom:1px solid #3b5867}
+.team-summary-edit-line summary{color:#c9e6d8;cursor:pointer;font-size:12px;font-weight:650}
+.team-summary-edit-line label{display:grid;gap:6px;font-size:12px;color:#bcd5dd;margin:10px 0}
+.team-summary-edit-line input{padding:9px 11px;background:#132b37;border:1px solid #466575;border-radius:8px;color:#f5fcfa;font-size:14px;max-width:200px}
+.team-summary-edit-line button{font-size:12px;color:#c8f3db;border:1px solid #4b756a;border-radius:8px;padding:9px 11px}
+.team-summary-edit-line small,.team-summary-edit-line p{display:block;color:#bacdd7;font-size:11px;line-height:1.5;margin:9px 0}
+.team-hit-frequency.compact{padding:8px;margin:8px 0 0}
+.team-hit-frequency.compact .team-hit-pair{grid-template-columns:1fr;gap:5px}
+.team-hit-frequency.compact .team-hit-pair>div{padding:7px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:5px}
+.team-hit-frequency.compact .team-hit-pair strong{font-size:12px}
+.team-hit-frequency.compact .team-hit-pair span{font-size:11px}
+.team-hit-frequency.compact .team-hit-pair small{font-size:10px}
+.team-hit-frequency.compact .team-hit-track{margin-top:7px}
+.team-times-note{font-size:11px;line-height:1.5;color:#bbd5df}
+@media(max-width:405px){
+ .team-summary-time-grid{grid-template-columns:1fr}
+ .team-hit-frequency.compact .team-hit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .team-hit-frequency.compact .team-hit-pair>div{display:flex;flex-direction:column;align-items:flex-start}
+}
