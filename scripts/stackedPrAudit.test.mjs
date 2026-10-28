@@ -75,3 +75,21 @@ test('impede origem de fork ou branch não experimental',()=>{
  const g=fixtures();g.pulls[1].head.ref='production';
  assert.throws(()=>verify(g),/branch inválida/);
 });
+
+test('admite lacuna fechada explicitamente conhecida, sem afrouxar ancestralidade',()=>{
+ const f=fixtures();
+ const [first,second]=f.pulls.slice(0,2);
+ first.number=80;second.number=82;
+ second.base.ref=first.head.ref;
+ const cmp={base:first.head.sha,head:second.head.sha,status:'ahead',
+   ahead_by:3,behind_by:0};
+ const opts={...f.opts,firstNumber:80,lastNumber:82,headSha:second.head.sha,
+   excludedNumbers:[81]};
+ const accepted=validateStackedPrChain([first,second],[cmp],opts);
+ assert.equal(accepted.chainValid,true);
+ assert.equal(accepted.reviewed,2);
+ assert.throws(()=>validateStackedPrChain([first,second],[cmp],
+   {...opts,excludedNumbers:[]}),/PR faltante/);
+ assert.throws(()=>validateStackedPrChain([first,second],
+   [{...cmp,behind_by:1}],opts),/não descende/);
+});
