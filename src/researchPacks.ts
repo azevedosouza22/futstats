@@ -87,7 +87,7 @@ export function mergeResearchPacks(
    if(fingerprints.has(key))
     throw Error('Confronto já registrado; revisar duplicação: '+entry.file);
    matches.push(copy);matchIds.add(copy.id);
-   sourceIds.add(copy.research.sourceId);fingerprints.add(key);
+   sourceIds.add(m.research.sourceId);fingerprints.add(key);
   }
  }
  const data:Data={teams,matches};
