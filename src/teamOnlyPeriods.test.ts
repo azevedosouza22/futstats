@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import type {Data,Match,Stats} from './model';
-import {analyzeTeamOnlyPeriods} from './teamOnlyPeriods';
+import {analyzeTeamOnlyPeriods,individualLineFrequency,validIndividualLine} from './teamOnlyPeriods';
 import {individualWindowAvailability} from './TeamOnlyCards';
 import {calculateSmartLeagueComparison,BOTH_SEASONS} from './leagueSmartComparison';
 
@@ -105,5 +105,48 @@ describe('Etapa 83 — médias do próprio time com 1T, 2T e jogo completo',()=>
   const report=analyzeTeamOnlyPeriods(data(base),fixture,'corners');
   expect(row(report,'home-any','full').last10).toMatchObject({count:3,mean:4});
   expect(row(report,'away-any','first').last10).toMatchObject({count:4,mean:2});
+ });
+});
+
+describe('Etapa 85 — frequência histórica individual por linha e período',()=>{
+ it('exibe exatamente 3/4 (75%) para Over e 1/4 (25%) para Under, sem inventar o quinto jogo',()=>{
+  const m=[9,11,12,13].map((n,i)=>match('freq'+i,
+   '2026-10-1'+i,comp,'H','X',n,0,0,0));
+  const sample=row(analyzeTeamOnlyPeriods(data(m),fixture,'shots'),'home-any','full').last5;
+  expect(sample).toMatchObject({count:4,mean:11.25});
+  expect(individualLineFrequency(sample,10.5)).toEqual({
+   count:4,over:3,under:1,overPercent:75,underPercent:25
+  });
+ });
+ it('separa frequência do 1º e 2º tempo e jamais soma o adversário',()=>{
+  const report=analyzeTeamOnlyPeriods(data(base),fixture,'shots');
+  const first=row(report,'home-any','first').last5;
+  const second=row(report,'home-any','second').last5;
+  expect(individualLineFrequency(first,6.5)).toMatchObject({count:3,over:2,under:1});
+  expect(individualLineFrequency(second,9.5)).toMatchObject({count:3,over:1,under:2});
+  expect(individualLineFrequency(first,6.5)!.over+
+   individualLineFrequency(first,6.5)!.under).toBe(first.count);
+ });
+ it('respeita as janelas distintas 5 e 10 e as amostras válidas reais',()=>{
+  const m=Array.from({length:7},(_,i)=>match('f'+i,
+   '2026-10-'+String(i+10).padStart(2,'0'),comp,'H','X',i+1,0,2,0));
+  const r=row(analyzeTeamOnlyPeriods(data(m),fixture,'shots'),'home-any','full');
+  expect(individualLineFrequency(r.last5,4.5)).toMatchObject({
+   count:5,over:3,under:2,overPercent:60,underPercent:40
+  });
+  expect(individualLineFrequency(r.last10,4.5)).toMatchObject({
+   count:7,over:3,under:4
+  });
+ });
+ it('não calcula proporção quando não há amostra e não aceita linha inválida',()=>{
+  const empty=row(analyzeTeamOnlyPeriods(data([]),fixture,'corners'),'home-any','first').last5;
+  expect(individualLineFrequency(empty,2.5)).toEqual({
+   count:0,over:0,under:0,overPercent:null,underPercent:null
+  });
+  expect(validIndividualLine(20.5)).toBe(true);
+  for(const line of [20,0.5-1,NaN,Infinity,1000.5]){
+   expect(validIndividualLine(line)).toBe(false);
+   expect(individualLineFrequency(empty,line)).toBeNull();
+  }
  });
 });
