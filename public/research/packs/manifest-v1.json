@@ -1,5 +1,16 @@
 {
   "format": "futstats-research-packs-v1",
   "version": 1,
-  "packs": []
+  "packs": [
+    {
+      "file": "premier_league_2025_26.json",
+      "competition": "Premier League inglesa 2025/26",
+      "count": 380
+    },
+    {
+      "file": "la_liga_2025_26.json",
+      "competition": "La Liga espanhola 2025/26",
+      "count": 380
+    }
+  ]
 }
