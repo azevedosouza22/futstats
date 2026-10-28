@@ -7,6 +7,8 @@ import RadarVenueV3 from './RadarVenueV3';
 import WorkRadarPreview from './WorkRadarPreview';
 import type {Data} from './model';
 import {inspectSafetyStorage} from './safetyArchive';
+import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
+import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
 import {analyzeRadarDevice,type RadarDeviceReport} from './radarDevicePreflight';
 
 const number = (n: number | null) =>
@@ -31,6 +33,20 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
   const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
   const [savedFocus,setSavedFocus]=useState<string|null>(null);
   const [deviceCheck,setDeviceCheck]=useState<RadarDeviceReport|null>(null);
+  // When this preview has no personal matches, use the read-only research
+  // catalog for future-game analysis. Never write it into the user's history.
+  const [historicalResearch,setHistoricalResearch]=useState<ResearchCatalog|null>(null);
+  useEffect(()=>{
+    const controller=new AbortController();
+    const reload=()=>{void loadResearchCatalog(controller.signal).then(result=>{
+      if(!controller.signal.aborted)setHistoricalResearch(result);
+    }).catch(()=>{if(!controller.signal.aborted)setHistoricalResearch(null);});};
+    reload();
+    window.addEventListener(PRIVATE_PACK_EVENT,reload);
+    return ()=>{controller.abort();window.removeEventListener(PRIVATE_PACK_EVENT,reload);};
+  },[]);
+  const usePublicResearch=data.matches.length===0&&historicalResearch!==null;
+  const analysisData=usePublicResearch?historicalResearch.data:data;
   function checkThisDevice(){
     // No writing to storage; no network, tracking or access to OS hardware.
     let storageReadable=false,invalidStorageGroups=0;
@@ -126,7 +142,7 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
       </details>
     </nav>
     <div className="radar-inner">
-      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} view={mode}
+      {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} analysisData={analysisData} researchMode={usePublicResearch} view={mode}
         focusedSavedKey={savedFocus}
         onViewSaved={key=>{setSavedFocus(key??null);setMode('saved');}}
         onOpenWork={()=>setMode('work')}/>}
