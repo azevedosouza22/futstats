@@ -183,8 +183,30 @@ export async function loadPrivateSeasonResearch(
  try{stored=await listPacks();}catch{return base;}
  if(signal?.aborted)throw Error('Consulta cancelada.');
  if(!stored.length)return base;
- const files=stored.sort((a,b)=>a.competition.localeCompare(b.competition));
- for(const file of files)checkPack(file);
+ // A season may have been imported privately before it became part of the
+ // published research. Keep the browser copy, but do not count it twice.
+ const published=new Map(base.data.matches.filter(m=>m.research)
+  .map(m=>[m.research!.sourceId,m]));
+ const sameStats=(a:Match,b:Match)=>
+  a.date===b.date&&a.competition===b.competition&&
+  a.research?.sourceUrl===b.research?.sourceUrl&&
+  a.research?.dateDiscrepancy===b.research?.dateDiscrepancy&&
+  JSON.stringify([a.first,a.second,a.research?.full])===
+  JSON.stringify([b.first,b.second,b.research?.full]);
+ const extra:PrivatePack[]=[];
+ for(const file of stored){
+  checkPack(file);
+  const matches=file.data.matches.filter(m=>{
+   const existing=published.get(m.research!.sourceId);
+   if(!existing)return true;
+   if(!sameStats(existing,m))
+    throw Error('Conflito entre pesquisa pública e privada: '+m.research!.sourceId);
+   return false;
+  });
+  if(matches.length)extra.push({...file,data:{...file.data,matches}});
+ }
+ if(!extra.length)return base;
+ const files=extra.sort((a,b)=>a.competition.localeCompare(b.competition));
  return mergeResearchPacks(base,
   files.map((f,i)=>({file:'private_season_'+(i+1)+'.json',
    competition:f.competition,count:f.data.matches.length})),files);
