@@ -31,7 +31,7 @@ export function parseResearchPackManifest(raw:unknown):PackEntry[]{
    seen.has(item.file)||typeof item.competition!=='string'||
    !item.competition.trim()||item.competition.length>150||
    competitionParts(item.competition).season===NO_SEASON||
-   !Number.isSafeInteger(item.count)||item.count<1||item.count>1200)
+   (typeof item.count!=='number'||!Number.isSafeInteger(item.count)||item.count<1||item.count>1200))
    throw Error('Pacote histórico sem nome, temporada ou quantidade válida.');
   seen.add(item.file);
   result.push({file:item.file,competition:item.competition,count:item.count as number});
