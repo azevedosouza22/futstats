@@ -407,10 +407,10 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
       </div>
       {periodCoverage&&<RadarPeriodCoveragePanel report={periodCoverage}/>}
       {periodLineComparison&&<RadarPeriodLineComparePanel report={periodLineComparison}/>}
-      {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={data}
+      {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={analysisData}
         fixture={{home:home.id,away:away.id,date,competition:league}}/>}
       {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name} trace={venueTrail} />}
-      {home&&away&&<RadarFourLensesPanel data={data}
+      {home&&away&&<RadarFourLensesPanel data={analysisData}
         fixture={{home:home.id,away:away.id,date,competition:league}}
         homeName={home.name} awayName={away.name}/>}
       <RadarLineExplorer groups={lineExplorationPreview}/>
