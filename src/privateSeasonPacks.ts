@@ -168,7 +168,10 @@ async function putPack(pack:PrivatePack):Promise<void>{
 export async function loadPrivateSeasonResearch(
  base:ResearchCatalog,signal?:AbortSignal
 ):Promise<ResearchCatalog>{
- const stored=await listPacks();
+ // Private storage may be unavailable in restricted/incognito browsers.
+ // Baseline research must continue to work without any optional local season.
+ let stored:PrivatePack[];
+ try{stored=await listPacks();}catch{return base;}
  if(signal?.aborted)throw Error('Consulta cancelada.');
  if(!stored.length)return base;
  const files=stored.sort((a,b)=>a.competition.localeCompare(b.competition));
