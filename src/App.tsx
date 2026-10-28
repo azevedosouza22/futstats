@@ -55,7 +55,7 @@ export default function App(){
  function goTo(pageNumber:number,focus?:'agenda'|'picks'){
    if(focus)setRadarFocus(focus);
    setPage(pageNumber);setSearch('');setHistoryPage(1);
-   window.scrollTo({top:0,behavior:'instant'});
+   window.scrollTo({top:0,behavior:'auto'});
  }
 
  const imageFieldOrigin=(k:keyof Stats,side:number)=>{const origin=detail?.image?.fields[detailPeriod]?.[k]?.[side];return origin?({recognized:'Reconhecido e revisado',corrected:'Corrigido pelo usuário',calculated:'Calculado'})[origin]:'';};
