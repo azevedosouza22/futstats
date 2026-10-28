@@ -10,6 +10,7 @@ import PreGame from './PreGame';
 import WorkPreGame from './WorkPreGame';
 import Radar from './Radar';
 import LeagueSmartComparison from './LeagueSmartComparison';
+import HomeDashboard from './HomeDashboard';
 import Live from './Live';
 import AutomaticMatches from './AutomaticMatches';
 import {metrics,labels,empty,stats,average,matchAverage,validateMatch,validData,STORAGE,type Data,type Team,type Match,type Stats} from './model';
@@ -145,11 +146,11 @@ export default function App(){
  </button>)}
  </nav><div className="main"><header><span>Futebol / <b>{page===6?(radarFocus==='picks'?'As Boas do Dia':'Agenda'):tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button type="button" className="mobile-safety-shortcut" aria-label="Abrir backup integral V4" title="Cópia integral com Histórico, Radar, Work e agenda CSV" onClick={()=>setPage(7)}><Shield size={18}/><span>Backup V4</span></button></div></header><main>
  <div className="heading"><div><div className="eyebrow">FUTSTATS · CENTRO DE ANÁLISES</div><h1>{[
- 'Seu futebol em números.','Equipes por campeonato.','Comparação Inteligente por liga.',
+ 'Visão Geral do FutStats IA.','Equipes por campeonato.','Comparação Inteligente por liga.',
  'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.','Radar V2 × V3.',
  'Ferramentas e testes opcionais.','Tudo organizado em um só lugar.'
  ][page]}</h1><p>{[
- 'Acompanhe o desempenho e descubra o que os dados dizem.',
+ 'Acompanhe indicadores, agenda e análises em um painel único.',
  'Filtre equipes por liga e temporada para não misturar médias.',
  'Filtre temporada, mandante, visitante e confrontos diretos.',
  'Encontre jogos por campeonato, temporada ou busca.',
@@ -163,27 +164,7 @@ export default function App(){
  {error&&<div className="alert" role="alert">{error}<button aria-label="Fechar aviso" onClick={()=>setError('')}><X size={16}/></button></div>}{notice&&<div className="notice" role="status"><Check size={17}/>{notice}<button aria-label="Fechar mensagem" onClick={()=>setNotice('')}><X size={16}/></button></div>}
  <div className="toolbar"><span><span className="online-dot"/> {page===1?`${scopedTeams.length} equipes nesta seleção`:[2,3].includes(page)?`${scopedMatches.length} partidas nesta seleção`:`${data.matches.length} partidas na sua base`}</span>{[0,1,2,3].includes(page)&&<div className="segment"><button className={period==='first'?'selected':''} onClick={()=>setPeriod('first')}>1º tempo</button><button className={period==='full'?'selected':''} onClick={()=>setPeriod('full')}>Partida completa</button></div>}</div>
  {[1,3].includes(page)&&leagueFilters}
- {page===0&&<><section className="home-shortcuts" aria-label="Acesso rápido às análises">
-  <div className="home-shortcuts-copy"><span className="quick-eyebrow">CENTRAL DE ANÁLISE</span><h2>Seu próximo jogo começa aqui.</h2><p>Acompanhe a agenda e veja os sinais dos Radares V2 e V3 em poucos toques.</p></div>
-  <div className="quick-actions">
-    <button type="button" onClick={()=>setPage(6)}><Target size={22}/><span><strong>Agenda e Radar</strong><small>Jogos futuros e previsões</small></span><ChevronRight size={18}/></button>
-    <button type="button" onClick={()=>setPage(5)}><Activity size={22}/><span><strong>Análise pré-jogo</strong><small>Histórico por equipe</small></span><ChevronRight size={18}/></button>
-  </div>
- </section><section className="panel backup-unified" aria-label="Backup completo do FutStats">
-  <div><h2>Cópia integral V4 · proteção dos dados</h2><p>Histórico, previsões, pesquisas Work e agenda CSV em um único arquivo. A restauração segura só funciona em um perfil vazio.</p></div>
-  <div className="backup-buttons">
-    <button type="button" className="primary" onClick={()=>setPage(7)}><Shield size={17}/> Abrir segurança e backup V4</button>
-    <details className="backup-legacy-tools"><summary>Backup antigo · Histórico + Radar</summary>
-      <div className="backup-legacy-actions">
-        <button type="button" className="text-button" onClick={exportData}><Download size={17}/> Exportar formato antigo</button>
-        <button type="button" className="text-button" onClick={()=>file.current?.click()}><Upload size={17}/> Restaurar formato antigo</button>
-      </div>
-    </details>
-  </div>
-  </section><div className="kpis">{[{label:'Partidas cadastradas',value:data.matches.length,icon:Shield,note:`${data.teams.length} equipes na base`},{label:'Gols por partida',value:fmt(mean('goals').value),icon:Goal,note:`${fmt(total('goals'))} gols · ${mean('goals').count} jogos com dados`},{label:'Finalizações por partida',value:fmt(mean('shots').value),icon:Target,note:`${mean('shots').count} jogos com finalizações disponíveis`},{label:'Escanteios por partida',value:fmt(mean('corners').value),icon:Flag,note:`${mean('corners').count} jogos com dados`}].map(k=><div className="kpi" key={k.label}><div><span>{k.label}</span><k.icon size={20}/></div><strong>{k.value}</strong><small>{k.note}</small></div>)}</div>
- <div className="dashboard-grid"><section className="panel"><div className="panel-head"><div><h2>Média de gols por equipe</h2><p>O ataque em perspectiva</p></div><span className="tag">{period==='full'?'90 MIN':'1º TEMPO'}</span></div>{ranking.some(t=>t.samples.goals)?<div className="ranking">{ranking.filter(t=>t.samples.goals).slice(0,5).map(t=><div className="rank-row" key={t.id}><div><span className="badge" style={{background:t.color}}>{t.name.slice(0,3).toUpperCase()}</span><span>{t.name}<small>{t.samples.goals} partidas com gols</small></span></div><div className="bar-track"><div style={{width:`${(t.values.goals??0)/Math.max(...ranking.map(r=>r.values.goals??0),1)*100}%`,background:t.color}}/></div><b>{fmt(t.values.goals)}</b></div>)}</div>:<div className="empty"><Goal/><h3>Seu próximo gol começa aqui</h3><p>Cadastre uma partida para visualizar as médias.</p><button className="text-button" onClick={()=>openMatch()}>Registrar primeira partida <ArrowUpRight size={16}/></button></div>}<div className="panel-foot">N/D: não disponível. Cada média exclui dados ausentes; amostras variam por métrica.</div></section>
- <section className="insight"><div className="eyebrow">MAIS CONTEXTO, MELHORES ANÁLISES</div><h2>O placar é só<br/>o começo.</h2><p>Compare gols, finalizações, escanteios e cartões de duas equipes, período por período.</p><div className="pitch"><div className="pitch-line"/><div className="pitch-circle"/><span className="player one"/><span className="player two"/><span className="player three"/><span className="player four"/></div><button onClick={()=>setPage(2)}>Comparar equipes <ArrowUpRight size={18}/></button></section></div>
- <section className="panel recent"><div className="panel-head"><div><h2>Últimas partidas</h2><p>Os jogos mais recentes da sua base</p></div><button className="text-button" onClick={()=>setPage(3)}>Ver histórico <ArrowUpRight size={16}/></button></div>{sorted.length?sorted.slice(0,4).map(m=><MatchRow key={m.id} m={m}/>):<div className="empty compact"><History/><p>Nenhuma partida cadastrada ainda.</p><button className="text-button" onClick={demo}>Explorar com dados de demonstração <ArrowUpRight size={16}/></button></div>}</section></>}
+ {page===0&&<HomeDashboard data={data} onNavigate={goTo} onNewMatch={()=>openMatch()}/>}
  {page===1&&<>{!scopedTeams.length?<div className="panel empty"><Users/><h3>Monte sua base de equipes</h3><p>Selecione outro campeonato ou cadastre equipes para continuar.</p><button className="primary" onClick={()=>openTeam()}>Cadastrar equipe</button></div>:<div className="team-grid">{scopedTeams.map(t=>{const avg=average(scopedMatches,t.id,period);return <section className="panel team-card" key={t.id}><div className="team-card-top"><Badge id={t.id}/><div><button aria-label={`Editar ${t.name}`} onClick={()=>openTeam(t)}><Pencil size={16}/></button><button aria-label={`Excluir ${t.name}`} onClick={()=>removeTeam(t)}><Trash2 size={16}/></button></div></div><h2>{t.name}</h2><p>{avg.count} partidas cadastradas</p><div className="team-numbers"><span><b>{fmt(avg.values.goals)}</b>Gols / jogo ({avg.samples.goals} jogos)</span><span><b>{fmt(avg.values.shots)}</b>Finalizações / jogo ({avg.samples.shots} jogos)</span><span><b>{fmt(avg.values.target)}</b>Chutes no gol / jogo ({avg.samples.target} jogos)</span><span><b>{fmt(avg.values.corners)}</b>Escanteios / jogo ({avg.samples.corners} jogos)</span></div></section>;})}</div>}</>}
  {page===2&&<><LeagueSmartComparison data={data}/>
  <details className="radar-extra-modes" aria-label="Comparação antiga opcional">
