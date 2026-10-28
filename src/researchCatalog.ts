@@ -5,6 +5,7 @@
 import {validData,type Data,type Match,type Stats} from './model';
 import {competitionParts} from './leagueCatalog';
 import {normalizeTeam} from './calendar';
+import {loadResearchPacks} from './researchPacks';
 
 export const RESEARCH_COUNTS={consolidated:951,rounds:68,total:1019} as const;
 export type ResearchCatalog={
@@ -115,5 +116,6 @@ export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchC
   fetch(base+'research/partidas-work-extras-68-v1.txt',{signal,cache:'no-store'})
  ]);
  if(!main.ok||!recent.ok)throw Error('Arquivos de pesquisa indisponíveis.');
- return parseResearchCatalog(await main.json() as unknown,await recent.text());
+ const baseline=parseResearchCatalog(await main.json() as unknown,await recent.text());
+ return loadResearchPacks(baseline,signal);
 }
