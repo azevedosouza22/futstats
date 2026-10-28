@@ -1460,3 +1460,27 @@ html{scroll-behavior:smooth}
  .team-summary-grid{grid-template-columns:1fr}
  .team-summary-main strong{font-size:33px}
 }
+
+/* Etapa 85 — frequências individuais compactas, com linhas independentes por período. */
+.team-summary-options{display:flex;flex-wrap:wrap;align-items:end;gap:12px 18px;margin-bottom:8px}
+.team-summary-options .team-summary-window{margin:0 0 2px}
+.team-line-input,.team-period-line-fields label{display:flex;flex-direction:column;gap:5px;color:#d6e8eb;font-size:12px;font-weight:600}
+.team-line-input input,.team-period-line-fields input{width:116px;max-width:100%;box-sizing:border-box;background:#0c222e;border:1px solid #547380;border-radius:8px;color:#f1faf6;padding:9px 10px;font-size:15px}
+.team-period-line-settings{margin:9px 0 13px;border:1px solid #385967;background:#162d38;border-radius:9px;padding:8px 11px}
+.team-period-line-settings summary{cursor:pointer;color:#d0e5e6;font-size:12px}
+.team-period-line-fields{display:flex;gap:15px;flex-wrap:wrap;margin-top:12px}
+.team-frequency{margin:11px 0 5px}
+.team-frequency-caption{font-size:11px;color:#afcdd4;margin-bottom:6px}
+.team-frequency-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.team-frequency-pair>div{display:flex;flex-direction:column;gap:4px;background:#213f4a;border-radius:8px;padding:9px;min-width:0}
+.team-frequency-pair small{font-size:11px;color:#c3dce1}
+.team-frequency-pair strong{font-size:16px;color:#effaf7;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.team-frequency-track{height:5px;background:#405e67;border-radius:99px;margin-top:9px;overflow:hidden}
+.team-frequency-track>div{height:100%;background:#72b5aa;border-radius:99px}
+.team-frequency-unavailable{font-size:12px;color:#f0d0a6}
+.team-summary-time-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.team-period-result{background:#203c49;border-radius:9px;padding:10px;min-width:0}
+.team-period-mean{display:flex;align-items:center;justify-content:space-between;gap:6px;color:#c6dfe0}
+.team-period-mean span{font-size:12px}
+.team-period-mean strong{font-size:21px;color:#eff9f5}
+@media(max-width:750px){.team-summary-time-detail{grid-template-columns:1fr}.team-frequency-pair strong{font-size:15px}}
