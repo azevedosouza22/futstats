@@ -8,7 +8,26 @@ import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 import type {RadarFixture} from './radar';
 import type {FourLensMetric,LensKind} from './radarFourLenses';
 
-export type IndividualMean={count:number;mean:number|null};
+export type IndividualMean={count:number;mean:number|null;observations:number[]};
+export type TeamFrequency={
+ count:number;over:number;under:number;overRate:number|null;underRate:number|null;
+};
+/** Half-integer lines avoid ties: every observed integer is either Over or Under. */
+export function individualLineFrequency(sample:IndividualMean,line:number):TeamFrequency{
+ if(!Number.isFinite(line)||line<0.5||line>999.5||!Number.isInteger(line-0.5)){
+  throw Error('Linha inválida. Use um valor terminado em ,5.');
+ }
+ const n=sample.observations.length;
+ const over=sample.observations.filter(value=>value>line).length;
+ const under=n-over;
+ return {count:n,over,under,overRate:n?over/n:null,underRate:n?under/n:null};
+}
+/** A neutral reference near the historical mean, not an odds line or bet tip. */
+export function suggestedIndividualLine(mean:number|null):number|null{
+ return mean===null||!Number.isFinite(mean)||mean<0?null:
+  Math.min(999.5,Math.max(0.5,Math.floor(mean)+0.5));
+}
+
 export type TeamPeriodRow={period:Period;last5:IndividualMean;last10:IndividualMean};
 export type IndividualLens={id:LensKind;periods:TeamPeriodRow[]};
 export type TeamOnlyReport={lenses:IndividualLens[];metric:FourLensMetric};
@@ -17,7 +36,7 @@ const periods:readonly Period[]=['first','second','full'];
 const kinds:readonly LensKind[]=['home-any','away-any','home-direct','away-direct'];
 function avg(values:number[]):IndividualMean{
  return {count:values.length,mean:values.length
-  ?values.reduce((sum,n)=>sum+n,0)/values.length:null};
+  ?values.reduce((sum,n)=>sum+n,0)/values.length:null,observations:[...values]};
 }
 export function analyzeTeamOnlyPeriods(data:Data,fixture:RadarFixture,metric:FourLensMetric):TeamOnlyReport{
  const teamNames=new Map(data.teams.map(t=>[t.id,normalizeTeam(t.name)]));
