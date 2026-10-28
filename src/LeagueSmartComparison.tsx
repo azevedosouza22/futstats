@@ -54,7 +54,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const leagues=availableSmartLeagues(active);
  const chosenLeague=leagues.includes(league)?league:(leagues[0]??'');
  const options=smartLeagueOptions(active,chosenLeague);
- const chosenSeason=season===BOTH_SEASONS||options.seasons.includes(season)
+ const chosenSeason=season===BOTH_SEASONS||[...options.seasons,...options.archivedSeasons].includes(season)
    ?season:BOTH_SEASONS;
  const preferred=useDemo?'hoffenheim':'';
  const preferredAway=useDemo?'schalke':'';
@@ -77,7 +77,7 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
   <p>Escolha campeonato, temporada e equipes. Compare as médias individuais
    por tempo e as finalizações, gols ou escanteios somados do confronto.</p>
   <details className="smart-advanced smart-source-settings">
-    <summary>Fonte dos dados · {mode==='research'?'Pesquisa de 1.019 jogos':mode==='device'?'Dados deste navegador':'Exemplo fictício'}</summary>
+    <summary>Fonte dos dados · {mode==='research'?'Pesquisa de '+(catalog?.total??'1.019')+' jogos':mode==='device'?'Dados deste navegador':'Exemplo fictício'}</summary>
   <div className="analysis-controls">
     <label>Base de dados para comparar
       <select aria-label="Fonte de dados da comparação inteligente" value={mode}
@@ -86,14 +86,14 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
           setLeague('');setSeason(BOTH_SEASONS);
           setHomeId('');setAwayId('');
         }}>
-        <option value="research">Pesquisa histórica real · 1.019 partidas</option>
+        <option value="research">Pesquisa histórica real · {catalog?.total??'1.019'} partidas</option>
         <option value="device">Base do dispositivo · somente leitura</option>
         <option value="demo">Demonstração fictícia</option>
       </select>
     </label>
   </div>
   {mode==='research'&&loading&&<p className="muted" role="status">
-    Carregando pesquisa histórica de 1.019 partidas, sem importação para o dispositivo…
+    Carregando pesquisa histórica, sem importação para o dispositivo…
   </p>}
   {mode==='research'&&!loading&&catalogError&&<p className="alert" role="alert">
     Não foi possível abrir a pesquisa: {catalogError}. Nada foi alterado.
@@ -131,6 +131,9 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
         <option value={BOTH_SEASONS}>Atual + anterior</option>
         {options.seasons.map((s,i)=><option key={s} value={s}>
           {s} · {i===0?'Atual':'Anterior'}
+        </option>)}
+        {options.archivedSeasons.map(s=><option key={s} value={s}>
+          {s} · Arquivo histórico
         </option>)}
       </select>
     </label>
