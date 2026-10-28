@@ -174,17 +174,12 @@ async function putPack(pack:PrivatePack):Promise<void>{
   tx.onabort=()=>reject(Error('A gravação privada foi interrompida.'));
  });}finally{db.close();}
 }
-export async function loadPrivateSeasonResearch(
- base:ResearchCatalog,signal?:AbortSignal
-):Promise<ResearchCatalog>{
- // Private storage may be unavailable in restricted/incognito browsers.
- // Baseline research must continue to work without any optional local season.
- let stored:PrivatePack[];
- try{stored=await listPacks();}catch{return base;}
- if(signal?.aborted)throw Error('Consulta cancelada.');
- if(!stored.length)return base;
- // A season may have been imported privately before it became part of the
- // published research. Keep the browser copy, but do not count it twice.
+/** Keep only private matches that are not already present in the published research.
+ * Raises an error on contradictory duplicates; never silently overwrites.
+ */
+export function unpublishedPrivatePacks(
+ base:ResearchCatalog,stored:readonly PrivatePack[]
+):PrivatePack[]{
  const published=new Map(base.data.matches.filter(m=>m.research)
   .map(m=>[m.research!.sourceId,m]));
  const sameStats=(a:Match,b:Match)=>
@@ -205,6 +200,20 @@ export async function loadPrivateSeasonResearch(
   });
   if(matches.length)extra.push({...file,data:{...file.data,matches}});
  }
+ return extra;
+}
+export async function loadPrivateSeasonResearch(
+ base:ResearchCatalog,signal?:AbortSignal
+):Promise<ResearchCatalog>{
+ // Private storage may be unavailable in restricted/incognito browsers.
+ // Baseline research must continue to work without any optional local season.
+ let stored:PrivatePack[];
+ try{stored=await listPacks();}catch{return base;}
+ if(signal?.aborted)throw Error('Consulta cancelada.');
+ if(!stored.length)return base;
+ // A season may have been imported privately before it became part of the
+ // published research. Keep the browser copy, but do not count it twice.
+ const extra=unpublishedPrivatePacks(base,stored);
  if(!extra.length)return base;
  const files=extra.sort((a,b)=>a.competition.localeCompare(b.competition));
  return mergeResearchPacks(base,
