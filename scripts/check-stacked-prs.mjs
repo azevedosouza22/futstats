@@ -32,8 +32,21 @@ async function main(){
   return out;
  };
  const pulls=await batch(pullNumbers,n=>json('/pulls/'+n));
- const pairs=pulls.slice(1).map((p,i)=>({
-  base:pulls[i].head?.sha,head:p.head?.sha
+ // PR #81 was closed because it duplicated #80 and is NOT an ancestor of #82.
+ // This exception must be exact, non-merged, and cannot hide a real dependency.
+ const excludedNumbers=number>=82?[81]:[];
+ if(excludedNumbers.length){
+  const duplicate=pulls.find(p=>p.number===81);
+  if(!duplicate||duplicate.state!=='closed'||duplicate.merged===true||
+   duplicate.merged_at||duplicate.head?.ref!=='feat/v4-individual-historical-frequency'||
+   duplicate.base?.ref!=='feat/v4-clean-individual-summary')
+   fail('PR #81 não corresponde ao duplicado encerrado documentado');
+  if(pulls.some(p=>p.number!==81&&p.base?.ref===duplicate.head.ref))
+   fail('PR #81 encerrado faz parte da cadeia ativa');
+ }
+ const activePulls=pulls.filter(p=>!excludedNumbers.includes(p.number));
+ const pairs=activePulls.slice(1).map((p,i)=>({
+  base:activePulls[i].head?.sha,head:p.head?.sha
  }));
  const comparisons=await batch(pairs,async p=>{
   if(!/^[0-9a-f]{40}$/.test(p.base??'')||
@@ -43,8 +56,9 @@ async function main(){
   return {base:p.base,head:p.head,status:result.status,
    ahead_by:result.ahead_by,behind_by:result.behind_by};
  },4);
- const result=validateStackedPrChain(pulls,comparisons,{
-  firstNumber:48,lastNumber:number,headSha:sha,repoFullName:repository
+ const result=validateStackedPrChain(activePulls,comparisons,{
+  firstNumber:48,lastNumber:number,headSha:sha,repoFullName:repository,
+  excludedNumbers
  });
  console.log('CADEIA EXPERIMENTAL VALIDADA — PRs #'+result.first+' a #'+
   result.last+' ('+result.reviewed+' DRAFTs; '+result.ancestryChecked+
