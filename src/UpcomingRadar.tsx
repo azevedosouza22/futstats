@@ -57,7 +57,7 @@ function NumericReferences({line,history,league,projected,legacy=false}:{
   </div>;
 }
 
-export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedSavedKey}:{data:Data;view:'new'|'saved';onOpenWork:()=>void;onViewSaved:(key?:string)=>void;focusedSavedKey?:string|null}) {
+export default function UpcomingRadar({data,analysisData,researchMode,view,onOpenWork,onViewSaved,focusedSavedKey}:{data:Data;analysisData:Data;researchMode:boolean;view:'new'|'saved';onOpenWork:()=>void;onViewSaved:(key?:string)=>void;focusedSavedKey?:string|null}) {
   const [ids,setIds]=useState<[string,string]>(['','']);
   const [date,setDate]=useState(brasiliaDate().date);
   const [time,setTime]=useState('');
@@ -86,7 +86,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
   },[view,focusedSavedKey]);
   const restoreInput=useRef<HTMLInputElement>(null);
   function useCalendarFixture(f:ScheduledFixture,selected?:DailyGoodFixture){
-    const selection=resolveCalendarFixture(data,f);
+    const selection=resolveCalendarFixture(analysisData,f);
     if(!selection)return;
     setIds([selection.homeId,selection.awayId]);setLeague(selection.competition);
     setDate(selection.date);setTime(selection.time);
@@ -101,9 +101,9 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
     futureFormRef.current?.focus({preventScroll:true});
     futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  const teams=data.teams;
-  const leagues=[...new Set(data.matches.map(m=>m.competition.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  const leagueTeams=teamsInCompetition(data,league);
+  const teams=analysisData.teams;
+  const leagues=[...new Set(analysisData.matches.map(m=>m.competition.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const leagueTeams=teamsInCompetition(analysisData,league);
   const home=leagueTeams.find(t=>t.id===ids[0]);
   const away=leagueTeams.find(t=>t.id===ids[1]);
   const readyToAnalyze=!!home&&!!away&&home.id!==away.id&&!!league&&/^\d{4}-\d{2}-\d{2}$/.test(date);
@@ -112,15 +112,15 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
     record.matchAt.slice(0,10)===date&&record.competition.trim()===league.trim()&&
     normalizeTeam(record.home)===normalizeTeam(home.name)&&
     normalizeTeam(record.away)===normalizeTeam(away.name));
-  const comparison=readyToAnalyze?radarUpcoming(data,{home:home.id,away:away.id,date,competition:league}):null;
-  const periodCoverage=readyToAnalyze&&home&&away?radarPeriodCoverage(data,{home:home.id,away:away.id,date,competition:league}):null;
-  const periodLineComparison=readyToAnalyze&&home&&away?comparePeriodRadarLines(data,{home:home.id,away:away.id,date,competition:league}):null;
-  const venuePeriod=readyToAnalyze&&home&&away?compareVenuePeriodSamples(data,{home:home.id,away:away.id,date,competition:league}):null;
-  const venueTrail=venuePeriod&&home&&away?traceVenueSamples(data,{home:home.id,away:away.id,date,competition:league},venuePeriod):null;
-  const prospective=readyToAnalyze&&home&&away?captureVenuePredictions(data,{home:home.id,away:away.id,date,competition:league}):[];
-  const numericLeagueContext=readyToAnalyze?leagueNumericContext(data,league,date):[];
+  const comparison=readyToAnalyze?radarUpcoming(analysisData,{home:home.id,away:away.id,date,competition:league}):null;
+  const periodCoverage=readyToAnalyze&&home&&away?radarPeriodCoverage(analysisData,{home:home.id,away:away.id,date,competition:league}):null;
+  const periodLineComparison=readyToAnalyze&&home&&away?comparePeriodRadarLines(analysisData,{home:home.id,away:away.id,date,competition:league}):null;
+  const venuePeriod=readyToAnalyze&&home&&away?compareVenuePeriodSamples(analysisData,{home:home.id,away:away.id,date,competition:league}):null;
+  const venueTrail=venuePeriod&&home&&away?traceVenueSamples(analysisData,{home:home.id,away:away.id,date,competition:league},venuePeriod):null;
+  const prospective=readyToAnalyze&&home&&away?captureVenuePredictions(analysisData,{home:home.id,away:away.id,date,competition:league}):[];
+  const numericLeagueContext=readyToAnalyze?leagueNumericContext(analysisData,league,date):[];
   const lineExplorationPreview=readyToAnalyze&&home&&away?
-    compareRadarLines(data,{home:home.id,away:away.id,date,competition:league}):[];
+    compareRadarLines(analysisData,{home:home.id,away:away.id,date,competition:league}):[];
   const settlements=saved.map(v=>settleVenuePredictions(data,v));
   const scores=scoreSettlements(settlements);
   const followup=summarizeRadarFollowup(saved,settlements);
@@ -143,9 +143,9 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
     const a=teams.find(t=>normalizeTeam(t.name)===normalizeTeam(f.away));
     if(!h||!a||h.id===a.id)return [];
     const fixture={home:h.id,away:a.id,date:f.date,competition:f.competition};
-    const analysis=radarUpcoming(data,fixture);
+    const analysis=radarUpcoming(analysisData,fixture);
     if(!analysis.homeHistory.length||!analysis.awayHistory.length)return [];
-    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(data,fixture),leagueContext:leagueNumericContext(data,f.competition,f.date),lineExploration:compareRadarLines(data,fixture)}];
+    return [{f,home:h,away:a,analysis,venue:captureVenuePredictions(analysisData,fixture),leagueContext:leagueNumericContext(analysisData,f.competition,f.date),lineExploration:compareRadarLines(analysisData,fixture)}];
   });
   const bulkCount=Math.min(roundPlans.length,Math.max(0,50-saved.length));
   function registerRound(){
@@ -200,12 +200,12 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       // A shortlist preview can expire between click and save. Recheck against
       // the current official schedule and frozen policy; never fabricate origin.
       const clock=new Date();
-      const matching=selectDailyGoodSignals(data,readOfficialCalendar(clock),clock).items
+      const matching=selectDailyGoodSignals(analysisData,readOfficialCalendar(clock),clock).items
         .find(x=>x.fixture.id===goodPickSelection.fixture.id&&
           x.fixture.date+'T'+x.fixture.time+':00'===matchAt&&
           x.fixture.competition===league&&
-          resolveCalendarFixture(data,x.fixture)?.homeId===home.id&&
-          resolveCalendarFixture(data,x.fixture)?.awayId===away.id&&
+          resolveCalendarFixture(analysisData,x.fixture)?.homeId===home.id&&
+          resolveCalendarFixture(analysisData,x.fixture)?.awayId===away.id&&
           x.verifiedAt===goodPickSelection.verifiedAt&&
           x.fixture.sourceUrl===goodPickSelection.fixture.sourceUrl&&
           JSON.stringify(x.signals)===JSON.stringify(goodPickSelection.signals));
@@ -297,6 +297,11 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
   const registered=roundStatuses.filter(x=>x.status!=='missing').length;
   const evaluated=roundStatuses.filter(x=>x.status==='scored').length;
   return <section className="radar-upcoming" aria-label="Radar para jogos futuros">
+    {researchMode&&<p className="notice" role="status">
+      Análise histórica experimental: {analysisData.matches.length.toLocaleString('pt-BR')} jogos de pesquisa
+      em leitura. Seus históricos pessoais e previsões salvas continuam separados.
+      Sem histórico local para conferir acertos automaticamente.
+    </p>}
     {view==='new'&&<>
       <section className="radar-line-explorer" aria-label="Demonstração da comparação inteligente">
         <h3>Nova comparação inteligente · 4 contextos</h3>
@@ -315,8 +320,8 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
         </div>}
       </section>
           <div className="radar-agenda-first">
-            <CalendarAgenda data={data} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
-              canAnalyzeFixture={f=>resolveCalendarFixture(data,f)!==null}
+            <CalendarAgenda data={analysisData} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
+              canAnalyzeFixture={f=>resolveCalendarFixture(analysisData,f)!==null}
               records={saved} onViewSaved={key=>{setRecordFilter('all');onViewSaved(key??undefined);}}/>
           </div>
           <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>
@@ -402,10 +407,10 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       </div>
       {periodCoverage&&<RadarPeriodCoveragePanel report={periodCoverage}/>}
       {periodLineComparison&&<RadarPeriodLineComparePanel report={periodLineComparison}/>}
-      {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={data}
+      {periodLineComparison&&home&&away&&<RadarCustomLinePanel data={analysisData}
         fixture={{home:home.id,away:away.id,date,competition:league}}/>}
       {venuePeriod&&home&&away&&<RadarVenuePeriodPanel report={venuePeriod} homeName={home.name} awayName={away.name} trace={venueTrail} />}
-      {home&&away&&<RadarFourLensesPanel data={data}
+      {home&&away&&<RadarFourLensesPanel data={analysisData}
         fixture={{home:home.id,away:away.id,date,competition:league}}
         homeName={home.name} awayName={away.name}/>}
       <RadarLineExplorer groups={lineExplorationPreview}/>
@@ -430,7 +435,7 @@ export default function UpcomingRadar({data,view,onOpenWork,onViewSaved,focusedS
       <span className="radar-hero-eyebrow">RADAR EXPERIMENTAL · V2 + V3</span>
       <h3>Antecipe. Registre. Compare.</h3>
       <p>Confira a agenda, acompanhe os sinais e compare as previsões com os resultados quando os jogos terminarem.</p>
-      <div className="radar-hero-stats"><span><strong>{data.matches.length}</strong> partidas na base</span><span><strong>{saved.length}</strong> registros pré-jogo</span></div>
+      <div className="radar-hero-stats"><span><strong>{analysisData.matches.length}</strong> partidas na base</span><span><strong>{saved.length}</strong> registros pré-jogo</span></div>
     </div>
 
           <details className="round-tracker-disclosure">

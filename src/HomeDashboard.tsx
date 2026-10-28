@@ -44,7 +44,11 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
  const now=new Date();
  const today=brasiliaDate(now).date;
  const references=readOfficialCalendar(now);
- const dailyGood=selectDailyGoodSignals(data,references,now);
+ // Match the Radar: use the published research only if this browser
+ // has no personal matches. Never blend its games with user histories.
+ const researchForRadar=data.matches.length===0&&research!==null;
+ const goodSource=researchForRadar?research.data:data;
+ const dailyGood=selectDailyGoodSignals(goodSource,references,now);
  const scheduled=references.filter(item=>item.fresh&&isUpcoming(item.fixture,now));
  const unique=new Set<string>();
  const upcoming=scheduled.filter(({fixture:f})=>{
@@ -67,7 +71,7 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
   {label:'Ligas na pesquisa',value:research?number(leagueCount):researchError?'N/D':'…',icon:Activity,
    note:'Sem misturar temporadas'},
   {label:'Boas verificadas hoje',value:number(dailyGood.items.length),icon:Star,
-   note:'Regras V2/V3 · histórico local'}
+   note:researchForRadar?'V2/V3 · pesquisa histórica':'V2/V3 · histórico local'}
  ];
  return <div className="fs-home" aria-label="Painel inicial FutStats IA">
   <section className="fs-home-hero" aria-label="Visão geral da pesquisa">
@@ -131,7 +135,7 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
    {dailyGood.items.length===0
     ?<div className="fs-home-empty">
       <Star size={23}/><div><strong>Nenhuma indicação qualificada no momento</strong>
-      <p>{dailyGood.checked} jogo(s) elegíveis conferidos para hoje no histórico local.
+      <p>{dailyGood.checked} jogo(s) elegíveis conferidos para hoje na {researchForRadar?'pesquisa histórica':'base local'}.
       Consulte o Radar para detalhes e possíveis pendências de fonte.</p></div>
     </div>
     :<div className="fs-home-pick-list">{dailyGood.items.slice(0,3).map(item=>
