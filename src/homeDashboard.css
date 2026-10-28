@@ -1,0 +1,103 @@
+
+/* Etapa 87 — primeira tela premium (PR experimental, apenas apresentação). */
+.fs-home{display:grid;gap:18px;color:#ecf8f7}
+.fs-home button{cursor:pointer}
+.fs-home-hero,.fs-home-panel{border:1px solid #355866;border-radius:18px;background:linear-gradient(125deg,#102731,#11202b 70%,#0d1a26);box-shadow:0 12px 25px #0002;padding:20px}
+.fs-home-hero{background:radial-gradient(circle at top right,#165a50 0,transparent 43%),linear-gradient(120deg,#10303c,#0b1a27 80%);border-color:#34786b}
+.fs-home-hero-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.fs-home-hero h2{font-size:clamp(22px,3vw,30px);line-height:1.18;color:#f1fff8;margin:11px 0 8px}
+.fs-home-hero p{font-size:13px;line-height:1.5;color:#bad1d2;margin:0}
+.fs-home-overline{display:inline-flex;align-items:center;gap:7px;color:#85eebf;font-weight:800;font-size:10px;letter-spacing:1.1px}
+.fs-home-date{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;border:1px solid #3c6b70;border-radius:20px;padding:8px 10px;font-size:12px;color:#d9f3ed;background:#102d34}
+.fs-home-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:21px}
+.fs-home-kpi{border:1px solid #315664;border-radius:13px;background:#0d212bbf;padding:15px 14px;display:grid;gap:6px;min-width:0}
+.fs-home-kpi-icon{display:flex;align-items:center;color:#55e1b2;margin-bottom:2px}
+.fs-home-kpi>span{font-size:12px;color:#c9dce0}
+.fs-home-kpi strong{font-size:27px;line-height:1.1;color:#f1fff9;font-variant-numeric:tabular-nums}
+.fs-home-kpi small{font-size:11px;line-height:1.3;color:#9fb9be}
+.fs-home-section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.fs-home-section-heading h2{display:flex;align-items:center;gap:10px;font-size:20px;line-height:1.25;color:#f0fff8;margin:0 0 6px}
+.fs-home-section-heading h2 svg{color:#6de6b3;flex-shrink:0}
+.fs-home-section-heading p{font-size:12px;line-height:1.55;color:#afc6cd;margin:0}
+.fs-home-source,.fs-home-more{white-space:nowrap;align-self:flex-start}
+.fs-home-source{border:1px solid #466977;border-radius:50px;background:#172e39;padding:6px 10px;color:#d2e6e8;font-size:11px}
+.fs-home .fs-home-more{display:inline-flex;align-items:center;gap:4px;background:#12313b;border:1px solid #4b7c7b;color:#dcfcf1;border-radius:30px;padding:8px 10px;font-size:12px;font-weight:700;min-height:37px}
+.fs-home .fs-home-more:hover{background:#1a4c4a}
+.fs-home-source-note{font-size:11px;color:#94b7bc;margin:0 0 11px}
+.fs-home-bars{display:grid;gap:13px}
+.fs-home-bar-row{display:flex;gap:12px;align-items:center;border-bottom:1px solid #31505a;padding-bottom:12px}
+.fs-home-bar-row:last-child{padding-bottom:0;border-bottom:0}
+.fs-home-bar-row>svg{color:#67dfb0;flex-shrink:0}
+.fs-home-bar-details{flex:1;min-width:0}
+.fs-home-bar-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.fs-home-bar-top span{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.fs-home-bar-top strong{font-size:14px;color:#e5f5f7}
+.fs-home-bar-top span small{font-size:11px;color:#a9c2c9}
+.fs-home-bar-top>b{font-size:19px;color:#64e8b4;font-variant-numeric:tabular-nums}
+.fs-home-bar-track{height:8px;border-radius:50px;overflow:hidden;background:#324954;margin:8px 0 5px}
+.fs-home-bar-track>div{height:100%;border-radius:50px;background:linear-gradient(90deg,#32b991,#66eab5)}
+.fs-home-bar-details>small{display:block;font-size:10px;color:#aac5c9}
+.fs-home-disclaimer{color:#b5cbd0;font-size:11px;line-height:1.6;margin:14px 0 0}
+.fs-home-empty{display:flex;gap:12px;align-items:start;border:1px dashed #3d616d;background:#102934;border-radius:14px;padding:16px}
+.fs-home-empty>svg{color:#5dcaab;flex-shrink:0}
+.fs-home-empty strong{color:#e6f5f4;font-size:13px}
+.fs-home-empty p{margin:6px 0 0;color:#b5cbd0;font-size:12px;line-height:1.6}
+.fs-home-pick-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px}
+.fs-home .fs-home-pick{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;border:1px solid #466876;background:#152f3c;color:#eafbf5;border-radius:14px;padding:16px;min-width:0}
+.fs-home-pick-league{font-size:11px;color:#a8d3cc}
+.fs-home-pick strong{font-size:15px}
+.fs-home-pick strong span,.fs-home-fixture-teams b span{color:#91b2b9;font-weight:400}
+.fs-home-line-chips{display:flex;flex-wrap:wrap;gap:5px}
+.fs-home-line-chips>span{border:1px solid #4b987a;border-radius:8px;background:#174336;color:#bcfbe0;padding:5px 7px;font-size:11px}
+.fs-home-pick>small{font-size:11px;line-height:1.5;color:#b0d2d0}
+.fs-home-fixtures{display:grid;gap:8px}
+.fs-home .fs-home-fixture{display:flex;align-items:center;gap:15px;text-align:left;color:#ebf7f4;border:1px solid #365e68;border-radius:12px;padding:12px;background:#122b37}
+.fs-home-fixture:hover,.fs-home-pick:hover{background:#194038}
+.fs-home-fixture-clock{display:grid;gap:3px;min-width:69px;border-right:1px solid #416273;padding-right:10px}
+.fs-home-fixture-clock strong{font-size:17px;font-variant-numeric:tabular-nums}
+.fs-home-fixture-clock small{font-size:10px;color:#a0bec7}
+.fs-home-fixture-teams{flex:1;display:grid;gap:4px;min-width:0}
+.fs-home-fixture-teams b{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.fs-home-fixture-teams small{color:#abc6c9;font-size:10px}
+.fs-home-fixture>svg:last-child{color:#7fcdb7;flex-shrink:0}
+.fs-home-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fs-home .fs-home-actions button{position:relative;display:grid;justify-items:start;gap:9px;min-width:0;padding:16px 12px 14px;border:1px solid #3c6873;border-radius:13px;color:#e8faf4;background:#12313c;text-align:left}
+.fs-home-actions button:hover{background:#1b4945}
+.fs-home-actions button>svg:first-child{color:#65dfad}
+.fs-home-actions button>svg:last-child{position:absolute;right:8px;top:13px;color:#89b7ba}
+.fs-home-actions strong{font-size:13px}
+.fs-home-actions small{font-size:10px;color:#aac7cb;line-height:1.35}
+.fs-home-footer{border:1px solid #395c66;border-radius:13px;background:#122632;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px}
+.fs-home-footer>div{display:flex;gap:10px;align-items:center;min-width:0}
+.fs-home-footer svg{flex-shrink:0;color:#74e3b7}
+.fs-home-footer strong,.fs-home-footer small{display:block}
+.fs-home-footer strong{font-size:12px;color:#d9fff0}
+.fs-home-footer small{font-size:11px;color:#aac4cc;margin-top:3px;line-height:1.45}
+.fs-home .fs-home-new-match{justify-self:start;padding:10px 13px;border:1px solid #426875;color:#ddfaf1;background:#12333b;border-radius:10px;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+@media(max-width:800px){
+ .fs-home{gap:13px}
+ .fs-home-hero,.fs-home-panel{padding:15px;border-radius:15px}
+ .fs-home-hero-head{flex-wrap:wrap}
+ .fs-home-hero h2{font-size:21px}
+ .fs-home-date{font-size:11px}
+ .fs-home-kpis{gap:7px;margin-top:16px}
+ .fs-home-kpi{padding:11px 8px;gap:5px;border-radius:10px}
+ .fs-home-kpi strong{font-size:22px}
+ .fs-home-kpi>span{font-size:10px}
+ .fs-home-kpi small{font-size:9px}
+ .fs-home-section-heading h2{font-size:17px}
+ .fs-home-section-heading p{font-size:11px}
+ .fs-home .fs-home-more{font-size:11px;padding:7px 8px}
+ .fs-home-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .fs-home-footer{flex-direction:column;align-items:stretch}
+ /* Full labels replace the previously truncated 'Agen...' / 'Com...' on Android. */
+ .mobile-bottom-nav button{font-size:clamp(9px,2.55vw,11px);padding:9px 1px;gap:4px}
+ .mobile-bottom-nav button span{overflow:visible;text-overflow:clip;max-width:none;white-space:nowrap}
+}
+@media(max-width:360px){
+ .fs-home-hero,.fs-home-panel{padding:12px}
+ .fs-home-kpi strong{font-size:19px}
+ .fs-home-section-heading{flex-wrap:wrap}
+ .fs-home .fs-home-more{min-height:31px}
+ .fs-home-fixture{gap:8px}
+}
