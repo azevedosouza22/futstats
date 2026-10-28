@@ -71,11 +71,13 @@ export default function LeagueSmartComparison({data}:{data:Data}){
      !!preferredAway&&t.name.toLocaleLowerCase('pt-BR').includes(preferredAway))
    ??options.teams.find(t=>t.key!==home?.key);
  const chosenDate=brasiliaDate().date;
- const calculated=home&&away&&validLine?calculateSmartLeagueComparison(active,{
+ // A malformed total-market line must not hide the independent team
+ // statistics. Those averages do not depend on the total-market threshold.
+ const calculated=home&&away?calculateSmartLeagueComparison(active,{
    league:chosenLeague,season:chosenSeason,home:home.id,away:away.id,
-   date:chosenDate,metric,period,line
+   date:chosenDate,metric,period,line:validLine?line:FOUR_LENS_LINES[metric][2]
  }):null;
- const report=calculated?.report;
+ const report=validLine?calculated?.report:null;
 const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
  return <section className="radar-line-explorer" aria-label="Comparação inteligente por liga e temporada">
   <h2>Comparação Inteligente · por liga</h2>
@@ -162,79 +164,76 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
       </select>
     </label>
   </div>
-  <details className="smart-advanced smart-total-settings">
-    <summary>Opções do total da partida · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {fmt(line)}</summary>
-  <div className="analysis-controls">
-    <label>Período
-      <select aria-label="Período da comparação inteligente" value={period}
-        onChange={e=>setPeriod(e.target.value as Period)}>
-        <option value="full">Jogo completo</option>
-        <option value="first">Primeiro tempo</option>
-        <option value="second">Segundo tempo</option>
-      </select>
-    </label>
-    <label>Linha Over/Under · total dos dois times
-      <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
-        placeholder="Ex.: 21,5" value={lineDraft} onChange={e=>setLineDraft(e.target.value)}/>
-      <small>Digite qualquer linha terminada em ,5. Ex.: 18,5 · 21,5 · 29,5.</small>
-    </label>
-  </div>
-  </details>
-  {!validLine&&<p className="alert" role="alert">
-    Informe uma linha positiva terminada em ,5 para analisar o Over e o Under.
-  </p>}
   <p className="smart-selection-note" role="status">
     {chosenSeason===BOTH_SEASONS?'Temporadas disponíveis: '+seasonTitle.join(' e '):'Temporada: '+chosenSeason}
     {' '}· Jogos anteriores a {chosenDate}.
   </p>
-  {report&&home&&away?<section aria-label="Tabela comparativa de quatro contextos">
+  {calculated?.teamOnly&&home&&away?<section aria-label="Estatísticas individuais das equipes">
     <div className="smart-summary-bar smart-results-context">
       <span>{home.name} × {away.name}</span>
       <strong>{metricLabel(metric)}</strong>
       <small>{chosenSeason===BOTH_SEASONS?'Temporada atual + anterior':chosenSeason}</small>
     </div>
-    {calculated?.teamOnly&&<TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>}
-    <details className="smart-total-collapsible">
-      <summary>Ver total da partida · Over/Under {fmt(line)}</summary>
-      <p>Aqui somamos as ações dos dois times, em vez de analisar cada um separadamente.</p>
-      <div className="smart-match-totals-intro">
-        <span className="smart-kicker">TOTAL DO CONFRONTO</span>
-        <h3>Somatório dos dois times</h3>
-        <p>{period==='full'?'Jogo inteiro':period==='first'?'1º tempo':'2º tempo'} · Linha {fmt(line)}</p>
-      </div>
+    <TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>
+  </section>:<p className="muted">
+    {calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'}
+  </p>}
+  <details className="smart-total-collapsible">
+    <summary>Totais dos dois times · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {validLine?fmt(line):'inválida'}</summary>
+    <p className="smart-total-explanation">Estes filtros alteram apenas a soma das duas equipes, não as médias individuais acima.</p>
+    <div className="analysis-controls smart-total-controls">
+      <label>Período · total do confronto
+        <select aria-label="Período da comparação inteligente" value={period}
+          onChange={e=>setPeriod(e.target.value as Period)}>
+          <option value="full">Jogo completo</option>
+          <option value="first">Primeiro tempo</option>
+          <option value="second">Segundo tempo</option>
+        </select>
+      </label>
+      <label>Linha Over/Under · total dos dois times
+        <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
+          placeholder="Ex.: 21,5" value={lineDraft} onChange={e=>setLineDraft(e.target.value)}/>
+        <small>Digite uma linha terminada em ,5, como 18,5 ou 21,5.</small>
+      </label>
+    </div>
+    {!validLine&&<p className="alert" role="alert">
+      Informe uma linha positiva terminada em ,5 para analisar Over e Under do confronto.
+    </p>}
+    {report&&home&&away?<>
       {report.projection!==null&&<button className="smart-suggest-line" type="button"
         onClick={()=>setLineDraft(String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',','))}>
         Usar linha próxima da média histórica: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
       </button>}
       <SmartComparisonCards report={report} home={home.name} away={away.name}/>
       <details className="smart-legacy-table">
-      <summary>Ver tabela numérica completa</summary>
-    <div className="radar-line-table-scroll">
-      <table className="analysis-table">
-        <caption>Comparação por mando e confrontos diretos — totais das duas equipes, não só do time escolhido</caption>
-        <thead><tr>
-          <th>Contexto</th><th>Média últimos 10</th><th>Over últimos 5</th>
-          <th>Under últimos 5</th><th>Over últimos 10</th><th>Under últimos 10</th>
-        </tr></thead>
-        <tbody>
-          {report.lenses.map(lens=><tr key={lens.id}>
-            <th>{lens.id==='home-any'?home.name+' · em casa / qualquer rival'
-              :lens.id==='away-any'?away.name+' · fora / qualquer rival'
-              :lens.id==='home-direct'?home.name+' · em casa × '+away.name
-              :away.name+' · fora × '+home.name+' (mesmos confrontos)'}</th>
-            <td>{fmt(lens.last10.mean)} <small>({lens.last10.count} jogos)</small></td>
-            <td>{freq(lens.last5.over,lens.last5.count)}</td>
-            <td>{freq(lens.last5.under,lens.last5.count)}</td>
-            <td>{freq(lens.last10.over,lens.last10.count)}</td>
-            <td>{freq(lens.last10.under,lens.last10.count)}</td>
-          </tr>)}
-        </tbody>
-      </table>
-    </div></details>
-    </details>
-  </section>:<p className="muted">
-    {validLine?(calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'):'Altere a linha para um valor terminado em ,5.'}
-  </p>}
+        <summary>Ver tabela numérica completa</summary>
+        <div className="radar-line-table-scroll">
+          <table className="analysis-table">
+            <caption>Comparação por mando e confrontos diretos — totais das duas equipes, não só do time escolhido</caption>
+            <thead><tr>
+              <th>Contexto</th><th>Média últimos 10</th><th>Over últimos 5</th>
+              <th>Under últimos 5</th><th>Over últimos 10</th><th>Under últimos 10</th>
+            </tr></thead>
+            <tbody>
+              {report.lenses.map(lens=><tr key={lens.id}>
+                <th>{lens.id==='home-any'?home.name+' · em casa / qualquer rival'
+                  :lens.id==='away-any'?away.name+' · fora / qualquer rival'
+                  :lens.id==='home-direct'?home.name+' · em casa × '+away.name
+                  :away.name+' · fora × '+home.name+' (mesmos confrontos)'}</th>
+                <td>{fmt(lens.last10.mean)} <small>({lens.last10.count} jogos)</small></td>
+                <td>{freq(lens.last5.over,lens.last5.count)}</td>
+                <td>{freq(lens.last5.under,lens.last5.count)}</td>
+                <td>{freq(lens.last10.over,lens.last10.count)}</td>
+                <td>{freq(lens.last10.under,lens.last10.count)}</td>
+              </tr>)}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </>:<p className="muted">{validLine
+      ?'Selecione duas equipes diferentes com histórico para comparar o total.'
+      :'Corrija a linha para visualizar os totais do confronto.'}</p>}
+  </details>
   <details className="smart-method-notes">
     <summary>Como interpretar essas médias?</summary>
     <p>As médias individuais mostram apenas o que a equipe produziu.
