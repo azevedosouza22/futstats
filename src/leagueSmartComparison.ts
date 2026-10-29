@@ -1,9 +1,9 @@
 /** Read-only catalog and filter for the existing comparison screen.
- * Only the two most recent labeled seasons per league are selectable.
+ * Every available season remains selectable; combined scope includes archives.
  * Never imports archived Work data or writes to the source Data.
  */
 import type {Data,Match,Period} from './model';
-import {normalizeTeam} from './calendar';
+import {comparisonTeamKey,type DirectVenueMode} from './smartDirectH2H';
 import {analyzeTeamOnlyPeriods,type TeamOnlyReport} from './teamOnlyPeriods';
 import {leagueOptions,competitionParts,NO_SEASON} from './leagueCatalog';
 import {
@@ -19,6 +19,7 @@ export type SmartLeagueOptions={
 export type LeagueComparisonSelection={
  league:string;season:string;home:string;away:string;
  date:string;metric:FourLensMetric;period:Period;line:number;
+ directVenue?:DirectVenueMode;
 };
 const latest=(a:string,b:string)=>b.localeCompare(a,'pt-BR');
 export function availableSmartLeagues(data:Data):string[]{
@@ -40,12 +41,12 @@ export function smartLeagueOptions(data:Data,league:string):SmartLeagueOptions{
  const names=new Map<string,LeagueTeamOption>();
  // Prefer the newest-season display name and ID for aliases that repeat
  // across the two seasons; preserve stored teams and records unchanged.
- for(const season of seasons)for(const m of filtered){
+ for(const season of everySeason)for(const m of filtered){
    if(competitionParts(m.competition).season!==season)continue;
    for(const id of [m.home,m.away]){
      const t=byId.get(id);
      if(!t||!teamIds.has(t.id))continue;
-     const key=normalizeTeam(t.name);
+     const key=comparisonTeamKey(t.name,m.competition);
      if(!key||names.has(key))continue;
      names.set(key,{id:t.id,name:t.name,key});
    }
@@ -74,15 +75,18 @@ export function calculateSmartLeagueComparison(data:Data,selection:LeagueCompari
  }
  const subset:Match[]=data.matches.filter(m=>
    competitionParts(m.competition).league===selection.league&&
-   (selection.season===BOTH_SEASONS
-     ?options.seasons.includes(competitionParts(m.competition).season)
-     :competitionParts(m.competition).season===selection.season)&&
+   (selection.season===BOTH_SEASONS||
+     competitionParts(m.competition).season===selection.season)&&
    m.date<selection.date
  );
  const scoped={...data,matches:subset};
- const fixture={home:home.id,away:away.id,date:selection.date,competition:options.competition};
- const report=analyzeFourLenses(scoped,fixture,selection.metric,selection.period,selection.line);
- const teamOnly=analyzeTeamOnlyPeriods(scoped,fixture,selection.metric);
+ const activeCompetition=selection.season===BOTH_SEASONS?options.competition:
+   subset.find(m=>competitionParts(m.competition).season===selection.season)?.competition??options.competition;
+ const fixture={home:home.id,away:away.id,date:selection.date,competition:activeCompetition};
+ const directVenue=selection.directVenue??'all';
+ const report=analyzeFourLenses(scoped,fixture,selection.metric,selection.period,
+   selection.line,{directVenue,useScopedSeasons:true});
+ const teamOnly=analyzeTeamOnlyPeriods(scoped,fixture,selection.metric,directVenue);
  return {report,teamOnly,matchCount:subset.length,status:subset.length
   ?'Histórico disponível na base deste navegador.':'Nenhum jogo anterior elegível para esta seleção.'};
 }
