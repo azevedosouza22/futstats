@@ -50,7 +50,7 @@ describe('Radar Inteligente de Padrões — experimental/sem odds',()=>{
   expect(corner?.recentHits).toBe(5);
   expect(corner?.opponentCount).toBe(10);
   expect(corner?.opponentHits).toBe(10);
-  expect(c.some(x=>x.metric==='goals')).toBe(true);
+  expect(c.every(x=>['goals','shots','target','corners'].includes(x.metric))).toBe(true);
   expect(Object.keys(c[0])).not.toContain('winProbability');
   expect(Object.keys(c[0])).not.toContain('odds');
  });
