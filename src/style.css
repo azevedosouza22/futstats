@@ -1634,3 +1634,42 @@ html{scroll-behavior:smooth}
  .smart-mando-section .smart-lens-grid{grid-template-columns:1fr;gap:9px}
  .smart-mando-section .smart-lens-card.team-summary-card{padding:9px}
 }
+
+
+/* Radar V4: concise primary experience; diagnostics remain opt-in.
+   Closed disclosures must not show their contents even with grid layout. */
+.premium .radar-start-actions{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px}
+.premium .radar-start-actions button{min-height:44px;flex:1 1 145px;border-radius:10px}
+.premium .radar-optional-demo,
+.premium .radar-technical-audit,
+.premium .radar-backup-tools,
+.premium .calendar-coverage-extra{
+ margin:12px 0;padding:12px;border:1px solid #466679;border-radius:12px;background:#162a37
+}
+.premium .radar-optional-demo>summary,
+.premium .radar-technical-audit>summary,
+.premium .radar-backup-tools>summary,
+.premium .calendar-coverage-extra>summary,
+.premium .official-calendar>summary,
+.premium .free-calendar-discovery>summary{
+ cursor:pointer;color:#d3f3ff;font-weight:700;min-height:44px;display:list-item;align-content:center
+}
+.premium details.radar-optional-demo:not([open]) > :not(summary),
+.premium details.radar-technical-audit:not([open]) > :not(summary),
+.premium details.radar-backup-tools:not([open]) > :not(summary),
+.premium details.calendar-coverage-extra:not([open]) > :not(summary),
+.premium details.official-calendar:not([open]) > :not(summary),
+.premium details.free-calendar-discovery:not([open]) > :not(summary),
+.premium details.daily-good-number-details:not([open]) > :not(summary){display:none}
+.premium .daily-good-number-details{margin-top:4px;padding:6px 8px;border:1px solid #526f66;border-radius:8px}
+.premium .daily-good-number-details>summary{cursor:pointer;font-size:12px;color:#b0ead2}
+.premium .daily-good-number-details>small{display:block;margin:4px 0}
+.premium .radar-technical-audit .daily-good-audit{margin-top:12px}
+@media(max-width:620px){
+ .premium .radar-start-actions{gap:8px}
+ .premium .radar-start-actions button{font-size:13px}
+ .premium .radar-optional-demo,
+ .premium .radar-technical-audit,
+ .premium .radar-backup-tools,
+ .premium .calendar-coverage-extra{padding:10px}
+}
