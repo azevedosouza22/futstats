@@ -36,6 +36,11 @@
       "file": "liga_portugal_2026_27.json",
       "competition": "Liga Portugal 2026/27",
       "count": 81
+    },
+    {
+      "file": "saudi_pro_league_2026_27.json",
+      "competition": "Saudi Pro League 2026/27",
+      "count": 98
     }
   ]
 }
