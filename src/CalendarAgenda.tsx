@@ -134,8 +134,8 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
   }
   const now=brasiliaDate(clock);
   return <section className="calendar-agenda" aria-label="Agenda experimental">
-    <h3>Visão diária · jogos disponíveis para análise</h3>
-    <p className="muted">Agenda em três níveis: fontes oficiais datadas, calendário local e candidatos comunitários. Os cartões indicam os dados disponíveis no Histórico principal e, quando existirem, na pesquisa Work separada. Nenhuma fonte é uma agenda ao vivo confirmada.</p>
+    <h3>Jogos para analisar</h3>
+    <p className="muted">Escolha Hoje, 7 ou 30 dias. Esta é uma agenda de referências cadastradas e candidatos provisórios, <strong>não ao vivo</strong>.</p>
     {workRead.error&&<p className="muted">Dados locais do Work não puderam ser lidos. Nada foi alterado; confira essa base na área Radar Work.</p>}
     {error&&<p role="alert" className="alert">{error}</p>}
     {notice&&<p role="status" className="notice">{notice}</p>}
@@ -148,9 +148,9 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       records={records} onViewSaved={onViewSaved}
       nextWeek={nextGood} onPreview={f=>onSelect(f)}/>
     <DailyPatternPicks result={dailyPatterns} onPreview={f=>onSelect(f)}/>
-    <section className="official-calendar" aria-label="Jogos com referências oficiais">
-      <h4>Confrontos com referência oficial</h4>
-      <p className="muted">Datas e horários foram conferidos manualmente em páginas das competições. A programação pode mudar. Quando a conferência tiver mais de dois dias, o horário não será usado automaticamente.</p>
+    <details className="official-calendar" aria-label="Jogos com referências oficiais">
+      <summary><strong>Jogos com referência oficial · {officialVisible.length}</strong></summary>
+      <p className="muted">Programação conferida anteriormente em páginas oficiais. Confirme o horário novamente antes de salvar.</p>
       <p className="muted" role="status">Referências oficiais futuras nesta janela:
         {' '}{officialVisible.length} · horário conferido recentemente:
         {' '}{officialVisible.filter(x=>x.fresh&&x.fixture.time!==null).length} ·
@@ -269,7 +269,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
             </article>
           )}
         </div>}
-    </section>
+    </details>
     <p className="muted">Agenda local: {visible.length} {visible.length===1?'jogo':'jogos'} sem referência oficial específica nesta janela · Brasília: {now.date} {now.time}</p>
     {visible.length>listed.length&&<p className="muted">Exibindo os primeiros {listed.length} jogos por data e horário para manter a consulta rápida no celular.</p>}
     {visible.length===0?<p className="muted">Nenhum outro confronto na agenda local nesta janela. Use as referências oficiais acima ou consulte mais datas.</p>:<div className="calendar-list">
@@ -288,9 +288,9 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       </article>)}
     </div>}
     <p className="muted">A visão diária utiliza apenas os jogos anteriores à data do confronto e as competições correspondentes. Para analisar as linhas e salvar uma previsão, abra o Radar completo. Sem horário confirmado, a prévia pode ser consultada, mas nenhuma previsão é salva.</p>
-    <section className="free-calendar-discovery" aria-label="Consulta gratuita de calendários europeus">
-      <h4>Consultar jogos das ligas europeias</h4>
-      <p className="muted">Consulta pontual a calendários comunitários gratuitos de Premier League, Serie A italiana, La Liga e Ligue 1. Datas podem estar desatualizadas; horários de Brasília não são confirmados. Esses confrontos aparecem apenas como <strong>candidatos para pesquisa</strong>.</p>
+    <details className="free-calendar-discovery" aria-label="Consulta gratuita de calendários europeus">
+      <summary>Consultar jogos europeus (opcional)</summary>
+      <p className="muted">Fonte comunitária provisória, sem horário confirmado. Confira a partida em fonte oficial antes de salvar.</p>
       <button type="button" className="text-button" disabled={freeLoading} onClick={()=>{void fetchCandidateFixtures();}}>
         {freeLoading?'Consultando calendários…':free?'Atualizar consulta gratuita':'Consultar calendários gratuitos'}
       </button>
@@ -320,9 +320,12 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
         </div>}
         <p className="muted">Consulta somente leitura. Estes candidatos não possuem horário confirmado e não podem ser salvos automaticamente como previsões. Não são jogos oficiais verificados.</p>
       </>}
-    </section>
-    <LeagueCoveragePanel data={data} workMatches={workRead.value?.matches??null}
-      workError={workRead.error}/>
+    </details>
+    <details className="calendar-coverage-extra">
+      <summary>Cobertura por campeonato (avançado)</summary>
+      <LeagueCoveragePanel data={data} workMatches={workRead.value?.matches??null}
+        workError={workRead.error}/>
+    </details>
     <details className="calendar-import-extra">
       <summary>Adicionar outros campeonatos e datas (CSV)</summary>
       <p className="muted">O FutStats não pesquisa automaticamente uma agenda atualizada. Use um CSV de calendário com fonte conferível.</p>
