@@ -89,7 +89,7 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await openRadar(page);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas.getByText('FC Barcelona × Real Madrid')).toBeVisible();
-  await expect(boas.getByText(/V2 + V3 concordam/).first()).toBeVisible();
+  await expect(boas.getByText(/V2 \+ V3 concordam/).first()).toBeVisible();
   const conflicts=boas.locator('details.daily-good-readiness');
   await conflicts.locator('summary').click();
   await expect(conflicts.getByRole('columnheader',{name:'Horários divergentes'})).toBeVisible();
