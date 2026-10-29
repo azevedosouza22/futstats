@@ -178,8 +178,8 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
   </section>:<p className="muted">
     {calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'}
   </p>}
-  <details className="smart-total-collapsible">
-    <summary>Totais dos dois times · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {validLine?fmt(line):'inválida'}</summary>
+  <details className="smart-total-collapsible smart-mando-section" open>
+    <summary>Comparação por mando · totais dos dois times · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {validLine?fmt(line):'inválida'}</summary>
     <p className="smart-total-explanation">Estes filtros alteram apenas a soma das duas equipes, não as médias individuais acima.</p>
     <div className="analysis-controls smart-total-controls">
       <label>Período · total do confronto
