@@ -1,18 +1,18 @@
 import {test,expect} from '@playwright/test';
 
-/** First visit in a clean browser must already contain the authorized 1,445
+/** First visit in a clean browser must already contain the authorized 1,751
  * records. No CSV picker, private IndexedDB import or changes to user history.
  */
 test.use({serviceWorkers:'block'});
-test('Etapa 97: 2.464 partidas aparecem sem importação na prévia experimental',async({page})=>{
+test('Etapa 99: 2.770 partidas aparecem sem importação na prévia experimental',async({page})=>{
  await page.route('**/raw.githubusercontent.com/**',r=>r.abort());
  await page.goto('/');
- await expect(page.getByText('2.464',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('2.770',{exact:true})).toBeVisible({timeout:45000});
  await expect(page.getByText('Jogos na pesquisa')).toBeVisible();
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
- await expect(page.getByText(/2464 partidas reais de pesquisa carregadas/)).toBeVisible({timeout:45000});
+ await expect(page.getByText(/2770 partidas reais de pesquisa carregadas/)).toBeVisible({timeout:45000});
  const competition=page.getByLabel('Campeonato da comparação inteligente');
  await competition.selectOption('Premier League inglesa');
  const season=page.getByLabel('Temporada da comparação inteligente');
@@ -28,6 +28,10 @@ test('Etapa 97: 2.464 partidas aparecem sem importação na prévia experimental
  await season.selectOption('2025/26');
  await expect(page.getByText(/Temporada: 2025\/26/)).toBeVisible();
  await competition.selectOption('Ligue 1 francesa');
+ await expect(season.locator('option[value="2025/26"]')).toHaveCount(1);
+ await season.selectOption('2025/26');
+ await expect(page.getByText(/Temporada: 2025\/26/)).toBeVisible();
+ await competition.selectOption('Liga Portugal');
  await expect(season.locator('option[value="2025/26"]')).toHaveCount(1);
  await season.selectOption('2025/26');
  await expect(page.getByText(/Temporada: 2025\/26/)).toBeVisible();
