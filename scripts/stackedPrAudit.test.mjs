@@ -93,3 +93,23 @@ test('admite lacuna fechada explicitamente conhecida, sem afrouxar ancestralidad
  assert.throws(()=>validateStackedPrChain([first,second],
    [{...cmp,behind_by:1}],opts),/não descende/);
 });
+
+test('autoriza somente o nome exato da branch do PR #97, sem relaxar outros PRs',()=>{
+ const f=fixtures();
+ f.opts.firstNumber=95;f.opts.lastNumber=97;
+ f.pulls.forEach((p,i)=>p.number=95+i);
+ f.pulls[2].head.ref='fix/v4-research-loading-mobile-2775';
+ const accepted=verify(f);
+ assert.equal(accepted.chainValid,true);
+ assert.equal(accepted.integrationAuthorized,false);
+ const other=fixtures();
+ other.opts.firstNumber=95;other.opts.lastNumber=97;
+ other.pulls.forEach((p,i)=>p.number=95+i);
+ other.pulls[2].head.ref='fix/v4-not-reviewed';
+ assert.throws(()=>verify(other),/branch inválida/);
+ const wrongNumber=fixtures();
+ wrongNumber.opts.firstNumber=94;wrongNumber.opts.lastNumber=96;
+ wrongNumber.pulls.forEach((p,i)=>p.number=94+i);
+ wrongNumber.pulls[2].head.ref='fix/v4-research-loading-mobile-2775';
+ assert.throws(()=>verify(wrongNumber),/branch inválida/);
+});
