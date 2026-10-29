@@ -59,16 +59,13 @@ function IndividualCard({lens,title,windowSize}:{lens:IndividualLens;title:strin
      {full.count?'Amostra pequena; histórico ainda limitado.':'Sem jogos válidos nesta seleção.'}
    </p>}
    <div className="team-individual-full-line">
-     <label>{changed?'Linha escolhida · jogo completo':'Linha sugerida · jogo completo'}
+     <label>Linha do jogo completo
        <input aria-label={'Linha individual para '+title} type="text" inputMode="decimal"
          value={changed?lineDraft:fmt(suggested)} placeholder="Ex.: 12,5"
          onChange={e=>setLineDraft(e.target.value)}/>
      </label>
      {changed&&<button type="button" onClick={()=>setLineDraft('')}>Restaurar</button>}
    </div>
-   {!changed&&full.count>0&&<small className="team-window-note">
-     Linha baseada na média dos {full.count} jogos exibidos (últimos {windowSize}).
-   </small>}
    {line!==null?<FrequencyRow line={line} frequency={individualLineFrequency(full,line)}/>:
     <p className="team-window-note" role="alert">{changed
       ?'Linha inválida: use número terminado em ,5.':'Sem dados para calcular a frequência.'}</p>}
