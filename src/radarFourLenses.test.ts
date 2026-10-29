@@ -48,7 +48,7 @@ describe('Etapa 78 — quatro recortes, frequências e temporadas sem vazamento'
       game('p2','2025-11-12',previous,'H','S',30),
       game('reverse','2025-12-15',previous,'S','H',22)
     ];
-    const r=analyzeFourLenses(data([...homeFive,...awayFive,...direct]),fixture,'shots','full',28.5);
+    const r=analyzeFourLenses(data([...homeFive,...awayFive,...direct]),fixture,'shots','full',28.5,{directVenue:'all'});
     expect(lens(r,'home-any').previousSeason).toMatchObject({count:2,mean:25});
     expect(lens(r,'home-any').currentSeason.count).toBe(5);
     expect(lens(r,'home-direct').last10.count).toBe(3);
