@@ -94,7 +94,7 @@ export function analyzeFourLenses(
   // named club. Match only normalized names within the two selected leagues.
   const teams=new Map(data.teams.map(t=>[t.id,comparisonTeamKey(t.name,fixture.competition)]));
   const teamKey=(id:string)=>teams.get(id)??comparisonTeamKey(id,fixture.competition);
-  const directVenue=options.directVenue??'all';
+  const directVenue=options.directVenue??'current';
   const homeKey=teamKey(fixture.home),awayKey=teamKey(fixture.away);
   const eligible=data.matches.filter(m=>
     (m.competition===fixture.competition||m.competition===previousCompetition||
