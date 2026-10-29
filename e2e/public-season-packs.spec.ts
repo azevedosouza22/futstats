@@ -59,3 +59,27 @@ test('Confrontos diretos reais: Benfica × Sporting em ambos os mandos, sem dupl
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
 });
 
+test('Brasileirão auditado: últimos cinco Santos em casa incluem Palmeiras e Bahia',async({page})=>{
+ await page.clock.setFixedTime(new Date('2026-10-29T16:00:00Z'));
+ await page.goto('/');
+ await expect(page.getByText('2.775',{exact:true})).toBeVisible({timeout:45000});
+ const mobile=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
+ if(await mobile.isVisible())await mobile.click();
+ else await page.locator('button[data-area="compare"]').click();
+ await page.getByLabel('Campeonato da comparação inteligente').selectOption('Brasileirão Série A');
+ await page.getByLabel('Temporada da comparação inteligente').selectOption('2026');
+ await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Santos'});
+ await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Palmeiras'});
+ await page.getByLabel('Indicador da comparação inteligente').selectOption('shots');
+ const panel=page.getByRole('region',{name:'Médias somente das equipes'});
+ const card=panel.locator('.team-summary-card').first();
+ await expect(card.getByRole('heading',{name:'Santos · em casa'})).toBeVisible();
+ await expect(card.locator('.team-summary-main strong')).toHaveText('21,6');
+ await expect(card.locator('.team-summary-main small')).toHaveText('5 jogos válidos');
+ await expect(card.locator('.team-period-compact-row').first()).toContainText('Média 8,8');
+ await expect(card.locator('.team-period-compact-row').last()).toContainText('Média 12,8');
+ // Read independently: 16 +23 +16 +32 +21 =108 shots, 108/5=21.6.
+ // The 09/09 Sudamericana match must not enter this Brasileirão sample.
+ expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
+});
+

@@ -51,6 +51,8 @@ jobs:
         run: node scripts/check-stacked-prs.mjs
       - name: Fluxo de usuário real no navegador
         run: npx playwright test e2e/good-picks-save-restore.spec.ts
+      - name: Pesquisa automática, Brasileirão e comparação compacta
+        run: npx playwright test e2e/public-season-packs.spec.ts e2e/compact-smart-comparison-mobile.spec.ts e2e/radar-research-readonly.spec.ts
       - name: PWA offline real em Chromium isolado (sem Android físico)
         run: npx playwright test e2e/offline-pwa-recovery.spec.ts
       - name: Guardar artefatos somente em falhas
@@ -60,3 +62,4 @@ jobs:
           name: futstats-e2e-falhas
           path: work/playwright
           retention-days: 3
+
