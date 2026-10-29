@@ -57,7 +57,7 @@ export function analyzeTeamOnlyPeriods(
  // Quarantine ALL duplicate copies, including copies sharing their local ID.
  const copies=new Map<string,Match[]>();
  for(const m of eligible){
-  const identity=[m.competition,m.date,key(m.home),key(m.away)].join('|');
+  const identity=[m.competition,m.date,...[key(m.home),key(m.away)].sort()].join('|');
   const rows=copies.get(identity)??[];
   rows.push(m);copies.set(identity,rows);
  }
