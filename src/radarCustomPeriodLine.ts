@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Etapa 63: one user-specified historical line for one metric and period.
  * READ-ONLY; exact pre-game match sample, no odds or V2/V3 prediction.
@@ -32,7 +33,7 @@ export function compareCustomPeriodLine(data:Data,fixture:RadarFixture,
   seen.add(m.id);
   return m.competition.trim()===fixture.competition.trim()&&
    m.date<fixture.date&&!m.research?.dateDiscrepancy&&
-   (m.research?.titleDate===undefined||m.research.titleDate<fixture.date)&&
+   researchDateBefore(m,fixture.date)&&
    (!m.external||['FT','Match Finished'].includes(m.external.status));
  });
  const matrix=radarPeriodCoverage(data,fixture);
@@ -59,3 +60,4 @@ export function compareCustomPeriodLine(data:Data,fixture:RadarFixture,
   sampleAdequate:enough,isHistoricalOnly:true
  };
 }
+

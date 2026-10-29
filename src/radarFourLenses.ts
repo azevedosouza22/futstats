@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /** Etapa 78 — four contextual lenses for an upcoming fixture.
  * READ ONLY. Uses only eligible matches before the target date, from the
  * selected season and its immediate predecessor. No odds, probabilities,
@@ -101,7 +102,7 @@ export function analyzeFourLenses(
       (options.useScopedSeasons===true&&competitionParts(m.competition).league===
         competitionParts(fixture.competition).league))&&
     m.date<fixture.date&&
-    (!m.research?.titleDate||m.research.titleDate<fixture.date)&&
+    researchDateBefore(m,fixture.date)&&
     !m.research?.dateDiscrepancy&&
     (!m.external||['FT','Match Finished'].includes(m.external.status))&&
     radarMetricIntegrity(m,metric)==='ok'&&
@@ -163,3 +164,4 @@ export function analyzeFourLenses(
       directMatchSides(m,homeKey,awayKey,teamKey,directVenue)!==null).length,
   };
 }
+

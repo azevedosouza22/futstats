@@ -3,6 +3,7 @@ import {describe,expect,it} from 'vitest';
 import {parseResearchCatalog} from './researchCatalog';
 import {mergeResearchPacks,parseResearchPackManifest} from './researchPacks';
 import {createPrivateSeasonPack,unpublishedPrivatePacks} from './privateSeasonPacks';
+import {applyBrazilResearchDateReview} from './brazilResearchReview';
 import type {Data,Match} from './model';
 
 const source=(relative:string)=>JSON.parse(readFileSync(new URL(relative,import.meta.url),'utf8'));
@@ -16,32 +17,33 @@ const packs=[
  source('../public/research/packs/la_liga_2025_26.json'),
  source('../public/research/packs/serie_a_italiana_2025_26.json'),
  source('../public/research/packs/ligue_1_francesa_2025_26.json'),
- source('../public/research/packs/liga_portugal_2025_26.json')
+ source('../public/research/packs/liga_portugal_2025_26.json'),
+ source('../public/research/packs/brasileirao_2026_incremental_20261029.json')
 ];
-const loaded=mergeResearchPacks(baseline,entries,packs);
+const loaded=applyBrazilResearchDateReview(mergeResearchPacks(baseline,entries,packs),source('../public/research/brasileirao-2026-review-20261029.json'));
 const bySource=(m:Match)=>m.research!.sourceId;
-describe('Publicação dos 1.751 jogos completos de cinco ligas 2025/26',()=>{
+describe('Pesquisa pública: cinco temporadas e Brasileirão 2026 auditado',()=>{
  it('carrega automaticamente os pacotes autorizados, sem alterar os 1.019 anteriores',()=>{
   const original=JSON.stringify(baseline.data);
-  expect(entries).toHaveLength(5);
-  expect(entries.map(x=>x.count)).toEqual([380,380,380,305,306]);
-  expect(loaded.total).toBe(2770);
-  expect(loaded.dateConflicts).toBe(48);
-  expect(loaded.data.matches).toHaveLength(2770);
+  expect(entries).toHaveLength(6);
+  expect(entries.map(x=>x.count)).toEqual([380,380,380,305,306,5]);
+  expect(loaded.total).toBe(2775);
+  expect(loaded.dateConflicts).toBe(0);
+  expect(loaded.data.matches).toHaveLength(2775);
   expect(loaded.data.radarSnapshots).toBeUndefined();
   expect(JSON.stringify(baseline.data)).toBe(original);
  });
  it('sem IDs repetidos, preservando liga, três períodos e proveniência Flashscore',()=>{
-  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(2770);
+  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(2775);
   expect(loaded.data.matches.some(m=>m.research?.sourceId==='z9FNO7c2')).toBe(false);
-  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(2770);
+  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(2775);
   for(const [index,pack] of packs.entries()){
    expect(pack.data.matches).toHaveLength(entries[index].count);
-   expect(pack.data.teams).toHaveLength(index>=3?18:20);
+   expect(pack.data.teams).toHaveLength(index===5?10:index>=3?18:20);
    expect(new Set(pack.data.matches.map((m:Match)=>m.research!.sourceId)).size).toBe(entries[index].count);
    for(const m of pack.data.matches as Match[]){
     expect(m.competition).toBe(pack.competition);
-    expect(m.research!.dateDiscrepancy).toBe(false);
+    expect(m.research!.dateDiscrepancy).toBe(m.research!.titleDate!==undefined&&m.research!.titleDate!==m.date);
     expect(m.research!.sourceUrl).toContain('?mid='+m.research!.sourceId);
     for(const k of ['goals','shots','target','corners'] as const)
      for(const i of [0,1])
@@ -124,3 +126,4 @@ describe('Publicação dos 1.751 jogos completos de cinco ligas 2025/26',()=>{
   expect(()=>unpublishedPrivatePacks(loaded,[conflicting])).toThrow(/Conflito/);
  });
 });
+

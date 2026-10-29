@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 import type {Data} from './model';
 import {radarMarkets,matchTotal} from './radar';
 import {duplicateRadarFixtureIds} from './radarFixtureUniqueness';
@@ -19,7 +20,7 @@ export function leagueNumericContext(
   const valid=data.matches.filter(m=>{
     if(m.competition.trim()!==competition.trim()||m.date>=beforeDate||
       m.research?.dateDiscrepancy||
-      (m.research?.titleDate!==undefined&&m.research.titleDate>=beforeDate)||
+      !researchDateBefore(m,beforeDate)||
       (m.external&&!['FT','Match Finished'].includes(m.external.status))||
       seen.has(m.id)||excluded.has(m.id))return false;
     seen.add(m.id);
@@ -36,3 +37,4 @@ export function leagueNumericContext(
     };
   });
 }
+

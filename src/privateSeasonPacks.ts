@@ -190,7 +190,7 @@ export function unpublishedPrivatePacks(
  const sameStats=(a:Match,b:Match)=>
   a.date===b.date&&a.competition===b.competition&&
   a.research?.sourceUrl===b.research?.sourceUrl&&
-  a.research?.dateDiscrepancy===b.research?.dateDiscrepancy&&
+  a.research?.titleDate===b.research?.titleDate&&
   samePair(a.first,b.first)&&samePair(a.second,b.second)&&
   !!a.research&&!!b.research&&samePair(a.research.full,b.research.full);
  const extra:PrivatePack[]=[];
@@ -313,3 +313,4 @@ export async function savePrivateSeasonsCsv(
  return {added:staged.added,skipped:staged.skipped,total:merged.total,
   seasons:staged.seasons};
 }
+

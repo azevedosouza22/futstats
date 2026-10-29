@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Etapa 59 — Venue-specific descriptive coverage, without conflating
  * "five recent fixtures" with "five home/away fixtures". The last five
@@ -38,7 +39,7 @@ function profile(matches:readonly Match[],clubId:string,side:VenueSide,
   seen.add(m.id);
   if(m.competition.trim()!==fixture.competition.trim()||m.date>=fixture.date||
      m.research?.dateDiscrepancy||
-     (m.research?.titleDate!==undefined&&m.research.titleDate>=fixture.date)||
+     !researchDateBefore(m,fixture.date)||
      (m.external&&!['FT','Match Finished'].includes(m.external.status))){
     excluded++;continue;
   }
@@ -71,3 +72,4 @@ export function compareVenuePeriodSamples(data:Data,fixture:RadarFixture):VenueP
   minimumSample:MIN_VENUE_PERIOD_SAMPLE,
   disclaimer:'DESCRITIVO — NÃO É PROBABILIDADE'};
 }
+

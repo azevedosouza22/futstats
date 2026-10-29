@@ -16,9 +16,14 @@ export type ImageOrigin = {
   matchFields: Record<'home' | 'away' | 'date' | 'competition', FieldOrigin | null> & Partial<Record<'country'|'round',FieldOrigin|null>>;
 };
 export type Team = {id: string; name: string; color: string; externalId?: string};
+export type ResearchDateReview = {
+  status:'confirmed'; date:string; titleDate:string; sourceId:string;
+  timezone:'America/Sao_Paulo'; officialSource:string; checkedAt:string;
+};
 export type ResearchOrigin = {
   provider: 'work-csv'; source: 'Flashscore'; sourceId: string; sourceUrl: string;
   importedAt: string; full: [Stats, Stats]; titleDate?: string; dateDiscrepancy: boolean;
+  dateReview?:ResearchDateReview;
 };
 export type Match = {
   id: string; home: string; away: string; date: string; competition: string;country?:string;round?:string;
@@ -71,6 +76,25 @@ export function validStats(s: Stats, nullable: boolean): boolean {
 const validPair=(p: [Stats,Stats], nullable: boolean) => Array.isArray(p)&&p.length===2&&p.every(s=>validStats(s,nullable));
 const isoDate=(value: unknown)=>typeof value==='string'&&!Number.isNaN(Date.parse(value));
 const originValues=['recognized','corrected','calculated'];
+/** Preserve the literal Flashscore title; only an evidenced review resolves quarantine. */
+function validDateReview(m:Match):boolean{
+ const r=m.research!,review=r.dateReview;
+ if(!review||review.status!=='confirmed'||m.competition!=='Brasileirão Série A 2026'||
+   review.sourceId!==r.sourceId||review.date!==m.date||review.titleDate!==r.titleDate||
+   review.date===review.titleDate||!validDate(review.titleDate)||
+   review.timezone!=='America/Sao_Paulo'||!isoDate(review.checkedAt))return false;
+ try{
+  const url=new URL(review.officialSource);
+  return url.protocol==='https:'&&!url.username&&!url.password&&
+   ['www.cbf.com.br','cbf.com.br','cbf-hml.cbf.com.br','socio.cruzeiro.com.br','clubedoremo.com.br','www.clubedoremo.com.br'].includes(url.hostname)&&url.pathname!=='/';
+ }catch{return false;}
+}
+/** Unreviewed future titles remain excluded; confirmed dates retain their literal provenance. */
+export function researchDateBefore(m:Match,beforeDate:string):boolean{
+ if(m.date>=beforeDate)return false;
+ const r=m.research;
+ return !r?.titleDate||r.titleDate<beforeDate||(!r.dateDiscrepancy&&validDateReview(m));
+}
 export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
   if (!validDate(m.date)) return 'Informe a data da partida.';
@@ -82,7 +106,8 @@ export function validateMatch(m: Match): string {
     if (r.provider!=='work-csv'||r.source!=='Flashscore'||!/^[-_a-zA-Z0-9]{3,80}$/.test(r.sourceId)||
       !isoDate(r.importedAt)||!validPair(r.full,true)||typeof r.dateDiscrepancy!=='boolean'||
       (r.titleDate!==undefined&&!validDate(r.titleDate))||
-      (r.dateDiscrepancy!==(r.titleDate!==undefined&&r.titleDate!==m.date))) return 'Metadados CSV inválidos.';
+      (r.dateReview!==undefined&&(!validDateReview(m)||r.dateDiscrepancy))||
+      (r.dateDiscrepancy!==((r.titleDate!==undefined&&r.titleDate!==m.date)&&!r.dateReview))) return 'Metadados CSV inválidos.';
     try {
       const url=new URL(r.sourceUrl);
       if(url.protocol!=='https:'||!['www.flashscore.com.br','flashscore.com.br','www.flashscore.com','flashscore.com'].includes(url.hostname)||
@@ -184,3 +209,4 @@ export function validData(value: unknown): value is Data {
   });
 }
 export const STORAGE='futstats:v1';
+

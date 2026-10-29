@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Etapa 60 — source-by-source trail for the EXISTING venue sample of Etapa 59.
  * This report does not select new matches, fetch sites, backfill N/D, verify
@@ -39,7 +40,7 @@ function trailFor(data:Data,fixture:RadarFixture,selected:readonly Match[],side:
    disposition='duplicate_id';reason='ID repetido na mesma amostra';
   }else if(m.competition.trim()!==fixture.competition.trim()||
    m.date>=fixture.date||m.research?.dateDiscrepancy||
-   (m.research?.titleDate!==undefined&&m.research.titleDate>=fixture.date)||
+   !researchDateBefore(m,fixture.date)||
    (m.external&&!['FT','Match Finished'].includes(m.external.status))){
    disposition='excluded_source';reason='Data, campeonato ou origem em revisão';
   }
@@ -109,3 +110,4 @@ export function exportVenueTrailCsv(report:VenueTrailReport):string{
  }
  return '\uFEFF'+rows.join('\r\n')+'\r\n';
 }
+

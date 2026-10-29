@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Etapa 56 — a read-only coverage matrix for the same last-five-match sample
  * selected by the existing Radar. These are match totals (two sides), NOT
@@ -58,8 +59,7 @@ export function radarPeriodCoverage(data:Parameters<typeof radarUpcoming>[0],
   // Defense in depth even if sample policy evolves.
   if(match.competition.trim()!==fixture.competition.trim()||
      match.date>=fixture.date||
-     (match.research?.titleDate!==undefined&&
-      match.research.titleDate>=fixture.date)||
+     !researchDateBefore(match,fixture.date)||
      (match.external&&!['FT','Match Finished'].includes(match.external.status)))
    {skippedAmbiguous++;continue;}
   unique.push(match);
@@ -137,3 +137,4 @@ export function exportRadarPeriodGapCsv(report:RadarPeriodCoverage):string{
  }
  return '\uFEFF'+rows.join('\r\n')+'\r\n';
 }
+
