@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import type {DirectVenueMode} from './smartDirectH2H';
 import {
  individualLineFrequency,suggestedIndividualLine,
  type IndividualLens,type IndividualMean,type TeamFrequency,type TeamOnlyReport
@@ -74,8 +75,9 @@ function IndividualCard({lens,title,windowSize}:{lens:IndividualLens;title:strin
    </div>
  </article>;
 }
-export default function TeamOnlyCards({report,home,away}:{
- report:TeamOnlyReport;home:string;away:string
+export default function TeamOnlyCards({report,home,away,directVenue,onDirectVenueChange}:{
+ report:TeamOnlyReport;home:string;away:string;
+ directVenue:DirectVenueMode;onDirectVenueChange:(mode:DirectVenueMode)=>void
 }){
  const [selectedWindow,setSelectedWindow]=useState<5|10>(5);
  const [homeAny,awayAny,homeDirect,awayDirect]=report.lenses;
@@ -111,12 +113,23 @@ export default function TeamOnlyCards({report,home,away}:{
    </section>
    <section className="team-summary-direct" aria-label="Confrontos diretos — equipes individuais">
      <h3>Confrontos diretos</h3>
-     <p>Mesmas partidas para ambos os clubes; não são amostras independentes.</p>
+     <label>Recorte de mandos nos confrontos diretos
+       <select aria-label="Filtro de mando dos confrontos diretos" value={directVenue}
+         onChange={e=>onDirectVenueChange(e.target.value as DirectVenueMode)}>
+         <option value="all">Todos os mandos</option>
+         <option value="current">Somente mando atual</option>
+       </select>
+     </label>
+     <p role="status">{report.directMatchCount} {report.directMatchCount===1?'confronto válido':'confrontos válidos'}
+       {' '}nas temporadas selecionadas · últimos até 10 por indicador e período.
+       Ambos os cartões representam as mesmas partidas, sem duplicar resultados.</p>
      <div className="team-summary-grid">
        <IndividualCard key={'direct-home-'+home+'-'+report.metric}
-         lens={homeDirect} title={home+' · contra '+away} windowSize={windowSize}/>
+         lens={homeDirect} title={home+' · contra '+away+
+           (directVenue==='all'?' · qualquer mando':' · em casa')} windowSize={windowSize}/>
        <IndividualCard key={'direct-away-'+away+'-'+report.metric}
-         lens={awayDirect} title={away+' · contra '+home} windowSize={windowSize}/>
+         lens={awayDirect} title={away+' · contra '+home+
+           (directVenue==='all'?' · qualquer mando':' · fora')} windowSize={windowSize}/>
      </div>
    </section>
    <p className="team-summary-footnote">
