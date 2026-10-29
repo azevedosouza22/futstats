@@ -40,7 +40,7 @@ function avg(values:number[]):IndividualMean{
   ?values.reduce((sum,n)=>sum+n,0)/values.length:null,observations:[...values]};
 }
 export function analyzeTeamOnlyPeriods(
- data:Data,fixture:RadarFixture,metric:FourLensMetric,directVenue:DirectVenueMode='all'
+ data:Data,fixture:RadarFixture,metric:FourLensMetric,directVenue:DirectVenueMode='current'
 ):TeamOnlyReport{
  const teamNames=new Map(data.teams.map(t=>[t.id,comparisonTeamKey(t.name,fixture.competition)]));
  const key=(id:string)=>teamNames.get(id)??comparisonTeamKey(id,fixture.competition);
