@@ -13,24 +13,25 @@ const manifest=source('../public/research/packs/manifest-v1.json');
 const entries=parseResearchPackManifest(manifest);
 const packs=[
  source('../public/research/packs/premier_league_2025_26.json'),
- source('../public/research/packs/la_liga_2025_26.json')
+ source('../public/research/packs/la_liga_2025_26.json'),
+ source('../public/research/packs/serie_a_italiana_2025_26.json')
 ];
 const loaded=mergeResearchPacks(baseline,entries,packs);
 const bySource=(m:Match)=>m.research!.sourceId;
-describe('Publicação dos 760 jogos históricos nas duas edições 2025/26',()=>{
+describe('Publicação dos 1.140 jogos completos de três ligas 2025/26',()=>{
  it('carrega automaticamente os pacotes autorizados, sem alterar os 1.019 anteriores',()=>{
   const original=JSON.stringify(baseline.data);
-  expect(entries).toHaveLength(2);
-  expect(entries.map(x=>x.count)).toEqual([380,380]);
-  expect(loaded.total).toBe(1779);
+  expect(entries).toHaveLength(3);
+  expect(entries.map(x=>x.count)).toEqual([380,380,380]);
+  expect(loaded.total).toBe(2159);
   expect(loaded.dateConflicts).toBe(48);
-  expect(loaded.data.matches).toHaveLength(1779);
+  expect(loaded.data.matches).toHaveLength(2159);
   expect(loaded.data.radarSnapshots).toBeUndefined();
   expect(JSON.stringify(baseline.data)).toBe(original);
  });
  it('sem IDs repetidos, preservando liga, três períodos e proveniência Flashscore',()=>{
-  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(1779);
-  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(1779);
+  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(2159);
+  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(2159);
   for(const pack of packs){
    expect(pack.data.matches).toHaveLength(380);
    expect(pack.data.teams).toHaveLength(20);
@@ -46,6 +47,22 @@ describe('Publicação dos 760 jogos históricos nas duas edições 2025/26',()=
   }
   expect(loaded.leagues.find(x=>x.competition==='Premier League inglesa 2025/26')?.count).toBe(380);
   expect(loaded.leagues.find(x=>x.competition==='La Liga espanhola 2025/26')?.count).toBe(380);
+  expect(loaded.leagues.find(x=>x.competition==='Serie A italiana 2025/26')?.count).toBe(380);
+ });
+ it('Serie A 2025/26 cobre 20 equipes e 38 jogos por equipe, sem dados ausentes',()=>{
+   const pack=packs.find(p=>p.competition==='Serie A italiana 2025/26')!;
+   const games=pack.data.matches as Match[];
+   const appearances=new Map<string,number>();
+   for(const m of games){
+    for(const id of [m.home,m.away])appearances.set(id,(appearances.get(id)??0)+1);
+    expect(m.date>='2025-08-01'&&m.date<'2026-07-01').toBe(true);
+    for(const period of [m.first,m.second,m.research!.full])
+     for(const side of period)
+      for(const k of ['goals','shots','target','corners'] as const)
+       expect(Number.isSafeInteger(side[k])&&side[k]!>=0).toBe(true);
+   }
+   expect(appearances.size).toBe(20);
+   expect([...appearances.values()].every(n=>n===38)).toBe(true);
  });
  it('reconcilia variações Athletic Bilbao e Celta entre as temporadas',()=>{
   const liga=loaded.data.matches.filter(m=>m.competition.startsWith('La Liga espanhola '));
