@@ -47,6 +47,19 @@ async function openRadar(page:Page){
   await page.getByRole('button',{name:/Agenda e Radar/}).click();
   await expect(page.getByRole('region',{name:/As Boas do Dia/})).toBeVisible();
 }
+async function openAudit(page:Page){
+  const details=page.locator('details.radar-technical-audit');
+  if(await details.count()&&!(await details.getAttribute('open'))){
+    await details.locator('summary').click();
+  }
+  return page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+}
+async function openOfficialDetails(page:Page){
+  const details=page.locator('details.official-calendar');
+  if(await details.count()&&!(await details.getAttribute('open'))){
+    await details.locator('summary').click();
+  }
+}
 async function openTools(page:Page){
   // Exercise a real visible control in both layouts; never bypass UI handlers.
   const mobile=page.getByRole('button',{name:'Abrir backup integral V4'});
@@ -76,12 +89,12 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
   await openRadar(page);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(boas.getByText('FC Barcelona × Real Madrid')).toBeVisible();
-  await expect(boas.getByText(/V2 e V3 concordam/).first()).toBeVisible();
+  await expect(boas.getByText(/V2 + V3 concordam/).first()).toBeVisible();
   const conflicts=boas.locator('details.daily-good-readiness');
   await conflicts.locator('summary').click();
   await expect(conflicts.getByRole('columnheader',{name:'Horários divergentes'})).toBeVisible();
   await expect(conflicts.locator('.daily-good-kickoff-conflicts')).toHaveCount(0);
-  await boas.getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await boas.getByRole('button',{name:'Analisar este jogo'}).click();
   await expect(page.locator('.radar-selected-fixture')).toContainText('FC Barcelona × Real Madrid');
   await expect(page.locator('.radar-selected-fixture')).toContainText('17:00');
   const before=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
@@ -104,7 +117,8 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
     })])
   });
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
+  await expect(page.locator('details.radar-technical-audit')).toHaveAttribute('open');
   await expect(audit).toContainText('1 registro(s) com identificação da lista');
   await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
@@ -258,6 +272,7 @@ test('Agenda: referência oficial vencida exige reconfirmação e não reativa A
   await page.route('**/raw.githubusercontent.com/**',route=>route.abort());
   await page.goto('/');
   await openRadar(page);
+  await openOfficialDetails(page);
   const queue=page.getByRole('region',{name:'Prioridades de reconferência da agenda oficial'});
   await expect(queue).toBeVisible();
   await expect(queue).toContainText('referência(s) com horário vencido');
@@ -283,7 +298,7 @@ test('Etapa 45: comparação documental de segunda fonte, sem atestar resultado'
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(original).toHaveLength(1);
@@ -302,7 +317,7 @@ test('Etapa 45: comparação documental de segunda fonte, sem atestar resultado'
   await page.reload();
   await openRadar(page);
   await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
   const queue=audit.getByRole('region',{name:'Fila de verificação independente dos resultados'});
   await expect(queue).toContainText('1 com CSV local para conferir');
   await queue.getByText(/Ver prioridades de verificação/).click();
@@ -366,15 +381,15 @@ test('Etapa 47: As Boas recupera registro existente em um toque sem duplicá-lo'
   await page.reload();
   await openRadar(page);
   const boas=page.getByRole('region',{name:/As Boas do Dia/});
-  await expect(boas.getByRole('button',{name:'Abrir Radar e conferir análise'})).toHaveCount(1);
-  await boas.getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+  await expect(boas.getByRole('button',{name:'Analisar este jogo'})).toHaveCount(1);
+  await boas.getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const before=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(before).toHaveLength(1);
   await page.getByRole('button',{name:/Criar previsão para um jogo futuro/}).click();
   const daily=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(daily).toContainText('Indicação já salva em As Boas');
-  await expect(daily.getByRole('button',{name:'Abrir Radar e conferir análise'})).toHaveCount(0);
+  await expect(daily.getByRole('button',{name:'Analisar este jogo'})).toHaveCount(0);
   await daily.getByRole('button',{name:'Ver previsão já registrada'}).click();
   const selected=page.getByRole('listitem',{name:'Previsão salva Barcelona contra Real Madrid'});
   await expect(selected).toBeVisible();
@@ -532,7 +547,7 @@ test('Etapa 51: ID de resultado duplicado e importação futura não viram acert
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(saved).toHaveLength(1);
@@ -572,7 +587,7 @@ test('Etapa 51: ID de resultado duplicado e importação futura não viram acert
   base.matches.pop(); // remove the unrelated fixture; only isolated synthetic data
   result.research.importedAt='2026-10-30T12:00:00.000Z';
   await saveBase();
-  let audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  let audit=await openAudit(page);
   await expect(audit).toContainText('0 confronto(s) com resultado');
   await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
     .toContainText('1 resultado(s) com data de importação futura');
@@ -581,7 +596,7 @@ test('Etapa 51: ID de resultado duplicado e importação futura não viram acert
 
   result.research.importedAt='2026-10-26T03:00:00.000Z';
   await saveBase();
-  audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  audit=await openAudit(page);
   await expect(audit).toContainText('1 confronto(s) com resultado');
   await expect(audit.getByRole('status',{name:'Resultados locais bloqueados por procedência'}))
     .toHaveCount(0);
@@ -603,12 +618,12 @@ test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',asy
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(original).toHaveLength(1);
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
   const cohorts=audit.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'});
   await expect(cohorts).toContainText('1 jogo(s) distinto(s) elegível(is)');
   await expect(cohorts).toContainText('0 com indicador do CSV local');
@@ -674,7 +689,7 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const original=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(original).toHaveLength(1);
@@ -693,7 +708,7 @@ test('Etapa 53: comparar segunda fonte no app sem editar JSON nem provar resulta
   await page.reload();
   await openRadar(page);
   await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
   const form=audit.getByRole('region',{name:'Preencher comparação sem arquivo JSON'});
   await expect(form).toBeVisible();
   await form.getByLabel('Previsão a comparar').selectOption(original[0].key);
@@ -746,7 +761,7 @@ test('Etapa 54: autoteste V4 em memória confere previsão e não toca no celula
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const prior=await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
@@ -796,7 +811,7 @@ test('Etapa 55: diagnóstico local da interface no Radar, sem alterar previsões
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const original=await page.evaluate(()=>Object.fromEntries(
    Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
@@ -874,7 +889,7 @@ test('Etapa 56: quatro indicadores em três períodos com N/D e previsão congel
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const panel=page.locator('details.radar-period-coverage');
   await expect(panel.locator('summary')).toContainText('9/10 jogos completos');
   const before=await page.evaluate(()=>Object.fromEntries(
@@ -950,7 +965,7 @@ test('Etapa 58: linhas Over e Under por tempo distinguem N/D, sem reescrever Rad
     {key:DATA_KEY,data});
   await page.reload();await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const explorer=page.locator('details.radar-period-line-comparison');
   await expect(explorer.locator('summary')).toContainText('Comparar Over e Under');
   const before=await page.evaluate(()=>Object.fromEntries(
@@ -995,7 +1010,7 @@ test('Etapa 59: comparar mandante em casa e visitante fora, preservando previsã
     {key:DATA_KEY,data});
   await page.reload();await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const original=await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
       .map(key=>[key,localStorage.getItem(key)])));
@@ -1049,7 +1064,7 @@ test('Etapa 59: menos de 3 escanteios válidos em casa mantém média N/D',async
     {key:DATA_KEY,data});
   await page.reload();await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const panel=page.getByRole('region',{name:'Comparação por mando de campo e períodos'});
   await panel.getByRole('button',{name:/Conferir desempenho em casa e fora/}).click();
   const casa=panel.getByRole('region',{name:'Barcelona · mandante em casa'});
@@ -1078,7 +1093,7 @@ test('Etapa 60: rastrear os dez jogos das médias por mando sem mudar previsões
     {key:DATA_KEY,data:history});
   await page.reload();await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const before=await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
       .map(k=>[k,localStorage.getItem(k)])));
@@ -1130,7 +1145,7 @@ test('Etapa 61: pré-check Android em Segurança mantém release BLOQUEADO e bac
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const snapshot=await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
@@ -1200,7 +1215,7 @@ test('Etapa 63: linha inteira separa empate, períodos e não modifica previsão
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   const original=await page.evaluate(()=>Object.fromEntries(
     Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)!)
       .map(key=>[key,localStorage.getItem(key)])));
@@ -1401,12 +1416,12 @@ test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte 
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const frozen=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(frozen).toHaveLength(1);
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
   let trace=audit.locator('details.daily-good-result-trace');
   await trace.locator('summary').click();
   await expect(trace).toContainText('RESULTADO_PENDENTE');
@@ -1440,7 +1455,7 @@ test('Etapa 68: origem congelada -> CSV local identificado, sem confirmar fonte 
   await page.reload();
   await openRadar(page);
   await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const updated=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const updated=await openAudit(page);
   trace=updated.locator('details.daily-good-result-trace');
   await trace.locator('summary').click();
   await expect(trace).toContainText('CSV_LOCAL_DOCUMENTADO');
@@ -1496,7 +1511,7 @@ test('Etapa 70: placar real de duas fontes nao vira acerto ou previsao criada',a
   await openRadar(page);
   await page.getByRole('navigation',{name:'Escolha o que fazer no Radar'})
     .getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const audit=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const audit=await openAudit(page);
   const pilot=audit.locator('details.daily-good-public-pilot');
   await pilot.locator('summary').click();
   await expect(pilot).toContainText('PLACAR CONCORDANTE EM DUAS PÁGINAS');
@@ -1529,12 +1544,12 @@ test('Etapa 72: exportar previsões pré-jogo sem CSV e sem criar taxa de acerto
   await page.reload();
   await openRadar(page);
   await page.getByRole('region',{name:/As Boas do Dia/})
-    .getByRole('button',{name:'Abrir Radar e conferir análise'}).click();
+    .getByRole('button',{name:'Analisar este jogo'}).click();
   await page.getByRole('button',{name:'Salvar previsão V2/V3 deste jogo'}).click();
   const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)??'[]'),RADAR_KEY);
   expect(saved).toHaveLength(1);
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
-  const panel=page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
+  const panel=await openAudit(page);
   const block=panel.getByRole('region',{name:'Levar previsões originais para pesquisa externa'});
   await expect(block).toBeVisible();
   const [dl]=await Promise.all([
