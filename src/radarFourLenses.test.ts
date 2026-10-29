@@ -42,7 +42,7 @@ describe('Etapa 78 — quatro recortes, frequências e temporadas sem vazamento'
     expect(r.historicalDirection).toBe('Under');
     expect(JSON.stringify(d)).toBe(before);
   });
-  it('mantém as duas temporadas separadas, mas não conta as duas vistas diretas como jogos diferentes',()=>{
+  it('inclui mandos invertidos sem contar as duas vistas diretas como jogos independentes',()=>{
     const direct=[
       game('p1','2025-09-20',previous,'H','S',20),
       game('p2','2025-11-12',previous,'H','S',30),
@@ -51,9 +51,14 @@ describe('Etapa 78 — quatro recortes, frequências e temporadas sem vazamento'
     const r=analyzeFourLenses(data([...homeFive,...awayFive,...direct]),fixture,'shots','full',28.5);
     expect(lens(r,'home-any').previousSeason).toMatchObject({count:2,mean:25});
     expect(lens(r,'home-any').currentSeason.count).toBe(5);
-    expect(lens(r,'home-direct').last10.count).toBe(2);
+    expect(lens(r,'home-direct').last10.count).toBe(3);
     expect(lens(r,'away-direct').matchIds).toEqual(lens(r,'home-direct').matchIds);
-    expect(lens(r,'home-direct').matchIds).not.toContain('reverse');
+    expect(lens(r,'home-direct').matchIds).toContain('reverse');
+    expect(r.directMatchCount).toBe(3);
+    const venue=analyzeFourLenses(data([...homeFive,...awayFive,...direct]),
+      fixture,'shots','full',28.5,{directVenue:'current'});
+    expect(lens(venue,'home-direct').last10.count).toBe(2);
+    expect(lens(venue,'home-direct').matchIds).not.toContain('reverse');
     expect(r.overlappingSamples).toBe(true);
   });
   it('exclui jogo futuro, data conflitante, outra liga e cópias de um mesmo confronto',()=>{
