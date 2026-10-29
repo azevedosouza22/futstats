@@ -11,6 +11,11 @@
       "file": "la_liga_2025_26.json",
       "competition": "La Liga espanhola 2025/26",
       "count": 380
+    },
+    {
+      "file": "serie_a_italiana_2025_26.json",
+      "competition": "Serie A italiana 2025/26",
+      "count": 380
     }
   ]
 }
