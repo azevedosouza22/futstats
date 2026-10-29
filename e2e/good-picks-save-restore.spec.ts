@@ -60,6 +60,20 @@ async function openOfficialDetails(page:Page){
     await details.locator(':scope > summary').click();
   }
 }
+async function openCoverage(page:Page){
+  const extra=page.locator('details.calendar-coverage-extra');
+  await expect(extra).toHaveCount(1);
+  if((await extra.getAttribute('open'))===null){
+    await extra.locator(':scope > summary').click();
+  }
+  await expect(extra).toHaveAttribute('open');
+  const coverage=extra.locator('details.league-coverage-panel');
+  if((await coverage.getAttribute('open'))===null){
+    await coverage.locator(':scope > summary').click();
+  }
+  await expect(coverage).toHaveAttribute('open');
+  return coverage;
+}
 async function openTools(page:Page){
   // Exercise a real visible control in both layouts; never bypass UI handlers.
   const mobile=page.getByRole('button',{name:'Abrir backup integral V4'});
@@ -117,11 +131,11 @@ test('As Boas -> Radar -> salvar -> recuperar registro e backup integral',async(
     })])
   });
   await page.getByRole('button',{name:'Ver previsão que acabei de salvar'}).click();
+  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
   const audit=await openAudit(page);
   await expect(page.locator('details.radar-technical-audit')).toHaveAttribute('open');
   await expect(audit).toContainText('1 registro(s) com identificação da lista');
   await expect(audit).toContainText('0 confronto(s) com resultado');
-  await expect(page.locator('#radar-saved-forecasts')).toBeFocused();
 
   const verification=audit.getByRole('region',{
     name:'Fila de verificação independente dos resultados'
@@ -661,7 +675,8 @@ test('Etapa 52: amostra por liga permanece 0/30 externa mesmo com CSV local',asy
   await page.reload();
   await openRadar(page);
   await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const updated=page.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'});
+  const reopened=await openAudit(page);
+  const updated=reopened.getByRole('region',{name:'Controle de amostras prospectivas por campeonato'});
   await expect(updated).toContainText('1 com indicador do CSV local');
   await expect(updated).toContainText('0 resultado(s) verificado(s) independentemente');
   const league=updated.getByRole('row',{name:/La Liga espanhola 2026\/27/});
@@ -1295,10 +1310,7 @@ test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',a
   },{data,work,key:WORK_KEY});
   await page.reload();
   await openRadar(page);
-  const coverageDisclosure=page.locator('details.calendar-coverage-extra');
-  await coverageDisclosure.locator(':scope > summary').click();
-  const coverage=page.locator('details.league-coverage-panel');
-  await coverage.locator('summary').click();
+  const coverage=await openCoverage(page);
   const details=coverage.locator('details.cross-store-review');
   await details.locator(':scope > summary').click();
   await expect(details).toContainText('1 ID(s) Flashscore presentes em ambas as bases');
@@ -1326,8 +1338,7 @@ test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',a
     {key:WORK_KEY,work});
   await page.reload();
   await openRadar(page);
-  const changed=page.locator('details.league-coverage-panel');
-  await changed.locator('summary').click();
+  const changed=await openCoverage(page);
   const report=changed.locator('details.cross-store-review');
   await report.locator('summary').click();
   await expect(report).toContainText('1 com valores divergentes');
@@ -1578,7 +1589,8 @@ test('Etapa 72: exportar previsões pré-jogo sem CSV e sem criar taxa de acerto
   await openRadar(page);
   await page.getByRole('navigation',{name:'Escolha o que fazer no Radar'})
     .getByRole('button',{name:/Ver previsões já registradas/}).click();
-  const block2=page.getByRole('region',{name:'Levar previsões originais para pesquisa externa'});
+  const afterReloadAudit=await openAudit(page);
+  const block2=afterReloadAudit.getByRole('region',{name:'Levar previsões originais para pesquisa externa'});
   const [later]=await Promise.all([
     page.waitForEvent('download'),
     block2.getByRole('button',{name:'Exportar previsões pré-jogo para pesquisa (JSON)'}).click()

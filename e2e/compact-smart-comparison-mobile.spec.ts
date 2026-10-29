@@ -4,7 +4,7 @@ test.use({viewport:{width:390,height:844},serviceWorkers:'block'});
 
 test('Comparação: equipe azul, diretos vermelhos e mando amarelo, sem toques extras',async({page})=>{
  await page.goto('/');
- await expect(page.getByText('2.856',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('2.954',{exact:true})).toBeVisible({timeout:45000});
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
