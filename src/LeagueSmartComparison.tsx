@@ -9,6 +9,7 @@ import {
 import {demoFourContextData} from './radarFourLensesDemo';
 import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
 import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
+import type {DirectVenueMode} from './smartDirectH2H';
 import SmartComparisonCards from './SmartComparisonCards';
 import TeamOnlyCards from './TeamOnlyCards';
 
@@ -47,6 +48,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const [homeId,setHomeId]=useState('');
  const [awayId,setAwayId]=useState('');
  const [metric,setMetric]=useState<FourLensMetric>('shots');
+ const [directVenue,setDirectVenue]=useState<DirectVenueMode>('all');
  const [period,setPeriod]=useState<Period>('full');
  const [lineDraft,setLineDraft]=useState('24,5');
  const line=Number(lineDraft.trim().replace(',','.'));
@@ -75,7 +77,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  // statistics. Those averages do not depend on the total-market threshold.
  const calculated=home&&away?calculateSmartLeagueComparison(active,{
    league:chosenLeague,season:chosenSeason,home:home.id,away:away.id,
-   date:chosenDate,metric,period,line:validLine?line:FOUR_LENS_LINES[metric][2]
+   date:chosenDate,metric,period,directVenue,line:validLine?line:FOUR_LENS_LINES[metric][2]
  }):null;
  const report=calculated?.report??null;
  // Quick summaries use an independent, near-mean half-point reference for
@@ -84,7 +86,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  const periodReports=useMemo<Record<Period,FourLensReport>|null>(()=>{
    if(!home||!away)return null;
    const selection={league:chosenLeague,season:chosenSeason,home:home.id,
-     away:away.id,date:chosenDate,metric};
+     away:away.id,date:chosenDate,metric,directVenue};
    const results={} as Record<Period,FourLensReport>;
    for(const p of ['full','first','second'] as const){
      const baseline=calculateSmartLeagueComparison(active,{
@@ -100,7 +102,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
        calculateSmartLeagueComparison(active,{...selection,period:p,line:nearMean}).report!;
    }
    return results;
- },[active,chosenLeague,chosenSeason,home?.id,away?.id,chosenDate,metric]);
+ },[active,chosenLeague,chosenSeason,home?.id,away?.id,chosenDate,metric,directVenue]);
 const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
  return <section className="radar-line-explorer" aria-label="Comparação inteligente por liga e temporada">
   <h2>Comparação Inteligente · por liga</h2>
@@ -158,7 +160,7 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
     <label>Temporada
       <select aria-label="Temporada da comparação inteligente" value={chosenSeason}
         onChange={e=>setSeason(e.target.value)}>
-        <option value={BOTH_SEASONS}>Atual + anterior</option>
+        <option value={BOTH_SEASONS}>Todas as temporadas disponíveis</option>
         {options.seasons.map((s,i)=><option key={s} value={s}>
           {s} · {i===0?'Atual':'Anterior'}
         </option>)}
@@ -188,16 +190,17 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
     </label>
   </div>
   <p className="smart-selection-note" role="status">
-    {chosenSeason===BOTH_SEASONS?'Temporadas disponíveis: '+seasonTitle.join(' e '):'Temporada: '+chosenSeason}
+    {chosenSeason===BOTH_SEASONS?'Temporadas disponíveis: '+[...options.seasons,...options.archivedSeasons].join(', '):'Temporada: '+chosenSeason}
     {' '}· Jogos anteriores a {chosenDate}.
   </p>
   {calculated?.teamOnly&&home&&away?<section aria-label="Estatísticas individuais das equipes">
     <div className="smart-summary-bar smart-results-context">
       <span>{home.name} × {away.name}</span>
       <strong>{metricLabel(metric)}</strong>
-      <small>{chosenSeason===BOTH_SEASONS?'Temporada atual + anterior':chosenSeason}</small>
+      <small>{chosenSeason===BOTH_SEASONS?'Todas as temporadas disponíveis':chosenSeason}</small>
     </div>
-    <TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}/>
+    <TeamOnlyCards report={calculated.teamOnly} home={home.name} away={away.name}
+      directVenue={directVenue} onDirectVenueChange={setDirectVenue}/>
   </section>:<p className="muted">
     {calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'}
   </p>}
@@ -258,8 +261,9 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
               {report.lenses.map(lens=><tr key={lens.id}>
                 <th>{lens.id==='home-any'?home.name+' · em casa / qualquer rival'
                   :lens.id==='away-any'?away.name+' · fora / qualquer rival'
-                  :lens.id==='home-direct'?home.name+' · em casa × '+away.name
-                  :away.name+' · fora × '+home.name+' (mesmos confrontos)'}</th>
+                  :lens.id==='home-direct'?home.name+' · contra '+away.name+
+                    (directVenue==='all'?' (todos os mandos)':' (mando atual)')
+                  :away.name+' · contra '+home.name+' (mesmos jogos, '+(directVenue==='all'?'todos os mandos':'mando atual')+')'}</th>
                 <td>{fmt(lens.last10.mean)} <small>({lens.last10.count} jogos)</small></td>
                 <td>{freq(lens.last5.over,lens.last5.count)}</td>
                 <td>{freq(lens.last5.under,lens.last5.count)}</td>
@@ -280,6 +284,8 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
       A seção de totais soma as duas equipes. Confrontos diretos também fazem parte
       dos históricos gerais e não contam como evidências independentes.
       Frequências passadas não são probabilidades futuras ou garantias de apostas.</p>
+    <p>Confrontos diretos podem incluir ambos os mandos, sem contar o mesmo jogo duas vezes.
+      A amostra respeita as temporadas selecionadas, a data e a integridade dos indicadores.</p>
     <p>Somente leitura: nenhuma previsão, backup ou partida é alterada.</p>
   </details>
  </section>;
