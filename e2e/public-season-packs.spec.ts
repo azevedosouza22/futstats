@@ -80,6 +80,10 @@ test('Brasileirão auditado: últimos cinco Santos em casa incluem Palmeiras e B
  await expect(card.locator('.team-period-compact-row').last()).toContainText('Média 12,8');
  // Read independently: 16 +23 +16 +32 +21 =108 shots, 108/5=21.6.
  // The 09/09 Sudamericana match must not enter this Brasileirão sample.
+ await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Bahia'});
+ await expect(panel.locator('.team-summary-card').first().locator('.team-summary-main strong')).toHaveText('13,4');
+ // Bahia x São Paulo: literal title 29/10, officially confirmed Brazilian date 28/10.
+ // It must be eligible on 29/10 after review, without admitting future fixtures.
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
 });
 

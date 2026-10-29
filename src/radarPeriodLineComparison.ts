@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Etapa 58 — Period-aware historical Over/Under COUNTS.
  * This is descriptive only: not bookmaker odds, forecasts, calibrated win
@@ -65,7 +66,7 @@ export function comparePeriodRadarLines(data:Data,fixture:RadarFixture):PeriodLi
   seen.add(match.id);
   return match.competition.trim()===fixture.competition.trim()&&
    match.date<fixture.date&&!match.research?.dateDiscrepancy&&
-   (match.research?.titleDate===undefined||match.research.titleDate<fixture.date)&&
+   researchDateBefore(match,fixture.date)&&
    (!match.external||['FT','Match Finished'].includes(match.external.status));
  });
  const coverage=radarPeriodCoverage(data,fixture);
@@ -98,3 +99,4 @@ export function comparePeriodRadarLines(data:Data,fixture:RadarFixture):PeriodLi
  }
  return {groups,fixtureDate:fixture.date,league:fixture.competition};
 }
+

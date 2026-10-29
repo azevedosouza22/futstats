@@ -89,6 +89,13 @@ function validDateReview(m:Match):boolean{
    ['www.cbf.com.br','cbf.com.br','cbf-hml.cbf.com.br','socio.cruzeiro.com.br','clubedoremo.com.br','www.clubedoremo.com.br'].includes(url.hostname)&&url.pathname!=='/';
  }catch{return false;}
 }
+/** Unreviewed future titles remain excluded; confirmed dates retain their literal provenance. */
+export function researchDateBefore(m:Match,beforeDate:string):boolean{
+ if(m.date>=beforeDate)return false;
+ const r=m.research;
+ if(r?.dateDiscrepancy)return false;
+ return !r?.titleDate||r.titleDate<beforeDate||validDateReview(m);
+}
 export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
   if (!validDate(m.date)) return 'Informe a data da partida.';

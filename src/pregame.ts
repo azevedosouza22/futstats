@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 import {average, type Match} from './model';
 export type Period = 'first' | 'full';
 export type Venue = 'all' | 'home' | 'away';
@@ -12,7 +13,7 @@ export function recentMatches(
 ): Match[] {
   return matches.filter(m => (m.home === team || m.away === team) && m.date < beforeDate &&
     // When the source shows two conflicting dates, neither may fall on/after the analysis day.
-    (!m.research?.titleDate || m.research.titleDate < beforeDate) &&
+    researchDateBefore(m,beforeDate) &&
     (!m.external || ['FT', 'Match Finished'].includes(m.external.status)) &&
     (!filters.competition || m.competition.trim() === filters.competition) &&
     (filters.venue !== 'home' || m.home === team) &&
@@ -31,3 +32,4 @@ export function pregameAverage(
 export function localDate(date = new Date()): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
+

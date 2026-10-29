@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /** Read-only averages of ONE team's actions at its venue (not match totals).
  * Based on the same selected league and season subset as the smart comparison.
  * An individual game contributes at most once to a context and period.
@@ -60,7 +61,7 @@ export function analyzeTeamOnlyPeriods(
  // Still require the same fixture league and season family.
  const eligible=data.matches.filter(m=>
   m.date<fixture.date&&
-  (!m.research?.titleDate||m.research.titleDate<fixture.date)&&
+  researchDateBefore(m,fixture.date)&&
   !m.research?.dateDiscrepancy&&
   (!m.external||['FT','Match Finished'].includes(m.external.status))&&
   radarMetricIntegrity(m,metric)==='ok'
@@ -96,3 +97,4 @@ export function analyzeTeamOnlyPeriods(
  return {metric,lenses,directVenue,
   directMatchCount:matches.filter(m=>directMatchSides(m,home,away,key,directVenue)!==null).length};
 }
+

@@ -3,7 +3,7 @@ import {describe,it,expect} from 'vitest';
 import {parseResearchCatalog} from './researchCatalog';
 import {mergeResearchPacks,parseResearchPackManifest,loadResearchPacks} from './researchPacks';
 import {applyBrazilResearchDateReview} from './brazilResearchReview';
-import {validData,validateMatch} from './model';
+import {validData,validateMatch,researchDateBefore} from './model';
 import {unpublishedPrivatePacks} from './privateSeasonPacks';
 const root='../public/research/';
 const source=(p:string)=>JSON.parse(readFileSync(new URL(root+p,import.meta.url),'utf8'));
@@ -14,6 +14,18 @@ const merged=mergeResearchPacks(baseline,entries,packs);
 const review=source('brasileirao-2026-review-20261029.json');
 const effective=applyBrazilResearchDateReview(merged,review);
 describe('Brasileirão 2026: incremento e revisão rastreável de 29/10',()=>{
+ it('usa a data brasileira confirmada sem permitir jogos futuros ou título não revisado',()=>{
+  const id='nDr51AQQ';
+  const old=merged.data.matches.find(m=>m.research?.sourceId===id)!;
+  const reviewed=effective.data.matches.find(m=>m.research?.sourceId===id)!;
+  expect(old.research!.titleDate).toBe('2026-10-29');
+  expect(reviewed.date).toBe('2026-10-28');
+  expect(researchDateBefore(old,'2026-10-29')).toBe(false);
+  expect(researchDateBefore(reviewed,'2026-10-29')).toBe(true);
+  expect(researchDateBefore(reviewed,'2026-10-28')).toBe(false);
+  const forged=structuredClone(reviewed);forged.research!.dateReview!.officialSource='https://evil.example/jogo';
+  expect(researchDateBefore(forged,'2026-10-29')).toBe(false);
+ });
  it('preserva originais e estatísticas; resolve 48 antigas e duas novas datas de título',()=>{
   const before=JSON.stringify(merged);
   const result=applyBrazilResearchDateReview(merged,review);

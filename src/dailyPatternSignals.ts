@@ -1,3 +1,4 @@
+import {researchDateBefore} from './model';
 /**
  * Radar de Padrões V1 — exploratório e somente leitura.
  *
@@ -65,7 +66,7 @@ function venueMatches(data:Data,fixture:ScheduledFixture){
  const grouped=new Map<string,Match[]>();
  for(const m of data.matches){
   if(!allowed.has(m.competition)||m.date>=fixture.date||
-     (m.research?.titleDate&&m.research.titleDate>=fixture.date)||
+     !researchDateBefore(m,fixture.date)||
      m.research?.dateDiscrepancy||
      (m.external&&!['FT','Match Finished'].includes(m.external.status)))continue;
   const identity=[m.competition,m.date,key(m.home),key(m.away)].join('|');
@@ -178,3 +179,4 @@ export function selectDailyPatterns(
   a.fixture.id.localeCompare(b.fixture.id));
  return {date,verified,items:items.slice(0,3)};
 }
+
