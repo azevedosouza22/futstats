@@ -47,7 +47,7 @@ test('Etapa 100: 2.954 partidas aparecem sem importação na prévia experimenta
  await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Abha'});
  await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Al Hazem'});
  await expect(page.getByRole('region',{name:'Médias somente das equipes'})).toBeVisible();
- await expect(page.getByText(/Temporada: 2026\\/27/)).toBeVisible();
+ await expect(page.getByText(/Temporada: 2026\/27/)).toBeVisible();
  const local=await page.evaluate(()=>localStorage.getItem('futstats:v1'));
  expect(local).toBeNull(); // Research must not silently modify user storage.
 });
