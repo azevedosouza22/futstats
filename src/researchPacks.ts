@@ -7,6 +7,7 @@ import {validData,type Data,type Match,type Team} from './model';
 import {competitionParts,NO_SEASON} from './leagueCatalog';
 import {normalizeTeam} from './calendar';
 import type {ResearchCatalog} from './researchCatalog';
+import {applyBrazilResearchDateReview} from './brazilResearchReview';
 
 type PackEntry={file:string;competition:string;count:number};
 type PackManifest={format:string;version:number;packs:PackEntry[]};
@@ -18,6 +19,7 @@ const isObj=(x:unknown):x is Record<string,unknown>=>
 const seasonTeamKey=(league:string,name:string)=>{
  const normalized=normalizeTeam(name).replace(/\./g,'');
  if(league==='La Liga espanhola'&&normalized==='celta vigo')return 'celta de vigo';
+ if(league==='Brasileirão Série A'&&normalized==='red bull bragantino')return 'rb bragantino';
  return normalized;
 };
 const fingerprint=(m:Match,names:Map<string,string>)=>[
@@ -119,5 +121,9 @@ export async function loadResearchPacks(
   if(!result.ok)throw Error('Pacote não encontrado: '+entry.file);
   payloads.push(await result.json() as unknown);
  }
- return mergeResearchPacks(baseline,entries,payloads);
+ const merged=mergeResearchPacks(baseline,entries,payloads);
+ const review=await fetch('/research/brasileirao-2026-review-20261029.json',{signal,cache:'no-store'});
+ if(!review.ok)throw Error('Conferência de datas do Brasileirão indisponível.');
+ return applyBrazilResearchDateReview(merged,await review.json() as unknown);
 }
+

@@ -1,0 +1,501 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Brasileirão Série A 2026",
+  "data": {
+    "teams": [
+      {
+        "id": "private-season-team-1",
+        "name": "Santos",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-2",
+        "name": "Palmeiras",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-3",
+        "name": "Fluminense",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-4",
+        "name": "Internacional",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-5",
+        "name": "Red Bull Bragantino",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-6",
+        "name": "Chapecoense",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-7",
+        "name": "Remo",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-8",
+        "name": "Botafogo",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-9",
+        "name": "Bahia",
+        "color": "#557e8d"
+      },
+      {
+        "id": "private-season-team-10",
+        "name": "São Paulo",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-21vH6po9",
+        "competition": "Brasileirão Série A 2026",
+        "date": "2026-10-28",
+        "home": "private-season-team-1",
+        "away": "private-season-team-2",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 1,
+            "corners": 0,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 4,
+            "corners": 1,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "21vH6po9",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/palmeiras-hMn9FTbH/santos-n3QdnjFB/resumo/estatisticas/total/?mid=21vH6po9",
+          "importedAt": "2026-10-29T00:00:00Z",
+          "full": [
+            {
+              "goals": 0,
+              "shots": 16,
+              "target": 5,
+              "corners": 1,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            },
+            {
+              "goals": 0,
+              "shots": 14,
+              "target": 5,
+              "corners": 3,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            }
+          ],
+          "titleDate": "2026-10-28",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-UsHUp3Ok",
+        "competition": "Brasileirão Série A 2026",
+        "date": "2026-10-28",
+        "home": "private-season-team-3",
+        "away": "private-season-team-4",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 4,
+            "corners": 6,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 4,
+            "corners": 4,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "UsHUp3Ok",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/fluminense-EV9L3kU4/internacional-tSCiHj0I/resumo/estatisticas/total/?mid=UsHUp3Ok",
+          "importedAt": "2026-10-29T00:00:00Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 16,
+              "target": 6,
+              "corners": 8,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            },
+            {
+              "goals": 1,
+              "shots": 13,
+              "target": 5,
+              "corners": 5,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            }
+          ],
+          "titleDate": "2026-10-28",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-faJea2wq",
+        "competition": "Brasileirão Série A 2026",
+        "date": "2026-10-28",
+        "home": "private-season-team-5",
+        "away": "private-season-team-6",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 14,
+            "target": 7,
+            "corners": 4,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 2,
+            "corners": 3,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 4,
+            "corners": 3,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "faJea2wq",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/chapecoense-jcQV3XP6/red-bull-bragantino-jwKvKhGa/resumo/estatisticas/total/?mid=faJea2wq",
+          "importedAt": "2026-10-29T00:00:00Z",
+          "full": [
+            {
+              "goals": 3,
+              "shots": 23,
+              "target": 11,
+              "corners": 7,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            },
+            {
+              "goals": 0,
+              "shots": 9,
+              "target": 3,
+              "corners": 4,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            }
+          ],
+          "titleDate": "2026-10-28",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-WpKydlll",
+        "competition": "Brasileirão Série A 2026",
+        "date": "2026-10-28",
+        "home": "private-season-team-7",
+        "away": "private-season-team-8",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 2,
+            "corners": 6,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "WpKydlll",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/botafogo-jXzWoWa5/remo-2i0B6Zul/resumo/estatisticas/total/?mid=WpKydlll",
+          "importedAt": "2026-10-29T00:00:00Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 11,
+              "target": 4,
+              "corners": 3,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            },
+            {
+              "goals": 1,
+              "shots": 15,
+              "target": 2,
+              "corners": 8,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            }
+          ],
+          "titleDate": "2026-10-29",
+          "dateDiscrepancy": true
+        }
+      },
+      {
+        "id": "research-private-nDr51AQQ",
+        "competition": "Brasileirão Série A 2026",
+        "date": "2026-10-28",
+        "home": "private-season-team-9",
+        "away": "private-season-team-10",
+        "first": [
+          {
+            "goals": 2,
+            "shots": 6,
+            "target": 2,
+            "corners": 5,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 4,
+            "corners": 7,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 4,
+            "yellow": null,
+            "red": null,
+            "possession": null,
+            "xg": null,
+            "chances": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "nDr51AQQ",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/bahia-UeD7XtzM/sao-paulo-QgP0oAUH/resumo/estatisticas/total/?mid=nDr51AQQ",
+          "importedAt": "2026-10-29T00:00:00Z",
+          "full": [
+            {
+              "goals": 3,
+              "shots": 13,
+              "target": 4,
+              "corners": 7,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            },
+            {
+              "goals": 2,
+              "shots": 14,
+              "target": 6,
+              "corners": 11,
+              "yellow": null,
+              "red": null,
+              "possession": null,
+              "xg": null,
+              "chances": null
+            }
+          ],
+          "titleDate": "2026-10-29",
+          "dateDiscrepancy": true
+        }
+      }
+    ]
+  }
+}

@@ -26,6 +26,11 @@
       "file": "liga_portugal_2025_26.json",
       "competition": "Liga Portugal 2025/26",
       "count": 306
+    },
+    {
+      "file": "brasileirao_2026_incremental_20261029.json",
+      "competition": "Brasileirão Série A 2026",
+      "count": 5
     }
   ]
 }

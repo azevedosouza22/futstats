@@ -1,0 +1,2608 @@
+{
+  "format": "futstats-research-date-review-v1",
+  "version": 1,
+  "competition": "Brasileirão Série A 2026",
+  "checkedAt": "2026-10-29T00:00:00Z",
+  "entries": [
+    {
+      "sourceId": "YauoLWJN",
+      "date": "2026-01-28",
+      "titleDate": "2026-01-29",
+      "home": "São Paulo",
+      "away": "Flamengo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-flamengo/831891",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 3,
+            "corners": 5
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 4,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 4,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 15,
+            "target": 5,
+            "corners": 6
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "CpixNhkB",
+      "date": "2026-01-29",
+      "titleDate": "2026-01-30",
+      "home": "Botafogo",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/botafogo-x-cruzeiro/831890",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 0,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 2,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 4,
+            "shots": 6,
+            "target": 5,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 2,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 4,
+            "shots": 10,
+            "target": 5,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 17,
+            "target": 4,
+            "corners": 7
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "QkMZRvX7",
+      "date": "2026-02-04",
+      "titleDate": "2026-02-05",
+      "home": "Palmeiras",
+      "away": "Vitória",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/sub-20-b/2026/palmeiras-x-vitoria/831902?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 3,
+            "shots": 10,
+            "target": 6,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 3,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 5,
+            "shots": 17,
+            "target": 8,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 4,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "WSr1r0Hl",
+      "date": "2026-02-04",
+      "titleDate": "2026-02-05",
+      "home": "Grêmio",
+      "away": "Botafogo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/sub-20/2026/gremio-x-botafogo/831905?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 5,
+            "target": 2,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 4,
+            "shots": 8,
+            "target": 7,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 2,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 5,
+            "shots": 14,
+            "target": 8,
+            "corners": 4
+          },
+          {
+            "goals": 3,
+            "shots": 9,
+            "target": 4,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "MaINiPBa",
+      "date": "2026-02-10",
+      "titleDate": "2026-02-11",
+      "home": "Vitória",
+      "away": "Flamengo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vitoria-x-flamengo/831917",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 2,
+            "target": 2,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 7
+          },
+          {
+            "goals": 2,
+            "shots": 6,
+            "target": 2,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "Cn4zcaWs",
+      "date": "2026-02-11",
+      "titleDate": "2026-02-12",
+      "home": "Vasco",
+      "away": "Bahia",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vasco-da-gama-saf-x-bahia/831910",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 14,
+            "target": 4,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 3,
+            "corners": 4
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 12,
+            "target": 0,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 26,
+            "target": 4,
+            "corners": 8
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 3,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "pEHsew1f",
+      "date": "2026-02-11",
+      "titleDate": "2026-02-12",
+      "home": "São Paulo",
+      "away": "Grêmio",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-gremio/831911",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 1,
+            "corners": 0
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 14,
+            "target": 3,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 18,
+            "target": 4,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "WUwqa7JP",
+      "date": "2026-02-12",
+      "titleDate": "2026-02-13",
+      "home": "Internacional",
+      "away": "Palmeiras",
+      "officialSource": "https://cbf-hml.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-c/2026/internacional-x-palmeiras/831915",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 2,
+            "corners": 7
+          },
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 4,
+            "corners": 4
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 16,
+            "target": 2,
+            "corners": 9
+          },
+          {
+            "goals": 2,
+            "shots": 4,
+            "target": 3,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 26,
+            "target": 4,
+            "corners": 16
+          },
+          {
+            "goals": 3,
+            "shots": 11,
+            "target": 7,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "065k6OQh",
+      "date": "2026-02-25",
+      "titleDate": "2026-02-26",
+      "home": "Palmeiras",
+      "away": "Fluminense",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/palmeiras-x-fluminense/831922",
+      "expected": {
+        "first": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 4,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 4,
+            "corners": 7
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 3,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 14,
+            "target": 6,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 18,
+            "target": 7,
+            "corners": 11
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "zoPwpY9j",
+      "date": "2026-02-25",
+      "titleDate": "2026-02-26",
+      "home": "Grêmio",
+      "away": "Atlético-MG",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/gremio-x-atletico-mineiro/831925",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 1,
+            "corners": 5
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 6,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 18,
+            "target": 7,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 2,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "WjXNGWpS",
+      "date": "2026-03-10",
+      "titleDate": "2026-03-11",
+      "home": "Mirassol",
+      "away": "Santos",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/mirassol-x-santos-fc/831933",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 0
+          },
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 0,
+            "corners": 6
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 6,
+            "corners": 6
+          },
+          {
+            "goals": 2,
+            "shots": 5,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 20,
+            "target": 9,
+            "corners": 6
+          },
+          {
+            "goals": 2,
+            "shots": 16,
+            "target": 2,
+            "corners": 7
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "bwZFIhGF",
+      "date": "2026-03-11",
+      "titleDate": "2026-03-12",
+      "home": "Corinthians",
+      "away": "Coritiba",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/corinthians-x-coritiba-saf/831932",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 1,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 1,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 1,
+            "corners": 8
+          },
+          {
+            "goals": 2,
+            "shots": 4,
+            "target": 2,
+            "corners": 6
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "za4CbXOq",
+      "date": "2026-03-11",
+      "titleDate": "2026-03-12",
+      "home": "Flamengo",
+      "away": "Cruzeiro",
+      "officialSource": "https://cbf-hml.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/flamengo-x-cruzeiro/831929",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 3,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 3,
+            "corners": 4
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 4,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 15,
+            "target": 7,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 4,
+            "corners": 7
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "dYG29lw2",
+      "date": "2026-03-12",
+      "titleDate": "2026-03-13",
+      "home": "Grêmio",
+      "away": "RB Bragantino",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-b/2026/gremio-x-red-bull-bragantino/831935",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 4,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 3,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 4,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 13,
+            "target": 6,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 20,
+            "target": 8,
+            "corners": 6
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "AwdDhacn",
+      "date": "2026-03-18",
+      "titleDate": "2026-03-19",
+      "home": "Santos",
+      "away": "Internacional",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/santos-fc-x-internacional/831951",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 0
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 2,
+            "corners": 4
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 4,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 2,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 17,
+            "target": 6,
+            "corners": 8
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "fRL3YeCU",
+      "date": "2026-03-18",
+      "titleDate": "2026-03-19",
+      "home": "Vasco",
+      "away": "Fluminense",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vasco-da-gama-saf-x-fluminense/831950",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 4,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 3,
+            "shots": 11,
+            "target": 5,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 16,
+            "target": 6,
+            "corners": 5
+          },
+          {
+            "goals": 2,
+            "shots": 14,
+            "target": 5,
+            "corners": 5
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "bZr41ftH",
+      "date": "2026-03-19",
+      "titleDate": "2026-03-20",
+      "home": "Chapecoense",
+      "away": "Corinthians",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/chapecoense-x-corinthians/831958?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 0
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 3,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 2,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 14,
+            "target": 4,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 4,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "IwGUHFQc",
+      "date": "2026-03-21",
+      "titleDate": "2026-03-22",
+      "home": "São Paulo",
+      "away": "Palmeiras",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-palmeiras/831961",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 1,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 1,
+            "target": 0,
+            "corners": 8
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 1,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 10
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 1
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "l8eApsH0",
+      "date": "2026-04-01",
+      "titleDate": "2026-04-02",
+      "home": "Fluminense",
+      "away": "Corinthians",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/fluminense-x-corinthians/831970",
+      "expected": {
+        "first": [
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 4,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 6,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 3,
+            "corners": 8
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 20,
+            "target": 10,
+            "corners": 8
+          },
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 4,
+            "corners": 10
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "2BLqatWg",
+      "date": "2026-04-02",
+      "titleDate": "2026-04-03",
+      "home": "RB Bragantino",
+      "away": "Flamengo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/red-bull-bragantino-x-flamengo/831974",
+      "expected": {
+        "first": [
+          {
+            "goals": 2,
+            "shots": 8,
+            "target": 3,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 0,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 18,
+            "target": 6,
+            "corners": 7
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 1,
+            "corners": 5
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "foIy121s",
+      "date": "2026-04-02",
+      "titleDate": "2026-04-03",
+      "home": "Palmeiras",
+      "away": "Grêmio",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/palmeiras-x-gremio/831973",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 1,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 4,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 16,
+            "target": 4,
+            "corners": 8
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 5,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "j78z8yFO",
+      "date": "2026-04-04",
+      "titleDate": "2026-04-05",
+      "home": "Vasco",
+      "away": "Botafogo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vasco-da-gama-saf-x-botafogo/831981",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 4,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 1
+          },
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 5,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 17,
+            "target": 5,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 18,
+            "target": 9,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "CISGCg1n",
+      "date": "2026-04-25",
+      "titleDate": "2026-04-26",
+      "home": "São Paulo",
+      "away": "Mirassol",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-mirassol/832012",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 0,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 1,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 0,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 17,
+            "target": 1,
+            "corners": 12
+          },
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 1,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "l22JCEIq",
+      "date": "2026-05-02",
+      "titleDate": "2026-05-03",
+      "home": "Cruzeiro",
+      "away": "Atlético-MG",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/cruzeiro-x-atletico-mineiro/832025",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 3,
+            "target": 2,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 1,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 14,
+            "target": 2,
+            "corners": 5
+          },
+          {
+            "goals": 3,
+            "shots": 6,
+            "target": 4,
+            "corners": 1
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "4Wwohsxg",
+      "date": "2026-05-16",
+      "titleDate": "2026-05-17",
+      "home": "Palmeiras",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/palmeiras-x-cruzeiro/832043?view=alteracoes",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 2,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 2,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 16,
+            "target": 2,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 4,
+            "corners": 5
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "4Qzy1xLN",
+      "date": "2026-05-23",
+      "titleDate": "2026-05-24",
+      "home": "Flamengo",
+      "away": "Palmeiras",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/flamengo-x-palmeiras/832050",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 1,
+            "corners": 4
+          },
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 5,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 22,
+            "target": 3,
+            "corners": 8
+          },
+          {
+            "goals": 3,
+            "shots": 12,
+            "target": 6,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "0EJZvDKP",
+      "date": "2026-07-22",
+      "titleDate": "2026-07-23",
+      "home": "São Paulo",
+      "away": "Athletico-PR",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-athletico-paranaense/832072",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 1,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 1,
+            "target": 0,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 2,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 3,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 18,
+            "target": 3,
+            "corners": 7
+          },
+          {
+            "goals": 2,
+            "shots": 11,
+            "target": 3,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "4S3cXLIG",
+      "date": "2026-07-22",
+      "titleDate": "2026-07-23",
+      "home": "Chapecoense",
+      "away": "Flamengo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/chapecoense-x-flamengo/832079",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 3,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 5,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 3,
+            "corners": 5
+          },
+          {
+            "goals": 4,
+            "shots": 10,
+            "target": 6,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "KvUgD0Rp",
+      "date": "2026-07-22",
+      "titleDate": "2026-07-23",
+      "home": "Internacional",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/internacional-x-cruzeiro/832076",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 4,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 1,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 6
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 21,
+            "target": 3,
+            "corners": 5
+          },
+          {
+            "goals": 2,
+            "shots": 13,
+            "target": 6,
+            "corners": 7
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "6V8piG9k",
+      "date": "2026-07-29",
+      "titleDate": "2026-07-30",
+      "home": "Fluminense",
+      "away": "Bahia",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/fluminense-x-bahia/832090",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 0,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 20,
+            "target": 9,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 25,
+            "target": 11,
+            "corners": 8
+          },
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 0,
+            "corners": 1
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "lCVf7Sam",
+      "date": "2026-07-29",
+      "titleDate": "2026-07-30",
+      "home": "Vitória",
+      "away": "Palmeiras",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vitoria-x-palmeiras/832098",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 2
+          },
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 3,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 3,
+            "corners": 6
+          },
+          {
+            "goals": 4,
+            "shots": 16,
+            "target": 5,
+            "corners": 1
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "pt4NPzGE",
+      "date": "2026-07-30",
+      "titleDate": "2026-07-31",
+      "home": "Coritiba",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/coritiba-saf-x-cruzeiro/832097",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 12,
+            "target": 0,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 2,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 0,
+            "shots": 19,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 20,
+            "target": 4,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "EJGK1OTO",
+      "date": "2026-08-08",
+      "titleDate": "2026-08-09",
+      "home": "Botafogo",
+      "away": "Fluminense",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/sub-17/2026/botafogo-x-fluminense/832101?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 0,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 5,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 4,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 22,
+            "target": 7,
+            "corners": 7
+          },
+          {
+            "goals": 1,
+            "shots": 14,
+            "target": 4,
+            "corners": 7
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "GM5oorrh",
+      "date": "2026-08-15",
+      "titleDate": "2026-08-16",
+      "home": "São Paulo",
+      "away": "Coritiba",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-b/2026/sao-paulo-x-coritiba-saf/832112",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 3,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 11,
+            "target": 3,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 19,
+            "target": 6,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 1,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "dGmuqYZI",
+      "date": "2026-08-29",
+      "titleDate": "2026-08-30",
+      "home": "Vasco",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/vasco-da-gama-saf-x-cruzeiro/832131",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 7,
+            "corners": 7
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 3,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 2,
+            "corners": 4
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 3,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 22,
+            "target": 9,
+            "corners": 11
+          },
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 6,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "MwalAAYH",
+      "date": "2026-09-05",
+      "titleDate": "2026-09-06",
+      "home": "Fluminense",
+      "away": "Vasco",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/sub-20/2026/fluminense-x-vasco-da-gama-saf/832140?view=documentos",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 1,
+            "target": 1,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 1,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 3,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 4,
+            "corners": 6
+          },
+          {
+            "goals": 0,
+            "shots": 15,
+            "target": 4,
+            "corners": 6
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "Ghn7iaNE",
+      "date": "2026-09-11",
+      "titleDate": "2026-09-12",
+      "home": "Coritiba",
+      "away": "Athletico-PR",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-b/2026/coritiba-saf-x-athletico-paranaense/832158",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 3
+          },
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 4,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 16,
+            "target": 4,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 23,
+            "target": 7,
+            "corners": 8
+          },
+          {
+            "goals": 3,
+            "shots": 14,
+            "target": 5,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "ULeXvMw9",
+      "date": "2026-09-12",
+      "titleDate": "2026-09-13",
+      "home": "Santos",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-c/2026/santos-fc-x-cruzeiro/832153",
+      "expected": {
+        "first": [
+          {
+            "goals": 2,
+            "shots": 17,
+            "target": 7,
+            "corners": 4
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 3
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 15,
+            "target": 3,
+            "corners": 9
+          },
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 2,
+            "corners": 0
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 32,
+            "target": 10,
+            "corners": 13
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 4,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "0rZDmjMt",
+      "date": "2026-09-19",
+      "titleDate": "2026-09-20",
+      "home": "São Paulo",
+      "away": "Internacional",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-internacional/832163?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 1,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 0,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 1,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "E9LhiBpT",
+      "date": "2026-10-07",
+      "titleDate": "2026-10-08",
+      "home": "Cruzeiro",
+      "away": "São Paulo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/cruzeiro-x-sao-paulo/832176",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 4,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 1,
+            "corners": 5
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 5,
+            "corners": 5
+          },
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 2,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 23,
+            "target": 9,
+            "corners": 8
+          },
+          {
+            "goals": 0,
+            "shots": 19,
+            "target": 3,
+            "corners": 8
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "EmpIvY0N",
+      "date": "2026-10-08",
+      "titleDate": "2026-10-09",
+      "home": "Fluminense",
+      "away": "Coritiba",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/a-x-b/832171?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 5,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 3,
+            "shots": 10,
+            "target": 5,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 4,
+            "shots": 22,
+            "target": 10,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 0,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "Mg7qego4",
+      "date": "2026-10-08",
+      "titleDate": "2026-10-09",
+      "home": "Palmeiras",
+      "away": "Bahia",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/palmeiras-x-bahia/832174?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 6,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 0,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 5,
+            "corners": 5
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 25,
+            "target": 11,
+            "corners": 7
+          },
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 1,
+            "corners": 3
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "nHIhMVq3",
+      "date": "2026-10-10",
+      "titleDate": "2026-10-11",
+      "home": "São Paulo",
+      "away": "Vitória",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-vitoria/832183?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 14,
+            "target": 4,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 1,
+            "corners": 0
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 1,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 20,
+            "target": 6,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 2,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "vXrY11bl",
+      "date": "2026-10-12",
+      "titleDate": "2026-10-13",
+      "home": "RB Bragantino",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/red-bull-bragantino-x-cruzeiro/832185",
+      "expected": {
+        "first": [
+          {
+            "goals": 3,
+            "shots": 11,
+            "target": 5,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 9,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 6,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 13,
+            "target": 4,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 4,
+            "shots": 20,
+            "target": 11,
+            "corners": 7
+          },
+          {
+            "goals": 2,
+            "shots": 25,
+            "target": 13,
+            "corners": 6
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "AysJYaZP",
+      "date": "2026-10-17",
+      "titleDate": "2026-10-18",
+      "home": "São Paulo",
+      "away": "Vasco",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/sub-20-b/2026/sao-paulo-x-vasco-da-gama-saf/832193",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 2,
+            "corners": 2
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 2,
+            "corners": 3
+          },
+          {
+            "goals": 0,
+            "shots": 13,
+            "target": 2,
+            "corners": 4
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "KpqbfGen",
+      "date": "2026-10-24",
+      "titleDate": "2026-10-25",
+      "home": "Santos",
+      "away": "Bahia",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-d/2026/santos-fc-x-bahia/832203",
+      "expected": {
+        "first": [
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 4,
+            "corners": 6
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 2,
+            "corners": 5
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 15,
+            "target": 7,
+            "corners": 8
+          },
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 0,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 23,
+            "target": 11,
+            "corners": 14
+          },
+          {
+            "goals": 1,
+            "shots": 16,
+            "target": 2,
+            "corners": 8
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "EB2UmMgR",
+      "date": "2026-02-05",
+      "titleDate": "2026-02-06",
+      "home": "Cruzeiro",
+      "away": "Coritiba",
+      "officialSource": "https://socio.cruzeiro.com.br/jogos/148",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 4,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 1,
+            "corners": 1
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 8,
+            "target": 0,
+            "corners": 10
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 1,
+            "corners": 1
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 19,
+            "target": 4,
+            "corners": 12
+          },
+          {
+            "goals": 2,
+            "shots": 10,
+            "target": 2,
+            "corners": 2
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "lfU2u4hm",
+      "date": "2026-05-09",
+      "titleDate": "2026-05-10",
+      "home": "Bahia",
+      "away": "Cruzeiro",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-cruzeiro/832038",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 1,
+            "corners": 1
+          },
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 3,
+            "corners": 5
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 5
+          },
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 4,
+            "corners": 3
+          }
+        ],
+        "full": [
+          {
+            "goals": 1,
+            "shots": 8,
+            "target": 3,
+            "corners": 6
+          },
+          {
+            "goals": 2,
+            "shots": 20,
+            "target": 7,
+            "corners": 8
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "nDr51AQQ",
+      "date": "2026-10-28",
+      "titleDate": "2026-10-29",
+      "home": "Bahia",
+      "away": "São Paulo",
+      "officialSource": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-sao-paulo/832219?view=escalacao",
+      "expected": {
+        "first": [
+          {
+            "goals": 2,
+            "shots": 6,
+            "target": 2,
+            "corners": 5
+          },
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 4,
+            "corners": 7
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 2,
+            "corners": 4
+          }
+        ],
+        "full": [
+          {
+            "goals": 3,
+            "shots": 13,
+            "target": 4,
+            "corners": 7
+          },
+          {
+            "goals": 2,
+            "shots": 14,
+            "target": 6,
+            "corners": 11
+          }
+        ]
+      }
+    },
+    {
+      "sourceId": "WpKydlll",
+      "date": "2026-10-28",
+      "titleDate": "2026-10-29",
+      "home": "Remo",
+      "away": "Botafogo",
+      "officialSource": "https://clubedoremo.com.br/noticias/clube-do-remo-finaliza-preparacao-para-a-partida-contra-o-botafogo",
+      "expected": {
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 1
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 2
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 2,
+            "corners": 2
+          },
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 2,
+            "corners": 6
+          }
+        ],
+        "full": [
+          {
+            "goals": 2,
+            "shots": 11,
+            "target": 4,
+            "corners": 3
+          },
+          {
+            "goals": 1,
+            "shots": 15,
+            "target": 2,
+            "corners": 8
+          }
+        ]
+      }
+    }
+  ]
+}
