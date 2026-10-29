@@ -124,3 +124,4 @@ export default function TeamOnlyCards({report,home,away}:{
      probabilidade futura. N/D significa sem dado, não zero.
    </p>
  </>;
+}
