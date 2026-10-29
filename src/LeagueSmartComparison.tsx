@@ -103,7 +103,6 @@ export default function LeagueSmartComparison({data}:{data:Data}){
    }
    return results;
  },[active,chosenLeague,chosenSeason,home?.id,away?.id,chosenDate,metric,directVenue]);
-const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
  return <section className="radar-line-explorer" aria-label="Comparação inteligente por liga e temporada">
   <h2>Comparação Inteligente · por liga</h2>
   <p>Escolha campeonato, temporada e equipes. Compare as médias individuais
