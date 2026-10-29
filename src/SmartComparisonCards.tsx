@@ -78,12 +78,14 @@ export default function SmartComparisonCards({report,periodReports,home,away,chi
      windowSize={windowSize}/>
   </div>
   <details className="smart-direct-details">
-   <summary>Ver totais nos confrontos diretos ({homeDirect.last10.count} jogo(s))</summary>
-   <p>Os dois recortes abaixo consultam as mesmas partidas; não representam provas independentes.</p>
+   <summary>Ver totais nos confrontos diretos ({report.directMatchCount} jogo(s), {report.directVenue==='all'?'todos os mandos':'mando atual'})</summary>
+   <p>Os dois recortes abaixo consultam os mesmos confrontos válidos; últimos até 10 por período. Não são amostras independentes.</p>
    <div className="smart-lens-grid">
-    <MandoCard reports={periodReports} id="home-direct" title={home+' em casa × '+away}
+    <MandoCard reports={periodReports} id="home-direct"
+     title={home+' · contra '+away+(report.directVenue==='all'?' · qualquer mando':' · em casa')}
      windowSize={windowSize}/>
-    <MandoCard reports={periodReports} id="away-direct" title={away+' fora × '+home}
+    <MandoCard reports={periodReports} id="away-direct"
+     title={away+' · contra '+home+(report.directVenue==='all'?' · qualquer mando':' · fora')}
      windowSize={windowSize}/>
    </div>
   </details>
