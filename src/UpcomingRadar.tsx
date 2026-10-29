@@ -303,6 +303,13 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
       Sem histórico local para conferir acertos automaticamente.
     </p>}
     {view==='new'&&<>
+      <div className="radar-start-actions" role="group" aria-label="Ações do Radar">
+        <button type="button" className="primary"
+          onClick={()=>futureFormRef.current?.scrollIntoView({behavior:'smooth',block:'start'})}>Criar previsão</button>
+        <button type="button" className="text-button"
+          onClick={()=>document.querySelector('.calendar-agenda')?.scrollIntoView({behavior:'smooth',block:'start'})}>Ver jogos e As Boas</button>
+      </div>
+      <details className="radar-optional-demo"><summary>Exemplo de análise (opcional)</summary>
       <section className="radar-line-explorer" aria-label="Demonstração da comparação inteligente">
         <h3>Nova comparação inteligente · 4 contextos</h3>
         <p>Veja na prática as médias e frequências Over/Under em casa, fora e nos
@@ -318,14 +325,9 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
           <RadarFourLensesPanel data={demoFourContextData} fixture={demoFourContextFixture}
             homeName="Hoffenheim (DEMO)" awayName="Schalke (DEMO)"/>
         </div>}
-      </section>
-          <div className="radar-agenda-first">
-            <CalendarAgenda data={analysisData} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
-              canAnalyzeFixture={f=>resolveCalendarFixture(analysisData,f)!==null}
-              records={saved} onViewSaved={key=>{setRecordFilter('all');onViewSaved(key??undefined);}}/>
-          </div>
+      </section></details>
           <h3 id="radar-new-forecast" ref={futureFormRef} tabIndex={-1}>1 · Criar previsão para um jogo futuro</h3>
-     <p className="radar-form-help">Toque em <strong>Analisar jogo</strong> na agenda acima para preencher campeonato, equipes, data e horário automaticamente. Se a partida não aparecer, selecione manualmente. A análise aparece abaixo, sem salvar nada antes de sua confirmação.</p>
+     <p className="radar-form-help">Toque em <strong>Abrir análise do jogo</strong> na agenda abaixo para preencher campeonato, equipes, data e horário automaticamente. Se a partida não aparecer, selecione manualmente. A análise aparece abaixo, sem salvar nada antes de sua confirmação.</p>
      <details className="radar-v2v3-explain"><summary>O que significam V2, V3 e “Sem sinal”?</summary>
        <p><b>V2:</b> faz uma projeção utilizando jogos anteriores das equipes, respeitando mando de campo e temporada, e exige uma margem em relação à linha do indicador.</p>
        <p><b>V3:</b> verifica se o histórico de ambas as equipes confirma o sinal da V2. Se não confirmar, pode mostrar “Sem sinal”.</p>
@@ -429,6 +431,11 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
       </div>}
 
 
+          <div className="radar-agenda-first">
+            <CalendarAgenda data={analysisData} onSelect={useCalendarFixture} onOpenWork={onOpenWork}
+              canAnalyzeFixture={f=>resolveCalendarFixture(analysisData,f)!==null}
+              records={saved} onViewSaved={key=>{setRecordFilter('all');onViewSaved(key??undefined);}}/>
+          </div>
     </>}
     {view==='saved'&&<>
           <div className="radar-hero">
@@ -460,8 +467,9 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
           <div className="radar-saved" id="radar-saved-forecasts"
             ref={savedSectionRef} tabIndex={-1} aria-label="Previsões salvas e acompanhamento">
       <h4>2 · Previsões salvas e acompanhamento ({saved.length})</h4>
-      <DailyGoodAuditPanel data={data} records={saved}/>
        <p className="muted">Aqui ficam os testes registrados antes das partidas. Para criar um novo, use o primeiro atalho do topo.</p>
+      <details className="radar-backup-tools">
+        <summary>Backup e restauração (opcional)</summary>
       <div className="radar-record-actions">
         {saved.length>0&&<button type="button" className="text-button" onClick={exportSaved}>Exportar registros JSON</button>}
         <label className="radar-record-import">Restaurar registros JSON
@@ -469,9 +477,10 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
             onChange={e=>{void restoreSaved(e.currentTarget.files?.[0]);}}/>
         </label>
       </div>
+      </details>
       <section className="radar-followup" aria-label="Painel de acompanhamento das previsões">
         <h5>Resultados dos testes registrados · V2 e V3</h5>
-        <p className="muted">Acompanhe as previsões congeladas antes das partidas. Os acertos só aparecem após importar resultados reais e validados.</p>
+        <p className="muted">Acompanhe as previsões congeladas antes das partidas. Os acertos aparecem quando houver resultados reais validados na base deste navegador.</p>
         <div className="radar-followup-kpis">
           {[
             {label:'Registros',count:followup.counts.total},
@@ -559,6 +568,10 @@ export default function UpcomingRadar({data,analysisData,researchMode,view,onOpe
           </li>;
         })}
       </ul></>}
+      <details className="radar-technical-audit">
+        <summary>Auditoria técnica e exportações (opcional)</summary>
+        <DailyGoodAuditPanel data={data} records={saved}/>
+      </details>
     </div>
     <p className="muted">Previsões V2/V3 ficam congeladas neste navegador. O backup completo agora inclui os jogos e os registros pré-jogo; o JSON separado do Radar permanece disponível. A conferência exige resultados reais validados na base; ainda não há consulta automática de resultados.</p>
 
