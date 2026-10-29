@@ -114,13 +114,20 @@ export async function loadResearchPacks(
  const response=await fetch(indexPath,{signal,cache:'no-store'});
  if(!response.ok)throw Error('Índice de pacotes de pesquisa indisponível.');
  const entries=parseResearchPackManifest(await response.json() as unknown);
- // Sequential fetch: avoid downloading every archived season concurrently.
- const payloads:unknown[]=[];
- for(const entry of entries){
-  const result=await fetch('/research/packs/'+entry.file,{signal,cache:'no-store'});
-  if(!result.ok)throw Error('Pacote não encontrado: '+entry.file);
-  payloads.push(await result.json() as unknown);
- }
+ // Limit downloads to 3 at a time on mobile rather than fetching 5+
+ // archives sequentially (slow) or all at once (high memory/network usage).
+ // Preserve manifest order for deterministic validation and duplicate checks.
+ const payloads:unknown[]=Array(entries.length);
+ let cursor=0;
+ const workers=Array.from({length:Math.min(3,entries.length)},async()=>{
+  while(cursor<entries.length){
+   const index=cursor++,entry=entries[index];
+   const result=await fetch('/research/packs/'+entry.file,{signal,cache:'no-store'});
+   if(!result.ok)throw Error('Pacote não encontrado: '+entry.file);
+   payloads[index]=await result.json() as unknown;
+  }
+ });
+ await Promise.all(workers);
  const merged=mergeResearchPacks(baseline,entries,payloads);
  const review=await fetch('/research/brasileirao-2026-review-20261029.json',{signal,cache:'no-store'});
  if(!review.ok)throw Error('Conferência de datas do Brasileirão indisponível.');
