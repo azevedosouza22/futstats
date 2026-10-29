@@ -53,8 +53,12 @@ describe('Etapa 81 — integração isolada de 1.019 jogos reais de pesquisa',()
    ...params,date:'2026-10-27'
   });
   const direct=(r:typeof pre)=>r.report!.lenses.find(x=>x.id==='home-direct')!;
-  expect(direct(pre).last10.count).toBe(1);
-  expect(direct(post).last10.count).toBe(2);
+  expect(direct(pre).last10.count).toBe(2);
+  expect(direct(post).last10.count).toBe(3);
+  const sameVenue=calculateSmartLeagueComparison(research.data,{
+    ...params,date:'2026-10-25',directVenue:'current'
+  });
+  expect(direct(sameVenue).last10.count).toBe(1);
   expect(direct(post).matchIds).toEqual(
     post.report!.lenses.find(x=>x.id==='away-direct')!.matchIds
   );
