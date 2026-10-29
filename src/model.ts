@@ -93,8 +93,7 @@ function validDateReview(m:Match):boolean{
 export function researchDateBefore(m:Match,beforeDate:string):boolean{
  if(m.date>=beforeDate)return false;
  const r=m.research;
- if(r?.dateDiscrepancy)return false;
- return !r?.titleDate||r.titleDate<beforeDate||validDateReview(m);
+ return !r?.titleDate||r.titleDate<beforeDate||(!r.dateDiscrepancy&&validDateReview(m));
 }
 export function validateMatch(m: Match): string {
   if (!m.home||!m.away||m.home===m.away) return 'Selecione duas equipes diferentes.';
