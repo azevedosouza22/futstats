@@ -87,3 +87,21 @@ test('Brasileirão auditado: últimos cinco Santos em casa incluem Palmeiras e B
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
 });
 
+
+test('Android: Início e Comparar compartilham um único carregamento da pesquisa',async({page})=>{
+ let requests=0;
+ page.on('request',request=>{
+  if(new URL(request.url()).pathname==='/research/partidas-work-951-v1.json')requests++;
+ });
+ await page.goto('/');
+ await expect(page.getByText('2.775',{exact:true})).toBeVisible({timeout:45000});
+ expect(requests).toBe(1);
+ const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
+ if(await mobileCompare.isVisible())await mobileCompare.click();
+ else await page.locator('button[data-area="compare"]').click();
+ await expect(page.getByLabel('Campeonato da comparação inteligente')).toBeVisible();
+ await expect(page.getByLabel('Time mandante da comparação inteligente')).not.toBeEmpty();
+ await expect(page.getByLabel('Time visitante da comparação inteligente')).not.toBeEmpty();
+ expect(requests).toBe(1); // No second network download on tab change.
+ expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
+});
