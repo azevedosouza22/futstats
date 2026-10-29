@@ -49,14 +49,14 @@ async function openRadar(page:Page){
 }
 async function openAudit(page:Page){
   const details=page.locator('details.radar-technical-audit');
-  if(await details.count()&&!(await details.getAttribute('open'))){
+  if(await details.count()&&(await details.getAttribute('open'))===null){
     await details.locator('summary').click();
   }
   return page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
 }
 async function openOfficialDetails(page:Page){
   const details=page.locator('details.official-calendar');
-  if(await details.count()&&!(await details.getAttribute('open'))){
+  if(await details.count()&&(await details.getAttribute('open'))===null){
     await details.locator('summary').click();
   }
 }
