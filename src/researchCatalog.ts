@@ -125,3 +125,29 @@ export async function loadResearchCatalog(signal?:AbortSignal):Promise<ResearchC
  const publicBase=await loadPublicResearchCatalog(signal);
  return loadPrivateSeasonResearch(publicBase,signal);
 }
+
+
+/** Shared, read-only public catalog for the Home and Compare screens.
+ * Avoids a second 2,775-match network download when navigating on mobile.
+ * The component's abort signal only cancels its own result, never another screen.
+ * A failed/slow request is reset so the next visit can retry.
+ * Private IndexedDB research is re-read each time; no data is persisted here.
+ */
+let sharedPublicCatalog:Promise<ResearchCatalog>|null=null;
+export async function loadSharedResearchCatalog(signal?:AbortSignal):Promise<ResearchCatalog>{
+ if(signal?.aborted)throw Error('Consulta cancelada.');
+ if(!sharedPublicCatalog){
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),90_000);
+  sharedPublicCatalog=loadPublicResearchCatalog(controller.signal)
+   .finally(()=>clearTimeout(timeout))
+   .catch(err=>{
+    sharedPublicCatalog=null;
+    if(controller.signal.aborted)throw Error('Tempo excedido ao carregar a pesquisa. Tente novamente.');
+    throw err;
+   });
+ }
+ const publicBase=await sharedPublicCatalog;
+ if(signal?.aborted)throw Error('Consulta cancelada.');
+ return loadPrivateSeasonResearch(publicBase,signal);
+}
