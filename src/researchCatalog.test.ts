@@ -3,6 +3,7 @@ import {describe,expect,it} from 'vitest';
 import {parseResearchCatalog,RESEARCH_COUNTS} from './researchCatalog';
 import {smartLeagueOptions,calculateSmartLeagueComparison,BOTH_SEASONS} from './leagueSmartComparison';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
+import {suggestedIndividualWindowLine,individualLineFrequency} from './teamOnlyPeriods';
 const main=JSON.parse(readFileSync(
  new URL('../public/research/partidas-work-951-v1.json',import.meta.url),'utf8'
 )) as unknown;
@@ -62,6 +63,31 @@ describe('Etapa 81 — integração isolada de 1.019 jogos reais de pesquisa',()
   expect(direct(post).matchIds).toEqual(
     post.report!.lenses.find(x=>x.id==='away-direct')!.matchIds
   );
+ });
+ it('Santos em casa: linha sugerida deve acompanhar os mesmos 5/10 jogos da média',()=>{
+  const opts=smartLeagueOptions(research.data,'Brasileirão Série A');
+  const home=opts.teams.find(t=>t.name==='Santos')!;
+  const away=opts.teams.find(t=>t.name==='Flamengo')!;
+  const r=calculateSmartLeagueComparison(research.data,{
+   league:'Brasileirão Série A',season:BOTH_SEASONS,home:home.id,away:away.id,
+   date:'2026-10-29',metric:'shots',period:'full',line:17.5
+  });
+  const lens=r.teamOnly!.lenses.find(x=>x.id==='home-any')!;
+  const full=lens.periods.find(x=>x.period==='full')!;
+  // Santos × Bahia (24/10) e Santos × Cruzeiro (12/09) têm
+  // divergências de data da fonte e permanecem de fora dos cálculos.
+  expect(full.last5.observations).toEqual([16,21,22,21,5]);
+  expect(full.last5.mean).toBe(17);
+  expect(full.last10.observations).toEqual([16,21,22,21,5,13,9,7,18,7]);
+  expect(full.last10.mean).toBeCloseTo(13.9,6);
+  expect(suggestedIndividualWindowLine(lens,'full',5)).toBe(17.5);
+  expect(suggestedIndividualWindowLine(lens,'full',10)).toBe(13.5);
+  expect(individualLineFrequency(full.last5,17.5)).toMatchObject({
+   count:5,over:3,under:2,overRate:0.6
+  });
+  expect(individualLineFrequency(full.last5,13.5)).toMatchObject({
+   count:5,over:4,under:1,overRate:0.8
+  });
  });
  it('falha fechada se arquivo recente ou consolidado vier adulterado',()=>{
   expect(()=>parseResearchCatalog(main,recent.split('\n').slice(1).join('\n')))
