@@ -7,7 +7,7 @@ import {
  availableSmartLeagues,smartLeagueOptions,calculateSmartLeagueComparison,BOTH_SEASONS
 } from './leagueSmartComparison';
 import {demoFourContextData} from './radarFourLensesDemo';
-import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
+import {loadSharedResearchCatalog,type ResearchCatalog} from './researchCatalog';
 import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
 import type {DirectVenueMode} from './smartDirectH2H';
 import SmartComparisonCards from './SmartComparisonCards';
@@ -30,7 +30,7 @@ export default function LeagueSmartComparison({data}:{data:Data}){
  useEffect(()=>{
    const controller=new AbortController();
    const reload=()=>{
-     void loadResearchCatalog(controller.signal).then(result=>{
+     void loadSharedResearchCatalog(controller.signal).then(result=>{
        if(controller.signal.aborted)return;
        setCatalog(result);setCatalogError('');setLoading(false);
      }).catch(e=>{
