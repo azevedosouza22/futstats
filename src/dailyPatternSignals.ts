@@ -12,7 +12,6 @@ import type {OfficialCalendarItem} from './officialCalendar';
 import {safeOfficialFixtureUrl,officialSnapshotFreshAt} from './officialSourceTrust';
 import {canonicalTeamInCompetition} from './radarTeamAliases';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
-import {competitionParts} from './leagueCatalog';
 import {previousSeasonCompetition,type FourLensMetric} from './radarFourLenses';
 
 type Scope='home'|'away'|'total';
