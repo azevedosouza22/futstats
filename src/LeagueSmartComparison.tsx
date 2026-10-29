@@ -1,8 +1,8 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
 import type {Data,Period} from './model';
 import {brasiliaDate} from './calendar';
 import {competitionParts} from './leagueCatalog';
-import {FOUR_LENS_LINES,FOUR_LENS_METRICS,type FourLensMetric} from './radarFourLenses';
+import {FOUR_LENS_LINES,FOUR_LENS_METRICS,type FourLensMetric,type FourLensReport} from './radarFourLenses';
 import {
  availableSmartLeagues,smartLeagueOptions,calculateSmartLeagueComparison,BOTH_SEASONS
 } from './leagueSmartComparison';
@@ -77,7 +77,30 @@ export default function LeagueSmartComparison({data}:{data:Data}){
    league:chosenLeague,season:chosenSeason,home:home.id,away:away.id,
    date:chosenDate,metric,period,line:validLine?line:FOUR_LENS_LINES[metric][2]
  }):null;
- const report=validLine?calculated?.report:null;
+ const report=calculated?.report??null;
+ // Quick summaries use an independent, near-mean half-point reference for
+ // each period. The separate detailed filters below remain the sole inputs
+ // to the historical verdict and numeric table.
+ const periodReports=useMemo<Record<Period,FourLensReport>|null>(()=>{
+   if(!home||!away)return null;
+   const selection={league:chosenLeague,season:chosenSeason,home:home.id,
+     away:away.id,date:chosenDate,metric};
+   const results={} as Record<Period,FourLensReport>;
+   for(const p of ['full','first','second'] as const){
+     const baseline=calculateSmartLeagueComparison(active,{
+       ...selection,period:p,line:FOUR_LENS_LINES[metric][2]
+     }).report;
+     if(!baseline)return null;
+     const left=baseline.lenses[0].last10.mean;
+     const right=baseline.lenses[2].last10.mean;
+     const mean=left!==null&&right!==null?(left+right)/2:left??right;
+     const nearMean=mean===null?FOUR_LENS_LINES[metric][2]:
+       Math.min(999.5,Math.max(0.5,Math.floor(mean)+0.5));
+     results[p]=nearMean===baseline.line?baseline:
+       calculateSmartLeagueComparison(active,{...selection,period:p,line:nearMean}).report!;
+   }
+   return results;
+ },[active,chosenLeague,chosenSeason,home?.id,away?.id,chosenDate,metric]);
 const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'));
  return <section className="radar-line-explorer" aria-label="Comparação inteligente por liga e temporada">
   <h2>Comparação Inteligente · por liga</h2>
@@ -178,33 +201,50 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
   </section>:<p className="muted">
     {calculated?.status??'Escolha duas equipes diferentes para montar a comparação.'}
   </p>}
-  <details className="smart-total-collapsible smart-mando-section" open>
-    <summary>Comparação por mando · totais dos dois times · {period==='full'?'jogo completo':period==='first'?'1º tempo':'2º tempo'} · linha {validLine?fmt(line):'inválida'}</summary>
-    <p className="smart-total-explanation">Estes filtros alteram apenas a soma das duas equipes, não as médias individuais acima.</p>
-    <div className="analysis-controls smart-total-controls">
-      <label>Período · total do confronto
-        <select aria-label="Período da comparação inteligente" value={period}
-          onChange={e=>setPeriod(e.target.value as Period)}>
-          <option value="full">Jogo completo</option>
-          <option value="first">Primeiro tempo</option>
-          <option value="second">Segundo tempo</option>
-        </select>
-      </label>
-      <label>Linha Over/Under · total dos dois times
-        <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
-          placeholder="Ex.: 21,5" value={lineDraft} onChange={e=>setLineDraft(e.target.value)}/>
-        <small>Digite uma linha terminada em ,5, como 18,5 ou 21,5.</small>
-      </label>
-    </div>
-    {!validLine&&<p className="alert" role="alert">
-      Informe uma linha positiva terminada em ,5 para analisar Over e Under do confronto.
-    </p>}
-    {report&&home&&away?<>
-      {report.projection!==null&&<button className="smart-suggest-line" type="button"
-        onClick={()=>setLineDraft(String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',','))}>
-        Usar linha próxima da média histórica: {fmt(Math.max(0.5,Math.floor(report.projection)+0.5))}
-      </button>}
-      <SmartComparisonCards report={report} home={home.name} away={away.name}/>
+  <section className="smart-total-collapsible smart-mando-section"
+    aria-label="Comparação por mando — totais dos dois times">
+    <h3>Comparação por mando · total da partida</h3>
+    <p className="smart-total-explanation">
+      Soma as ações dos dois times em cada jogo. Resumo com linhas próprias
+      para jogo completo, 1º e 2º tempo, como nos cartões individuais.
+    </p>
+    {report&&periodReports&&home&&away?<>
+      <SmartComparisonCards report={report} periodReports={periodReports}
+        home={home.name} away={away.name} displayVerdict={validLine}>
+        <details className="smart-mando-detail-options">
+          <summary>Configurar Tendência Histórica e tabela numérica ·
+            {period==='full'?' jogo completo':period==='first'?' 1º tempo':' 2º tempo'}
+            {' · linha '}{validLine?fmt(line):'inválida'}</summary>
+          <p>Estes controles ajustam apenas a Tendência Histórica e a tabela
+            numérica. O resumo dos três períodos acima tem linhas próprias.</p>
+          <div className="analysis-controls smart-total-controls">
+            <label>Período · análise detalhada
+              <select aria-label="Período da comparação inteligente" value={period}
+                onChange={e=>setPeriod(e.target.value as Period)}>
+                <option value="full">Jogo completo</option>
+                <option value="first">Primeiro tempo</option>
+                <option value="second">Segundo tempo</option>
+              </select>
+            </label>
+            <label>Linha Over/Under · análise detalhada
+              <input type="text" inputMode="decimal" aria-label="Linha da comparação inteligente"
+                placeholder="Ex.: 21,5" value={lineDraft}
+                onChange={e=>setLineDraft(e.target.value)}/>
+              <small>Digite uma linha terminada em ,5, como 18,5 ou 21,5.</small>
+            </label>
+          </div>
+          {!validLine&&<p className="alert" role="alert">
+            Informe uma linha positiva terminada em ,5 para analisar Over e Under.
+          </p>}
+          {validLine&&report.projection!==null&&<button className="smart-suggest-line"
+            type="button" onClick={()=>setLineDraft(
+              String(Math.max(0.5,Math.floor(report.projection!)+0.5)).replace('.',',')
+            )}>Usar linha próxima da média histórica: {fmt(
+              Math.max(0.5,Math.floor(report.projection)+0.5)
+            )}</button>}
+        </details>
+      </SmartComparisonCards>
+      {validLine?<>
       <details className="smart-legacy-table">
         <summary>Ver tabela numérica completa</summary>
         <div className="radar-line-table-scroll">
@@ -230,10 +270,10 @@ const seasonTitle=options.seasons.map((s,i)=>s+(i===0?' (atual)':' (anterior)'))
           </table>
         </div>
       </details>
-    </>:<p className="muted">{validLine
-      ?'Selecione duas equipes diferentes com histórico para comparar o total.'
-      :'Corrija a linha para visualizar os totais do confronto.'}</p>}
-  </details>
+      </>:<p className="muted">Corrija a linha da análise detalhada
+        para ver a Tendência Histórica e a tabela numérica.</p>}
+    </>:<p className="muted">{calculated?.status??'Selecione duas equipes para comparar.'}</p>}
+  </section>
   <details className="smart-method-notes">
     <summary>Como interpretar essas médias?</summary>
     <p>As médias individuais mostram apenas o que a equipe produziu.
