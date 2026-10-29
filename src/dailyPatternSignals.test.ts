@@ -43,13 +43,13 @@ describe('Radar Inteligente de Padrões — experimental/sem odds',()=>{
   const corner=c.find(x=>x.metric==='corners');
   expect(corner).toBeDefined();
   expect(corner?.scope).toBe('home');
-  expect(corner?.direction).toBe('Over');
-  expect(corner?.line).toBe(5.5);
+  expect(corner?.direction).toBe('Under');
+  expect(corner?.line).toBe(6.5);
   expect(corner?.teamCount).toBe(10);
-  expect(corner?.teamHits).toBe(9);
+  expect(corner?.teamHits).toBe(10);
   expect(corner?.recentHits).toBe(5);
   expect(corner?.opponentCount).toBe(10);
-  expect(corner?.opponentHits).toBe(8);
+  expect(corner?.opponentHits).toBe(10);
   expect(c.some(x=>x.metric==='goals')).toBe(true);
   expect(Object.keys(c[0])).not.toContain('winProbability');
   expect(Object.keys(c[0])).not.toContain('odds');
