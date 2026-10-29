@@ -50,14 +50,14 @@ async function openRadar(page:Page){
 async function openAudit(page:Page){
   const details=page.locator('details.radar-technical-audit');
   if(await details.count()&&(await details.getAttribute('open'))===null){
-    await details.locator('summary').click();
+    await details.locator(':scope > summary').click();
   }
   return page.getByRole('region',{name:'Validação prospectiva As Boas do Dia'});
 }
 async function openOfficialDetails(page:Page){
   const details=page.locator('details.official-calendar');
   if(await details.count()&&(await details.getAttribute('open'))===null){
-    await details.locator('summary').click();
+    await details.locator(':scope > summary').click();
   }
 }
 async function openTools(page:Page){
@@ -448,6 +448,7 @@ test('Etapa 49: nove jogos oficiais Bundesliga acessíveis por filtro, vencendo 
   await openRadar(page);
   await page.getByRole('group',{name:'Período da agenda'})
     .getByRole('button',{name:'7 dias'}).click();
+  await openOfficialDetails(page);
   const official=page.getByRole('region',{name:'Jogos com referências oficiais'});
   await official.getByLabel('Filtrar campeonato na agenda oficial')
     .selectOption('Bundesliga 2026/27');
@@ -471,6 +472,7 @@ test('Etapa 49: nove jogos oficiais Bundesliga acessíveis por filtro, vencendo 
   await openRadar(page);
   await page.getByRole('group',{name:'Período da agenda'})
     .getByRole('button',{name:'7 dias'}).click();
+  await openOfficialDetails(page);
   const stale=page.getByRole('region',{name:'Jogos com referências oficiais'});
   await stale.getByLabel('Filtrar campeonato na agenda oficial')
     .selectOption('Bundesliga 2026/27');
@@ -488,6 +490,7 @@ test('Etapa 50: nove jogos Bundesliga agrupados numa fonte com CSV PENDENTE',asy
   await openRadar(page);
   await page.getByRole('group',{name:'Período da agenda'})
     .getByRole('button',{name:'7 dias'}).click();
+  await openOfficialDetails(page);
   const official=page.getByRole('region',{name:'Jogos com referências oficiais'});
   await official.getByLabel('Filtrar campeonato na agenda oficial')
     .selectOption('Bundesliga 2026/27');
@@ -1292,10 +1295,12 @@ test('Etapa 64: comparar sem mesclar ID compartilhado entre Histórico e Work',a
   },{data,work,key:WORK_KEY});
   await page.reload();
   await openRadar(page);
+  const coverageDisclosure=page.locator('details.calendar-coverage-extra');
+  await coverageDisclosure.locator(':scope > summary').click();
   const coverage=page.locator('details.league-coverage-panel');
   await coverage.locator('summary').click();
   const details=coverage.locator('details.cross-store-review');
-  await details.locator('summary').click();
+  await details.locator(':scope > summary').click();
   await expect(details).toContainText('1 ID(s) Flashscore presentes em ambas as bases');
   await expect(details).toContainText('1 coincidência(s) local(is)');
   await expect(details).toContainText('0 resultado(s) confirmado(s) externamente');
@@ -1356,7 +1361,7 @@ test('Etapa 66: As Boas não usa data CSV conflitante para criar sinal V2/V3',as
   const good=page.getByRole('region',{name:/As Boas do Dia/});
   await expect(good).toContainText('Nenhuma indicação passou pelos critérios hoje');
   await expect(good.locator('.daily-good-item')).toHaveCount(0);
-  await expect(good).toContainText('1 com histórico mínimo');
+  await expect(good).toContainText('1 com histórico suficiente');
   const saved=await page.evaluate(key=>localStorage.getItem(key),RADAR_KEY);
   expect(saved===null||saved==='[]').toBe(true);
   const snapshot=await page.evaluate(key=>localStorage.getItem(key),DATA_KEY);
