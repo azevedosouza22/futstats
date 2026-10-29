@@ -54,7 +54,6 @@ export default function SmartComparisonCards({report,periodReports,home,away,chi
  const enoughHistory=['home-any','away-any'].some(id=>
    periodLens(periodReports,'full',id as LensKind).last10.count>5);
  const windowSize=enoughHistory?selectedWindow:5;
- const [homeAny,homeDirect,awayAny,awayDirect]=report.lenses;
  return <section className="smart-comparison-output" aria-label="Resultado da comparação inteligente">
   <div className="smart-match-head">
    <span className="smart-kicker">COMPARAÇÃO POR MANDO</span>
