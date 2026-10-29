@@ -46,9 +46,9 @@ function MandoCard({reports,id,title,windowSize}:{
    </div>
  </article>;
 }
-export default function SmartComparisonCards({report,periodReports,home,away,children}:{
+export default function SmartComparisonCards({report,periodReports,home,away,children,displayVerdict=true}:{
  report:FourLensReport;periodReports:Record<Period,FourLensReport>;
- home:string;away:string;children?:ReactNode
+ home:string;away:string;children?:ReactNode;displayVerdict?:boolean
 }){
  const [selectedWindow,setSelectedWindow]=useState<5|10>(5);
  const enoughHistory=['home-any','away-any'].some(id=>
@@ -88,7 +88,7 @@ export default function SmartComparisonCards({report,periodReports,home,away,chi
    </div>
   </details>
   {children}
-  <section className="smart-verdict" role="status">
+  {displayVerdict&&<section className="smart-verdict" role="status">
    <small>LEITURA DOS DADOS DISPONÍVEIS</small>
    <h4>{report.historicalDirection==='Sem consenso'
     ?'Sem consenso histórico'
@@ -96,6 +96,6 @@ export default function SmartComparisonCards({report,periodReports,home,away,chi
    <p>{report.reason}</p>
    <p>Referência descritiva dos dois mandos: <b>{fmt(report.projection)}</b> ações por jogo.</p>
    <small>Frequência histórica não é probabilidade futura. Não considera odds.</small>
-  </section>
+  </section>}
  </section>;
 }
