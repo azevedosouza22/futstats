@@ -50,8 +50,7 @@ describe('Etapa 86 — catálogo extensível sem migrar o histórico',()=>{
   expect(archive.matchCount).toBe(1);
   expect(standard.matchCount).toBeGreaterThan(1);
   expect(standard.matchCount).toBe(
-   baseline.data.matches.filter(v=>v.competition.startsWith('Bundesliga ')&&
-    ['Bundesliga 2025/26','Bundesliga 2026/27'].includes(v.competition)&&v.date<s.date).length
+   baseline.data.matches.filter(v=>v.competition.startsWith('Bundesliga ')&&v.date<s.date).length+1
   );
   expect(JSON.stringify(baseline.data)).toBe(before);
  });

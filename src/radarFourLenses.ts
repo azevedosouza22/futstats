@@ -5,7 +5,8 @@
  */
 import {stats,type Data,type Match,type Metric,type Period} from './model';
 import type {RadarFixture} from './radar';
-import {normalizeTeam} from './calendar';
+import {comparisonTeamKey,directMatchSides,type DirectVenueMode} from './smartDirectH2H';
+import {competitionParts} from './leagueCatalog';
 import {radarMetricIntegrity} from './radarHistoricalIntegrity';
 
 export type FourLensMetric='goals'|'shots'|'target'|'corners';
@@ -30,13 +31,16 @@ export type FourLensReport={
   reason:string;
   /** Not distinct games across lenses; overlap must never be counted twice. */
   overlappingSamples:true;
+  /** Unique eligible direct fixtures, not the number of lens views. */
+  directMatchCount:number;
+  directVenue:DirectVenueMode;
 };
 
 const label:Record<LensKind,string>={
   'home-any':'Mandante em casa · qualquer adversário',
-  'home-direct':'Mandante em casa · contra este visitante',
+  'home-direct':'Confrontos diretos · ações do mandante escolhido',
   'away-any':'Visitante fora · qualquer adversário',
-  'away-direct':'Visitante fora · contra este mandante',
+  'away-direct':'Confrontos diretos · ações do visitante escolhido',
 };
 export const FOUR_LENS_LINES:Record<FourLensMetric,readonly number[]>={
   goals:[0.5,1.5,2.5,3.5],
@@ -68,30 +72,34 @@ function sample(values:readonly number[],line:number):LensSample{
   };
 }
 function belongs(m:Match,homeKey:string,awayKey:string,kind:LensKind,
-  teamKey:(id:string)=>string):boolean{
+  teamKey:(id:string)=>string,directVenue:DirectVenueMode):boolean{
   const h=teamKey(m.home),a=teamKey(m.away);
   switch(kind){
     case 'home-any':return h===homeKey;
     case 'away-any':return a===awayKey;
     case 'home-direct':
-    case 'away-direct':return h===homeKey&&a===awayKey;
+    case 'away-direct':return directMatchSides(m,homeKey,awayKey,teamKey,directVenue)!==null;
   }
 }
 
 export function analyzeFourLenses(
   data:Data,fixture:RadarFixture,metric:FourLensMetric='shots',
-  period:Period='full',line=FOUR_LENS_LINES[metric][2]
+  period:Period='full',line=FOUR_LENS_LINES[metric][2],
+  options:{directVenue?:DirectVenueMode;useScopedSeasons?:boolean}={}
 ):FourLensReport{
   const previousCompetition=previousSeasonCompetition(fixture.competition);
   const validLine=Number.isFinite(line)&&line>0&&line%1===0.5;
   if(!validLine)throw Error('Linha inválida: utilize um limite positivo terminado em ,5.');
   // The imported season may allocate different local team IDs to the same
   // named club. Match only normalized names within the two selected leagues.
-  const teams=new Map(data.teams.map(t=>[t.id,normalizeTeam(t.name)]));
-  const teamKey=(id:string)=>teams.get(id)??normalizeTeam(id);
+  const teams=new Map(data.teams.map(t=>[t.id,comparisonTeamKey(t.name,fixture.competition)]));
+  const teamKey=(id:string)=>teams.get(id)??comparisonTeamKey(id,fixture.competition);
+  const directVenue=options.directVenue??'current';
   const homeKey=teamKey(fixture.home),awayKey=teamKey(fixture.away);
   const eligible=data.matches.filter(m=>
-    (m.competition===fixture.competition||m.competition===previousCompetition)&&
+    (m.competition===fixture.competition||m.competition===previousCompetition||
+      (options.useScopedSeasons===true&&competitionParts(m.competition).league===
+        competitionParts(fixture.competition).league))&&
     m.date<fixture.date&&
     (!m.research?.titleDate||m.research.titleDate<fixture.date)&&
     !m.research?.dateDiscrepancy&&
@@ -104,7 +112,7 @@ export function analyzeFourLenses(
   // preferentially selected or counted as independent evidence.
   const repeats=new Map<string,Match[]>();
   for(const m of eligible){
-    const key=[m.competition,m.date,teamKey(m.home),teamKey(m.away)].join('|');
+    const key=[m.competition,m.date,...[teamKey(m.home),teamKey(m.away)].sort()].join('|');
     const found=repeats.get(key)??[];
     found.push(m);repeats.set(key,found);
   }
@@ -115,7 +123,7 @@ export function analyzeFourLenses(
   const total=(m:Match)=>stats(m,0,period)[metric]!+stats(m,1,period)[metric]!;
   const kinds:LensKind[]=['home-any','home-direct','away-any','away-direct'];
   const lenses=kinds.map(id=>{
-    const rows=valid.filter(m=>belongs(m,homeKey,awayKey,id,teamKey));
+    const rows=valid.filter(m=>belongs(m,homeKey,awayKey,id,teamKey,directVenue));
     const recent=rows.slice(0,10),last5=recent.slice(0,5);
     return {
       id,label:label[id],
@@ -151,5 +159,7 @@ export function analyzeFourLenses(
     competition:fixture.competition,previousCompetition,date:fixture.date,
     metric,period,line,lenses,projection,historicalDirection,reason,
     overlappingSamples:true,
+    directVenue,directMatchCount:valid.filter(m=>
+      directMatchSides(m,homeKey,awayKey,teamKey,directVenue)!==null).length,
   };
 }
