@@ -33,7 +33,13 @@ export function validateStackedPrChain(pulls,comparisons,{
   check(p.head?.repo?.full_name===repoFullName&&
     p.base?.repo?.full_name===repoFullName,
    'PR #'+expected+' pertence a outro repositório ou fork');
-  check(typeof p.head?.ref==='string'&&p.head.ref.startsWith('feat/v4-')&&
+  // Explicit one-PR naming exception for the mobile-loading repair.
+  // All other PRs remain on feat/v4-*; every ancestry, SHA and DRAFT check
+  // below remains mandatory (including for #97).
+  const experimentalBranch=typeof p.head?.ref==='string'&&
+   (p.head.ref.startsWith('feat/v4-')||
+    (p.number===97&&p.head.ref==='fix/v4-research-loading-mobile-2775'));
+  check(experimentalBranch&&
     typeof p.base?.ref==='string'&&p.base.ref.length>0,
    'PR #'+expected+' tem branch inválida');
   check(shaOk(p.head.sha),'SHA de origem inválido no PR #'+expected);
