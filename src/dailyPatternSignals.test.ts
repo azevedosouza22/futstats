@@ -27,13 +27,13 @@ for(let i=0;i<10;i++){
  teams.push({id:oa,name:'Adversário A'+i,color:'#fff'});
  matches.push({
   id:'home-'+i,home:'h',away:oh,date,competition:fixture.competition,
-  first:[s(1,9,3,Math.floor(homeCorners/2)),s(0,5,2,1)],
-  second:[s(0,8,3,Math.ceil(homeCorners/2)),s(1,6,2,2)]
+  first:[s(1,9,3,Math.floor(homeCorners/2)),s(0,5,2,i%2?2:0)],
+  second:[s(0,8,3,Math.ceil(homeCorners/2)),s(1,6,2,0)]
  });
  matches.push({
   id:'away-'+i,home:oa,away:'a',date,competition:fixture.competition,
-  first:[s(0,9,3,Math.floor(awayConceded/2)),s(0,5,2,2)],
-  second:[s(1,8,3,Math.ceil(awayConceded/2)),s(0,6,2,1)]
+  first:[s(0,9,3,Math.floor(awayConceded/2)),s(0,5,2,i%2?2:0)],
+  second:[s(1,8,3,Math.ceil(awayConceded/2)),s(0,6,2,0)]
  });
 }
 const data:Data={teams,matches};
