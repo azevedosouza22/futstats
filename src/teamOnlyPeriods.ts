@@ -33,6 +33,17 @@ export type IndividualLens={id:LensKind;periods:TeamPeriodRow[]};
 export type TeamOnlyReport={lenses:IndividualLens[];metric:FourLensMetric;
  directVenue:DirectVenueMode;directMatchCount:number;};
 
+/** Keep the suggested full-game line tied to the SAME 5/10-game window
+ * used by the displayed average, never an implicit 10-game baseline.
+ */
+export function suggestedIndividualWindowLine(
+ lens:IndividualLens,period:Period,windowSize:5|10
+):number|null{
+ const row=lens.periods.find(x=>x.period===period);
+ if(!row)return null;
+ return suggestedIndividualLine((windowSize===5?row.last5:row.last10).mean);
+}
+
 const periods:readonly Period[]=['first','second','full'];
 const kinds:readonly LensKind[]=['home-any','away-any','home-direct','away-direct'];
 function avg(values:number[]):IndividualMean{
