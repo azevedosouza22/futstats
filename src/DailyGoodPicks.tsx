@@ -46,14 +46,11 @@ export default function DailyGoodPicks({data,result,onSelect,records,onViewSaved
 }){
   return <section className="daily-good-picks" aria-label="As Boas do Dia — leitura experimental">
     <div className="daily-good-head">
-      <h4>As Boas do Dia <small>· seleção experimental</small></h4>
-      <p className="muted">Jogos futuros com agenda oficial recente e sinais V2/V3 convergentes.
-        Os critérios usam dados anteriores da mesma liga, não resultados já conhecidos.
-        <b> Não são probabilidades, apostas recomendadas nem previsões de IA treinada.</b>
-      </p>
+      <h4>As Boas do Dia <small>· sinais do histórico</small></h4>
+      <p className="muted">Jogos com data oficial recente e V2/V3 em concordância.
+        <strong> Histórico observado, não garantia de acerto.</strong></p>
     </div>
-    <p className="muted">Hoje: {result.date} · {result.checked} {result.checked===1?'jogo verificado e futuro':'jogos verificados e futuros'} analisados ·
-      {' '}{result.withAdequateHistory} com histórico mínimo nas duas equipes.</p>
+    <p className="muted" role="status">Hoje: {result.checked} jogos futuros verificados · {result.withAdequateHistory} com histórico suficiente · {result.items.length} indicações.</p>
     {result.items.length===0
       ?<p className="daily-good-empty">Nenhuma indicação passou pelos critérios hoje.
         Isso pode significar ausência de jogos verificados, dados insuficientes ou
@@ -70,9 +67,13 @@ export default function DailyGoodPicks({data,result,onSelect,records,onViewSaved
           <ul className="daily-good-signals">
             {item.signals.map(m=><li key={m.id}>
               <b>{m.label}: {m.direction} {fmt(m.line)}</b>
-              <small>V2 e V3 concordam · projeção V2 {fmt(m.projection)} · média histórica {fmt(m.historicalMean)}</small>
-              <small>{m.historicalSample} jogos para o indicador · {m.leagueSample} observações na liga</small>
-              <FourLensEvidence data={data} fixture={item.fixture} signal={m}/>
+              <small><strong>V2 + V3 concordam</strong> · {m.historicalSample} jogos no indicador</small>
+              <details className="daily-good-number-details">
+                <summary>Ver médias e referências</summary>
+                <small>Projeção V2: {fmt(m.projection)} · média histórica: {fmt(m.historicalMean)}</small>
+                <small>{m.leagueSample} observações na liga</small>
+                <FourLensEvidence data={data} fixture={item.fixture} signal={m}/>
+              </details>
             </li>)}
           </ul>
           {match.state!=='not_saved'&&<p className="muted" role="status">
@@ -88,7 +89,7 @@ export default function DailyGoodPicks({data,result,onSelect,records,onViewSaved
             onClick={()=>match.state==='not_saved'
               ?onSelect(item.fixture,item):onViewSaved(match.recordKey)}
             className="text-button">
-            {match.state==='not_saved'?'Abrir Radar e conferir análise'
+            {match.state==='not_saved'?'Analisar este jogo'
              :match.state==='duplicates'?'Revisar registros existentes'
              :'Ver previsão já registrada'}
           </button>
