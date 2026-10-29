@@ -148,7 +148,7 @@ export default function CalendarAgenda({data,onSelect,canAnalyzeFixture,onOpenWo
       records={records} onViewSaved={onViewSaved}
       nextWeek={nextGood} onPreview={f=>onSelect(f)}/>
     <DailyPatternPicks result={dailyPatterns} onPreview={f=>onSelect(f)}/>
-    <details className="official-calendar" aria-label="Jogos com referências oficiais">
+    <details role="region" className="official-calendar" aria-label="Jogos com referências oficiais">
       <summary><strong>Jogos com referência oficial · {officialVisible.length}</strong></summary>
       <p className="muted">Programação conferida anteriormente em páginas oficiais. Confirme o horário novamente antes de salvar.</p>
       <p className="muted" role="status">Referências oficiais futuras nesta janela:
