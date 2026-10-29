@@ -101,6 +101,61 @@ describe('Etapa 83 — médias do próprio time com 1T, 2T e jogo completo',()=>
   expect(row(partial,'home-any','first').last10).toMatchObject({count:0,mean:null});
   expect(row(partial,'away-any','first').last10).toMatchObject({count:1,mean:3});
  });
+ it('confrontos diretos consultam os dois mandos, recuperam temporada arquivada e contam cada jogo uma vez',()=>{
+  const archived='Liga fictícia 2024/25';
+  const extended:Data={teams:[
+    ...teams,{id:'H-old',name:'H',color:'#999'},{id:'S-old',name:'S',color:'#999'}
+   ],matches:[
+    match('same','2026-10-01',comp,'H','S',5,7,4,6),
+    match('reverse','2026-10-02',comp,'S','H',8,9,3,4),
+    match('old-reverse','2025-10-03',prior,'S-old','H-old',4,3,6,5),
+    match('archive','2024-10-04',archived,'H-old','S-old',9,8,2,3),
+    match('future-reverse','2026-11-09',comp,'S','H',90,90,90,90)
+   ]};
+  const before=JSON.stringify(extended);
+  const params={league:'Liga fictícia',season:BOTH_SEASONS,home:'H',away:'S',
+    date:'2026-11-08',metric:'shots' as const,period:'full' as const,line:20.5};
+  const all=calculateSmartLeagueComparison(extended,params);
+  expect(all.matchCount).toBe(4);
+  expect(all.report?.directMatchCount).toBe(4);
+  expect(all.teamOnly?.directMatchCount).toBe(4);
+  expect(row(all.teamOnly!,'home-direct','full').last10).toMatchObject({count:4,mean:11.75});
+  expect(row(all.teamOnly!,'away-direct','full').last10).toMatchObject({count:4,mean:9.75});
+  const home=all.report!.lenses.find(x=>x.id==='home-direct')!;
+  const away=all.report!.lenses.find(x=>x.id==='away-direct')!;
+  expect(home.matchIds).toEqual(away.matchIds);
+  expect(home.matchIds).toContain('reverse');
+  expect(home.matchIds).toContain('archive');
+  const current=calculateSmartLeagueComparison(extended,{...params,directVenue:'current'});
+  expect(current.report?.directMatchCount).toBe(2);
+  expect(current.teamOnly?.directMatchCount).toBe(2);
+  expect(row(current.teamOnly!,'home-direct','full').last10).toMatchObject({count:2,mean:14.5});
+  expect(row(current.teamOnly!,'away-direct','full').last10).toMatchObject({count:2,mean:7.5});
+  expect(current.report!.lenses.find(x=>x.id==='home-direct')?.matchIds).toEqual(['same','archive']);
+  const onlyOld=calculateSmartLeagueComparison(extended,{...params,season:archived.split(' ').at(-1)!});
+  expect(onlyOld.report?.directMatchCount).toBe(1);
+  expect(JSON.stringify(extended)).toBe(before);
+ });
+ it('reconhece Grêmio FBPA e Grêmio por alias explícito, sem misturar outros campeonatos',()=>{
+  const brasil='Brasileirão Série A 2026';
+  const matchSet:Data={teams:[
+    {id:'g1',name:'Grêmio FBPA',color:'#999'},
+    {id:'g2',name:'Grêmio',color:'#999'},
+    {id:'f',name:'Flamengo',color:'#999'},
+    {id:'x',name:'Flamengo',color:'#999'}
+   ],matches:[
+    match('a','2026-08-01',brasil,'g1','f',3,4,2,3),
+    match('b','2026-09-01',brasil,'x','g2',1,2,5,6),
+    match('c','2026-09-02','Outra Liga 2026','g1','f',20,20,20,20)
+   ]};
+  const r=calculateSmartLeagueComparison(matchSet,{
+    league:'Brasileirão Série A',season:BOTH_SEASONS,home:'g1',away:'f',
+    date:'2026-10-30',metric:'shots',period:'full',line:10.5
+   });
+  expect(r.report?.directMatchCount).toBe(2);
+  expect(r.teamOnly?.directMatchCount).toBe(2);
+  expect(r.matchCount).toBe(2);
+ }); 
  it('retorna média individual para outros indicadores, inclusive escanteios',()=>{
   const report=analyzeTeamOnlyPeriods(data(base),fixture,'corners');
   expect(row(report,'home-any','full').last10).toMatchObject({count:3,mean:4});
