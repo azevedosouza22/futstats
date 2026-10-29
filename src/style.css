@@ -1589,3 +1589,48 @@ html{scroll-behavior:smooth}
  .team-summary-main strong{font-size:25px}
  .team-individual-full-line label{flex-wrap:wrap;gap:4px}
 }
+
+/* Etapa 94 — o bloco amarelo adota o mesmo ritmo dos cartões azul/vermelho.
+   O cálculo, a Tendência Histórica e a tabela numérica são preservados. */
+.smart-mando-section>h3{font-size:17px;color:#fff1b1;margin:0 0 5px;line-height:1.45}
+.smart-mando-section>.smart-total-explanation{font-size:12px;color:#f1e7c5;margin:4px 0 10px}
+.smart-mando-section .smart-match-head{padding:5px 0}
+.smart-mando-section .smart-match-head h3{font-size:16px;margin:3px 0}
+.smart-mando-section .smart-match-head p{font-size:11px;line-height:1.5}
+.smart-mando-section .team-summary-window{margin:8px 0}
+.smart-mando-section .smart-lens-card.team-summary-card{
+ padding:9px 10px;background:#474024;border-color:#968a4c;box-shadow:none
+}
+.smart-mando-section .smart-lens-card.team-summary-card h4{font-size:15px;margin:0 0 5px}
+.smart-mando-section .team-summary-main{padding:5px 0 8px;border-color:#91885e}
+.smart-mando-section .team-summary-main strong{font-size:25px}
+.smart-mando-section .team-summary-main span,
+.smart-mando-section .team-summary-main small,
+.smart-mando-section .team-summary-main>small{color:#e7dfbb}
+.smart-mando-section .team-period-compact-row{background:rgba(29,24,9,.28);border-color:#776d45}
+.smart-mando-section .team-period-compact-head strong{color:#fff3c6}
+.smart-mando-section .team-period-compact-head span{color:#ddd3ac}
+.smart-mando-section .team-simple-line{color:#f2e2a6}
+.smart-mando-section .team-simple-pairs>span{
+ background:rgba(35,27,7,.33);border-color:rgba(228,201,107,.2);color:#f9eccc
+}
+.smart-mando-section .team-simple-pairs b{color:#fffbdf}
+.smart-mando-section .team-simple-pairs em{color:#bce6b6}
+.smart-mando-section .smart-direct-details{
+ padding:8px 10px;margin:10px 0;background:#3c3622;border-color:#7e7246;color:#f5e9c4
+}
+.smart-mando-section .smart-direct-details>summary{font-size:12px;color:#ffedb4}
+.smart-mando-section .smart-direct-details>p{color:#dfd1ab}
+.smart-mando-detail-options{border:1px solid #827947;border-radius:10px;
+ padding:8px 10px;margin:12px 0;background:#3b3523}
+.smart-mando-detail-options>summary{font-size:12px;line-height:1.55;
+ font-weight:700;cursor:pointer;color:#fff0bd}
+.smart-mando-detail-options>p{font-size:11px;line-height:1.55;color:#e7d9b7}
+.smart-mando-detail-options .smart-total-controls{margin:10px 0}
+.smart-mando-detail-options .smart-suggest-line{font-size:12px;margin:9px 0}
+.smart-mando-section .smart-legacy-table{background:#282d31}
+.smart-mando-section .smart-legacy-table>summary{color:#e6ecef}
+@media(max-width:600px){
+ .smart-mando-section .smart-lens-grid{grid-template-columns:1fr;gap:9px}
+ .smart-mando-section .smart-lens-card.team-summary-card{padding:9px}
+}
