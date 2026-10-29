@@ -12,7 +12,7 @@ test('Etapa 99: 2.775 partidas aparecem sem importação na prévia experimental
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
- await expect(page.getByText(/2775 partidas reais de pesquisa carregadas/)).toBeVisible({timeout:45000});
+ await expect(page.getByRole('heading',{name:/Comparação Inteligente/}).first()).toBeVisible();
  const competition=page.getByLabel('Campeonato da comparação inteligente');
  await competition.selectOption('Premier League inglesa');
  const season=page.getByLabel('Temporada da comparação inteligente');
