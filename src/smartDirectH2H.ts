@@ -21,7 +21,7 @@ export function comparisonTeamKey(name:string,competition:string):string{
 /** Return the real index of each selected team, including reversed mandos. */
 export function directMatchSides(
  match:Pick<Match,'home'|'away'>,home:string,away:string,
- teamKey:(id:string)=>string,mode:DirectVenueMode='all'
+ teamKey:(id:string)=>string,mode:DirectVenueMode='current'
 ):readonly [number,number]|null{
  const h=teamKey(match.home),a=teamKey(match.away);
  if(h===home&&a===away)return [0,1];
