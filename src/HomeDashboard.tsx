@@ -7,7 +7,7 @@ import type {Data} from './model';
 import {brasiliaDate,isUpcoming} from './calendar';
 import {readOfficialCalendar} from './officialCalendar';
 import {selectDailyGoodSignals} from './dailyGoodSignals';
-import {loadResearchCatalog,type ResearchCatalog} from './researchCatalog';
+import {loadSharedResearchCatalog,type ResearchCatalog} from './researchCatalog';
 import {homeHistoricalMarkets,homeLeagueCount} from './homeDashboardModel';
 import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
 import PrivateSeasonCsvImport from './PrivateSeasonCsvImport';
@@ -30,7 +30,7 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
  useEffect(()=>{
   const controller=new AbortController();
   const reload=()=>{
-   void loadResearchCatalog(controller.signal).then(result=>{
+   void loadSharedResearchCatalog(controller.signal).then(result=>{
     if(!controller.signal.aborted){setResearch(result);setResearchError('');}
    }).catch(err=>{
     if(!controller.signal.aborted)
