@@ -112,7 +112,7 @@ export function analyzeFourLenses(
   // preferentially selected or counted as independent evidence.
   const repeats=new Map<string,Match[]>();
   for(const m of eligible){
-    const key=[m.competition,m.date,teamKey(m.home),teamKey(m.away)].join('|');
+    const key=[m.competition,m.date,...[teamKey(m.home),teamKey(m.away)].sort()].join('|');
     const found=repeats.get(key)??[];
     found.push(m);repeats.set(key,found);
   }
