@@ -21,6 +21,11 @@
       "file": "ligue_1_francesa_2025_26.json",
       "competition": "Ligue 1 francesa 2025/26",
       "count": 305
+    },
+    {
+      "file": "liga_portugal_2025_26.json",
+      "competition": "Liga Portugal 2025/26",
+      "count": 306
     }
   ]
 }
