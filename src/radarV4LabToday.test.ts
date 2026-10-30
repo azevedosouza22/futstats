@@ -57,7 +57,7 @@ describe('V4 day laboratory — chronological, isolated and conservative',()=>{
   expect(r.historyIds).not.toContain('BAD_TODAY');
   expect(r.historyIds).not.toContain('BAD_FUTURE');
   expect(r.picks.find(x=>x.metric==='shots'&&x.period==='full')?.mean).toBe(32);
-  const short=analyzeV4Fixture({teams,dmatches:[] as never} as unknown as Data,fixture);
+  const short=analyzeV4Fixture({teams,matches:[]},fixture);
   expect(short.status).toBe('unresolved');
  });
  it('does not duplicate the same agenda fixture and does not guess identity',()=>{
