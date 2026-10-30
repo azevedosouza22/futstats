@@ -50,10 +50,10 @@ export default function App(){
  const [seasonFilter,setSeasonFilter]=useState(ALL_LEAGUES);
  const [historyPage,setHistoryPage]=useState(1);
  const [toolPanel,setToolPanel]=useState<'image'|'sportsdb'|'live'|'api'>('image');
- const [radarFocus,setRadarFocus]=useState<'agenda'|'picks'>('agenda');
+ const [radarFocus,setRadarFocus]=useState<'agenda'|'picks'|'v4'>('agenda');
  const mainActive=page===6?(radarFocus==='picks'?'picks':'agenda'):
    page===0?'home':page===2?'compare':'more';
- function goTo(pageNumber:number,focus?:'agenda'|'picks'){
+ function goTo(pageNumber:number,focus?:'agenda'|'picks'|'v4'){
    if(focus)setRadarFocus(focus);
    setPage(pageNumber);setSearch('');setHistoryPage(1);
    window.scrollTo({top:0,behavior:'auto'});
@@ -144,10 +144,10 @@ export default function App(){
    onClick={()=>goTo(t.page,t.area==='picks'?'picks':t.area==='agenda'?'agenda':undefined)}>
    <t.icon size={21}/><span>{t.name}</span>
  </button>)}
- </nav><div className="main"><header><span>Futebol / <b>{page===6?(radarFocus==='picks'?'As Boas do Dia':'Agenda'):tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button type="button" className="mobile-safety-shortcut" aria-label="Abrir backup integral V4" title="Cópia integral com Histórico, Radar, Work e agenda CSV" onClick={()=>setPage(7)}><Shield size={18}/><span>Backup V4</span></button></div></header><main>
+ </nav><div className="main"><header><span>Futebol / <b>{page===6?(radarFocus==='v4'?'Laboratório Radar V4':radarFocus==='picks'?'As Boas do Dia':'Agenda'):tabs[page].name}</b></span><span className="local-pill"><span className="online-dot"/>Armazenamento local</span><div className="mobile-backups"><button type="button" className="mobile-safety-shortcut" aria-label="Abrir backup integral V4" title="Cópia integral com Histórico, Radar, Work e agenda CSV" onClick={()=>setPage(7)}><Shield size={18}/><span>Backup V4</span></button></div></header><main>
  <div className="heading"><div><div className="eyebrow">FUTSTATS · CENTRO DE ANÁLISES</div><h1>{[
  'Visão Geral do FutStats IA.','Equipes por campeonato.','Comparação Inteligente por liga.',
- 'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.','Radar V2 × V3.',
+ 'Seu histórico, organizado.','Amplie sua base.','Prepare sua análise.',radarFocus==='v4'?'Radar V4 · Laboratório.':'Radar V2 × V3.',
  'Ferramentas e testes opcionais.','Tudo organizado em um só lugar.'
  ][page]}</h1><p>{[
  'Acompanhe indicadores, agenda e análises em um painel único.',
@@ -156,7 +156,7 @@ export default function App(){
  'Encontre jogos por campeonato, temporada ou busca.',
  'Importe pesquisas CSV revisadas com segurança.',
  'Compare janelas recentes, com amostras e fontes claras.',
- 'Registre análises antes de cada partida e avalie resultados reais.',
+ radarFocus==='v4'?'Análise experimental de jogos futuros, sem alterar as previsões V2/V3.':'Registre análises antes de cada partida e avalie resultados reais.',
  'OCR, TheSportsDB, consultas pontuais e outros testes experimentais.',
  'Histórico, equipes, previsões e ferramentas continuam acessíveis.'
  ][page]}</p></div>
