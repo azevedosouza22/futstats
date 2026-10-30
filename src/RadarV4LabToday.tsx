@@ -1,5 +1,7 @@
 import {useState} from 'react';
-import {brasiliaDate} from './calendar';
+import {brasiliaDate,type ScheduledFixture,normalizeTeam} from './calendar';
+import {CALENDAR_STORAGE,parseStoredCalendar} from './calendarStorage';
+import {consultFreeAgenda} from './freeCalendarDiscovery';
 import {readOfficialCalendar,type OfficialCalendarItem} from './officialCalendar';
 import type {Data} from './model';
 import {analyzeV4Day,V4_METRICS,V4_PERIODS,type V4FixtureReport,type V4Period,type V4Metric} from './radarV4LabToday';
@@ -18,6 +20,7 @@ function exportJSON(content:unknown,name:string){
 export default function RadarV4LabToday({research}:{research:Data|null}){
  const [report,setReport]=useState<V4FixtureReport[]|null>(null);
  const [references,setReferences]=useState<OfficialCalendarItem[]>([]);
+ const [sources,setSources]=useState<Record<string,string>>({});
  const [reportDate,setReportDate]=useState('');
  const [period,setPeriod]=useState<V4Period>('full');
  const [busy,setBusy]=useState(false);
@@ -28,17 +31,43 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
  const ready=report?.filter(r=>r.status==='ready')??[];
  const count=ready.reduce((s,r)=>s+r.picks.filter(p=>p.line!==null).length,0);
  const noSignal=ready.reduce((s,r)=>s+r.picks.filter(p=>p.line===null).length,0);
- function run(){
+ async function run(){
   setError('');setMessage('');setBusy(true);
   try{
    if(!research)throw Error('Pesquisa histórica ainda não disponível. Aguarde o carregamento.');
    const clock=new Date(),date=brasiliaDate(clock).date;
-   // Source is a dated, manually verified calendar; there is NO live fixture feed.
-   const refs=readOfficialCalendar(clock).filter(r=>r.fixture.date===date);
-   const results=analyzeV4Day(research,refs.map(r=>r.fixture),date);
-   setReport(results);setReferences(refs);setReportDate(date);
-   if(!results.length)setMessage('Nenhum confronto futuro na agenda oficial registrada para hoje. A agenda não é atualizada automaticamente.');
-   else setMessage('Análise realizada somente na pesquisa histórica. Confira os avisos de atualização de agenda.');
+   // Priority: official references > pre-existing user CSV > provisional catalogue.
+   const official=readOfficialCalendar(clock).filter(r=>r.fixture.date===date);
+   const candidates:ScheduledFixture[]=[...official.map(r=>r.fixture)];
+   const origins:Record<string,string>=Object.fromEntries(official.map(r=>[
+    r.fixture.id,r.fresh?'Referência oficial recente':'Referência oficial antiga, reconferir'
+   ]));
+   let calendarWarning='';
+   try{
+    const saved=parseStoredCalendar(localStorage.getItem(CALENDAR_STORAGE)??'[]');
+    for(const entry of saved.filter(f=>f.date===date)){
+     candidates.push(entry);origins[entry.id]='Agenda CSV cadastrada, conferir na origem';
+    }
+   }catch{calendarWarning=' A agenda CSV local não pôde ser lida; nenhum dado foi alterado.';}
+   let freeWarning='';
+   try{
+    const free=await consultFreeAgenda(clock);
+    for(const item of free.candidates.filter(x=>x.fixture.date===date)){
+     candidates.push(item.fixture);
+     origins[item.fixture.id]='Catálogo comunitário (data e horário provisórios)';
+    }
+    if(free.errors.length)freeWarning=' Algumas fontes gratuitas não responderam.';
+   }catch{freeWarning=' Fontes gratuitas indisponíveis nesta consulta.';}
+   const seen=new Set<string>();
+   const deduped=candidates.filter(item=>{
+    const key=[item.date,item.competition.replace(/ 20\\d{2}(?:\\/\\d{2})?$/,''),
+      normalizeTeam(item.home),normalizeTeam(item.away)].join('|');
+    if(seen.has(key))return false;seen.add(key);return true;
+   });
+   const results=analyzeV4Day(research,deduped,date);
+   setReport(results);setReferences(official);setSources(origins);setReportDate(date);
+   if(!results.length)setMessage('Nenhum confronto restante encontrado para hoje nas fontes disponíveis.'+calendarWarning+freeWarning);
+   else setMessage('Análise histórica calculada. Confirme cada confronto na origem: nem toda agenda é oficial ou recente.'+calendarWarning+freeWarning);
   }catch(e){setError(e instanceof Error?e.message:'Falha no cálculo V4.');}
   finally{setBusy(false);}
  }
@@ -84,7 +113,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    {report&&<button type="button" onClick={exportReport}>Exportar relatório V4 (JSON)</button>}
    <button type="button" onClick={exportSaved}>Exportar previsões V4 salvas</button>
   </div>
-  <p className="v4-lab-muted">Consulta apenas a agenda oficial registrada e a pesquisa histórica já disponível. Não atualiza os calendários pela internet nem coleta jogos novos automaticamente. Uma referência antiga exige reconferência antes de salvar.</p>
+  <p className="v4-lab-muted">Usa agenda oficial cadastrada, CSV local e fontes comunitárias gratuitas consultadas sob demanda. Não é feed ao vivo: datas e horários exigem conferência. Uma agenda provisória não autoriza salvar a previsão.</p>
   {!research&&<p role="status">Carregando base histórica experimental de pesquisa…</p>}
   {error&&<p className="v4-lab-alert" role="alert">{error}</p>}
   {message&&<p className="v4-lab-message" role="status">{message}</p>}
@@ -104,7 +133,8 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
     const future=Boolean(origin?.fresh&&origin.fixture.time);
     return <article className="v4-lab-fixture" key={r.fixture.id}>
      <div className="v4-lab-fixture-head"><div>
-      <small>{r.competition??r.fixture.competition} · {r.fixture.time??'Horário a confirmar'} (Brasília)</small>
+      <small>{r.competition??r.fixture.competition} · {r.fixture.time??'Horário a confirmar'} {r.fixture.time?'(Brasília)':''}</small>
+      <small className="v4-lab-origin">{sources[r.fixture.id]??'Origem da agenda a revisar'}</small>
       <h4>{r.fixture.home} × {r.fixture.away}</h4>
      </div><span className={origin?.fresh?'v4-lab-fresh':'v4-lab-stale'}>
       {origin?.fresh?'Agenda recente':'Reconfirmar agenda'}</span></div>
