@@ -113,3 +113,22 @@ test('autoriza somente o nome exato da branch do PR #97, sem relaxar outros PRs'
  wrongNumber.pulls[2].head.ref='fix/v4-research-loading-mobile-2775';
  assert.throws(()=>verify(wrongNumber),/branch inválida/);
 });
+
+test('permite apenas a branch exata de pesquisa do PR #102 e continua bloqueando produção',()=>{
+ const f=fixtures();
+ f.opts.firstNumber=100;f.opts.lastNumber=102;
+ f.pulls.forEach((p,i)=>p.number=100+i);
+ f.pulls[2].head.ref='research/radar-v4-lab-piloto-01-saudi-2025-26';
+ assert.equal(verify(f).chainValid,true);
+ assert.equal(verify(f).integrationAuthorized,false);
+ const wrongName=fixtures();
+ wrongName.opts.firstNumber=100;wrongName.opts.lastNumber=102;
+ wrongName.pulls.forEach((p,i)=>p.number=100+i);
+ wrongName.pulls[2].head.ref='research/radar-v4-lab-outro';
+ assert.throws(()=>verify(wrongName),/branch inválida/);
+ const wrongNumber=fixtures();
+ wrongNumber.opts.firstNumber=99;wrongNumber.opts.lastNumber=101;
+ wrongNumber.pulls.forEach((p,i)=>p.number=99+i);
+ wrongNumber.pulls[2].head.ref='research/radar-v4-lab-piloto-01-saudi-2025-26';
+ assert.throws(()=>verify(wrongNumber),/branch inválida/);
+});

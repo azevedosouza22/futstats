@@ -1,0 +1,1664 @@
+{
+  "format": "futstats-radar-v4-prospectiva-experimental-v1",
+  "date": "2026-10-30",
+  "timezone": "America/Sao_Paulo",
+  "generated_at_utc": "2026-10-30T08:55:11.563Z",
+  "experiment_status": "congelado_antes_dos_jogos",
+  "repository": "azevedosouza22/futstats",
+  "branch": "research/radar-v4-lab-piloto-01-saudi-2025-26",
+  "methodology": "Radar V4 Lab piloto 03: últimos 5 jogos anteriores de cada time na mesma competição/temporada, 8+ IDs distintos; para cada um dos 12 indicadores maior linha Over predefinida com frequência histórica >=70%; caso contrário sem sinal",
+  "source_files": [
+    {
+      "path": "public/research/partidas-work-951-v1.json",
+      "sha": "0f8af057fcf75b39f7c04f10c8855dd9476a11b4"
+    },
+    {
+      "path": "public/research/partidas-work-extras-68-v1.txt",
+      "sha": "490d9233ca9f1b550c620522c0c641dc3b7f0d3f"
+    },
+    {
+      "path": "public/research/packs/brasileirao_2026_incremental_20261029.json",
+      "sha": "ad90dd97881c1d05097fe9552f6733162ede0d82"
+    },
+    {
+      "path": "public/research/packs/liga_portugal_2026_27.json",
+      "sha": "0a140141edf2d8178ebfc7407b14bcd6a1decd87"
+    },
+    {
+      "path": "public/research/packs/saudi_pro_league_2026_27.json",
+      "sha": "38782bc6aaf1b9def676a3eb88c7533989b847c7"
+    }
+  ],
+  "sources_external_fixtures": [
+    "https://www.goal.com/br/listas/futebol-programacao-jogos-tv-aberta-fechada-onde-assistir-online-app/bltc0a7361374657315",
+    "https://www.cnnbrasil.com.br/esportes/agenda/"
+  ],
+  "universe_current_seasons": 1203,
+  "fixtures_count": 10,
+  "signal_count": 105,
+  "abstention_count": 15,
+  "signals_by_period": {
+    "full": 37,
+    "first": 29,
+    "second": 39
+  },
+  "notes": [
+    "Resultados de partidas de hoje não consultados",
+    "Odds reais não consultadas; nenhum ROI",
+    "Sinais do laboratório, não V2/V3 nem recomendações validadas para apostar",
+    "Não alterou produção, Radar, backups ou dados pessoais",
+    "IDs históricos e frequências registradas para auditoria posterior"
+  ],
+  "fixtures": [
+    {
+      "competition": "Brasileirão Série A 2026",
+      "date": "2026-10-30",
+      "home": "Corinthians",
+      "away": "Mirassol",
+      "home_history": [
+        {
+          "id": "dASMoUjg",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "phCOok8j",
+          "date": "2026-10-07"
+        },
+        {
+          "id": "8W61K9EF",
+          "date": "2026-10-11"
+        },
+        {
+          "id": "hdprTwcm",
+          "date": "2026-10-19"
+        },
+        {
+          "id": "jV8lzDAU",
+          "date": "2026-10-24"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "4zWUq8L5",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "f75igXFG",
+          "date": "2026-10-07"
+        },
+        {
+          "id": "hz97G0Ds",
+          "date": "2026-10-11"
+        },
+        {
+          "id": "0MmjRHRa",
+          "date": "2026-10-16"
+        },
+        {
+          "id": "lQzFjYfB",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 32.5
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 10.3
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 10.6
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 2.8
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 10.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 13.5
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.3
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.8
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.1
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 19
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 6
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 5.8
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 1.7
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga 2026/27",
+      "date": "2026-10-30",
+      "home": "Elversberg",
+      "away": "Mainz",
+      "home_history": [
+        {
+          "id": "Ot9I6Iz2",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "4dYNZG4l",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "KtlUkTfn",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "hhNdDNhA",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "dlCz6uop",
+          "date": "2026-10-24"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "YTLWFMDF",
+          "date": "2026-09-12"
+        },
+        {
+          "id": "YgibJeK7",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "f1XIrCmJ",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "6yPlFqOc",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "rsnE2Rek",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 24.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 30.9
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 9.9
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 10.2
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 3.9
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 13.7
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.6
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 1.8
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 17.2
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 5.3
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.2
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 2.1
+        }
+      ]
+    },
+    {
+      "competition": "La Liga espanhola 2026/27",
+      "date": "2026-10-30",
+      "home": "Villarreal",
+      "away": "Espanyol",
+      "home_history": [
+        {
+          "id": "GGiPsLP1",
+          "date": "2026-09-17"
+        },
+        {
+          "id": "00B1PI8s",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "2mAGw9Ti",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "fulq13RF",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "ELhT9X9m",
+          "date": "2026-10-24"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "rNqB5OH8",
+          "date": "2026-09-15"
+        },
+        {
+          "id": "00VbGuWQ",
+          "date": "2026-09-18"
+        },
+        {
+          "id": "dUikzzNa",
+          "date": "2026-10-09"
+        },
+        {
+          "id": "bB7ejnDc",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "25Xg8KYr",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 28.3
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 11.5
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 8.6
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 2.5
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 12.3
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 5
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 3.4
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 1.1
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 16
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 5.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 6.5
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.2
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 1.4
+        }
+      ]
+    },
+    {
+      "competition": "Ligue 1 francesa 2026/27",
+      "date": "2026-10-30",
+      "home": "Le Havre",
+      "away": "PSG",
+      "home_history": [
+        {
+          "id": "YiUa8b14",
+          "date": "2026-09-12"
+        },
+        {
+          "id": "2oHPT5Ts",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "UuHmO1cJ",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "xQxjy9h5",
+          "date": "2026-10-18"
+        },
+        {
+          "id": "xpqjtez2",
+          "date": "2026-10-25"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "QRQiAKWi",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "SC8SVhaS",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "K6cIM9wC",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "f3OwnQ6N",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "zyZq2xcL",
+          "date": "2026-10-26"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 30.6
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 9.3
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 11.2
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 3.1
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 12.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 14
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.4
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.4
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 0.7
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 16.6
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.9
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 6.8
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 2.4
+        }
+      ]
+    },
+    {
+      "competition": "Ligue 1 francesa 2026/27",
+      "date": "2026-10-30",
+      "home": "Nice",
+      "away": "Rennes",
+      "home_history": [
+        {
+          "id": "KUw6nHvo",
+          "date": "2026-09-12"
+        },
+        {
+          "id": "Uuc6OAi2",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "ngaAOV8a",
+          "date": "2026-10-11"
+        },
+        {
+          "id": "EPMNk87b",
+          "date": "2026-10-18"
+        },
+        {
+          "id": "bXIA0PLG",
+          "date": "2026-10-23"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "r5CuLyoA",
+          "date": "2026-09-11"
+        },
+        {
+          "id": "Kn5KXEUF",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "SW0QKm8O",
+          "date": "2026-10-11"
+        },
+        {
+          "id": "nwLVmnxB",
+          "date": "2026-10-18"
+        },
+        {
+          "id": "6JPFdGKr",
+          "date": "2026-10-25"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 27
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 9.5
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "mean": 11.5
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 3.3
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 11.9
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 3.6
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.8
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.6
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 11.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 15.1
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 5.9
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 6.7
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 1.7
+        }
+      ]
+    },
+    {
+      "competition": "Ligue 1 francesa 2026/27",
+      "date": "2026-10-30",
+      "home": "Lille",
+      "away": "Lens",
+      "home_history": [
+        {
+          "id": "EVVF4G0T",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "Uuc6OAi2",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "UuHmO1cJ",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "I3v6XQiU",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "2Nzx4bS8",
+          "date": "2026-10-25"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "65S76xWG",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "dSbbQWMk",
+          "date": "2026-09-18"
+        },
+        {
+          "id": "MFDuQNS6",
+          "date": "2026-10-09"
+        },
+        {
+          "id": "QoF9t4Up",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "UJurrH5k",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 20.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 23.9
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "mean": 9
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 8.1
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 2.7
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 10.7
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 3.8
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 3
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "mean": 1.4
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 13.2
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.2
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.1
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 1.3
+        }
+      ]
+    },
+    {
+      "competition": "Liga Portugal 2026/27",
+      "date": "2026-10-30",
+      "home": "Casa Pia",
+      "away": "Sporting",
+      "home_history": [
+        {
+          "id": "QXavX2yg",
+          "date": "2026-09-06"
+        },
+        {
+          "id": "8CeRsKkB",
+          "date": "2026-09-12"
+        },
+        {
+          "id": "OrdYcWu9",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "OtXhNn9K",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "rkrOizVA",
+          "date": "2026-10-24"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "I7dWYO6t",
+          "date": "2026-09-05"
+        },
+        {
+          "id": "EBNbPBZq",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "Y9gDA9PE",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "Iqp7aqHD",
+          "date": "2026-10-09"
+        },
+        {
+          "id": "QTwB2iqT",
+          "date": "2026-10-25"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 24.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 27.1
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 11.2
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 8.2
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 2.6
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 10.1
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 5.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 6.3
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 2.6
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 0.8
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 17
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.9
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 5.6
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 1.8
+        }
+      ]
+    },
+    {
+      "competition": "Saudi Pro League 2026/27",
+      "date": "2026-10-30",
+      "home": "Abha",
+      "away": "Al-Ittihad",
+      "home_history": [
+        {
+          "id": "xCm0wsDD",
+          "date": "2026-09-09"
+        },
+        {
+          "id": "n5PPg2cf",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "YJhr8DZ1",
+          "date": "2026-10-16"
+        },
+        {
+          "id": "vynUz395",
+          "date": "2026-10-24"
+        },
+        {
+          "id": "MumpnBeo",
+          "date": "2026-10-27"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "Khh6l7LE",
+          "date": "2026-09-08"
+        },
+        {
+          "id": "KINXitS6",
+          "date": "2026-09-11"
+        },
+        {
+          "id": "nPHNrc6j",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "vwB9Bntf",
+          "date": "2026-10-20"
+        },
+        {
+          "id": "KEmpXK8U",
+          "date": "2026-10-23"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 20.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 24.3
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 9.4
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 8
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 2.8
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 11.7
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.6
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.5
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.3
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 9.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 12.6
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.8
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 3.5
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 1.5
+        }
+      ]
+    },
+    {
+      "competition": "Saudi Pro League 2026/27",
+      "date": "2026-10-30",
+      "home": "Al Diriyah",
+      "away": "Neom SC",
+      "home_history": [
+        {
+          "id": "n5PPg2cf",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "I9RilJrT",
+          "date": "2026-10-09"
+        },
+        {
+          "id": "0QpUVGR8",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "Qg9H9QA6",
+          "date": "2026-10-20"
+        },
+        {
+          "id": "KEmpXK8U",
+          "date": "2026-10-23"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "x6djcy4n",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "AqOqjuEG",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "jD2lJwr3",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "K6kEvoAt",
+          "date": "2026-10-20"
+        },
+        {
+          "id": "vynUz395",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 24.1
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 10.4
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 7.1
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 2
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 10.8
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 4.9
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 3.7
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 0.8
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 9.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "mean": 13.3
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.5
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "mean": 3.4
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.2
+        }
+      ]
+    },
+    {
+      "competition": "Saudi Pro League 2026/27",
+      "date": "2026-10-30",
+      "home": "Al Shabab",
+      "away": "Al Ahli",
+      "home_history": [
+        {
+          "id": "MLtpsPDl",
+          "date": "2026-09-09"
+        },
+        {
+          "id": "Iqb6gg3B",
+          "date": "2026-09-12"
+        },
+        {
+          "id": "f9BP2IcM",
+          "date": "2026-10-11"
+        },
+        {
+          "id": "ddjsQoem",
+          "date": "2026-10-19"
+        },
+        {
+          "id": "llU9mtgB",
+          "date": "2026-10-22"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "QkeEnojR",
+          "date": "2026-09-08"
+        },
+        {
+          "id": "AJfbeFYb",
+          "date": "2026-09-11"
+        },
+        {
+          "id": "vJ4960bc",
+          "date": "2026-10-09"
+        },
+        {
+          "id": "l48lOPPa",
+          "date": "2026-10-19"
+        },
+        {
+          "id": "n1kxZtvI",
+          "date": "2026-10-23"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 20.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 26.6
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 8.4
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 10.2
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 3.7
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 12.4
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 4
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5.3
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 2.1
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 14.2
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.4
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 4.9
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.6
+        }
+      ]
+    }
+  ]
+}
