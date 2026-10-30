@@ -65,6 +65,14 @@ describe('V4 day laboratory — chronological, isolated and conservative',()=>{
   const miss=analyzeV4Fixture(data(),{...fixture,away:'Clube diferente'});
   expect(miss.status).toBe('unresolved');
  });
+ it('resolves documented official team names without modifying V2/V3 aliases',()=>{
+  const source=data();
+  const germany:Data={teams:source.teams.map(t=>({...t,name:t.id==='home'?'Elversberg':t.id==='away'?'Mainz':'Outro'})),
+   matches:source.matches.map(m=>({...m,competition:'Bundesliga 2026/27'}))};
+  const official={...fixture,competition:'Bundesliga 2026/27',
+   home:'SV Elversberg',away:'1. FSV Mainz 05'};
+  expect(analyzeV4Fixture(germany,official).status).toBe('ready');
+ });
  it('stores frozen V4 records only with fresh pre-kickoff source and never overwrites',()=>{
   const report=analyzeV4Fixture(data(),fixture);
   const now=new Date('2026-10-30T14:00:00Z'); // 11:00 in Brasilia
