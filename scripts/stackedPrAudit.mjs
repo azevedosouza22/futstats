@@ -34,11 +34,12 @@ export function validateStackedPrChain(pulls,comparisons,{
     p.base?.repo?.full_name===repoFullName,
    'PR #'+expected+' pertence a outro repositório ou fork');
   // Explicit one-PR naming exception for the mobile-loading repair.
-  // All other PRs remain on feat/v4-*; every ancestry, SHA and DRAFT check
-  // below remains mandatory (including for #97).
+  // One exact, read-only lab exception for #102; all others require feat/v4-*.
+  // Every ancestry, SHA and DRAFT check remains mandatory for all branches.
   const experimentalBranch=typeof p.head?.ref==='string'&&
    (p.head.ref.startsWith('feat/v4-')||
-    (p.number===97&&p.head.ref==='fix/v4-research-loading-mobile-2775'));
+    (p.number===97&&p.head.ref==='fix/v4-research-loading-mobile-2775')||
+    (p.number===102&&p.head.ref==='research/radar-v4-lab-piloto-01-saudi-2025-26'));
   check(experimentalBranch&&
     typeof p.base?.ref==='string'&&p.base.ref.length>0,
    'PR #'+expected+' tem branch inválida');
