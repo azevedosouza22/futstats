@@ -41,6 +41,11 @@
       "file": "saudi_pro_league_2026_27.json",
       "competition": "Saudi Pro League 2026/27",
       "count": 98
+    },
+    {
+      "file": "saudi_pro_league_2025_26.json",
+      "competition": "Saudi Pro League 2025/26",
+      "count": 306
     }
   ]
 }
