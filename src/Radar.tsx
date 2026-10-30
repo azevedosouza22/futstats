@@ -1,6 +1,7 @@
 import {useEffect,useState} from 'react';
 import {radarRetrospective} from './radar';
 import UpcomingRadar from './UpcomingRadar';
+import RadarV4LabToday from './RadarV4LabToday';
 import RadarBacktest from './RadarBacktest';
 import RadarVenueV2 from './RadarVenueV2';
 import RadarVenueV3 from './RadarVenueV3';
@@ -16,13 +17,13 @@ const number = (n: number | null) =>
 const percent = (n: number | null) =>
   n === null ? 'N/D' : (n * 100).toLocaleString('pt-BR', {maximumFractionDigits: 1}) + '%';
 
-export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'|'picks'}) {
+export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'|'picks'|'v4'}) {
   // The two primary shortcuts share the existing Radar/Agenda engine.
   // Focus its appropriate section; all existing saved predictions stay untouched.
   useEffect(()=>{
-    setMode('new'); // Both primary destinations live in the future-game Radar.
+    setMode(focus==='v4'?'v4':'new'); // V4 is a strictly isolated research view.
     const id=window.setTimeout(()=>{
-      document.querySelector(focus==='picks'?'.daily-good-picks':'.calendar-agenda')
+      document.querySelector(focus==='v4'?'.v4-lab-today':focus==='picks'?'.daily-good-picks':'.calendar-agenda')
         ?.scrollIntoView({block:'start',behavior:'smooth'});
     },120);
     return ()=>window.clearTimeout(id);
@@ -30,7 +31,7 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedFixtureId, setSelectedFixtureId] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [mode,setMode] = useState<'new'|'saved'|'history'|'work'>('new');
+  const [mode,setMode] = useState<'new'|'saved'|'history'|'work'|'v4'>('new');
   const [savedFocus,setSavedFocus]=useState<string|null>(null);
   const [deviceCheck,setDeviceCheck]=useState<RadarDeviceReport|null>(null);
   // When this preview has no personal matches, use the read-only research
@@ -104,6 +105,11 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
           <span aria-hidden="true">2</span><strong>Ver previsões já registradas</strong>
           <small>Consulte os testes já salvos, incluindo qualquer novo registro, e acompanhe os resultados.</small>
         </button>
+        <button type="button" className="radar-quick-action radar-quick-action--v4"
+          aria-pressed={mode==='v4'} onClick={()=>setMode('v4')}>
+          <span aria-hidden="true">V4</span><strong>Analisar jogos de hoje</strong>
+          <small>Laboratório experimental: linhas Over, jogo inteiro e 1º/2º tempo; sem alterar V2/V3.</small>
+        </button>
       </div>
       <details className="radar-extra-modes">
         <summary>Outras análises · Histórico e Work</summary>
@@ -142,6 +148,7 @@ export default function Radar({data,focus='agenda'}: {data: Data;focus?:'agenda'
       </details>
     </nav>
     <div className="radar-inner">
+      {mode==='v4'&&<RadarV4LabToday research={historicalResearch?.data??null}/>}
       {(mode==='new'||mode==='saved')&&<UpcomingRadar data={data} analysisData={analysisData} researchMode={usePublicResearch} view={mode}
         focusedSavedKey={savedFocus}
         onViewSaved={key=>{setSavedFocus(key??null);setMode('saved');}}
