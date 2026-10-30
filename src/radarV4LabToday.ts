@@ -37,6 +37,14 @@ function exactCompetition(data:Data,fixture:ScheduledFixture):string|null{
  const inferred=entered+' '+fixture.date.slice(0,4);
  return existing.has(inferred)?inferred:null;
 }
+/** Confirmed label variants for the V4 lab ONLY; no changes to shared Radar aliases. */
+function v4KnownName(name:string,competition:string):string{
+ const lookup:Record<string,Record<string,string>>={
+  'Bundesliga 2026/27':{'SV Elversberg':'Elversberg','1. FSV Mainz 05':'Mainz'},
+  'La Liga espanhola 2026/27':{'Villarreal CF':'Villarreal','RCD Espanyol':'Espanyol'}
+ };
+ return lookup[competition]?.[name]??name;
+}
 function wholeMatchTotal(match:Match,period:V4Period,metric:V4Metric):number|null{
  const a=stats(match,0,period)[metric],b=stats(match,1,period)[metric];
  if(a===null||b===null)return null;
@@ -49,7 +57,8 @@ export function analyzeV4Fixture(data:Data,fixture:ScheduledFixture):V4FixtureRe
   historyIds:[] as string[],picks:[] as V4Pick[]};
  const league=exactCompetition(data,fixture);
  if(!league)return {...base,status:'unresolved',reason:'Temporada não encontrada na pesquisa.'};
- const resolved=resolveCalendarFixture(data,{...fixture,competition:league});
+ const resolved=resolveCalendarFixture(data,{...fixture,competition:league,
+  home:v4KnownName(fixture.home,league),away:v4KnownName(fixture.away,league)});
  if(!resolved)return {...base,competition:league,status:'unresolved',
   reason:'Equipes não reconhecidas nesta temporada; não houve correspondência aproximada.'};
  const prior=data.matches.filter(m=>m.competition===league&&m.research&&
