@@ -60,8 +60,9 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    }catch{freeWarning=' Fontes gratuitas indisponíveis nesta consulta.';}
    const seen=new Set<string>();
    const deduped=candidates.filter(item=>{
-    const key=[item.date,item.competition.replace(/ 20\\d{2}(?:\\/\\d{2})?$/,''),
-      normalizeTeam(item.home),normalizeTeam(item.away)].join('|');
+    const parts=item.competition.split(' '),last=parts.at(-1)??'';
+    const league=last.startsWith('20')?parts.slice(0,-1).join(' '):item.competition;
+    const key=[item.date,league,normalizeTeam(item.home),normalizeTeam(item.away)].join('|');
     if(seen.has(key))return false;seen.add(key);return true;
    });
    const results=analyzeV4Day(research,deduped,date);
