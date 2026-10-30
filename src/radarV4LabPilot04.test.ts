@@ -114,7 +114,8 @@ function matchedAudit(){
  // The audit must not silently proceed if the reproduced sample differs.
  expect(rows).toHaveLength(240);
  expect(new Set(rows.map(r=>r.game.research!.sourceId)).size).toBe(240);
- expect(published).toEqual({signals:2591,correct:1840,wrong:751,abstained:289});
+ // Audit first: expose the current-source calculations even when historical snapshot drifts.
+ // Original 1840/751 reference remains a strict gate in the enclosing test.
  const audit:AuditRow[]=[];
  for(const period of periods)for(const metric of metrics){
   const fixedLine=lines[period][metric][1]; // predeclared, not tuned to outcomes
@@ -155,5 +156,6 @@ describe('Radar V4 Pilot 04 — paired same-fixture, same-line, same-period cont
  it('reproduces Pilot 03 and measures fixed Over vs prior-data filters',()=>{
   const report=matchedAudit();
   console.info('RADAR_V4_MATCHED_AUDIT_JSON='+JSON.stringify(report));
+  expect(report.adaptiveTotal).toEqual({signals:2591,correct:1840,wrong:751,abstained:289});
  });
 });
