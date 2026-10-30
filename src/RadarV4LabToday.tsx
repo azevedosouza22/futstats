@@ -50,14 +50,18 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
     }
    }catch{calendarWarning=' A agenda CSV local não pôde ser lida; nenhum dado foi alterado.';}
    let freeWarning='';
+   const controller=new AbortController();
+   const timeout=window.setTimeout(()=>controller.abort(),12000);
    try{
-    const free=await consultFreeAgenda(clock);
+    const free=await consultFreeAgenda(clock,controller.signal);
     for(const item of free.candidates.filter(x=>x.fixture.date===date)){
      candidates.push(item.fixture);
      origins[item.fixture.id]='Catálogo comunitário (data e horário provisórios)';
     }
-    if(free.errors.length)freeWarning=' Algumas fontes gratuitas não responderam.';
+    if(controller.signal.aborted)freeWarning=' Consulta gratuita interrompida após limite de tempo.';
+    else if(free.errors.length)freeWarning=' Algumas fontes gratuitas não responderam.';
    }catch{freeWarning=' Fontes gratuitas indisponíveis nesta consulta.';}
+   finally{window.clearTimeout(timeout);}
    const seen=new Set<string>();
    const deduped=candidates.filter(item=>{
     const parts=item.competition.split(' '),last=parts.at(-1)??'';
