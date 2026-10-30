@@ -33,7 +33,7 @@ describe('Brasileirão 2026: incremento e revisão rastreável de 29/10',()=>{
   expect(baseline.total).toBe(1019);
   expect(baseline.dateConflicts).toBe(48);
   expect(merged.dateConflicts).toBe(50);
-  expect(result.total).toBe(2954);
+  expect(result.total).toBe(3260);
   expect(result.dateConflicts).toBe(0);
   expect(validData(result.data)).toBe(true);
   expect(result.data.matches.filter(m=>m.research?.dateReview)).toHaveLength(50);
