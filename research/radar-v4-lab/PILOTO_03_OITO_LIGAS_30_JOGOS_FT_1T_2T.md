@@ -22,16 +22,16 @@ Ampliação do Piloto 02, executada sobre a **base de pesquisa de 3.260 partidas
 | Jogos | 240 |
 | Oportunidades (4 × 3 × 240) | 2.880 |
 | Sinais emitidos | **2.591** |
-| Acertos | **1.840** |
-| Erros | **751** |
+| Acertos | **1.846** |
+| Erros | **745** |
 | Sem sinal | **289** |
-| Acertos entre sinais | **71,0%** |
+| Acertos entre sinais | **71,2%** |
 
 ### Resultado por liga
 
 | Liga | Sinais | Acertos | Erros | Abstenções | Acertos / sinais | Lucro fictício a R$10, odd1,50 |
 |---|---:|---:|---:|---:|---:|---:|
-| Brasileirão 2026 | 350 | 251 | 99 | 10 | 71,7% | +R$ 265 |
+| Brasileirão 2026 | 350 | 257 | 93 | 10 | 73,4% | +R$ 355 |
 | Bundesliga 2025/26 | 352 | 265 | 87 | 8 | 75,3% | +R$ 455 |
 | Premier League 2025/26 | 339 | 248 | 91 | 21 | 73,2% | +R$ 330 |
 | La Liga 2025/26 | 305 | 213 | 92 | 55 | 69,8% | +R$ 145 |
@@ -39,36 +39,36 @@ Ampliação do Piloto 02, executada sobre a **base de pesquisa de 3.260 partidas
 | Ligue 1 francesa 2025/26 | 342 | 247 | 95 | 18 | 72,2% | +R$ 285 |
 | Liga Portugal 2025/26 | 286 | 199 | 87 | 74 | 69,6% | +R$ 125 |
 | Saudi Pro League 2025/26 | 346 | 228 | 118 | 14 | 65,9% | -R$ 40 |
-| **Total** | **2.591** | **1.840** | **751** | **289** | **71,0%** | **+R$ 1.690** |
+| **Total** | **2.591** | **1.846** | **745** | **289** | **71,2%** | **+R$ 1.780** |
 
 ### Resultado por período e por mercado
 
 | Período | Mercado | Sinais | Acertos | Erros | Sem sinal | Taxa observada |
 |---|---|---:|---:|---:|---:|---:|
 | Partida inteira | Finalizações | 196 | 145 | 51 | 44 | 74,0% |
-| Partida inteira | Escanteios | 235 | 155 | 80 | 5 | 66,0% |
-| Partida inteira | Chutes no gol | 229 | 161 | 68 | 11 | 70,3% |
-| Partida inteira | Gols | 208 | 143 | 65 | 32 | 68,8% |
-| 1º tempo | Finalizações | 204 | 156 | 48 | 36 | 76,5% |
+| Partida inteira | Escanteios | 235 | 156 | 79 | 5 | 66,4% |
+| Partida inteira | Chutes no gol | 229 | 162 | 67 | 11 | 70,7% |
+| Partida inteira | Gols | 208 | 144 | 64 | 32 | 69,2% |
+| 1º tempo | Finalizações | 204 | 156 | 48 | 36 | 76,9% |
 | 1º tempo | Escanteios | 228 | 163 | 65 | 12 | 71,5% |
-| 1º tempo | Chutes no gol | 217 | 147 | 70 | 23 | 67,7% |
+| 1º tempo | Chutes no gol | 217 | 148 | 69 | 23 | 68,2% |
 | 1º tempo | Gols | 179 | 129 | 50 | 61 | 72,1% |
 | 2º tempo | Finalizações | 216 | 158 | 58 | 24 | 73,1% |
 | 2º tempo | Escanteios | 238 | 156 | 82 | 2 | 65,5% |
-| 2º tempo | Chutes no gol | 232 | 165 | 67 | 8 | 71,1% |
-| 2º tempo | Gols | 209 | 162 | 47 | 31 | 77,5% |
+| 2º tempo | Chutes no gol | 232 | 166 | 66 | 8 | 71,6% |
+| 2º tempo | Gols | 209 | 163 | 46 | 31 | 78,0% |
 
 ### Comparação de amostras
 - Teste 02: **16 jogos**, **57 sinais**, 47 acertos (82,5%). Foram apenas FT.
-- Teste 03: **240 jogos**, **2.591 sinais**, 1.840 acertos (71,0%). São FT+1T+2T, com linhas diferentes por período. **As taxas não são equivalentes em desenho**, por isso a redução não deve ser interpretada isoladamente como piora de um modelo.
+- Teste 03: **240 jogos**, **2.591 sinais**, 1.846 acertos (71,2%). São FT+1T+2T, com linhas diferentes por período. **As taxas não são equivalentes em desenho**, por isso a redução não deve ser interpretada isoladamente como piora de um modelo.
 - O Teste 03 contém os dois jogos recentes de cada liga do Teste 02 e **não é uma amostra independente** do Teste 02.
 
 ## Simulação financeira — NÃO resultado financeiro histórico
 Usuário solicitou entender apostas de **R$10 cada, odd fictícia 1,50**. Considerando uma aposta simples em cada um dos **2.591 sinais**:
 - Total hipoteticamente apostado = **R$25.910**.
-- Retorno bruto hipotético dos 1.840 acertos = **R$27.600**.
-- Prejuízo hipotético dos 751 erros = R$7.510 já embutidos no lucro líquido.
-- Lucro líquido hipotético = **R$1.690**; ROI fictício = **6,5%**.
+- Retorno bruto hipotético dos 1.846 acertos = **R$27.690**.
+- Prejuízo hipotético dos 745 erros = R$7.450 já embutidos no lucro líquido.
+- Lucro líquido hipotético = **R$1.780**; ROI fictício = **6,9%**.
 
 **Isto não demonstra rentabilidade.** Odds uniformes de 1,50 **não foram observadas nem coletadas** para nenhuma linha. Algumas linhas conservadoras (especialmente Over 0,5 gols por tempo ou Over 1,5 gols no jogo) podem ter preços bem inferiores; vários mercados e tempos não são necessariamente ofertados. O teste emite cerca de 10,8 sinais por partida, vários fortemente correlacionados: perdas simultâneas e exigência de banca são riscos reais. Com odd 1,50 o ponto de equilíbrio teórico é 66,7% (antes de eventuais custos). **Não projetar lucros reais, não prometer performance e não ativar apostas automáticas.**
 
@@ -86,3 +86,9 @@ npx vitest run src/radarV4LabPilot03.test.ts
 ```
 
 O teste acessa somente arquivos de pesquisa e valida **3.260 jogos, 240 seleções em ordem temporal, ausência de fuga de dados futuros, resultados por liga, por indicador e por período**. Executa sem modificar a UI, `localStorage`, backups, Radar V2/V3 ou produção.
+
+## Retificação transparente da auditoria (30/10/2026)
+
+A reexecução independente do procedimento e a execução do novo teste `src/radarV4LabPilot04.test.ts` no GitHub Actions sobre a **base de pesquisa atual de 3.260 partidas** revelaram divergência em relação à primeira tabela publicada neste relatório: o registro anterior informava **1.840 acertos, 751 erros, 71,0% e +R$ 1.690 fictícios**. O código reproduz agora **1.846 acertos, 745 erros, 71,2% e +R$ 1.780 fictícios**, sem mudança na quantidade de sinais (2.591), abstenções (289), amostra de 240 jogos ou regras de linhas.
+
+Os seis acertos adicionais concentram-se no subtotal do **Brasileirão 2026: 257/350 agora, ante 251/350 no registro anterior**. As outras sete ligas conservam suas contagens. As seis diferenças de mercado/período estão discriminadas na tabela acima. **A causa histórica da divergência original ainda não está comprovada** (pode ser uma tabela originalmente não executada/validada ou mudança de insumo); portanto, não se deve alegar que houve melhora do modelo, e o relatório anterior deve ser preservado no histórico Git como trilha de auditoria. O teste original do Piloto 03 e o novo teste pareado do Piloto 04 passam a integrar o `npm run build` apenas no PR experimental. Não há alteração de algoritmo, dados pessoais, aplicativo ou produção. A correção não demonstra odds reais ou lucro.
