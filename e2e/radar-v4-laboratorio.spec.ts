@@ -6,7 +6,7 @@ test('Radar V4: botão da visão geral abre laboratório sem alterar os registro
  await page.route(/^https:\/\//,route=>route.abort());
  await page.goto('/');
  await page.getByRole('button',{name:'Analisar jogos de hoje'}).first().click();
- await expect(page.getByRole('heading',{name:'Radar V4 · Laboratório'})).toBeVisible();
+ await expect(page.locator('.v4-lab-head h3')).toHaveText('Radar V4 · Laboratório');
  const analyze=page.locator('.v4-lab-actions button.primary');
  await expect(analyze).toBeEnabled({timeout:90000});
  await analyze.click();
