@@ -49,7 +49,7 @@ Ampliação do Piloto 02, executada sobre a **base de pesquisa de 3.260 partidas
 | Partida inteira | Escanteios | 235 | 156 | 79 | 5 | 66,4% |
 | Partida inteira | Chutes no gol | 229 | 162 | 67 | 11 | 70,7% |
 | Partida inteira | Gols | 208 | 144 | 64 | 32 | 69,2% |
-| 1º tempo | Finalizações | 204 | 156 | 48 | 36 | 76,9% |
+| 1º tempo | Finalizações | 204 | 156 | 48 | 36 | 76,5% |
 | 1º tempo | Escanteios | 228 | 163 | 65 | 12 | 71,5% |
 | 1º tempo | Chutes no gol | 217 | 148 | 69 | 23 | 68,2% |
 | 1º tempo | Gols | 179 | 129 | 50 | 61 | 72,1% |
