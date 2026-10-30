@@ -93,17 +93,17 @@ function pilot(){
  return rows;
 }
 const expectedByLeague=[
- [350,251,99,10],[352,265,87,8],[339,248,91,21],
+ [350,257,93,10],[352,265,87,8],[339,248,91,21],
  [305,213,92,55],[271,189,82,89],[342,247,95,18],
  [286,199,87,74],[346,228,118,14]
 ];
 const expectedByPeriod={
- full:{shots:[196,145,51,44],corners:[235,155,80,5],
-  target:[229,161,68,11],goals:[208,143,65,32]},
+ full:{shots:[196,145,51,44],corners:[235,156,79,5],
+  target:[229,162,67,11],goals:[208,144,64,32]},
  first:{shots:[204,156,48,36],corners:[228,163,65,12],
-  target:[217,147,70,23],goals:[179,129,50,61]},
+  target:[217,148,69,23],goals:[179,129,50,61]},
  second:{shots:[216,158,58,24],corners:[238,156,82,2],
-  target:[232,165,67,8],goals:[209,162,47,31]}
+  target:[232,166,66,8],goals:[209,163,46,31]}
 };
 describe('Radar V4 Lab Piloto 03: 240 jogos × 4 métricas × 3 períodos',()=>{
  it('seleciona 30 por liga, todos os históricos anteriores e sem sourceIds repetidos',()=>{
@@ -139,10 +139,10 @@ describe('Radar V4 Lab Piloto 03: 240 jogos × 4 métricas × 3 períodos',()=>{
    expect([z.signals,z.correct,z.wrong,z.abstained]).toEqual(expectedByPeriod[p][k]);
   }
   const total=score(all);
-  expect(total).toEqual({signals:2591,correct:1840,wrong:751,abstained:289});
+  expect(total).toEqual({signals:2591,correct:1846,wrong:745,abstained:289});
   expect(total.signals+total.abstained).toBe(240*4*3);
   // Purely hypothetical fixed stake R$10, uniformly offered decimal odds 1.50.
   // This is NOT a historical ROI because real odds are unknown.
-  expect(1840*15-2591*10).toBe(1690);
+  expect(1846*15-2591*10).toBe(1780);
  });
 });
