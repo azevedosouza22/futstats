@@ -4,10 +4,10 @@ import {test,expect} from '@playwright/test';
  * records. No CSV picker, private IndexedDB import or changes to user history.
  */
 test.use({serviceWorkers:'block'});
-test('Etapa 100: 2.954 partidas aparecem sem importação na prévia experimental',async({page})=>{
+test('Etapa 101: 3.260 partidas aparecem sem importação na prévia experimental',async({page})=>{
  await page.route('**/raw.githubusercontent.com/**',r=>r.abort());
  await page.goto('/');
- await expect(page.getByText('2.954',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
  await expect(page.getByText('Jogos na pesquisa')).toBeVisible();
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
@@ -48,13 +48,19 @@ test('Etapa 100: 2.954 partidas aparecem sem importação na prévia experimenta
  await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Al Hazem'});
  await expect(page.getByRole('region',{name:'Médias somente das equipes'})).toBeVisible();
  await expect(page.getByText(/Temporada: 2026\/27/)).toBeVisible();
+ await expect(season.locator('option[value="2025/26"]')).toHaveCount(1);
+ await season.selectOption('2025/26');
+ await page.getByLabel('Time mandante da comparação inteligente').selectOption({label:'Al Ahli'});
+ await page.getByLabel('Time visitante da comparação inteligente').selectOption({label:'Al Hilal'});
+ await expect(page.getByRole('region',{name:'Médias somente das equipes'})).toBeVisible();
+ await expect(page.getByText(/Temporada: 2025\/26/)).toBeVisible();
  const local=await page.evaluate(()=>localStorage.getItem('futstats:v1'));
  expect(local).toBeNull(); // Research must not silently modify user storage.
 });
 
 test('Confrontos diretos reais: Benfica × Sporting em ambos os mandos, sem duplicar',async({page})=>{
  await page.goto('/');
- await expect(page.getByText('2.954',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
@@ -75,7 +81,7 @@ test('Confrontos diretos reais: Benfica × Sporting em ambos os mandos, sem dupl
 test('Brasileirão auditado: últimos cinco Santos em casa incluem Palmeiras e Bahia',async({page})=>{
  await page.clock.setFixedTime(new Date('2026-10-29T16:00:00Z'));
  await page.goto('/');
- await expect(page.getByText('2.954',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
  const mobile=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobile.isVisible())await mobile.click();
  else await page.locator('button[data-area="compare"]').click();
@@ -107,7 +113,7 @@ test('Android: Início e Comparar compartilham um único carregamento da pesquis
   if(new URL(request.url()).pathname==='/research/partidas-work-951-v1.json')requests++;
  });
  await page.goto('/');
- await expect(page.getByText('2.954',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
  expect(requests).toBe(1);
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();

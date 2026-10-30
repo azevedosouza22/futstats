@@ -535,6 +535,7 @@ test('Etapa 50: nove jogos Bundesliga agrupados numa fonte com CSV PENDENTE',asy
   await openRadar(page);
   await page.getByRole('group',{name:'Período da agenda'})
     .getByRole('button',{name:'7 dias'}).click();
+  await openOfficialDetails(page);
   const expired=page.getByRole('region',{name:'Jogos com referências oficiais'});
   await expired.getByLabel('Filtrar campeonato na agenda oficial')
     .selectOption('Bundesliga 2026/27');
