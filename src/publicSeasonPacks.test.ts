@@ -20,25 +20,26 @@ const packs=[
  source('../public/research/packs/liga_portugal_2025_26.json'),
  source('../public/research/packs/brasileirao_2026_incremental_20261029.json'),
  source('../public/research/packs/liga_portugal_2026_27.json'),
- source('../public/research/packs/saudi_pro_league_2026_27.json')
+ source('../public/research/packs/saudi_pro_league_2026_27.json'),
+ source('../public/research/packs/saudi_pro_league_2025_26.json')
 ];
 const loaded=applyBrazilResearchDateReview(mergeResearchPacks(baseline,entries,packs),source('../public/research/brasileirao-2026-review-20261029.json'));
 const bySource=(m:Match)=>m.research!.sourceId;
-describe('Pesquisa pública: Saudi Pro League 2026/27 e 2.856 jogos anteriores preservados',()=>{
+describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos anteriores preservados',()=>{
  it('carrega automaticamente os pacotes autorizados, sem alterar os 1.019 anteriores',()=>{
   const original=JSON.stringify(baseline.data);
-  expect(entries).toHaveLength(8);
-  expect(entries.map(x=>x.count)).toEqual([380,380,380,305,306,5,81,98]);
-  expect(loaded.total).toBe(2954);
+  expect(entries).toHaveLength(9);
+  expect(entries.map(x=>x.count)).toEqual([380,380,380,305,306,5,81,98,306]);
+  expect(loaded.total).toBe(3260);
   expect(loaded.dateConflicts).toBe(0);
-  expect(loaded.data.matches).toHaveLength(2954);
+  expect(loaded.data.matches).toHaveLength(3260);
   expect(loaded.data.radarSnapshots).toBeUndefined();
   expect(JSON.stringify(baseline.data)).toBe(original);
  });
  it('sem IDs repetidos, preservando liga, três períodos e proveniência Flashscore',()=>{
-  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(2954);
+  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(3260);
   expect(loaded.data.matches.some(m=>m.research?.sourceId==='z9FNO7c2')).toBe(false);
-  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(2954);
+  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(3260);
   for(const [index,pack] of packs.entries()){
    expect(pack.data.matches).toHaveLength(entries[index].count);
    expect(pack.data.teams).toHaveLength(index===5?10:index>=3?18:20);
@@ -59,6 +60,7 @@ describe('Pesquisa pública: Saudi Pro League 2026/27 e 2.856 jogos anteriores p
   expect(loaded.leagues.find(x=>x.competition==='Liga Portugal 2025/26')?.count).toBe(306);
   expect(loaded.leagues.find(x=>x.competition==='Liga Portugal 2026/27')?.count).toBe(81);
   expect(loaded.leagues.find(x=>x.competition==='Saudi Pro League 2026/27')?.count).toBe(98);
+  expect(loaded.leagues.find(x=>x.competition==='Saudi Pro League 2025/26')?.count).toBe(306);
  });
  it('Serie A 2025/26 cobre 20 equipes e 38 jogos por equipe, sem dados ausentes',()=>{
    const pack=packs.find(p=>p.competition==='Serie A italiana 2025/26')!;
@@ -174,6 +176,35 @@ describe('Pesquisa pública: Saudi Pro League 2026/27 e 2.856 jogos anteriores p
   expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(98);
   expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2026/27')).toHaveLength(81);
   expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2025/26')).toHaveLength(306);
+  expect(loaded.data.radarSnapshots).toBeUndefined();
+ });
+ it('Saudi Pro League 2025/26: todas as 306 partidas, 34 rodadas e 17 mandos por equipe',()=>{
+  const pack=packs.find(p=>p.competition==='Saudi Pro League 2025/26')!;
+  const matches=pack.data.matches as (Match&{round?:string})[];
+  const rounds=new Map<number,number>();
+  const home=new Map<string,number>();
+  const away=new Map<string,number>();
+  for(const m of matches){
+    const round=Number(m.round);
+    rounds.set(round,(rounds.get(round)??0)+1);
+    home.set(m.home,(home.get(m.home)??0)+1);
+    away.set(m.away,(away.get(m.away)??0)+1);
+    expect(m.date>='2025-08-28'&&m.date<='2026-05-21').toBe(true);
+    expect(m.research!.dateDiscrepancy).toBe(false);
+    for(const period of [m.first,m.second,m.research!.full])
+      for(const side of period){
+        for(const k of ['goals','shots','target','corners'] as const)
+          expect(Number.isSafeInteger(side[k])&&side[k]!>=0).toBe(true);
+        expect(side.target!).toBeLessThanOrEqual(side.shots!);
+      }
+  }
+  expect([...rounds].sort((a,b)=>a[0]-b[0])).toEqual(Array.from({length:34},(_,i)=>[i+1,9]));
+  expect(home.size).toBe(18);
+  expect(away.size).toBe(18);
+  expect([...home.values()].every(n=>n===17)).toBe(true);
+  expect([...away.values()].every(n=>n===17)).toBe(true);
+  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2025/26')).toHaveLength(306);
+  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(98);
   expect(loaded.data.radarSnapshots).toBeUndefined();
  });
  it('reconcilia variações Athletic Bilbao e Celta entre as temporadas',()=>{
