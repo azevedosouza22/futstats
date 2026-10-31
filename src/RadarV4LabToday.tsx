@@ -8,6 +8,7 @@ import {combineV4DayListings,consultV4CommunityDay} from './radarV4DayFixtures';
 import {loadV4Archive,V4_ARCHIVED_DAYS,V4_ARCHIVE_SOURCES,type V4DayArchive} from './radarV4DailyArchive';
 import {RADAR_V4_LAB_STORAGE,freezeV4Report,readV4Frozen} from './radarV4LabFrozen';
 import RadarV4OddsPanel from './RadarV4OddsPanel';
+import RadarV4AuditPanel from './RadarV4AuditPanel';
 import './radarV4LabToday.css';
 
 const pName:Record<V4Period,string>={full:'Partida completa',first:'1º tempo',second:'2º tempo'};
@@ -251,6 +252,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
     </article>;
    })}
   </div>}
+  <RadarV4AuditPanel/>
   <p className="v4-lab-disclaimer">O laboratório usa os cinco jogos anteriores de cada equipe,
    quatro mercados e três períodos; exige 8 IDs históricos distintos e frequência Over
    ≥70%. Frequência histórica não é probabilidade futura. O simulador de odds exige
