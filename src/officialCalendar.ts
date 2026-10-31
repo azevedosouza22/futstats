@@ -288,3 +288,40 @@ export function readOfficialCalendar(now=new Date()):OfficialCalendarItem[]{
     (a.fixture.time??'99:99').localeCompare(b.fixture.time??'99:99')||
     a.fixture.home.localeCompare(b.fixture.home));
 }
+
+
+/**
+ * V4-only day ledger: historical/today listings do not disappear at kickoff.
+ * Do NOT use this in the live V2/V3 calendar or to certify a saved forecast.
+ * Outdated/elapsed fixtures have time=null; V2/V3 freshness policy is unchanged.
+ */
+export function readKnownV4DaySources(day:string,now=new Date()):OfficialCalendarItem[]{
+ if(!dateValid(day))return [];
+ const references:OfficialCalendarRecord[]=[...CBF_FIXTURES,...BUNDESLIGA_FIXTURES,
+  ...PREMIER_LEAGUE_FIXTURES,...SERIE_A_ITALIANA_FIXTURES,...LA_LIGA_FIXTURES,
+  ...VERIFIED_EUROPE_FIXTURES.map(x=>({
+   id:x.key,competition:WORK_LEAGUES[x.league],home:x.home,away:x.away,
+   localDate:x.localDate,localTime:x.localTime,timezone:x.timezone,
+   utcKickoff:x.utcKickoff,officialUrl:x.officialUrl,verifiedAt:x.verifiedAt
+  })).filter(x=>!!x.competition)];
+ const result:OfficialCalendarItem[]=[];
+ const seen=new Set<string>();
+ for(const record of references){
+  const kickoff=new Date(record.utcKickoff);
+  if(!Number.isFinite(kickoff.getTime())||kickoff.getTime()<=0)continue;
+  // Project from the registered timestamp just BEFORE kickoff. Only the V4
+  // day ledger receives this projection; never treat it as a fresh live quote.
+  const earlier=new Date(kickoff.getTime()-60000);
+  const item=officialCalendarItem(record,earlier);
+  if(!item||item.fixture.date!==day)continue;
+  const key=[day,item.fixture.competition,normalizeTeam(item.fixture.home),
+   normalizeTeam(item.fixture.away)].join('|');
+  if(seen.has(key))continue;seen.add(key);
+  const fresh=officialSnapshotFreshAt(item.verifiedAt,brasiliaDate(now).date)
+   &&kickoff.getTime()>now.getTime();
+  result.push({...item,fresh,
+   fixture:{...item.fixture,time:fresh?item.fixture.time:null}});
+ }
+ return result.sort((a,b)=>a.fixture.competition.localeCompare(b.fixture.competition,'pt-BR')||
+  a.fixture.home.localeCompare(b.fixture.home,'pt-BR'));
+}
