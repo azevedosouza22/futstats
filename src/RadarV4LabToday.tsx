@@ -1,5 +1,5 @@
 import {useEffect,useState} from 'react';
-import {brasiliaDate} from './calendar';
+import {brasiliaDate,type ScheduledFixture} from './calendar';
 import {CALENDAR_STORAGE,parseStoredCalendar} from './calendarStorage';
 import {readOfficialCalendar,readKnownV4DaySources,type OfficialCalendarItem} from './officialCalendar';
 import type {Data} from './model';
@@ -79,7 +79,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    // The permission to freeze stays restricted to an official recent future kickoff.
    const officialAll=readKnownV4DaySources(day,clock);
    const officialFuture=readOfficialCalendar(clock).filter(x=>x.fixture.date===day);
-   let csv=[],calendarWarning='';
+   let csv:ScheduledFixture[]=[],calendarWarning='';
    try{
     csv=parseStoredCalendar(localStorage.getItem(CALENDAR_STORAGE)??'[]');
    }catch{calendarWarning=' A agenda CSV local estava inválida; foi ignorada sem alterações.';}
