@@ -52,3 +52,21 @@ test('V4 recupera as dez análises da manhã mesmo às 19h17, sem refazer previs
  await expect(simulator).toContainText('Valor teórico negativo');
  expect(await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'))).toBeNull();
 });
+
+test('Radar V4: 31/10 appears as tomorrow on 30/10 and retains 29 pregame forecasts',async({page})=>{
+ await page.clock.install({time:new Date('2026-10-31T02:08:00Z')}); // 30/10 23:08 Brasília
+ await page.route(/^https:\/\//,route=>route.abort());
+ await page.goto('/');
+ await page.getByRole('button',{name:'Analisar jogos de hoje'}).first().click();
+ await page.getByLabel('Data do laboratório V4').selectOption('2026-10-31');
+ await expect(page.getByText(/Registro pré-jogo original · 31\/10\/2026/)).toBeVisible({timeout:90000});
+ const summary=page.getByLabel('Resumo dos resultados');
+ await expect(summary).toContainText('Jogos encontrados29');
+ await expect(summary).toContainText('Sinais V4316');
+ await expect(summary).toContainText('Sem sinal32');
+ await expect(page.locator('.v4-lab-fixture')).toHaveCount(29);
+ await expect(page.getByRole('heading',{name:'Chelsea × Manchester Utd'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Bayern × Dortmund'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Porto × Estoril'})).toBeVisible();
+ expect(await page.evaluate(()=>localStorage.getItem('futstats:radar-v4-lab-frozen:v1'))).toBeNull();
+});
