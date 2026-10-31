@@ -7,6 +7,7 @@ import {analyzeV4Day,V4_METRICS,V4_PERIODS,type V4FixtureReport,type V4Period,ty
 import {combineV4DayListings,consultV4CommunityDay} from './radarV4DayFixtures';
 import {loadV4Archive,V4_20261030_SOURCE,type V4DayArchive} from './radarV4DailyArchive';
 import {RADAR_V4_LAB_STORAGE,freezeV4Report,readV4Frozen} from './radarV4LabFrozen';
+import RadarV4OddsPanel from './RadarV4OddsPanel';
 import './radarV4LabToday.css';
 
 const pName:Record<V4Period,string>={full:'Partida completa',first:'1º tempo',second:'2º tempo'};
@@ -28,6 +29,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
  const [sources,setSources]=useState<Record<string,string>>({});
  const [reportDate,setReportDate]=useState('');
  const [period,setPeriod]=useState<V4Period>('full');
+ const [selectedOddsKey,setSelectedOddsKey]=useState<string|null>(null);
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState('');
  const [error,setError]=useState('');
@@ -57,11 +59,13 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
   return ()=>controller.abort();
  },[selectedDate]);
  function selectDate(next:string){
+  setSelectedOddsKey(null);
   setSelectedDate(next);setReport(null);setArchive(null);
   setSources({});setReferences([]);setReportDate('');
   setMessage('');setError('');
  }
  async function run(){
+  setSelectedOddsKey(null);
   setError('');setMessage('');setBusy(true);
   try{
    const day=selectedDate;
@@ -194,6 +198,8 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    {report.map(r=>{
     const origin=references.find(x=>x.fixture.id===r.fixture.id);
     const future=eligibleToSave(r);
+    const activePick=r.picks.find(p=>p.period===period&&
+     selectedOddsKey===r.fixture.id+'|'+p.period+'|'+p.metric);
     return <article className="v4-lab-fixture" key={r.fixture.id}>
      <div className="v4-lab-fixture-head"><div>
       <small>{r.competition??r.fixture.competition} · {r.fixture.time??'Horário N/D ou não reconfirmado'}
@@ -207,7 +213,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
       <p className="v4-lab-muted">Histórico: {r.homeHistoryCount} jogos por mandante ·
        {r.awayHistoryCount} por visitante · {r.historyIds.length} IDs distintos.</p>
       <div className="v4-lab-table-wrap"><table className="analysis-table">
-       <thead><tr><th>Mercado</th><th>Linha V4</th><th>Ocorrências</th><th>Média</th></tr></thead>
+       <thead><tr><th>Mercado</th><th>Linha V4</th><th>Ocorrências</th><th>Média</th><th>Odd</th></tr></thead>
        <tbody>{V4_METRICS.map(metric=>{
         const pick=r.picks.find(p=>p.period===period&&p.metric===metric);
         return <tr key={metric}><th>{mName[metric]}</th>
@@ -215,8 +221,17 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
           <td>{pick?.line!==null&&pick?.overs!==null&&pick?.overs!==undefined
              ?pick.overs+'/'+pick.observed:'—'}</td>
           <td>{pick?.mean===null||pick?.mean===undefined?'N/D':number(pick.mean)}</td>
+          <td><button type="button" className="v4-odds-trigger"
+            disabled={pick?.line===null||pick?.line===undefined}
+            aria-label={'Simular odd de '+mName[metric]+' · '+pName[period]+' · '+r.fixture.home+' × '+r.fixture.away}
+            onClick={()=>{const key=r.fixture.id+'|'+period+'|'+metric;
+             setSelectedOddsKey(previous=>previous===key?null:key);}}>Simular odd</button></td>
          </tr>;
        })}</tbody></table></div>
+      {activePick?.line!==null&&activePick?.line!==undefined&&
+       <RadarV4OddsPanel key={selectedOddsKey} label={mName[activePick.metric]+' · '+
+        pName[activePick.period]+' · Over '+number(activePick.line)}
+        pick={activePick} archive={!!archive}/>}
       <div className="v4-lab-fixture-foot">
        <a href={r.fixture.sourceUrl} target="_blank" rel="noopener noreferrer">
         {archive?'Abrir registro pré-jogo':'Conferir fonte da agenda'}</a>
@@ -230,7 +245,9 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
   </div>}
   <p className="v4-lab-disclaimer">O laboratório usa os cinco jogos anteriores de cada equipe,
    quatro mercados e três períodos; exige 8 IDs históricos distintos e frequência Over
-   ≥70%. Frequência histórica não é probabilidade futura. Jogos consultados após
+   ≥70%. Frequência histórica não é probabilidade futura. O simulador de odds exige
+   estimativa de probabilidade separada e não fornece indicação automática de aposta.
+   Jogos consultados após
    o início não são transformados em previsões anteriores. O arquivo original de
    30/10 permanece intocado. Sem odds verificadas, sem rentabilidade demonstrada.</p>
  </section>;
