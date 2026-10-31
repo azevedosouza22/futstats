@@ -15,7 +15,8 @@ const mName:Record<V4Metric,string>={shots:'Finalizações',corners:'Escanteios'
 const number=(n:number)=>n.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
 const archiveDays:readonly string[]=V4_ARCHIVED_DAYS;
 const archived=(date:string)=>archiveDays.includes(date);
-const shortDate=(date:string)=>date.split('-').reverse().join('/');
+const shortDate=(date:string)=>date.slice(0,10).split('-').reverse().join('/');
+const adendumKey='2026-10-31-adendo-coritiba-vitoria';
 function exportJSON(content:unknown,name:string){
  const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json'});
  const href=URL.createObjectURL(blob);
@@ -46,7 +47,8 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    r.fixture.id,'Previsão original de '+shortDate(original.date)+' — congelada antes dos jogos'
   ])));
   setReferences([]);
-  setMessage('As 120 decisões originais foram recuperadas sem recálculo e permanecem auditáveis.');
+  setMessage(original.reports.length*12+' decisões pré-jogo recuperadas sem recálculo.'+
+    (original.archiveKey===adendumKey?' Adendo separado das 29 partidas originais.':''));
  }
  useEffect(()=>{
   if(!archived(selectedDate))return;
@@ -164,12 +166,14 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
       onChange={e=>selectDate(e.target.value)}>
      <option value={today}>Hoje · {today.split('-').reverse().join('/')}</option>
      {archiveDays.filter(day=>day!==today).map(day=><option key={day} value={day}>
-      {day==='2026-10-31'&&today<day?'Amanhã · ':'Arquivo · '}{shortDate(day)} · pré-jogo</option>)}
+      {day===adendumKey?'Adendo 31/10 · Coritiba × Vitória':
+       (day==='2026-10-31'&&today<day?'Amanhã · ':'Arquivo · ')+shortDate(day)+' · pré-jogo'}</option>)}
     </select>
    </label>
    <button type="button" className="primary" onClick={()=>void run()}
     disabled={busy||(!research&&!archived(selectedDate))}>
-    {busy?'Consultando…':archived(selectedDate)?'Ver análises pré-jogo de '+shortDate(selectedDate):'Analisar jogos de hoje'}
+    {busy?'Consultando…':selectedDate===adendumKey?'Ver adendo pré-jogo · Coritiba × Vitória':
+      archived(selectedDate)?'Ver análises pré-jogo de '+shortDate(selectedDate):'Analisar jogos de hoje'}
    </button>
    {report&&<button type="button" onClick={exportReport}>Exportar relatório V4 (JSON)</button>}
    <button type="button" onClick={exportSaved}>Exportar previsões V4 salvas</button>
@@ -181,11 +185,11 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
   {error&&<p className="v4-lab-alert" role="alert">{error}</p>}
   {message&&<p className="v4-lab-message" role="status">{message}</p>}
   {archive&&<div className="v4-lab-archive-banner" role="status">
-    <strong>Registro pré-jogo original · {shortDate(archive.date)} · {new Date(archive.createdAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'})} (Brasília)</strong>
+    <strong>{archive.archiveKey===adendumKey?'Adendo pré-jogo — Coritiba × Vitória':'Registro pré-jogo original'} · {shortDate(archive.date)} · {new Date(archive.createdAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'})} (Brasília)</strong>
     <span>{archive.reports.length} partidas · {archive.signals} sinais · {archive.abstentions} abstenções.
      As {archive.reports.length*12} decisões registradas antes dos jogos foram recuperadas sem recálculo com resultados.
      Os horários indicados são referências da agenda e devem ser reconfirmados.</span>
-    <a href={V4_ARCHIVE_SOURCES[archive.date]} target="_blank" rel="noopener noreferrer">
+    <a href={V4_ARCHIVE_SOURCES[archive.archiveKey]} target="_blank" rel="noopener noreferrer">
      Conferir arquivo original no GitHub</a>
    </div>}
   {report&&<div className="v4-lab-results">
