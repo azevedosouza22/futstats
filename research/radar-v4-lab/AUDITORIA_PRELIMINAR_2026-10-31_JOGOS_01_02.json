@@ -1,0 +1,377 @@
+{
+  "format": "futstats-radar-v4-auditoria-preliminar-2026-10-31-v1",
+  "date": "2026-10-31",
+  "games": [
+    "Chelsea x Manchester Utd",
+    "Levante x Atl. Madrid"
+  ],
+  "created_at_utc": "2026-10-31T15:20:44.388Z",
+  "frozen_forecasts_commit": "a5964b45814bd2dbcba830dd5e20148724b8b1a2",
+  "frozen_forecasts_utc": "2026-10-31T01:57:27.197Z",
+  "status": "PRELIMINAR — placar e FT confirmados; 1T com registro pontual HT de outro provedor; 2T por diferença; conferência Flashscore por período pendente",
+  "rule": "ACERTO se total real > linha; ERRO se total real <= linha; SEM SINAL não contado; não se presume odds.",
+  "summary": {
+    "hits": 19,
+    "misses": 3,
+    "abstentions": 2
+  },
+  "fixtures": [
+    {
+      "fixture": "Chelsea x Manchester Utd",
+      "date": "2026-10-31",
+      "competition": "Premier League inglesa 2026/27",
+      "time_brasilia": "09:30",
+      "source_date": "2026-10-31T01:57:27.197Z",
+      "sources": {
+        "full": "https://www.skysports.com/football/chelsea-vs-manchester-united/stats/559527",
+        "first": "https://www.ogol.com.br/ao-vivo/2026-10-31-chelsea-manchester-united/12253172"
+      },
+      "decision_count": 12,
+      "summary": {
+        "hits": 11,
+        "misses": 0,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 18,
+          "actual_away": 12,
+          "actual_total": 30,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/chelsea-vs-manchester-united/stats/559527"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 8,
+          "actual_away": 7,
+          "actual_total": 15,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/chelsea-vs-manchester-united/stats/559527"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 7.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 9,
+          "actual_away": 5,
+          "actual_total": 14,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/chelsea-vs-manchester-united/stats/559527"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "prematch_status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "actual_home": 2,
+          "actual_away": 0,
+          "actual_total": 2,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/chelsea-vs-manchester-united/stats/559527"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 7,
+          "actual_away": 9,
+          "actual_total": 16,
+          "decision": "ACERTO",
+          "source": "https://www.ogol.com.br/ao-vivo/2026-10-31-chelsea-manchester-united/12253172"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 3,
+          "actual_away": 6,
+          "actual_total": 9,
+          "decision": "ACERTO",
+          "source": "https://www.ogol.com.br/ao-vivo/2026-10-31-chelsea-manchester-united/12253172"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 3,
+          "actual_away": 3,
+          "actual_total": 6,
+          "decision": "ACERTO",
+          "source": "https://www.ogol.com.br/ao-vivo/2026-10-31-chelsea-manchester-united/12253172"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "prematch_status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "actual_home": 0,
+          "actual_away": 0,
+          "actual_total": 0,
+          "decision": "SEM SINAL",
+          "source": "https://www.ogol.com.br/ao-vivo/2026-10-31-chelsea-manchester-united/12253172"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 11,
+          "actual_away": 3,
+          "actual_total": 14,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 5,
+          "actual_away": 1,
+          "actual_total": 6,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 6,
+          "actual_away": 2,
+          "actual_total": 8,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "prematch_status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "actual_home": 2,
+          "actual_away": 0,
+          "actual_total": 2,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        }
+      ]
+    },
+    {
+      "fixture": "Levante x Atl. Madrid",
+      "date": "2026-10-31",
+      "competition": "La Liga espanhola 2026/27",
+      "time_brasilia": "10:00",
+      "source_date": "2026-10-31T01:57:27.197Z",
+      "sources": {
+        "full": "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029",
+        "first": "https://footballinfo.net/Fixtures/Details/1570439"
+      },
+      "decision_count": 12,
+      "summary": {
+        "hits": 8,
+        "misses": 3,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 20,
+          "actual_away": 11,
+          "actual_total": 31,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 5,
+          "actual_away": 3,
+          "actual_total": 8,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 4,
+          "actual_away": 5,
+          "actual_total": 9,
+          "decision": "ACERTO",
+          "source": "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "prematch_status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 0,
+          "actual_away": 2,
+          "actual_total": 2,
+          "decision": "ERRO",
+          "source": "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 12.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 6,
+          "actual_away": 5,
+          "actual_total": 11,
+          "decision": "ERRO",
+          "source": "https://footballinfo.net/Fixtures/Details/1570439"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 1,
+          "actual_away": 1,
+          "actual_total": 2,
+          "decision": "ERRO",
+          "source": "https://footballinfo.net/Fixtures/Details/1570439"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 2,
+          "actual_away": 2,
+          "actual_total": 4,
+          "decision": "ACERTO",
+          "source": "https://footballinfo.net/Fixtures/Details/1570439"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "prematch_status": "sem_sinal",
+          "line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "actual_home": 0,
+          "actual_away": 1,
+          "actual_total": 1,
+          "decision": "SEM SINAL",
+          "source": "https://footballinfo.net/Fixtures/Details/1570439"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "prematch_status": "sinal",
+          "line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "actual_home": 14,
+          "actual_away": 6,
+          "actual_total": 20,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "prematch_status": "sinal",
+          "line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 4,
+          "actual_away": 2,
+          "actual_total": 6,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "prematch_status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "actual_home": 2,
+          "actual_away": 3,
+          "actual_total": 5,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "prematch_status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "actual_home": 0,
+          "actual_away": 1,
+          "actual_total": 1,
+          "decision": "ACERTO",
+          "source": "derived: FT minus first half (different providers)"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Fonte FT Sky Sports, primeiro tempo ogol/Chelsea e FootballInfo/Levante, 2T por subtração aritmética, sujeito a revisão quando a mesma fonte trouxer os 3 períodos.",
+    "FT Chelsea finalizou com 30 chutes, 14 no alvo, 15 escanteios, 2 gols.",
+    "FT Levante/Atlético finalizou com 31 chutes, 9 no alvo, 8 escanteios, 2 gols.",
+    "Mercados dependentes do primeiro tempo ainda aguardam revisão visual única por períodos na fonte principal; não homologar 55 colunas.",
+    "Não alterar previsão original e não usar resultados de hoje para gerar outra previsão."
+  ]
+}

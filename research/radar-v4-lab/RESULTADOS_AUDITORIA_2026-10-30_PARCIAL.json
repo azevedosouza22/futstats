@@ -1,0 +1,1198 @@
+{
+  "format": "futstats-v4-lab-outcome-audit-v1",
+  "day": "2026-10-30",
+  "status": "PARTIAL_PENDING_HALF_STATS",
+  "reference_source": "research/radar-v4-lab/PREVISOES_PROSPECTIVAS_2026-10-30.json",
+  "reference_created_at": "2026-10-30T08:55:11.563Z",
+  "excluded": [
+    "Corinthians x Mirassol"
+  ],
+  "notes": [
+    "Histórico pre-jogo não foi modificado.",
+    "Status de mercado sem sinal: ABSTAIN, nunca falha.",
+    "Medições de 1T e 2T de chutes/cantos/alvo ainda ausentes em maioria dos jogos.",
+    "1T e 2T gols apurados por placares de intervalo e final.",
+    "Fontes coletadas em estado web; divergências pendentes devem ser marcadas N/D.",
+    "Taxas condicionais de subconjunto não significam retorno financeiro."
+  ],
+  "fixtures": [
+    {
+      "fixture": "Elversberg x Mainz",
+      "competition": "Bundesliga 2026/27",
+      "score": "4–1",
+      "actual_full": {
+        "shots": 23,
+        "corners": 16,
+        "target": 8,
+        "goals": 5
+      },
+      "actual_first": {
+        "goals": 3
+      },
+      "source_urls": [
+        "https://web-production-a0606.up.railway.app/match/sv-elversberg-vs-fsv-mainz-05-2026-10-30/stats",
+        "https://www.bundesliga.com/en/bundesliga/news/elversberg-mainz-match-report-highlights-matchday-8-campbell-keidel-39785"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 24.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 23,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 8.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 16,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 7.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 8,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 2.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 5,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 13.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Villarreal x Espanyol",
+      "competition": "La Liga espanhola 2026/27",
+      "score": "0–1",
+      "actual_full": {
+        "shots": 19,
+        "corners": 10,
+        "target": 7,
+        "goals": 1
+      },
+      "actual_first": {
+        "goals": 0
+      },
+      "source_urls": [
+        "https://www.skysports.com/football/villarreal-vs-espanyol/7304562054954161232",
+        "https://www.flashscore.com.ve/partido/futbol/rcd-espanyol-QFfPdh1J/villarreal-cf-lUatW5jE/?mid=xdLoJd4b"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 26.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 19,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 9.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 10,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 7.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "MISS"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 0,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 13.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 5.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Le Havre x PSG",
+      "competition": "Ligue 1 francesa 2026/27",
+      "score": "1–5",
+      "actual_full": {
+        "shots": 29,
+        "corners": 8,
+        "target": 15,
+        "goals": 6
+      },
+      "actual_first": {
+        "shots": 13,
+        "corners": 3,
+        "target": 6,
+        "goals": 3
+      },
+      "source_urls": [
+        "https://www.ogol.com.br/ao-vivo/2026-10-30-le-havre-psg/12244085",
+        "https://www.eurosport.es/futbol/ligue-1/2026-2027/live-le-havre-ac-psg_mtc21875704/live-stats.shtml"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 26.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 29,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 8.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 8,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 15,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 6,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 12.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 13,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 2.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 6,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 13.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 16,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 5,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 9,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Nice x Rennes",
+      "competition": "Ligue 1 francesa 2026/27",
+      "score": "5–2",
+      "actual_full": {
+        "shots": 35,
+        "corners": 11,
+        "target": 17,
+        "goals": 7
+      },
+      "actual_first": {
+        "goals": 4
+      },
+      "source_urls": [
+        "https://stats.betapilive.com/fr/football/match/nice-stade-rennais-6a39ad975e99bd05c640bdef",
+        "https://flashsportapp.com/en/football/match/nice-rennes-2026-10-30-1552806/"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 22.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 35,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 7.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 11,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 8.5,
+          "historical_frequency": 10,
+          "historical_n": 10,
+          "actual": 17,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 2.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": 3.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 4,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 11.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Lille x Lens",
+      "competition": "Ligue 1 francesa 2026/27",
+      "score": "1–0",
+      "actual_full": {
+        "shots": 21,
+        "corners": 12,
+        "target": 10,
+        "goals": 1
+      },
+      "actual_first": {
+        "goals": 0
+      },
+      "source_urls": [
+        "https://www.maxifoot.fr/match/lille-lens-20261030.htm",
+        "https://www.losc.fr/actualites/2026-10-30/losc-rcl-le-compte-rendu"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 20.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 21,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 6.5,
+          "historical_frequency": 10,
+          "historical_n": 10,
+          "actual": 12,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 6.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 10,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "MISS"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 2.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 10,
+          "historical_n": 10,
+          "actual": 0,
+          "decision": "MISS"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 11.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 4.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Casa Pia x Sporting",
+      "competition": "Liga Portugal 2026/27",
+      "score": "0–2",
+      "actual_full": {
+        "shots": 35,
+        "corners": 7,
+        "target": 13,
+        "goals": 2
+      },
+      "actual_first": {
+        "shots": 18,
+        "corners": 2,
+        "target": 5,
+        "goals": 1
+      },
+      "source_urls": [
+        "https://matchdayclub.live/en/match/af%3A1575531",
+        "https://footballedge.io/en/matches/casa-pia-vs-sporting-cp-2026-10-30"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 24.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 35,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 9.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 6.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 13,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 18,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 5.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "MISS"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 5,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 13.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 17,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 5,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 8,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Abha x Al-Ittihad",
+      "competition": "Saudi Pro League 2026/27",
+      "score": "1–1",
+      "actual_full": {
+        "shots": 17,
+        "corners": 11,
+        "target": 8,
+        "goals": 2
+      },
+      "actual_first": {
+        "goals": 0
+      },
+      "source_urls": [
+        "https://www.sportinglife.com/football/live/242327/abha-vs-al-ittihad/stats",
+        "https://nofluffpicks.com/match/abha-vs-al-ittihad-2026-10-30"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 20.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 17,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 6.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 11,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 6.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 8,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": 2.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 0,
+          "decision": "MISS"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 9.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 2.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Al Diriyah x Neom SC",
+      "competition": "Saudi Pro League 2026/27",
+      "score": "1–2",
+      "actual_full": {
+        "shots": null,
+        "corners": 7,
+        "target": 10,
+        "goals": 3
+      },
+      "actual_first": {
+        "goals": 2
+      },
+      "source_urls": [
+        "https://www.sportinglife.com/football/live/242288/diriyah-club-vs-neom/stats",
+        "https://footballedge.io/en/matches/al-diriyah-vs-neom-2026-10-30"
+      ],
+      "notes": [
+        "Divergência entre fontes: 33 versus 35 finalizações totais. Sem sinal V4 neste mercado; não atribuído valor à auditoria."
+      ],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 7.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "MISS"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 10,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": 2,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 9.5,
+          "historical_frequency": 10,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": null,
+          "historical_frequency": null,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "ABSTAIN"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 1,
+          "decision": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Al Shabab x Al Ahli",
+      "competition": "Saudi Pro League 2026/27",
+      "score": "6–1",
+      "actual_full": {
+        "shots": 26,
+        "corners": 7,
+        "target": 11,
+        "goals": 7
+      },
+      "actual_first": {
+        "goals": 4
+      },
+      "source_urls": [
+        "https://www.ysscores.com/en/match/5970195/Al-Shabab-FC-vs-Al-Ahli-SFC",
+        "https://www.sportsmole.co.uk/football/saudi-pro-league/al-shahbab-vs-al-ahli_game_260710.html"
+      ],
+      "notes": [],
+      "decisions": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "original_line": 20.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 26,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "original_line": 6.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "original_line": 8.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 11,
+          "decision": "HIT"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "original_line": 3.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 7,
+          "decision": "HIT"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "original_line": 8.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "original_line": 2.5,
+          "historical_frequency": 9,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "original_line": 4.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "original_line": 1.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": 4,
+          "decision": "HIT"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "original_line": 11.5,
+          "historical_frequency": 7,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "original_line": 2.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "original_line": 3.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": null,
+          "decision": "N_D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "original_line": 0.5,
+          "historical_frequency": 8,
+          "historical_n": 10,
+          "actual": 3,
+          "decision": "HIT"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "opportunities": 108,
+    "signals": 93,
+    "abstentions": 15,
+    "verified": 57,
+    "hits": 45,
+    "misses": 12,
+    "unverified": 36
+  }
+}
