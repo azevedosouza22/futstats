@@ -37,5 +37,18 @@ test('V4 recupera as dez análises da manhã mesmo às 19h17, sem refazer previs
  await expect(page.getByRole('heading',{name:'Corinthians × Mirassol'})).toBeVisible();
  await expect(page.getByRole('heading',{name:'Al Shabab × Al Ahli'})).toBeVisible();
  await expect(page.getByText('Over 26,5').first()).toBeVisible();
+ // Odds are always entered manually, never pulled from retrospective match results.
+ await page.getByRole('button',{name:/Simular odd de Finalizações · Partida completa/}).first().click();
+ const simulator=page.getByRole('region',{name:'Simulador de odds V4'});
+ await expect(simulator).toBeVisible();
+ await simulator.getByRole('textbox',{name:'Odd da casa'}).fill('1,50');
+ await expect(simulator).toContainText('66,67%');
+ await expect(simulator).toContainText('não pode dizer se a odd compensa');
+ await simulator.getByRole('textbox',{name:'Probabilidade estimada (%)'}).fill('70');
+ await expect(simulator).toContainText('Valor teórico positivo');
+ await expect(simulator).toContainText('+5,00%');
+ await expect(simulator).toContainText('0,10');
+ await simulator.getByRole('textbox',{name:'Odd da casa'}).fill('1,30');
+ await expect(simulator).toContainText('Valor teórico negativo');
  expect(await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'))).toBeNull();
 });
