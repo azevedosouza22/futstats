@@ -32,3 +32,31 @@
 .v4-lab-archive-banner a{color:#a6ddf1;font-size:.87rem}
 .v4-lab-origin{display:block;margin-top:4px;color:#bfd2bc}
 @media(max-width:680px){.v4-lab-date-select{width:100%}.v4-lab-date-select select{width:100%}}
+
+/* Odds simulator — one optional manual scenario per V4 Over line, no implicit recommendation. */
+.v4-lab-table-wrap table{min-width:520px}
+.v4-odds-trigger{border:1px solid #638f7e;border-radius:8px;padding:7px 10px;
+ background:#244c3e;color:#e3fff0;min-height:38px;font-size:.82rem;white-space:nowrap;cursor:pointer}
+.v4-odds-trigger:disabled{opacity:.38;cursor:not-allowed;background:transparent}
+.v4-odds-panel{margin:14px 0;padding:15px;border:1px solid #588b75;border-radius:12px;
+ background:rgba(35,86,64,.16)}
+.v4-odds-panel h5{margin:0 0 8px;font-size:1rem}
+.v4-odds-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.v4-odds-inputs label{display:flex;flex-direction:column;gap:6px;font-size:.8rem;color:#c4d9cc}
+.v4-odds-inputs input{width:100%;box-sizing:border-box;min-height:44px;
+ padding:9px 11px;border-radius:9px;border:1px solid #678f7a;
+ color:#f3fff6;background:#142e24;font:inherit;font-size:1rem}
+.v4-odds-break{margin:14px 0 8px}
+.v4-odds-output{margin:12px 0;padding:12px;border-radius:10px;
+ border:1px solid #516b5c;background:rgba(5,24,18,.3)}
+.v4-odds-plus{color:#95e1b5}.v4-odds-minus{color:#ffc1b7}
+.v4-odds-numbers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;margin-top:10px;font-size:.86rem}
+.v4-odds-numbers span{display:flex;flex-direction:column;gap:3px}
+.v4-odds-numbers b{font-size:1.03rem}
+.v4-odds-warning{border-top:1px solid #345b47;padding-top:12px;
+ margin-bottom:0;color:#bacdc2;font-size:.81rem;line-height:1.5}
+@media(max-width:680px){.v4-odds-panel{padding:11px}
+ .v4-odds-inputs{grid-template-columns:1fr}
+ .v4-odds-numbers{grid-template-columns:1fr 1fr}
+}
