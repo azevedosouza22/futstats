@@ -1,10 +1,11 @@
 import {test,expect} from '@playwright/test';
+import {RESEARCH_TOTAL,RESEARCH_TOTAL_LABEL} from './research-total';
 
 test.use({viewport:{width:390,height:844},serviceWorkers:'block'});
 
 test('Comparação: equipe azul, diretos vermelhos e mando amarelo, sem toques extras',async({page})=>{
  await page.goto('/');
- await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText(RESEARCH_TOTAL_LABEL,{exact:true})).toBeVisible({timeout:45000});
  const mobileCompare=page.locator('.mobile-bottom-nav').getByRole('button',{name:'Comparar'});
  if(await mobileCompare.isVisible())await mobileCompare.click();
  else await page.locator('button[data-area="compare"]').click();
