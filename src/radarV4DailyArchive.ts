@@ -54,10 +54,12 @@ export function parseV4Archive(raw:unknown):V4DayArchive {
    if(pairs.has(key))throw Error('Mercado/tempo duplicado no arquivo V4.');
    pairs.add(key);
    const yes=row.status==='sinal';
-   if(yes&&(!validNumber(row.line)||typeof row.frequency_hits!=='number'||
-      !Number.isSafeInteger(row.frequency_hits)||row.frequency_hits<0||
-      row.frequency_hits>ids.length||row.frequency_hits/ids.length<.7))
-    throw Error('Frequência do sinal congelado inválida.');
+   if(yes){
+    const freq=row.frequency_hits;
+    if(!validNumber(row.line)||typeof freq!=='number'||!Number.isSafeInteger(freq)||
+     freq<0||freq>ids.length||freq/ids.length<.7)
+     throw Error('Frequência do sinal congelado inválida.');
+   }
    if(!yes&&(row.line!==null||row.frequency_hits!==null))
     throw Error('Abstenção histórica adulterada.');
    if(yes)signals++;else abstentions++;
