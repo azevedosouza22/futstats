@@ -8,6 +8,7 @@ const dimensions:{id:GroupDimension;label:string}[]=[
  {id:'period',label:'Por tempo'},
  {id:'metric',label:'Por mercado'},
  {id:'league',label:'Por liga'},
+ {id:'fixture',label:'Por jogo'},
  {id:'line',label:'Por linha exata'},
  {id:'league-period-metric',label:'Combinações'}
 ];
@@ -74,6 +75,7 @@ export default function RadarV4AuditPanel(){
     <strong>Rentabilidade: simulação, não lucro real</strong>
     <span>{brl(376)} hipoteticamente apostados em 188 entradas de {brl(2)} a odd fixa 1,50: resultado {brl(8)} e ROI +2,13%. Não existem odds reais pré-jogo comprovadas neste arquivo.</span>
     <span>Não é possível testar padrões de segunda a sexta versus fim de semana utilizando apenas partidas de sábado. As hipóteses precisam ser congeladas e verificadas em novos dias.</span>
+    <a href={SOURCE} download="LV4_2026-10-31_auditoria_360_decisoes.json">Consultar as 360 decisões e suas fontes (JSON)</a>
     <a href="https://github.com/azevedosouza22/futstats/blob/feat/v4-laboratorio-analisar-jogos-hoje/research/radar-v4-lab/PROTOCOLO_RELATORIO_DIARIO_PADROES_V4.md"
      target="_blank" rel="noopener noreferrer">Metodologia e critérios para validar estratégias</a>
    </div>
