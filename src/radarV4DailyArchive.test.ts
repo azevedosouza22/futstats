@@ -90,3 +90,54 @@ describe('V4: historical 30 October frozen laboratory vs daily explorer',()=>{
   expect(()=>parseV4Archive(changed)).toThrow();
  });
 });
+
+const rawTomorrow=JSON.parse(readFileSync(new URL('../public/research/v4-lab/2026-10-31.json',
+ import.meta.url),'utf8')) as unknown;
+const tomorrow=parseV4Archive(rawTomorrow);
+
+describe('V4 31 October 2026 — immutable prospectively selected programme',()=>{
+ it('contains 29 pregame matches, 316 signals, 32 abstentions and 348 decisions',()=>{
+  expect(tomorrow.date).toBe('2026-10-31');
+  expect(tomorrow.createdAt).toBe('2026-10-31T01:57:27.197Z');
+  expect(tomorrow.reports).toHaveLength(29);
+  expect(tomorrow.signals).toBe(316);
+  expect(tomorrow.abstentions).toBe(32);
+  expect(tomorrow.reports.flatMap(x=>x.picks)).toHaveLength(348);
+  expect(tomorrow.reports.every(x=>x.fixture.date==='2026-10-31'&&
+   x.fixture.time!==null&&x.historyIds.length>=8)).toBe(true);
+  expect(tomorrow.reports.every(x=>x.fixture.home!=='Nice'&&
+   x.competition!=='Brasileirão Série A 2026')).toBe(true);
+ });
+ it('replays ALL 348 decisions and the original IDs against the 3,260-game research',()=>{
+  const discrepancies:string[]=[];
+  expect(research.data.matches).toHaveLength(3260);
+  for(const report of tomorrow.reports){
+   const fresh=analyzeV4Fixture(research.data,report.fixture);
+   if(fresh.status!=='ready'){
+    discrepancies.push(report.fixture.home+' × '+report.fixture.away+': '+fresh.reason);
+    continue;
+   }
+   if(JSON.stringify([...fresh.historyIds].sort())!==
+    JSON.stringify([...report.historyIds].sort()))
+    discrepancies.push(report.fixture.home+' × '+report.fixture.away+': wrong historic IDs');
+   for(const period of V4_PERIODS)for(const metric of V4_METRICS){
+    const a=fresh.picks.find(p=>p.period===period&&p.metric===metric)!;
+    const b=report.picks.find(p=>p.period===period&&p.metric===metric)!;
+    if(a.line!==b.line||a.overs!==b.overs||a.observed!==b.observed||a.mean!==b.mean)
+     discrepancies.push(report.fixture.home+' × '+report.fixture.away+' '+
+      period+'/'+metric+': replay differed');
+   }
+  }
+  expect(discrepancies).toEqual([]);
+ });
+ it('rejects tampered signals or missing fixtures and never changes the 30th archive',()=>{
+  const damaged=structuredClone(rawTomorrow) as
+   {signal_count:number;fixtures:{picks:{line:number|null}[]}[]};
+  damaged.signal_count=317;
+  expect(()=>parseV4Archive(damaged)).toThrow();
+  damaged.signal_count=316;damaged.fixtures[0].picks[0].line=null;
+  expect(()=>parseV4Archive(damaged)).toThrow();
+  expect(archival.signals).toBe(105);
+  expect(archival.abstentions).toBe(15);
+ });
+});
