@@ -141,3 +141,44 @@ describe('V4 31 October 2026 — immutable prospectively selected programme',()=
   expect(archival.abstentions).toBe(15);
  });
 });
+
+const rawCoritibaVitoria=JSON.parse(readFileSync(new URL(
+ '../public/research/v4-lab/2026-10-31-adendo-coritiba-vitoria.json',
+ import.meta.url),'utf8')) as unknown;
+const coritibaVitoria=parseV4Archive(rawCoritibaVitoria);
+describe('V4 31 October: corrected Coritiba x Vitoria 16h schedule with separate frozen pregame archive',()=>{
+ it('preserves original 29 matches while tracking correction in a new 1-game addendum',()=>{
+  expect(tomorrow.reports).toHaveLength(29);
+  expect(tomorrow.signals).toBe(316);
+  expect(coritibaVitoria.archiveKey).toBe('2026-10-31-adendo-coritiba-vitoria');
+  expect(coritibaVitoria.date).toBe('2026-10-31');
+  expect(coritibaVitoria.createdAt).toBe('2026-10-31T13:00:44.063Z');
+  expect(coritibaVitoria.reports).toHaveLength(1);
+  expect(coritibaVitoria.signals).toBe(12);
+  expect(coritibaVitoria.abstentions).toBe(0);
+  const r=coritibaVitoria.reports[0];
+  expect(r.fixture.home).toBe('Coritiba');
+  expect(r.fixture.away).toBe('Vitória');
+  expect(r.fixture.time).toBe('16:00');
+  expect(r.historyIds).toHaveLength(10);
+  expect(r.picks.find(x=>x.period==='first'&&x.metric==='target')).toMatchObject({
+   line:3.5,overs:10,observed:10});
+ });
+ it('matches all 12 decisions and historical IDs against exact published engine',()=>{
+  const expected=coritibaVitoria.reports[0];
+  const actual=analyzeV4Fixture(research.data,expected.fixture);
+  expect(actual.status).toBe('ready');
+  expect([...actual.historyIds].sort()).toEqual([...expected.historyIds].sort());
+  for(const p of expected.picks){
+   const a=actual.picks.find(x=>x.period===p.period&&x.metric===p.metric);
+   expect(a).toMatchObject({line:p.line,overs:p.overs,observed:p.observed,mean:p.mean});
+  }
+ });
+ it('refuses tampering and never allows a post-match revision of the original',()=>{
+  const tampered=structuredClone(rawCoritibaVitoria) as {signal_count:number};
+  tampered.signal_count=11;
+  expect(()=>parseV4Archive(tampered)).toThrow();
+  expect(tomorrow.reports).toHaveLength(29);
+  expect(archival.reports).toHaveLength(10);
+ });
+});
