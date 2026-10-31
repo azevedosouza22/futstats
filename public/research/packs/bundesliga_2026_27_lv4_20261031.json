@@ -1,0 +1,411 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Bundesliga 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Augsburg",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Freiburg",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-3",
+        "name": "Schalke",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-4",
+        "name": "RB Leipzig",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-5",
+        "name": "Monchengladbach",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-6",
+        "name": "Paderborn",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-7",
+        "name": "Bremen",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-8",
+        "name": "Hoffenheim",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-9",
+        "name": "Leverkusen",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-10",
+        "name": "Stuttgart",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-0xJ20dWI",
+        "competition": "Bundesliga 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 4,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 10,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 2,
+            "shots": 4,
+            "target": 2,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "0xJ20dWI",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/augsburg-fTVNku3I/freiburg-fiEQZ7C7/resumo/estatisticas/total/?mid=0xJ20dWI",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 1,
+              "shots": 15,
+              "target": 5,
+              "corners": 1,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 2,
+              "shots": 10,
+              "target": 2,
+              "corners": 2,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-4hbzFeoC",
+        "competition": "Bundesliga 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-3",
+        "away": "lv4-work-team-4",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 11,
+            "target": 7,
+            "corners": 5,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "4hbzFeoC",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/rb-leipzig-KbS1suSm/schalke-0Ija0Ej9/resumo/estatisticas/total/?mid=4hbzFeoC",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 0,
+              "shots": 6,
+              "target": 1,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 2,
+              "shots": 18,
+              "target": 10,
+              "corners": 7,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-OEdKIwnm",
+        "competition": "Bundesliga 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-5",
+        "away": "lv4-work-team-6",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 3,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 2,
+            "corners": 4,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 1,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 2,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "OEdKIwnm",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/b-monchengladbach-88HSzjDr/paderborn-G2Op923t/resumo/estatisticas/total/?mid=OEdKIwnm",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 0,
+              "shots": 12,
+              "target": 4,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 13,
+              "target": 4,
+              "corners": 7,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-Wv0SGHGa",
+        "competition": "Bundesliga 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-7",
+        "away": "lv4-work-team-8",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 15,
+            "target": 4,
+            "corners": 6,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "Wv0SGHGa",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/bremen-Ig1f1fy3/hoffenheim-hQAtP9Sl/resumo/estatisticas/total/?mid=Wv0SGHGa",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 18,
+              "target": 4,
+              "corners": 8,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 16,
+              "target": 2,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-nFCn4vXg",
+        "competition": "Bundesliga 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-9",
+        "away": "lv4-work-team-10",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 9,
+            "target": 3,
+            "corners": 5,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 5,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 15,
+            "target": 5,
+            "corners": 7,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 2,
+            "shots": 6,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "nFCn4vXg",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/leverkusen-4jcj2zMd/stuttgart-nJQmYp1B/resumo/estatisticas/total/?mid=nFCn4vXg",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 24,
+              "target": 8,
+              "corners": 12,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 4,
+              "shots": 15,
+              "target": 7,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}
