@@ -19,3 +19,16 @@
 .v4-lab-fixture-foot{justify-content:space-between}.v4-lab-fixture-foot a{color:#9bd4e8}
 .v4-lab-disclaimer{margin-top:20px;border-top:1px solid #365348;padding-top:14px}
 @media(max-width:680px){.v4-lab-today{padding:12px}.v4-lab-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.v4-lab-fixture{padding:10px}.v4-lab-actions button{width:100%}.v4-lab-fixture-foot button{width:100%}}
+
+
+.v4-lab-date-select{display:flex;flex-direction:column;gap:5px;font-size:.81rem;min-width:180px}
+.v4-lab-date-select select{border:1px solid #59766b;border-radius:9px;min-height:44px;
+ padding:9px 12px;background:#19332b;color:#f2fff6;font:inherit}
+.v4-lab-archive-banner{display:flex;flex-direction:column;gap:8px;
+ border:1px solid #5a9e79;background:rgba(28,83,58,.22);border-radius:12px;
+ padding:14px;margin:18px 0}
+.v4-lab-archive-banner strong{color:#c2f4d8}
+.v4-lab-archive-banner span{color:#d6e7dc;font-size:.88rem}
+.v4-lab-archive-banner a{color:#a6ddf1;font-size:.87rem}
+.v4-lab-origin{display:block;margin-top:4px;color:#bfd2bc}
+@media(max-width:680px){.v4-lab-date-select{width:100%}.v4-lab-date-select select{width:100%}}
