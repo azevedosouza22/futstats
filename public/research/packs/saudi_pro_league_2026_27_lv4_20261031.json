@@ -1,0 +1,171 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Saudi Pro League 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Al-Taawon",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Al Ettifaq",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-3",
+        "name": "Al-Fayha",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-4",
+        "name": "Al Faysaly",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-Gfx2fl6e",
+        "competition": "Saudi Pro League 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 1,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 2,
+            "corners": 4,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 6,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "Gfx2fl6e",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/al-ettifaq-ncrXAWGn/al-taawon-WjJkJilj/resumo/estatisticas/total/?mid=Gfx2fl6e",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 1,
+              "shots": 5,
+              "target": 2,
+              "corners": 1,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 16,
+              "target": 5,
+              "corners": 10,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-WUlMsBMk",
+        "competition": "Saudi Pro League 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-3",
+        "away": "lv4-work-team-4",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 3,
+            "shots": 6,
+            "target": 3,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 12,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "WUlMsBMk",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/al-fayha-Meknfpi2/al-faysaly-AsIgIB3d/resumo/estatisticas/total/?mid=WUlMsBMk",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 4,
+              "shots": 16,
+              "target": 6,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 17,
+              "target": 5,
+              "corners": 2,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}
