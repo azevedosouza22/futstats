@@ -65,7 +65,7 @@ const periodName:Record<string,string>={full:'Jogo completo',first:'1º tempo',s
 const marketName:Record<string,string>={goals:'Gols',shots:'Finalizações',target:'Chutes no gol',corners:'Escanteios'};
 export function auditPeriodName(key:string){return periodName[key]??key;}
 export function auditMarketName(key:string){return marketName[key]??key;}
-export type GroupDimension='period'|'metric'|'league'|'line'|'league-period-metric';
+export type GroupDimension='period'|'metric'|'league'|'line'|'fixture'|'league-period-metric';
 /** Exploratory breakdown; derived ONLY from original picks, never optimizes forecasts retroactively. */
 export function summarizeV4Audit(audit:V4Audit,dimension:GroupDimension):AuditGroup[]{
  const groups=new Map<string,{a:number;e:number;b:number;p:number;games:Set<string>}>();
@@ -74,6 +74,7 @@ export function summarizeV4Audit(audit:V4Audit,dimension:GroupDimension):AuditGr
   const label=dimension==='period'?auditPeriodName(pick.period):
    dimension==='metric'?auditMarketName(pick.metric):
    dimension==='league'?d.competition:
+   dimension==='fixture'?d.fixture:
    dimension==='line'?auditMarketName(pick.metric)+' · '+auditPeriodName(pick.period)+' · '+(pick.line===null?'Sem sinal':'Over '+pick.line.toFixed(1).replace('.',',')):
    d.competition+' · '+auditMarketName(pick.metric)+' · '+auditPeriodName(pick.period);
   const g=groups.get(label)??{a:0,e:0,b:0,p:0,games:new Set<string>()};
