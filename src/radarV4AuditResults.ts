@@ -57,7 +57,8 @@ export function parseV4Audit(raw:unknown):V4Audit{
  const s=raw.summary;
  if(hits!==s.hits||misses!==s.misses||abs!==s.abstentions||
   hits+misses!==s.evaluated_signals||pending!==s.pending_signals||
-  s.duplicates!==0||s.games_complete+s.games_pending!==30)
+  s.duplicates!==0||typeof s.games_complete!=='number'||
+  typeof s.games_pending!=='number'||s.games_complete+s.games_pending!==30)
   throw Error('Totais do LV4 não conferem com as 360 decisões.');
  return raw as unknown as V4Audit;
 }
