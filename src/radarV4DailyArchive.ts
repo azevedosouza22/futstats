@@ -4,9 +4,19 @@
 import type {V4FixtureReport,V4Period,V4Metric,V4Pick} from './radarV4LabToday';
 import {V4_PERIODS,V4_METRICS} from './radarV4LabToday';
 
-export const V4_ARCHIVED_DAYS=['2026-10-30'] as const;
+export const V4_ARCHIVED_DAYS=['2026-10-30','2026-10-31'] as const;
 export const V4_20261030_SOURCE=
  'https://github.com/azevedosouza22/futstats/blob/f0274c218c2cca184f95059df2244098b953ee91/research/radar-v4-lab/PREVISOES_PROSPECTIVAS_2026-10-30.json';
+export const V4_20261031_SOURCE=
+ 'https://github.com/azevedosouza22/futstats/blob/a5964b45814bd2dbcba830dd5e20148724b8b1a2/research/radar-v4-lab/PREVISOES_PROSPECTIVAS_2026-10-31.json';
+export const V4_ARCHIVE_SOURCES:Record<string,string>={
+ '2026-10-30':V4_20261030_SOURCE,
+ '2026-10-31':V4_20261031_SOURCE
+};
+const specs:Record<string,{count:number;signals:number;abstentions:number;createdAt:string}>={
+ '2026-10-30':{count:10,signals:105,abstentions:15,createdAt:'2026-10-30T08:55:11.563Z'},
+ '2026-10-31':{count:29,signals:316,abstentions:32,createdAt:'2026-10-31T01:57:27.197Z'}
+};
 export type V4DayArchive={
  date:string;createdAt:string;reports:V4FixtureReport[];
  signals:number;abstentions:number;origin:'historical-pregame-github';
@@ -23,10 +33,13 @@ function validHistory(rows:unknown,date:string):rows is {id:string;date:string}[
 }
 export function parseV4Archive(raw:unknown):V4DayArchive {
  if(!obj(raw)||raw.format!=='futstats-radar-v4-prospectiva-experimental-v1'||
-  raw.date!=='2026-10-30'||raw.fixtures_count!==10||
-  raw.signal_count!==105||raw.abstention_count!==15||
-  typeof raw.generated_at_utc!=='string'||raw.generated_at_utc!=='2026-10-30T08:55:11.563Z'||
-  !Array.isArray(raw.fixtures)||raw.fixtures.length!==10)
+  typeof raw.date!=='string'||!specs[raw.date])
+  throw Error('Registro pré-jogo V4 sem data autorizada.');
+ const specification=specs[raw.date];
+ if(raw.fixtures_count!==specification.count||
+  raw.signal_count!==specification.signals||raw.abstention_count!==specification.abstentions||
+  typeof raw.generated_at_utc!=='string'||raw.generated_at_utc!==specification.createdAt||
+  !Array.isArray(raw.fixtures)||raw.fixtures.length!==specification.count)
   throw Error('Registro histórico V4 inválido ou modificado.');
  const reports:V4FixtureReport[]=[];
  const identities=new Set<string>();
@@ -69,23 +82,29 @@ export function parseV4Archive(raw:unknown):V4DayArchive {
   }
   if(V4_PERIODS.some(p=>V4_METRICS.some(m=>!pairs.has(p+'|'+m))))
    throw Error('Arquivo histórico V4 sem todos os 12 mercados.');
+  const source=f.date==='2026-10-31'&&string(f.fixture_source)&&
+   f.fixture_source.startsWith('https://')?f.fixture_source:V4_20261030_SOURCE;
+  const time=f.date==='2026-10-31'&&typeof f.time_brasilia==='string'&&
+   /^([01]\\d|2[0-3]):[0-5]\\d$/.test(f.time_brasilia)?f.time_brasilia:null;
   reports.push({
-   fixture:{id:'archive|'+f.date+'|'+identity,date:f.date,time:null,
-    competition:f.competition,home:f.home,away:f.away,sourceUrl:V4_20261030_SOURCE},
+   fixture:{id:'archive|'+f.date+'|'+identity,date:f.date,time,
+    competition:f.competition,home:f.home,away:f.away,sourceUrl:source},
    competition:f.competition,status:'ready',
-   reason:'Análise original registrada em 30/10/2026 às 05h55 de Brasília. Não recalculada.',
+   reason:'Previsão original registrada antes dos jogos em '+f.date+'. Sem recálculo com resultados.',
    homeHistoryCount:5,awayHistoryCount:5,historyIds:ids,picks
   });
  }
- if(signals!==105||abstentions!==15)
+ if(signals!==specification.signals||abstentions!==specification.abstentions)
   throw Error('Totais do arquivo pré-jogo divergentes do registro original.');
  return {date:raw.date as string,createdAt:raw.generated_at_utc,reports,
   signals,abstentions,origin:'historical-pregame-github'};
 }
 /** Restrict paths to an allowlist; never construct URLs from arbitrary dates. */
 export async function loadV4Archive(day:string,signal?:AbortSignal):Promise<V4DayArchive|null>{
- if(day!=='2026-10-30')return null;
- const response=await fetch('/research/v4-lab/2026-10-30.json',{signal,cache:'no-store'});
+ const path=day==='2026-10-30'?'/research/v4-lab/2026-10-30.json':
+  day==='2026-10-31'?'/research/v4-lab/2026-10-31.json':null;
+ if(!path)return null;
+ const response=await fetch(path,{signal,cache:'no-store'});
  if(!response.ok)throw Error('Registro histórico V4 indisponível. Nenhum dado foi recriado.');
  return parseV4Archive(await response.json() as unknown);
 }
