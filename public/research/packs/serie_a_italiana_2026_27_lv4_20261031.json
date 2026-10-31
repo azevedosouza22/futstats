@@ -1,0 +1,91 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Serie A italiana 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Bologna",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Monza",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-65OT4SjS",
+        "competition": "Serie A italiana 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 7,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 2,
+            "target": 1,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "65OT4SjS",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/bologna-0M9xNN8N/monza-4YSMlwj7/resumo/estatisticas/total/?mid=65OT4SjS",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 10,
+              "target": 5,
+              "corners": 5,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 6,
+              "target": 4,
+              "corners": 2,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}
