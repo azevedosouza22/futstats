@@ -70,3 +70,19 @@ test('Radar V4: 31/10 appears as tomorrow on 30/10 and retains 29 pregame foreca
  await expect(page.getByRole('heading',{name:'Porto × Estoril'})).toBeVisible();
  expect(await page.evaluate(()=>localStorage.getItem('futstats:radar-v4-lab-frozen:v1'))).toBeNull();
 });
+
+test('V4: scheduled Coritiba x Vitoria 16h recorded as a separate pregame addendum',async({page})=>{
+ await page.clock.install({time:new Date('2026-10-31T13:02:00Z')}); // 31/10 10:02 Brasília
+ await page.route(/^https:\/\//,route=>route.abort());
+ await page.goto('/');
+ await page.getByRole('button',{name:'Analisar jogos de hoje'}).first().click();
+ await page.getByLabel('Data do laboratório V4').selectOption('2026-10-31-adendo-coritiba-vitoria');
+ await expect(page.getByText(/Adendo pré-jogo — Coritiba × Vitória/)).toBeVisible({timeout:90000});
+ const summary=page.getByLabel('Resumo dos resultados');
+ await expect(summary).toContainText('Jogos encontrados1');
+ await expect(summary).toContainText('Sinais V412');
+ await expect(summary).toContainText('Sem sinal0');
+ await expect(page.getByRole('heading',{name:'Coritiba × Vitória'})).toBeVisible();
+ await expect(page.getByText('Over 26,5').first()).toBeVisible();
+ expect(await page.evaluate(()=>localStorage.getItem('futstats:radar-v4-lab-frozen:v1'))).toBeNull();
+});
