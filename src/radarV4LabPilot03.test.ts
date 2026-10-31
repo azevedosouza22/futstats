@@ -107,7 +107,7 @@ const expectedByPeriod={
 };
 describe('Radar V4 Lab Piloto 03: 240 jogos × 4 métricas × 3 períodos',()=>{
  it('seleciona 30 por liga, todos os históricos anteriores e sem sourceIds repetidos',()=>{
-  expect(research.data.matches).toHaveLength(3260);
+  expect(research.data.matches).toHaveLength(3786);
   const rows=pilot();
   expect(rows).toHaveLength(240);
   for(const [index,league] of competitions.entries()){
