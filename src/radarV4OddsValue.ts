@@ -12,7 +12,7 @@ export type OddsValueResult={
 };
 function numberPtBR(raw:string):number|null{
  const input=raw.trim();
- if(!/^\\d+(?:[.,]\\d+)?$/.test(input))return null;
+ if(!/^\d+(?:[.,]\d+)?$/.test(input))return null;
  const n=Number(input.replace(',','.'));
  return Number.isFinite(n)?n:null;
 }
