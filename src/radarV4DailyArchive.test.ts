@@ -58,8 +58,8 @@ describe('V4: historical 30 October frozen laboratory vs daily explorer',()=>{
   expect(combined.filter(x=>x.fixture.home==='Villarreal CF')).toHaveLength(1);
   expect(combined.some(x=>x.fixture.home==='Club Z'&&x.origin==='community')).toBe(true);
  });
- it('compares same 120 lines with the actual 3,260-game catalog before each kickoff',()=>{
-  expect(research.data.matches).toHaveLength(3260);
+ it('compares same 120 lines with the actual 3,786-game catalog before each kickoff',()=>{
+  expect(research.data.matches).toHaveLength(3786);
   const differences:string[]=[];
   for(const stored of archival.reports){
    const replay=analyzeV4Fixture(research.data,stored.fixture);
@@ -108,9 +108,9 @@ describe('V4 31 October 2026 — immutable prospectively selected programme',()=
   expect(tomorrow.reports.every(x=>x.fixture.home!=='Nice'&&
    x.competition!=='Brasileirão Série A 2026')).toBe(true);
  });
- it('replays ALL 348 decisions and the original IDs against the 3,260-game research',()=>{
+ it('replays ALL 348 decisions and the original IDs against the 3,786-game research',()=>{
   const discrepancies:string[]=[];
-  expect(research.data.matches).toHaveLength(3260);
+  expect(research.data.matches).toHaveLength(3786);
   for(const report of tomorrow.reports){
    const fresh=analyzeV4Fixture(research.data,report.fixture);
    if(fresh.status!=='ready'){
