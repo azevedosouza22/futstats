@@ -1,0 +1,91 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Liga Portugal 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Moreirense",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Estrela da Amadora",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-n3bGVkDF",
+        "competition": "Liga Portugal 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 0,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "n3bGVkDF",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/estrela-da-amadora-hrYABE5k/moreirense-8d9NGt9H/resumo/estatisticas/total/?mid=n3bGVkDF",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 11,
+              "target": 4,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 11,
+              "target": 1,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}
