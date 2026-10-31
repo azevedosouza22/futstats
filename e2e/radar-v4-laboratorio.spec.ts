@@ -86,3 +86,21 @@ test('V4: scheduled Coritiba x Vitoria 16h recorded as a separate pregame addend
  await expect(page.getByText('Over 26,5').first()).toBeVisible();
  expect(await page.evaluate(()=>localStorage.getItem('futstats:radar-v4-lab-frozen:v1'))).toBeNull();
 });
+
+test('LV4: resultados Work de 31/10, filtros e ROI hipotético visíveis sem modificar previsões',async({page})=>{
+ await page.clock.install({time:new Date('2026-10-31T19:05:00Z')});
+ await page.route(/^https:\/\//,route=>route.abort());
+ await page.goto('/');
+ await page.getByRole('button',{name:'Analisar jogos de hoje'}).first().click();
+ const panel=page.getByRole('region',{name:'Auditoria de resultados LV4'});
+ await expect(panel).toBeVisible({timeout:90000});
+ await panel.getByRole('button',{name:'Consultar auditoria de 31/10'}).click();
+ await expect(panel).toContainText('17/30',{timeout:60000});
+ await expect(panel).toContainText('68,1%');
+ await expect(panel).toContainText('Simulação, não lucro real');
+ await panel.getByLabel('Agrupamento da auditoria LV4').selectOption('metric');
+ await expect(panel.getByRole('rowheader',{name:'Gols'})).toBeVisible();
+ await panel.getByLabel('Agrupamento da auditoria LV4').selectOption('league-period-metric');
+ await expect(panel).toContainText('hipóteses exploratórias');
+ expect(await page.evaluate(()=>localStorage.getItem('futstats:radar-v4-lab-frozen:v1'))).toBeNull();
+});
