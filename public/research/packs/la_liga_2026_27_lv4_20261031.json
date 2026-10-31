@@ -1,0 +1,171 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "La Liga espanhola 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Levante",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Atl. Madrid",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-3",
+        "name": "Rayo Vallecano",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-4",
+        "name": "Celta de Vigo",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-6gvM2yKH",
+        "competition": "La Liga espanhola 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 14,
+            "target": 2,
+            "corners": 4,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "6gvM2yKH",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/atl-madrid-jaarqpLQ/levante-G8FL0ShI/resumo/estatisticas/total/?mid=6gvM2yKH",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 0,
+              "shots": 20,
+              "target": 4,
+              "corners": 5,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 2,
+              "shots": 11,
+              "target": 5,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-UVHwLIZo",
+        "competition": "La Liga espanhola 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-3",
+        "away": "lv4-work-team-4",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 0,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 9,
+            "target": 5,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "UVHwLIZo",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/celta-vigo-8pvUZFhf/rayo-vallecano-8bcjFy6O/resumo/estatisticas/total/?mid=UVHwLIZo",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 3,
+              "shots": 14,
+              "target": 8,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 11,
+              "target": 0,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}
