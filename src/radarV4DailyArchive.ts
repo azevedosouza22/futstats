@@ -85,7 +85,7 @@ export function parseV4Archive(raw:unknown):V4DayArchive {
   const source=f.date==='2026-10-31'&&string(f.fixture_source)&&
    f.fixture_source.startsWith('https://')?f.fixture_source:V4_20261030_SOURCE;
   const time=f.date==='2026-10-31'&&typeof f.time_brasilia==='string'&&
-   /^([01]\\d|2[0-3]):[0-5]\\d$/.test(f.time_brasilia)?f.time_brasilia:null;
+   /^([01]\d|2[0-3]):[0-5]\d$/.test(f.time_brasilia)?f.time_brasilia:null;
   reports.push({
    fixture:{id:'archive|'+f.date+'|'+identity,date:f.date,time,
     competition:f.competition,home:f.home,away:f.away,sourceUrl:source},
