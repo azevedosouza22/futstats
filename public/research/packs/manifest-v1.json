@@ -46,6 +46,41 @@
       "file": "saudi_pro_league_2025_26.json",
       "competition": "Saudi Pro League 2025/26",
       "count": 306
+    },
+    {
+      "file": "mls_2025.json",
+      "competition": "MLS 2025",
+      "count": 509
+    },
+    {
+      "file": "premier_league_2026_27_lv4_20261031.json",
+      "competition": "Premier League inglesa 2026/27",
+      "count": 6
+    },
+    {
+      "file": "la_liga_2026_27_lv4_20261031.json",
+      "competition": "La Liga espanhola 2026/27",
+      "count": 2
+    },
+    {
+      "file": "saudi_pro_league_2026_27_lv4_20261031.json",
+      "competition": "Saudi Pro League 2026/27",
+      "count": 2
+    },
+    {
+      "file": "serie_a_italiana_2026_27_lv4_20261031.json",
+      "competition": "Serie A italiana 2026/27",
+      "count": 1
+    },
+    {
+      "file": "bundesliga_2026_27_lv4_20261031.json",
+      "competition": "Bundesliga 2026/27",
+      "count": 5
+    },
+    {
+      "file": "liga_portugal_2026_27_lv4_20261031.json",
+      "competition": "Liga Portugal 2026/27",
+      "count": 1
     }
   ]
 }
