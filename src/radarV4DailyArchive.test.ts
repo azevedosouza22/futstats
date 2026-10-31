@@ -66,11 +66,14 @@ describe('V4: historical 30 October frozen laboratory vs daily explorer',()=>{
    if(replay.status!=='ready'){
     differences.push(stored.fixture.home+' × '+stored.fixture.away+': '+replay.reason);continue;
    }
+   if(JSON.stringify([...replay.historyIds].sort())!==
+      JSON.stringify([...stored.historyIds].sort()))
+    differences.push(stored.fixture.home+' × '+stored.fixture.away+': IDs históricos diferentes');
    for(const period of V4_PERIODS)for(const metric of V4_METRICS){
     const expected=stored.picks.find(p=>p.period===period&&p.metric===metric)!;
     const actual=replay.picks.find(p=>p.period===period&&p.metric===metric)!;
     if(expected.line!==actual.line||expected.overs!==actual.overs||
-       expected.observed!==actual.observed)
+       expected.observed!==actual.observed||expected.mean!==actual.mean)
      differences.push(stored.fixture.home+' × '+stored.fixture.away+
       ' '+period+'/'+metric+': snapshot '+expected.line+'/'+expected.overs+
       ' vs engine '+actual.line+'/'+actual.overs);
