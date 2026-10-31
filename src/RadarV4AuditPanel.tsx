@@ -70,9 +70,9 @@ export default function RadarV4AuditPanel(){
     </table>
    </div>
    {(dimension==='line'||dimension==='league-period-metric')&&
-    <p className="v4-lab-muted">Somente cruzamentos com pelo menos três sinais resolvidos. Ordenação exploratória por taxa de acerto. Podem existir vários sinais correlacionados do mesmo jogo; não significa estratégia validada.</p>}
+    <p className="v4-lab-muted">Somente cruzamentos com pelo menos três sinais resolvidos. São hipóteses exploratórias, ordenadas por taxa de acerto. Podem existir vários sinais correlacionados do mesmo jogo; não significa estratégia validada.</p>}
    <div className="v4-lab-archive-banner" style={{marginTop:'.8rem'}}>
-    <strong>Rentabilidade: simulação, não lucro real</strong>
+    <strong>Rentabilidade: Simulação, não lucro real</strong>
     <span>{brl(376)} hipoteticamente apostados em 188 entradas de {brl(2)} a odd fixa 1,50: resultado {brl(8)} e ROI +2,13%. Não existem odds reais pré-jogo comprovadas neste arquivo.</span>
     <span>Não é possível testar padrões de segunda a sexta versus fim de semana utilizando apenas partidas de sábado. As hipóteses precisam ser congeladas e verificadas em novos dias.</span>
     <a href={SOURCE} download="LV4_2026-10-31_auditoria_360_decisoes.json">Consultar as 360 decisões e suas fontes (JSON)</a>
