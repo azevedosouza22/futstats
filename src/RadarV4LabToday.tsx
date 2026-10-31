@@ -5,7 +5,7 @@ import {readOfficialCalendar,readKnownV4DaySources,type OfficialCalendarItem} fr
 import type {Data} from './model';
 import {analyzeV4Day,V4_METRICS,V4_PERIODS,type V4FixtureReport,type V4Period,type V4Metric} from './radarV4LabToday';
 import {combineV4DayListings,consultV4CommunityDay} from './radarV4DayFixtures';
-import {loadV4Archive,V4_20261030_SOURCE,type V4DayArchive} from './radarV4DailyArchive';
+import {loadV4Archive,V4_ARCHIVED_DAYS,V4_ARCHIVE_SOURCES,type V4DayArchive} from './radarV4DailyArchive';
 import {RADAR_V4_LAB_STORAGE,freezeV4Report,readV4Frozen} from './radarV4LabFrozen';
 import RadarV4OddsPanel from './RadarV4OddsPanel';
 import './radarV4LabToday.css';
@@ -13,7 +13,9 @@ import './radarV4LabToday.css';
 const pName:Record<V4Period,string>={full:'Partida completa',first:'1º tempo',second:'2º tempo'};
 const mName:Record<V4Metric,string>={shots:'Finalizações',corners:'Escanteios',target:'Chutes no gol',goals:'Gols'};
 const number=(n:number)=>n.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
-const archiveDate='2026-10-30';
+const archiveDays:readonly string[]=V4_ARCHIVED_DAYS;
+const archived=(date:string)=>archiveDays.includes(date);
+const shortDate=(date:string)=>date.split('-').reverse().join('/');
 function exportJSON(content:unknown,name:string){
  const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json'});
  const href=URL.createObjectURL(blob);
@@ -41,16 +43,16 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
  function applyArchive(original:V4DayArchive){
   setArchive(original);setReport(original.reports);setReportDate(original.date);
   setSources(Object.fromEntries(original.reports.map(r=>[
-   r.fixture.id,'Registro original do laboratório: 30/10/2026 às 05h55, antes dos jogos'
+   r.fixture.id,'Previsão original de '+shortDate(original.date)+' — congelada antes dos jogos'
   ])));
   setReferences([]);
   setMessage('As 120 decisões originais foram recuperadas sem recálculo e permanecem auditáveis.');
  }
  useEffect(()=>{
-  if(selectedDate!==archiveDate)return;
+  if(!archived(selectedDate))return;
   const controller=new AbortController();
   setBusy(true);
-  void loadV4Archive(archiveDate,controller.signal).then(original=>{
+  void loadV4Archive(selectedDate,controller.signal).then(original=>{
    if(!controller.signal.aborted&&original)applyArchive(original);
   }).catch(err=>{
    if(!controller.signal.aborted)setError(err instanceof Error?err.message:
@@ -69,9 +71,9 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
   setError('');setMessage('');setBusy(true);
   try{
    const day=selectedDate;
-   if(day===archiveDate){
+   if(archived(day)){
     const original=await loadV4Archive(day);
-    if(!original)throw Error('Registro de 30/10 não encontrado.');
+    if(!original)throw Error('Registro prospectivo da data selecionada não encontrado.');
     applyArchive(original);
     return;
    }
@@ -112,7 +114,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
  function save(r:V4FixtureReport){
   setError('');setMessage('');
   try{
-   if(archive)throw Error('O arquivo de 30/10 é histórico e não pode ser registrado novamente.');
+   if(archive)throw Error('O arquivo pré-jogo está congelado e não pode ser registrado novamente.');
    const ref=references.find(x=>x.fixture.id===r.fixture.id);
    if(!ref)throw Error('Este confronto não tem horário futuro oficialmente reconfirmado.');
    const latest=readOfficialCalendar(new Date()).find(x=>x.fixture.id===r.fixture.id&&
@@ -161,12 +163,13 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
     <select aria-label="Data do laboratório V4" value={selectedDate}
       onChange={e=>selectDate(e.target.value)}>
      <option value={today}>Hoje · {today.split('-').reverse().join('/')}</option>
-     {today!==archiveDate&&<option value={archiveDate}>30/10/2026 · arquivo original</option>}
+     {archiveDays.filter(day=>day!==today).map(day=><option key={day} value={day}>
+      {day==='2026-10-31'&&today<day?'Amanhã · ':'Arquivo · '}{shortDate(day)} · pré-jogo</option>)}
     </select>
    </label>
    <button type="button" className="primary" onClick={()=>void run()}
-    disabled={busy||(!research&&selectedDate!==archiveDate)}>
-    {busy?'Consultando…':selectedDate===archiveDate?'Ver análises originais de 30/10':'Analisar jogos de hoje'}
+    disabled={busy||(!research&&!archived(selectedDate))}>
+    {busy?'Consultando…':archived(selectedDate)?'Ver análises pré-jogo de '+shortDate(selectedDate):'Analisar jogos de hoje'}
    </button>
    {report&&<button type="button" onClick={exportReport}>Exportar relatório V4 (JSON)</button>}
    <button type="button" onClick={exportSaved}>Exportar previsões V4 salvas</button>
@@ -174,14 +177,15 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
   <p className="v4-lab-muted">Calendário completo do dia: fontes oficiais cadastradas, agenda CSV local e
    catálogos gratuitos consultados sob comando. Nenhuma dessas fontes é uma agenda ao vivo
    universal; ligas ausentes continuam identificadas como lacuna de cobertura.</p>
-  {!research&&selectedDate!==archiveDate&&<p role="status">Carregando base histórica experimental…</p>}
+  {!research&&!archived(selectedDate)&&<p role="status">Carregando base histórica experimental…</p>}
   {error&&<p className="v4-lab-alert" role="alert">{error}</p>}
   {message&&<p className="v4-lab-message" role="status">{message}</p>}
   {archive&&<div className="v4-lab-archive-banner" role="status">
-    <strong>Registro pré-jogo original · 30/10/2026, 05h55 (Brasília)</strong>
-    <span>10 partidas · 105 sinais · 15 abstenções. As 120 decisões foram recuperadas
-     do arquivo registrado antes dos confrontos. Não houve recálculo com resultados.</span>
-    <a href={V4_20261030_SOURCE} target="_blank" rel="noopener noreferrer">
+    <strong>Registro pré-jogo original · {shortDate(archive.date)} · {new Date(archive.createdAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'})} (Brasília)</strong>
+    <span>{archive.reports.length} partidas · {archive.signals} sinais · {archive.abstentions} abstenções.
+     As {archive.reports.length*12} decisões registradas antes dos jogos foram recuperadas sem recálculo com resultados.
+     Os horários indicados são referências da agenda e devem ser reconfirmados.</span>
+    <a href={V4_ARCHIVE_SOURCES[archive.date]} target="_blank" rel="noopener noreferrer">
      Conferir arquivo original no GitHub</a>
    </div>}
   {report&&<div className="v4-lab-results">
@@ -234,7 +238,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
         pick={activePick} archive={!!archive}/>}
       <div className="v4-lab-fixture-foot">
        <a href={r.fixture.sourceUrl} target="_blank" rel="noopener noreferrer">
-        {archive?'Abrir registro pré-jogo':'Conferir fonte da agenda'}</a>
+        {archive?'Conferir fonte da agenda ou previsão':'Conferir fonte da agenda'}</a>
        {!archive&&<button type="button" disabled={!future||savedIds.includes(r.fixture.id)}
         onClick={()=>save(r)}>{savedIds.includes(r.fixture.id)?'Previsão V4 salva':
           future?'Salvar previsão V4':'Somente consulta — sem registro retroativo'}</button>}
@@ -248,7 +252,7 @@ export default function RadarV4LabToday({research}:{research:Data|null}){
    ≥70%. Frequência histórica não é probabilidade futura. O simulador de odds exige
    estimativa de probabilidade separada e não fornece indicação automática de aposta.
    Jogos consultados após
-   o início não são transformados em previsões anteriores. O arquivo original de
-   30/10 permanece intocado. Sem odds verificadas, sem rentabilidade demonstrada.</p>
+   o início não são transformados em previsões anteriores. Os arquivos prospectivos
+   permanecem intocados. Sem odds verificadas, sem rentabilidade demonstrada.</p>
  </section>;
 }
