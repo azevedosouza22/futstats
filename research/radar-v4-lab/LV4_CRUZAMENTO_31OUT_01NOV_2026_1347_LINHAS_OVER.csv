@@ -1,0 +1,171 @@
+league,period,metric,line,hit,miss,evaluated,rate,unique_games,days,abst,nd,pending
+Premier League inglesa 2026/27,full,goals,1.5,6,0,6,100,6,1,0,0,0
+Premier League inglesa 2026/27,full,goals,2.5,0,1,1,0,1,1,0,0,0
+Premier League inglesa 2026/27,full,shots,22.5,4,1,5,80,5,1,0,0,0
+Premier League inglesa 2026/27,full,shots,24.5,2,1,3,66.67,3,1,0,0,0
+Premier League inglesa 2026/27,full,target,5.5,2,0,2,100,2,1,0,0,0
+Premier League inglesa 2026/27,full,target,6.5,2,0,2,100,2,1,0,0,0
+Premier League inglesa 2026/27,full,target,7.5,1,3,4,25,4,1,0,0,0
+Premier League inglesa 2026/27,full,corners,6.5,1,0,1,100,1,1,0,0,0
+Premier League inglesa 2026/27,full,corners,7.5,2,0,2,100,2,1,0,0,0
+Premier League inglesa 2026/27,full,corners,8.5,3,0,3,100,3,1,0,0,0
+Premier League inglesa 2026/27,full,corners,9.5,1,0,1,100,1,1,0,0,0
+Premier League inglesa 2026/27,first,goals,0.5,2,0,2,100,2,1,0,0,0
+Premier League inglesa 2026/27,first,shots,8.5,3,2,5,60,5,1,0,0,0
+Premier League inglesa 2026/27,first,shots,10.5,0,2,2,0,2,1,0,1,0
+Premier League inglesa 2026/27,first,target,2.5,2,2,4,50,4,1,0,1,0
+Premier League inglesa 2026/27,first,target,3.5,1,1,2,50,2,1,0,0,0
+Premier League inglesa 2026/27,first,corners,2.5,1,0,1,100,1,1,0,0,0
+Premier League inglesa 2026/27,first,corners,3.5,3,0,3,100,3,1,0,0,0
+Premier League inglesa 2026/27,first,corners,4.5,1,0,1,100,1,1,0,1,0
+Premier League inglesa 2026/27,second,goals,0.5,6,0,6,100,6,1,0,0,0
+Premier League inglesa 2026/27,second,goals,1.5,0,2,2,0,2,1,0,0,0
+Premier League inglesa 2026/27,second,shots,9.5,1,0,1,100,1,1,0,0,0
+Premier League inglesa 2026/27,second,shots,13.5,5,1,6,83.33,6,1,0,0,0
+Premier League inglesa 2026/27,second,target,2.5,1,0,1,100,1,1,0,0,0
+Premier League inglesa 2026/27,second,target,3.5,4,1,5,80,5,1,0,1,0
+Premier League inglesa 2026/27,second,target,4.5,0,1,1,0,1,1,0,0,0
+Premier League inglesa 2026/27,second,corners,2.5,2,0,2,100,2,1,0,1,0
+Premier League inglesa 2026/27,second,corners,3.5,2,1,3,66.67,3,1,0,0,0
+Premier League inglesa 2026/27,second,corners,4.5,2,0,2,100,2,1,0,0,0
+La Liga espanhola 2026/27,full,goals,1.5,3,0,3,100,3,2,0,0,0
+La Liga espanhola 2026/27,full,goals,2.5,1,1,2,50,2,1,0,0,0
+La Liga espanhola 2026/27,full,shots,24.5,1,1,2,50,2,1,0,0,0
+La Liga espanhola 2026/27,full,shots,26.5,1,2,3,33.33,3,2,0,0,0
+La Liga espanhola 2026/27,full,target,6.5,1,0,1,100,1,1,0,0,0
+La Liga espanhola 2026/27,full,target,8.5,4,0,4,100,4,2,0,0,0
+La Liga espanhola 2026/27,full,corners,6.5,1,2,3,33.33,3,2,0,0,0
+La Liga espanhola 2026/27,full,corners,8.5,1,0,1,100,1,1,0,0,0
+La Liga espanhola 2026/27,first,goals,0.5,4,0,4,100,4,2,0,0,0
+La Liga espanhola 2026/27,first,shots,8.5,1,0,1,100,1,1,0,1,0
+La Liga espanhola 2026/27,first,shots,10.5,0,1,1,0,1,1,0,1,0
+La Liga espanhola 2026/27,first,shots,12.5,0,1,1,0,1,1,0,0,0
+La Liga espanhola 2026/27,first,target,3.5,1,0,1,100,1,1,0,1,0
+La Liga espanhola 2026/27,first,target,4.5,1,0,1,100,1,1,0,0,0
+La Liga espanhola 2026/27,first,corners,2.5,1,1,2,50,2,1,0,0,0
+La Liga espanhola 2026/27,first,corners,3.5,1,0,1,100,1,1,0,1,0
+La Liga espanhola 2026/27,second,goals,0.5,5,0,5,100,5,2,0,0,0
+La Liga espanhola 2026/27,second,shots,11.5,1,0,1,100,1,1,0,0,0
+La Liga espanhola 2026/27,second,shots,13.5,2,0,2,100,2,1,0,2,0
+La Liga espanhola 2026/27,second,target,2.5,1,0,1,100,1,1,0,0,0
+La Liga espanhola 2026/27,second,target,3.5,1,0,1,100,1,1,0,1,0
+La Liga espanhola 2026/27,second,target,4.5,0,1,1,0,1,1,0,1,0
+La Liga espanhola 2026/27,second,corners,2.5,1,0,1,100,1,1,0,1,0
+La Liga espanhola 2026/27,second,corners,3.5,1,1,2,50,2,1,0,1,0
+Bundesliga 2026/27,full,goals,1.5,2,0,2,100,2,1,0,0,0
+Bundesliga 2026/27,full,goals,2.5,1,2,3,33.33,3,1,0,0,0
+Bundesliga 2026/27,full,goals,3.5,0,1,1,0,1,1,0,0,0
+Bundesliga 2026/27,full,shots,22.5,2,0,2,100,2,1,0,0,0
+Bundesliga 2026/27,full,shots,24.5,1,0,1,100,1,1,0,1,0
+Bundesliga 2026/27,full,shots,26.5,2,1,3,66.67,3,1,0,0,0
+Bundesliga 2026/27,full,target,6.5,1,0,1,100,1,1,0,0,0
+Bundesliga 2026/27,full,target,7.5,2,0,2,100,2,1,0,1,0
+Bundesliga 2026/27,full,target,8.5,0,3,3,0,3,1,0,0,0
+Bundesliga 2026/27,full,corners,7.5,1,1,2,50,2,1,0,0,0
+Bundesliga 2026/27,full,corners,8.5,3,0,3,100,3,1,0,0,0
+Bundesliga 2026/27,full,corners,9.5,0,1,1,0,1,1,0,1,0
+Bundesliga 2026/27,first,goals,0.5,3,2,5,60,5,1,0,0,0
+Bundesliga 2026/27,first,shots,8.5,2,0,2,100,2,1,0,0,0
+Bundesliga 2026/27,first,shots,10.5,1,0,1,100,1,1,0,1,0
+Bundesliga 2026/27,first,shots,12.5,2,1,3,66.67,3,1,0,0,0
+Bundesliga 2026/27,first,target,2.5,2,0,2,100,2,1,0,0,0
+Bundesliga 2026/27,first,target,3.5,1,1,2,50,2,1,0,1,0
+Bundesliga 2026/27,first,target,4.5,1,0,1,100,1,1,0,0,0
+Bundesliga 2026/27,first,corners,2.5,1,1,2,50,2,1,0,0,0
+Bundesliga 2026/27,first,corners,3.5,2,1,3,66.67,3,1,0,1,0
+Bundesliga 2026/27,first,corners,4.5,0,1,1,0,1,1,0,0,0
+Bundesliga 2026/27,second,goals,0.5,3,0,3,100,3,2,0,0,0
+Bundesliga 2026/27,second,goals,1.5,3,1,4,75,4,1,0,0,0
+Bundesliga 2026/27,second,shots,11.5,3,0,3,100,3,1,0,0,0
+Bundesliga 2026/27,second,shots,13.5,3,0,3,100,3,1,0,1,0
+Bundesliga 2026/27,second,target,3.5,1,1,2,50,2,1,0,1,0
+Bundesliga 2026/27,second,target,4.5,2,2,4,50,4,1,0,0,0
+Bundesliga 2026/27,second,corners,2.5,0,1,1,0,1,1,0,0,0
+Bundesliga 2026/27,second,corners,3.5,2,0,2,100,2,1,0,1,0
+Bundesliga 2026/27,second,corners,5.5,3,0,3,100,3,1,0,0,0
+Serie A italiana 2026/27,full,goals,1.5,3,1,4,75,4,2,0,0,0
+Serie A italiana 2026/27,full,goals,2.5,2,0,2,100,2,1,0,0,0
+Serie A italiana 2026/27,full,shots,22.5,1,0,1,100,1,1,0,0,0
+Serie A italiana 2026/27,full,shots,24.5,0,2,2,0,2,2,0,0,0
+Serie A italiana 2026/27,full,shots,26.5,2,1,3,66.67,3,2,0,0,0
+Serie A italiana 2026/27,full,target,6.5,1,0,1,100,1,1,0,0,0
+Serie A italiana 2026/27,full,target,7.5,0,1,1,0,1,1,0,0,0
+Serie A italiana 2026/27,full,target,8.5,3,1,4,75,4,2,0,0,0
+Serie A italiana 2026/27,full,corners,7.5,2,1,3,66.67,3,2,0,0,0
+Serie A italiana 2026/27,full,corners,8.5,0,1,1,0,1,1,0,0,0
+Serie A italiana 2026/27,full,corners,9.5,0,1,1,0,1,1,0,0,0
+Serie A italiana 2026/27,first,goals,0.5,3,1,4,75,4,2,0,0,0
+Serie A italiana 2026/27,first,shots,12.5,1,0,1,100,1,1,0,2,0
+Serie A italiana 2026/27,first,target,2.5,1,0,1,100,1,1,0,3,0
+Serie A italiana 2026/27,first,corners,2.5,2,0,2,100,2,1,0,1,0
+Serie A italiana 2026/27,second,goals,0.5,2,0,2,100,2,2,0,0,0
+Serie A italiana 2026/27,second,goals,1.5,0,3,3,0,3,2,0,0,0
+Serie A italiana 2026/27,second,shots,11.5,0,1,1,0,1,1,0,0,0
+Serie A italiana 2026/27,second,shots,13.5,0,1,1,0,1,1,0,3,0
+Serie A italiana 2026/27,second,target,3.5,1,0,1,100,1,1,0,2,0
+Serie A italiana 2026/27,second,target,4.5,1,0,1,100,1,1,0,2,0
+Serie A italiana 2026/27,second,corners,3.5,1,0,1,100,1,1,0,2,0
+Serie A italiana 2026/27,second,corners,4.5,0,1,1,0,1,1,0,1,0
+Ligue 1 francesa 2026/27,full,goals,1.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,goals,2.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,shots,20.5,0,1,1,0,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,shots,22.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,target,5.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,target,7.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,corners,6.5,0,1,1,0,1,1,0,0,0
+Ligue 1 francesa 2026/27,full,corners,7.5,0,1,1,0,1,1,0,0,0
+Ligue 1 francesa 2026/27,first,goals,0.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,second,goals,0.5,1,0,1,100,1,1,0,0,0
+Ligue 1 francesa 2026/27,second,goals,1.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,full,goals,1.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,full,goals,2.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,full,shots,22.5,0,1,1,0,1,1,0,0,0
+Liga Portugal 2026/27,full,shots,26.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,full,target,6.5,0,1,1,0,1,1,0,0,0
+Liga Portugal 2026/27,full,target,8.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,full,corners,7.5,1,1,2,50,2,1,0,0,0
+Liga Portugal 2026/27,first,goals,0.5,0,1,1,0,1,1,0,0,0
+Liga Portugal 2026/27,first,shots,8.5,1,0,1,100,1,1,0,1,0
+Liga Portugal 2026/27,first,target,2.5,0,1,1,0,1,1,0,1,0
+Liga Portugal 2026/27,first,corners,3.5,0,1,1,0,1,1,0,1,0
+Liga Portugal 2026/27,second,goals,0.5,2,0,2,100,2,1,0,0,0
+Liga Portugal 2026/27,second,shots,11.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,second,target,2.5,1,0,1,100,1,1,0,0,0
+Liga Portugal 2026/27,second,corners,2.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,full,goals,1.5,2,0,2,100,2,1,0,0,0
+Saudi Pro League 2026/27,full,goals,3.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,full,shots,20.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,full,shots,24.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,full,shots,26.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,full,target,5.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,full,target,8.5,0,2,2,0,2,1,0,0,0
+Saudi Pro League 2026/27,full,corners,8.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,full,corners,9.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,first,goals,0.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,first,goals,1.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,first,shots,8.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,first,shots,10.5,1,1,2,50,2,1,0,0,0
+Saudi Pro League 2026/27,first,target,3.5,0,2,2,0,2,1,0,0,0
+Saudi Pro League 2026/27,first,corners,2.5,2,0,2,100,2,1,0,0,0
+Saudi Pro League 2026/27,first,corners,4.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,second,goals,0.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,second,goals,1.5,0,2,2,0,2,1,0,0,0
+Saudi Pro League 2026/27,second,shots,11.5,2,1,3,66.67,3,1,0,0,0
+Saudi Pro League 2026/27,second,target,2.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,second,target,3.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,second,target,4.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,second,corners,2.5,1,0,1,100,1,1,0,0,0
+Saudi Pro League 2026/27,second,corners,3.5,0,1,1,0,1,1,0,0,0
+Saudi Pro League 2026/27,second,corners,4.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,full,goals,1.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,full,shots,26.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,full,target,8.5,0,1,1,0,1,1,0,0,0
+Brasileirão Série A 2026,full,corners,8.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,first,goals,0.5,0,1,1,0,1,1,0,0,0
+Brasileirão Série A 2026,first,shots,12.5,0,1,1,0,1,1,0,0,0
+Brasileirão Série A 2026,first,target,3.5,0,1,1,0,1,1,0,0,0
+Brasileirão Série A 2026,first,corners,3.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,second,goals,0.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,second,shots,13.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,second,target,3.5,1,0,1,100,1,1,0,0,0
+Brasileirão Série A 2026,second,corners,3.5,1,0,1,100,1,1,0,0,0
