@@ -1,0 +1,518 @@
+{
+  "date": "2026-11-03",
+  "prepared_date": "2026-11-02",
+  "timezone": "America/Sao_Paulo",
+  "status": "EXPERIMENTAL_PREMATCH_STUDY_NOT_APP_FROZEN",
+  "forbidden_to_modify": [
+    "production",
+    "659 historical personal matches",
+    "Radar V2/V3",
+    "historical predictions",
+    "2026-11-01 odds/bets"
+  ],
+  "method": "Last 5 games of each team in exact competition and season, min 8 distinct IDs, 8 observed total stats; select largest Over in src/radarV4LabToday.ts grid with retrospective frequency>=70%",
+  "sourceBrazil": {
+    "name": "brasileirao_2026_324_20261029.json",
+    "google_drive_url": "https://drive.google.com/file/d/1bHlyHnId20T39-hTqZNzTY8yFNsnoS9Y/view",
+    "count": 324,
+    "unique_source_ids": 324,
+    "first_date": "2026-01-28",
+    "last_date": "2026-10-28",
+    "sum_checks_failures": 0
+  },
+  "sourceUCL": {
+    "url": "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-and-results/",
+    "club_games_in_league_phase_before_nov3": 3,
+    "coverage": "Only match results public; no full FT/1T/2T shots, targets and corners dataset under exact Champions League 2026/27 in inspected FutStats packs.",
+    "lv4_status": "UNRESOLVED_NO_UCL_PACK"
+  },
+  "sourcesKickoffs": {
+    "Brazil": "https://credencial.cbf.com.br/competicoes/listar/42/1",
+    "UCL": "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-and-results/"
+  },
+  "controls": {
+    "futstats_signal_total": 22,
+    "futstats_abstentions": 2,
+    "qualified_fixtures": 2,
+    "nonqualified_fixtures": 9,
+    "unscored_ucl_cells": 108,
+    "real_bets_to_place": 0,
+    "simulated_bets_to_place": 0,
+    "odds": "N/D",
+    "odds_min_value": "N/D"
+  },
+  "brazil_reports": [
+    {
+      "kick_brt": "19:30",
+      "competition": "Brasileirão Série A 2026",
+      "status": "ready",
+      "hist_ids": [
+        "YDhJ7WU9",
+        "EkcGEvrf",
+        "IsfXAdsJ",
+        "YBVbjP0S",
+        "faJea2wq",
+        "4zWUq8L5",
+        "f75igXFG",
+        "hz97G0Ds",
+        "0MmjRHRa",
+        "lQzFjYfB"
+      ],
+      "form": {
+        "Chapecoense": {
+          "W": 1,
+          "D": 0,
+          "L": 4,
+          "GF": 3,
+          "GA": 13,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 18,
+          "targets_for_avg": 3.4,
+          "targets_against_avg": 8.4,
+          "corners_for_avg": 4.6,
+          "corners_against_avg": 5.4
+        },
+        "Mirassol": {
+          "W": 2,
+          "D": 2,
+          "L": 1,
+          "GF": 6,
+          "GA": 3,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 17.6,
+          "targets_for_avg": 4.4,
+          "targets_against_avg": 4.6,
+          "corners_for_avg": 4,
+          "corners_against_avg": 6
+        }
+      },
+      "indicators": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "line": 26.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 30.5,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "line": 7.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 10,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "line": 8.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 10.4,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "line": 1.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 2.5,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "line": 12.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 12.5,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "line": 4.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 4.9,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "line": 3.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 4.9,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "line": 0.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 1.3,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "line": 13.5,
+          "overs": 9,
+          "observed": 10,
+          "mean": 18,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "line": 3.5,
+          "overs": 9,
+          "observed": 10,
+          "mean": 5.1,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "line": 4.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 5.5,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "line": null,
+          "overs": null,
+          "observed": 10,
+          "mean": 1.2,
+          "reason": "below_70",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        }
+      ],
+      "fixture": "Chapecoense × Mirassol",
+      "history_count": 10,
+      "history_source": "2026 Brasileirão 324 games, up to 2026-10-28"
+    },
+    {
+      "kick_brt": "21:30",
+      "competition": "Brasileirão Série A 2026",
+      "status": "ready",
+      "hist_ids": [
+        "phCOok8j",
+        "8CzkbJcD",
+        "0MmjRHRa",
+        "lOeeW39d",
+        "UsHUp3Ok",
+        "AFN2tZED",
+        "EmpIvY0N",
+        "OKIyMMkK",
+        "MyxaPedC",
+        "UJYsf713"
+      ],
+      "form": {
+        "Internacional": {
+          "W": 2,
+          "D": 1,
+          "L": 2,
+          "GF": 7,
+          "GA": 6,
+          "shots_for_avg": 14.8,
+          "shots_against_avg": 17,
+          "targets_for_avg": 5.2,
+          "targets_against_avg": 5.4,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 7.6
+        },
+        "Coritiba": {
+          "W": 0,
+          "D": 1,
+          "L": 4,
+          "GF": 1,
+          "GA": 12,
+          "shots_for_avg": 10,
+          "shots_against_avg": 22.6,
+          "targets_for_avg": 2.2,
+          "targets_against_avg": 8.4,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 8.4
+        }
+      },
+      "indicators": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "line": 26.5,
+          "overs": 9,
+          "observed": 10,
+          "mean": 32.2,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "line": 9.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 12.6,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "line": 8.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 10.6,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "line": 1.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 2.6,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "line": 12.5,
+          "overs": 8,
+          "observed": 10,
+          "mean": 14,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "line": 3.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 5.4,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "line": 3.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 4.8,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "line": null,
+          "overs": null,
+          "observed": 10,
+          "mean": 0.9,
+          "reason": "below_70",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "line": 13.5,
+          "overs": 10,
+          "observed": 10,
+          "mean": 18.2,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "line": 5.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 7.2,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "line": 4.5,
+          "overs": 7,
+          "observed": 10,
+          "mean": 5.8,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "line": 0.5,
+          "overs": 9,
+          "observed": 10,
+          "mean": 1.7,
+          "reason": "qualified",
+          "odd": null,
+          "odds_status": "NOT_OBSERVED",
+          "market_value_assessment": "N/D"
+        }
+      ],
+      "fixture": "Internacional × Coritiba",
+      "history_count": 10,
+      "history_source": "2026 Brasileirão 324 games, up to 2026-10-28"
+    }
+  ],
+  "ucl_fixtures": [
+    {
+      "fixture": "Shakhtar Donetsk × Sporting CP",
+      "time_brt": "14:45",
+      "last_champions_matchday_3_results": "Shakhtar 0–1 Inter; Sporting 2–3 LASK",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Galatasaray × Stuttgart",
+      "time_brt": "14:45",
+      "last_champions_matchday_3_results": "Galatasaray 4–2 Lille; Stuttgart 1–1 Atlético Madrid",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Atlético de Madrid × Bayern München",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "Atlético 1–1 Stuttgart; Bayern 2–2 Arsenal",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Barcelona × Aston Villa",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "Barcelona 2–4 PSG; Aston Villa 3–1 Viking",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Feyenoord × Inter",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "Feyenoord 0–1 Betis; Inter 1–0 Shakhtar",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Bodø/Glimt × Lille",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "Bodø/Glimt 3–4 Napoli; Lille 2–4 Galatasaray",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "LASK × Slovan Bratislava",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "LASK 3–2 Sporting; Slovan 0–4 Roma",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Manchester United × Roma",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "United 1–4 Como; Roma 4–0 Slovan",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    },
+    {
+      "fixture": "Villarreal × PSG",
+      "time_brt": "17:00",
+      "last_champions_matchday_3_results": "Villarreal 3–4 Liverpool; PSG 4–2 Barcelona",
+      "status": "NO_V4_QUALIFIED_SIGNAL",
+      "decisions_possible": 12,
+      "decisions_issued": 0,
+      "unknown": 12
+    }
+  ],
+  "disclaimer": "Frequencies 7/10, 9/10, 10/10 are retrospective proportions of match totals, not calibrated future probabilities, and may be correlated across the same fixture. Not an offer, advice or direction to place bets. MP 1394/2026 restrictions apply."
+}
