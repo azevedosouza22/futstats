@@ -1,0 +1,124 @@
+{
+  "date": "2026-11-03",
+  "timestamp_relevant": "after Internacional × Coritiba finished/user reports FT Over1.5 lost",
+  "source": "User messages in ChatGPT conversation",
+  "scope": "experimental LV4 prospective audits, read-only original lines",
+  "latest_confirmed": {
+    "fixture": "Internacional × Coritiba",
+    "market": "full-time goals Over1.5",
+    "odd": 2.14,
+    "stake_brl": 1,
+    "outcome": "LOSS",
+    "payout_brl": 0,
+    "net_brl": -1,
+    "goals_total": "LESS_THAN_2",
+    "score_exact": "N/D"
+  },
+  "user_reported_tickets": [
+    {
+      "fixture": "Chapecoense × Mirassol",
+      "market": "full corners Over7.5",
+      "odd": 1.74,
+      "stake": 1,
+      "result": "WIN_USER_REPORTED",
+      "return_if_settled": 1.74
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "full corners Over9.5",
+      "odd": 1.7,
+      "stake": 1,
+      "result": "WIN_USER_REPORTED",
+      "return_if_settled": 1.7
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "second half goals Over0.5",
+      "odd": 1.75,
+      "stake": 1,
+      "result": "GOAL_VALIDATED_USER_REPORTED_SETTLEMENT_PENDING",
+      "return_if_settled": 1.75
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "full goals Over1.5",
+      "odd": 2.14,
+      "stake": 1,
+      "result": "LOSS_USER_CONFIRMED",
+      "return_if_settled": 0
+    }
+  ],
+  "financial_if_three_wins_settled": {
+    "total_entries": 4,
+    "wins": 3,
+    "losses": 1,
+    "staked_brl": 4,
+    "returned_brl": 5.19,
+    "net_brl": 1.19,
+    "roi_pct": 29.75
+  },
+  "audit_internacional_coritiba_resolved": [
+    {
+      "period": "first",
+      "market": "corners",
+      "over_line": 3.5,
+      "actual_first_half": 6,
+      "status": "HIT"
+    },
+    {
+      "period": "first",
+      "market": "shots",
+      "over_line": 12.5,
+      "actual_first_half": 10,
+      "status": "MISS"
+    },
+    {
+      "period": "first",
+      "market": "target",
+      "over_line": 3.5,
+      "actual_first_half": 3,
+      "status": "MISS"
+    },
+    {
+      "period": "first",
+      "market": "goals",
+      "over_line": null,
+      "actual_first_half": 0,
+      "status": "ABSTENTION"
+    },
+    {
+      "period": "full",
+      "market": "corners",
+      "over_line": 9.5,
+      "actual_total": "at least 10",
+      "status": "HIT"
+    },
+    {
+      "period": "second",
+      "market": "goals",
+      "over_line": 0.5,
+      "actual_second_half": "at least 1",
+      "status": "HIT"
+    },
+    {
+      "period": "full",
+      "market": "goals",
+      "over_line": 1.5,
+      "actual_total": "less than 2",
+      "status": "MISS"
+    }
+  ],
+  "interim_audit_totals": {
+    "hits": 3,
+    "misses": 3,
+    "abstentions": 1,
+    "other_lv4_indicators_pending": 5
+  },
+  "notes": [
+    "User does not supply exact final score; do not invent score.",
+    "User confirms the on-field second-half goal; platform ticket settlement for second-half goals not explicitly shown.",
+    "3-win profit calculation conditional on third ticket normal settlement.",
+    "Not a prospective ROI validation nor recommendation of any further bets.",
+    "Do not alter production, original forecasts, Radar V2/V3, 659 historic personal games or backups."
+  ]
+}
