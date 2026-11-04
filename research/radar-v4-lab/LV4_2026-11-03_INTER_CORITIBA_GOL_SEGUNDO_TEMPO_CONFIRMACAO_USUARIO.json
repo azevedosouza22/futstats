@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-03",
+  "match": "Internacional × Coritiba",
+  "event": "User confirms one valid goal scored in the second half; no exact score, minute or scorer supplied",
+  "status": "USER_REPORTED_LIVE_UNVERIFIED",
+  "lv4_original_snapshot": "research/radar-v4-lab/LV4_2026-11-03_CHECKPOINT_PREJOGO_11_CONFRONTOS.json",
+  "observations": [
+    {
+      "period": "first",
+      "metric": "corners",
+      "line": 3.5,
+      "actual": 6,
+      "signal": "HIT",
+      "source": "Flashscore user screenshots"
+    },
+    {
+      "period": "first",
+      "metric": "shots",
+      "line": 12.5,
+      "actual": 10,
+      "signal": "MISS",
+      "source": "Flashscore user screenshots"
+    },
+    {
+      "period": "first",
+      "metric": "shots_on_target",
+      "line": 3.5,
+      "actual": 3,
+      "signal": "MISS",
+      "source": "Flashscore user screenshots"
+    },
+    {
+      "period": "first",
+      "metric": "goals",
+      "line": null,
+      "actual": 0,
+      "signal": "NO_SIGNAL_NOT_UNDER_PREDICTION",
+      "source": "Flashscore user screenshots"
+    },
+    {
+      "period": "full",
+      "metric": "corners",
+      "line": 9.5,
+      "actual": "at least 10 by ~55'",
+      "signal": "HIT",
+      "source": "user report"
+    },
+    {
+      "period": "second",
+      "metric": "goals",
+      "line": 0.5,
+      "actual": "at least 1 goal in second half",
+      "signal": "HIT",
+      "historical_frequency": "9/10",
+      "source": "user report"
+    },
+    {
+      "period": "full",
+      "metric": "goals",
+      "line": 1.5,
+      "actual": "at least 1 goal; no 2nd confirmed yet",
+      "signal": "PENDING",
+      "source": "user report"
+    }
+  ],
+  "reported_bets": [
+    {
+      "market": "full corners Over9.5",
+      "stake_brl": 1,
+      "odds": 1.7,
+      "result": "WIN_REPORTED"
+    },
+    {
+      "market": "full goals Over1.5",
+      "stake_brl": 1,
+      "odds": 2.14,
+      "result": "PENDING"
+    },
+    {
+      "market": "second-half goals Over0.5",
+      "stake_brl": null,
+      "odds": null,
+      "result": "NO_PLACEMENT_CONFIRMED"
+    }
+  ],
+  "other_match_related": {
+    "fixture": "Chapecoense × Mirassol",
+    "bet": "full corners Over7.5",
+    "stake_brl": 1,
+    "odds": 1.74,
+    "result": "WIN_SCREENSHOT"
+  },
+  "notes": [
+    "Do not interpret a single 2H goal as winning the full-time Over1.5 bet after a 0-0 halftime.",
+    "Do not claim user placed the 2H goal bet.",
+    "Audit the other LV4 signals, including misses, after official final stats.",
+    "No production or frozen LV4 forecast changes, no real-money betting recommendations."
+  ]
+}
