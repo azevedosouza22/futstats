@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-03",
+  "fixture": "Internacional × Coritiba",
+  "phase": "INTERVAL",
+  "provenance": "User report in conversation; not independently validated Flashscore full match statistics",
+  "historical_ref": "research/radar-v4-lab/LV4_2026-11-03_CHECKPOINT_PREJOGO_11_CONFRONTOS.json",
+  "historical_source_sha": "124624db563a00f0e6fcd21056e990ea8d2ccf04",
+  "original_predictions_unchanged": true,
+  "reported": {
+    "half_time_score": {
+      "home": 0,
+      "away": 0
+    },
+    "first_half_corners_total": 6
+  },
+  "signal_audit": [
+    {
+      "period": "first",
+      "metric": "corners",
+      "line": 3.5,
+      "historical_hits": 7,
+      "historical_n": 10,
+      "status": "HIT_PROVISIONAL_USER_REPORTED",
+      "actual": 6
+    },
+    {
+      "period": "first",
+      "metric": "goals",
+      "line": null,
+      "historical_hits": null,
+      "historical_n": 10,
+      "status": "ABSTENTION_NOT_UNDER_PREDICTION",
+      "actual": 0
+    },
+    {
+      "period": "full",
+      "metric": "corners",
+      "line": 9.5,
+      "historical_hits": 8,
+      "historical_n": 10,
+      "status": "PENDING",
+      "actual_at_halftime": 6,
+      "remaining_required": 4
+    },
+    {
+      "period": "full",
+      "metric": "goals",
+      "line": 1.5,
+      "historical_hits": 8,
+      "historical_n": 10,
+      "status": "PENDING",
+      "actual_at_halftime": 0,
+      "remaining_required": 2
+    }
+  ],
+  "real_bets_reported": [
+    {
+      "selection": "Full-time Over9.5 corners",
+      "stake_brl": 1,
+      "decimal_odds": 1.7,
+      "potential_return_brl": 1.7,
+      "potential_profit_brl": 0.7,
+      "status": "OPEN_USER_REPORTED",
+      "timing": "entered before halftime per user description; exact time N/D",
+      "market_matches_original": true
+    },
+    {
+      "selection": "Full-time Over1.5 goals",
+      "stake_brl": 1,
+      "decimal_odds": 2.14,
+      "potential_return_brl": 2.14,
+      "potential_profit_brl": 1.14,
+      "status": "OPEN_USER_REPORTED",
+      "timing": "entered before halftime per user description; exact time N/D",
+      "market_matches_original": true
+    }
+  ],
+  "financial": {
+    "total_stake_brl": 2,
+    "returns_settled_brl": 0,
+    "returns_settled_status": "NONE_SETTLED",
+    "total_potential_return_if_both_win_brl": 3.84,
+    "total_potential_profit_if_both_win_brl": 1.84
+  },
+  "warnings": [
+    "User-reported corners count, unverified result; verify match FT/1T/2T from score provider after closure",
+    "No goals in first half is NOT an Under prediction; LV4 abstained in goals 1T",
+    "Live bets do not change frozen prospective records or transform the price into pregame odds",
+    "Do not alter original predictions, production, 659 personal matches, V2/V3, other user data",
+    "Records are accounting of user actions, not advice to place further bets"
+  ]
+}
