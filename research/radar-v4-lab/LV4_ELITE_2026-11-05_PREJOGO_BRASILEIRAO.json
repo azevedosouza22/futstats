@@ -1,0 +1,335 @@
+{
+  "date": "2026-11-05",
+  "prepared": "2026-11-04",
+  "scope": "Prospective study of two confirmed Brasileirão fixtures; Saudi postponed; UEL inadequate same-competition source sample.",
+  "status": "RESEARCH_SNAPSHOT_NOT_APP_FROZEN",
+  "source": "Drive FutStats/Testes/brasileirao_2026_324_20261029.json, 324 unique games through 2026-10-28",
+  "supplemental": "Atlético-MG 0–1 Cruzeiro 2026-10-29: Flashscore and Scorely whole match; corners 1T/2T on benchmarkfutestats; shots and target by period N/D. 17–17 FT shots differs from ge source's 14–17 and requires canonical visual verification. No match-source ID verified.",
+  "original_v4_policy": "Last 5 games per team same 2026 competition (>=8 unique matches), >=8 valid observations, highest line Over with >=70% historical frequency.",
+  "elite_v1_provisional": "At least 9/10 and all 10 observed, mean minus line >= goals 0.8 / shots 3 / on-target 1.5 / corners 2; no claim of prospective probability.",
+  "venue_context": "Separate 5 latest home fixtures for host and 5 latest away fixtures for guest; diagnostic only, no modification of original picks.",
+  "totals": {
+    "decisions": 24,
+    "signals": 20,
+    "abstentions": 4,
+    "elite": 5
+  },
+  "fixtures": [
+    {
+      "fixture": "Palmeiras × Remo",
+      "date": "2026-11-05",
+      "time_brt": "19:30",
+      "history_ids": [
+        "Mg7qego4",
+        "8W61K9EF",
+        "hAPGswCt",
+        "GCx7hfQb",
+        "21vH6po9",
+        "SCoS5AaM",
+        "KAQ6bSid",
+        "MkHXweB5",
+        "rRhmYPvp",
+        "WpKydlll"
+      ],
+      "supplemental_match": null,
+      "form": {
+        "Palmeiras": "4V 1E 0D; 9 GP 1 GC",
+        "Remo": "1V 3E 1D; 4 GP 4 GC"
+      },
+      "picks": [
+        {
+          "metric": "goals",
+          "period": "full",
+          "over_line": null,
+          "hits": null,
+          "observed": 10,
+          "mean": 1.8,
+          "classification": "SEM_SINAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "goals",
+          "period": "first",
+          "over_line": 0.5,
+          "hits": 8,
+          "observed": 10,
+          "mean": 1,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "goals",
+          "period": "second",
+          "over_line": null,
+          "hits": null,
+          "observed": 10,
+          "mean": 0.8,
+          "classification": "SEM_SINAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "shots",
+          "period": "full",
+          "over_line": 26.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 31.5,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "shots",
+          "period": "first",
+          "over_line": 10.5,
+          "hits": 10,
+          "observed": 10,
+          "mean": 14.2,
+          "classification": "ELITE_CANDIDATO",
+          "mando_visita_5mais5": [
+            9,
+            10
+          ]
+        },
+        {
+          "metric": "shots",
+          "period": "second",
+          "over_line": 13.5,
+          "hits": 9,
+          "observed": 10,
+          "mean": 17.3,
+          "classification": "ELITE_CANDIDATO",
+          "mando_visita_5mais5": [
+            7,
+            10
+          ]
+        },
+        {
+          "metric": "target",
+          "period": "full",
+          "over_line": 8.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 9.7,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "target",
+          "period": "first",
+          "over_line": 2.5,
+          "hits": 9,
+          "observed": 10,
+          "mean": 4,
+          "classification": "ELITE_CANDIDATO",
+          "mando_visita_5mais5": [
+            9,
+            10
+          ]
+        },
+        {
+          "metric": "target",
+          "period": "second",
+          "over_line": 4.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 5.7,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "corners",
+          "period": "full",
+          "over_line": 9.5,
+          "hits": 9,
+          "observed": 10,
+          "mean": 12.5,
+          "classification": "ELITE_CANDIDATO",
+          "mando_visita_5mais5": [
+            8,
+            10
+          ]
+        },
+        {
+          "metric": "corners",
+          "period": "first",
+          "over_line": 3.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 5.6,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "corners",
+          "period": "second",
+          "over_line": 5.5,
+          "hits": 8,
+          "observed": 10,
+          "mean": 6.9,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        }
+      ]
+    },
+    {
+      "fixture": "Cruzeiro × Bahia",
+      "date": "2026-11-05",
+      "time_brt": "21:30",
+      "history_ids": [
+        "E9LhiBpT",
+        "vXrY11bl",
+        "U1u7NZQO",
+        "rRhmYPvp",
+        null,
+        "Mg7qego4",
+        "hz97G0Ds",
+        "QNNOuHtg",
+        "KpqbfGen",
+        "nDr51AQQ"
+      ],
+      "supplemental_match": "Atlético-MG × Cruzeiro 29/10, id N/D",
+      "form": {
+        "Cruzeiro": "4V 0E 1D; 10 GP 6 GC",
+        "Bahia": "2V 1E 2D; 5 GP 7 GC"
+      },
+      "picks": [
+        {
+          "metric": "goals",
+          "period": "full",
+          "over_line": null,
+          "hits": null,
+          "observed": 10,
+          "mean": 2.8,
+          "classification": "SEM_SINAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "goals",
+          "period": "first",
+          "over_line": 0.5,
+          "hits": 9,
+          "observed": 10,
+          "mean": 1.7,
+          "classification": "ELITE_CANDIDATO",
+          "mando_visita_5mais5": [
+            9,
+            10
+          ]
+        },
+        {
+          "metric": "goals",
+          "period": "second",
+          "over_line": null,
+          "hits": null,
+          "observed": 10,
+          "mean": 1.1,
+          "classification": "SEM_SINAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "shots",
+          "period": "full",
+          "over_line": 26.5,
+          "hits": 8,
+          "observed": 10,
+          "mean": 32.6,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "shots",
+          "period": "first",
+          "over_line": 12.5,
+          "hits": 8,
+          "observed": 9,
+          "mean": 16.1,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "shots",
+          "period": "second",
+          "over_line": 13.5,
+          "hits": 7,
+          "observed": 9,
+          "mean": 16.3,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "target",
+          "period": "full",
+          "over_line": 8.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 12,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "target",
+          "period": "first",
+          "over_line": 4.5,
+          "hits": 8,
+          "observed": 9,
+          "mean": 6.8,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "target",
+          "period": "second",
+          "over_line": 3.5,
+          "hits": 7,
+          "observed": 9,
+          "mean": 5.7,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "corners",
+          "period": "full",
+          "over_line": 9.5,
+          "hits": 8,
+          "observed": 10,
+          "mean": 14.3,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "corners",
+          "period": "first",
+          "over_line": 4.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 7.5,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        },
+        {
+          "metric": "corners",
+          "period": "second",
+          "over_line": 5.5,
+          "hits": 7,
+          "observed": 10,
+          "mean": 6.8,
+          "classification": "LV4_CONVENCIONAL",
+          "mando_visita_5mais5": null
+        }
+      ]
+    }
+  ],
+  "risks": [
+    "Palmeiras Remo shots 2nd half Elite 9/10 original but 7/10 home-away context; contextual warning, not change to frozen classification.",
+    "All historical frequencies uncalibrated; no verified odds or financial edge.",
+    "No production, 659, V2/V3, prior frozen forecasts, or Work collection changed."
+  ],
+  "sources": {
+    "calendar": "https://ge.globo.com/ba/futebol/brasileirao-serie-a/noticia/2026/11/02/brasileirao-2026-veja-onde-assistir-ao-vivo-aos-jogos-da-34a-rodada.ghtml",
+    "baseline": "https://drive.google.com/file/d/1bHlyHnId20T39-hTqZNzTY8yFNsnoS9Y/view",
+    "supplement": "https://www.flashscore.in/match/football/atletico-mg-hGLC5Bah/cruzeiro-0SwtclaU/summary/stats/",
+    "corners_split": "https://www.benchmarkfutestats.com.br/jogo/8409610/",
+    "saudi_status": "https://www.saff.com.sa/en/team.php?id=67",
+    "europe": "https://www.uefa.com/uefaeuropaleague/news/02a8-2174cafa5bb6-82bbc20c9b92-1000--2026-27-europa-league-all-the-league-phase-fixtures-and-re/"
+  }
+}
