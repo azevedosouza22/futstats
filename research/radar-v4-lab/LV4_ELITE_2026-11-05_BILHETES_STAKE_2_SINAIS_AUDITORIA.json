@@ -1,0 +1,68 @@
+{
+  "type": "LV4_ELITE_USER_BET_SETTLEMENT_EVIDENCE",
+  "date": "2026-11-05",
+  "review_date": "2026-11-06",
+  "competition": "Brasileirão Série A 2026",
+  "stage": "TWO_TICKETS_SETTLED_OTHER_SIGNALS_PENDING",
+  "pregame_frozen_ref": "research/radar-v4-lab/LV4_ELITE_2026-11-05_PREJOGO_BRASILEIRAO.json",
+  "screenshots": [
+    {
+      "path": "1000063128.jpg",
+      "context": "Stake Palmeiras vs Remo full time corners O9.5 loss, odds 1.70, R$1 stake, R$0 return"
+    },
+    {
+      "path": "1000063127.jpg",
+      "context": "Stake Cruzeiro vs Bahia first-half total goals O0.5 win, odds 1.73, R$1 stake, R$1.73 return"
+    }
+  ],
+  "bets": [
+    {
+      "fixture": "Palmeiras × Remo",
+      "final_score": "6-1",
+      "market": "corners",
+      "period": "full",
+      "over_line": 9.5,
+      "pregame_elite": "ELITE_CANDIDATO",
+      "historical_frequency": "9/10",
+      "odds": 1.7,
+      "stake_brl": 1,
+      "payout_brl": 0,
+      "result": "LOSS",
+      "profit_brl": -1,
+      "corners_total": "N/D",
+      "evidence": "User screenshot bookmaker settled loss; score of 6–1 is goals, not corners"
+    },
+    {
+      "fixture": "Cruzeiro × Bahia",
+      "final_score": "3-2",
+      "market": "goals",
+      "period": "first",
+      "over_line": 0.5,
+      "pregame_elite": "ELITE_CANDIDATO",
+      "historical_frequency": "9/10",
+      "odds": 1.73,
+      "stake_brl": 1,
+      "payout_brl": 1.73,
+      "result": "WIN",
+      "profit_brl": 0.73,
+      "first_half_score": "N/D",
+      "evidence": "User screenshot bookmaker settled win"
+    }
+  ],
+  "settlement_summary": {
+    "billed_tickets": 2,
+    "wins": 1,
+    "losses": 1,
+    "staked_brl": 2,
+    "payout_brl": 1.73,
+    "profit_brl": -0.27,
+    "roi_percent": -13.5
+  },
+  "quality_notes": [
+    "Other cropped settlement receipts and one winning two-leg multiple visible but markets, amounts, and stake not fully verifiable; exclude from totals.",
+    "User screenshots confirm the settled wager outcomes, not full 12-period metrics for each game; do not score entire LV4 24-decision matrix.",
+    "No odds-edge or future-calibrated probability established; 9/10 historical is not a guarantee of success.",
+    "Preserve original prospective forecast, V2/V3, 659 historical personal matches and production. No merge or deploy."
+  ],
+  "status": "READONLY_RESEARCH_LOG"
+}

@@ -1,0 +1,108 @@
+{
+  "fixture": "Internacional × Coritiba",
+  "date": "2026-11-03",
+  "stage": "HALF_TIME_FIRST_HALF_STATS",
+  "approx_screen_capture_time_brt": "2026-11-03T22:40:00-03:00",
+  "live_score_at_2H_start": "0–0",
+  "live_match_clock": "2nd half 45:35–46:04",
+  "source": "Five Flashscore screenshots provided by user",
+  "screen_files": [
+    "1000062494.jpg",
+    "1000062495.jpg",
+    "1000062496.jpg",
+    "1000062497.jpg",
+    "1000062498.jpg"
+  ],
+  "first_half": {
+    "Internacional": {
+      "goals": 0,
+      "shots": 5,
+      "target": 2,
+      "big_chances": 1,
+      "xG": 0.42,
+      "corners": 5,
+      "possession_pct": 58
+    },
+    "Coritiba": {
+      "goals": 0,
+      "shots": 5,
+      "target": 1,
+      "big_chances": 1,
+      "xG": 0.43,
+      "corners": 1,
+      "possession_pct": 42
+    },
+    "totals": {
+      "goals": 0,
+      "shots": 10,
+      "target": 3,
+      "big_chances": 2,
+      "xG": 0.85,
+      "corners": 6
+    }
+  },
+  "pre_match_snapshot_sha": "124624db563a00f0e6fcd21056e990ea8d2ccf04",
+  "v4_relevant_first_half": {
+    "goals": {
+      "line": null,
+      "mean": 0.9,
+      "status": "ABSTENTION_CORRECTLY_NOT_UNDER_PREDICTION"
+    },
+    "shots": {
+      "line": 12.5,
+      "hits": 8,
+      "observations": 10,
+      "mean": 14,
+      "status": "MISS_IF_SHOTS_TOTAL_10"
+    },
+    "target": {
+      "line": 3.5,
+      "hits": 7,
+      "observations": 10,
+      "mean": 4.8,
+      "status": "MISS_IF_SHOTS_ON_TARGET_TOTAL_3"
+    },
+    "corners": {
+      "line": 3.5,
+      "hits": 7,
+      "observations": 10,
+      "mean": 5.4,
+      "status": "HIT_6_CORNERS"
+    }
+  },
+  "v4_second_half_goals": {
+    "over0_5": {
+      "historical_hits": 9,
+      "n": 10,
+      "mean": 1.7
+    },
+    "over1_5": {
+      "historical_frequency": "NOT_DERIVED",
+      "status": "NO_ORIGINAL_SIGNAL"
+    }
+  },
+  "scenario_only_poisson": {
+    "baseline_1": "If 2H expected goals lambda were 0.85 as 1H xG, independent Poisson P>=2=20.93%; first-half xG is not independently a 2H forecast.",
+    "baseline_2": "If 2H expected goals lambda were retrospective mean 1.7, independent Poisson P>=2=50.68%; descriptive reference, not calibrated.",
+    "not_a_confidence_interval": true
+  },
+  "bets_previously_reported": [
+    "FT Over9.5 corners at odds1.70 R$1 user-reported",
+    "FT Over1.5 goals at odds2.14 R$1 user-reported"
+  ],
+  "settlement": "OPEN_OR_NOT_VERIFIED",
+  "do_not_modify": [
+    "pre-match picks",
+    "production",
+    "legacy 659 games",
+    "V2/V3",
+    "original locked audits"
+  ],
+  "warnings": [
+    "No full 2H stats and no final score verified",
+    "The 1H display may freeze after 2H started",
+    "At screenshot time 2H clock near 46:04, no 2H pressure measurable",
+    "P>=2 2H is not covered by original 2H LV4 Over0.5 signal",
+    "No new bets or real-time bet value inference from scenarios"
+  ]
+}

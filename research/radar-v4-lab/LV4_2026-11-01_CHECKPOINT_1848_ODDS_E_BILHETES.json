@@ -1,0 +1,976 @@
+{
+  "date": "2026-11-01",
+  "cutoff": "2026-11-01T18:48:00-03:00",
+  "status": "PARTIAL_VALIDATION; user-reported Juventus/Marseille + public scores + settled user slips",
+  "base_ref": "research/radar-v4-lab/LV4_2026-11-01_CHECKPOINT_1736_UNION_VALIDADO.json",
+  "frozen_commit": "9e50531db0c18f7603df601e007ee20022de4c19",
+  "summary": {
+    "original_games": 20,
+    "original_decisions": 240,
+    "original_signals": 208,
+    "original_abstentions": 32,
+    "games_with_some_evidence": 19,
+    "decisions_for_those_games": 228,
+    "hits": 47,
+    "misses": 38,
+    "ND": 115,
+    "abstentions": 28,
+    "evaluated": 85,
+    "rate_pct": 55.29,
+    "unexamined_fixture": "Braga × Famalicão (8 signals,4 abstentions)",
+    "pending_total_signals": 123
+  },
+  "betting_summary": {
+    "tickets": 6,
+    "distinct_matches": 5,
+    "stake_fixed_brl": 1,
+    "staked_brl": 6,
+    "returned_brl": 5.64,
+    "net_brl": -0.36,
+    "roi_pct": -6,
+    "wins": 3,
+    "losses": 3,
+    "reported_user_settlements_not_independently_verified": [
+      "Juventus × Napoli",
+      "Marseille × Toulouse"
+    ],
+    "unavailable_odds": [
+      "Marítimo × Santa Clara escanteios FT Over7,5"
+    ]
+  },
+  "bets": [
+    {
+      "match": "Ath. Bilbao × Real Sociedad",
+      "league": "La Liga",
+      "selection": "Gols FT Over 2,5",
+      "odd": 1.74,
+      "stake": 1,
+      "return": 1.74,
+      "outcome": "WIN",
+      "frozen_line": 2.5,
+      "match_original": true,
+      "history": "7/10",
+      "settlement": "Screenshot definido"
+    },
+    {
+      "match": "Académico Viseu × Rio Ave",
+      "league": "Liga Portugal",
+      "selection": "Gols FT Over 2,5",
+      "odd": 1.86,
+      "stake": 1,
+      "return": 1.86,
+      "outcome": "WIN",
+      "frozen_line": 2.5,
+      "match_original": true,
+      "history": "7/10",
+      "settlement": "Screenshot definido"
+    },
+    {
+      "match": "Marítimo × Santa Clara",
+      "league": "Liga Portugal",
+      "selection": "Gols FT Over 2,5",
+      "odd": 2.41,
+      "stake": 1,
+      "return": 0,
+      "outcome": "LOSS",
+      "frozen_line": 2.5,
+      "match_original": true,
+      "history": "7/10",
+      "settlement": "Screenshot definido"
+    },
+    {
+      "match": "Marítimo × Santa Clara",
+      "league": "Liga Portugal",
+      "selection": "Escanteios FT Over 7,5",
+      "odd": null,
+      "stake": 1,
+      "return": 0,
+      "outcome": "LOSS",
+      "frozen_line": 7.5,
+      "match_original": true,
+      "history": "7/10",
+      "settlement": "Screenshot definido, odd N/D"
+    },
+    {
+      "match": "Marseille × Toulouse",
+      "league": "Ligue 1",
+      "selection": "Gols FT Over 2,5",
+      "odd": 1.47,
+      "stake": 1,
+      "return": 0,
+      "outcome": "LOSS",
+      "frozen_line": 2.5,
+      "match_original": true,
+      "history": "7/10",
+      "settlement": "User reported 2-0 FT, not new settled slip screenshot"
+    },
+    {
+      "match": "Juventus × Napoli",
+      "league": "Serie A italiana",
+      "selection": "Combinada: gols FT Over 1,5 + escanteios FT Over 8,5",
+      "odd": 2.04,
+      "stake": 1,
+      "return": 2.04,
+      "outcome": "WIN",
+      "frozen_line": "gols 1.5 / escanteios 9.5",
+      "match_original": false,
+      "history": "8/10 gols, 7/10 escanteios",
+      "settlement": "User reported win, not new settled slip screenshot"
+    }
+  ],
+  "betting_by_league": {
+    "La Liga": {
+      "tickets": 1,
+      "won": 1,
+      "lost": 0,
+      "staked": 1,
+      "returned": 1.74,
+      "profit": 0.74
+    },
+    "Liga Portugal": {
+      "tickets": 3,
+      "won": 1,
+      "lost": 2,
+      "staked": 3,
+      "returned": 1.86,
+      "profit": -1.14
+    },
+    "Ligue 1": {
+      "tickets": 1,
+      "won": 0,
+      "lost": 1,
+      "staked": 1,
+      "returned": 0,
+      "profit": -1
+    },
+    "Serie A italiana": {
+      "tickets": 1,
+      "won": 1,
+      "lost": 0,
+      "staked": 1,
+      "returned": 2.04,
+      "profit": 1.04
+    }
+  },
+  "betting_by_type": {
+    "Gols FT Over2.5": {
+      "tickets": 4,
+      "won": 2,
+      "lost": 2,
+      "staked": 4,
+      "returned": 3.6,
+      "profit": -0.3999999999999999
+    },
+    "other": {
+      "tickets": 2,
+      "won": 1,
+      "lost": 1,
+      "staked": 2,
+      "returned": 2.04,
+      "profit": 0.040000000000000036
+    }
+  },
+  "added_games": [
+    {
+      "fixture": "Ath. Bilbao x Real Sociedad",
+      "league": "La Liga espanhola 2026/27",
+      "score": "2-1",
+      "source_url": "https://sport.sky.it/calcio/liga/partite/2026/giornata-11/athletic-bilbao-real-sociedad/risultato-gol",
+      "evidence": "User's winning Over 2.5 screenshot + Sky Sport half-time goal times 14',30',45+2'; full time 2-1 user slip",
+      "source_class": "user_bet_and_public_live_match",
+      "results": {
+        "hits": 1,
+        "misses": 1,
+        "ND": 8,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 12.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "SEM_SINAL",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS",
+          "evidence_quality": "public_or_user_score_by_period"
+        }
+      ]
+    },
+    {
+      "fixture": "Académico Viseu x Rio Ave",
+      "league": "Liga Portugal 2026/27",
+      "score": "2-1",
+      "source_url": "https://www.noticiasaominuto.com/desporto/3076733/academico-de-viseu-bate-rio-ave-e-chega-a-sexta-vitoria-consecutiva-na-i-liga",
+      "evidence": "User's winning Over 2.5 screenshot; Lusa: Rio Ave scored 38', Viseu 69' and 77'.",
+      "source_class": "verified_public_media_and_user_bet",
+      "results": {
+        "hits": 3,
+        "misses": 0,
+        "ND": 9,
+        "abstentions": 0
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        }
+      ]
+    },
+    {
+      "fixture": "Marítimo x Santa Clara",
+      "league": "Liga Portugal 2026/27",
+      "score": "0-2",
+      "source_url": "https://www.noticiasaominuto.com/desporto/3075935/em-direto-casa-pia-sporting-da-pontape-de-saida-na-10-jornada",
+      "evidence": "User's settled losing Over 2.5 and Over 7.5 corner slips; Lusa 36' and 60' goals; exact number of corners NOT supplied.",
+      "source_class": "verified_public_media_and_user_bet",
+      "results": {
+        "hits": 2,
+        "misses": 2,
+        "ND": 7,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "MISS",
+          "evidence_quality": "settled_bet_loss_at_same_exact_market_and_line"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "MISS",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 9.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT",
+          "evidence_quality": "public_or_user_score_by_period"
+        }
+      ]
+    },
+    {
+      "fixture": "Marseille x Toulouse",
+      "league": "Ligue 1 francesa 2026/27",
+      "score": "2-0 (user reported)",
+      "source_url": "https://www.eurosport.fr/football/ligue-1/2026-2027/live-olympique-de-marseille-toulouse-fc_mtc21875780/live.shtml",
+      "evidence": "User confirmed Marseille 2-0 after goal disallowed; Eurosport reported 2-0 in first period, but retrieved page not final score; user says loss of Over 2.5.",
+      "source_class": "user_report_with_public_half_time_context",
+      "results": {
+        "hits": 0,
+        "misses": 2,
+        "ND": 9,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "MISS",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "SEM_SINAL",
+          "evidence_quality": "public_or_user_score_by_period"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS",
+          "evidence_quality": "public_or_user_score_by_period"
+        }
+      ]
+    },
+    {
+      "fixture": "Juventus x Napoli",
+      "league": "Serie A italiana 2026/27",
+      "score": "FT N/D (user reported combined criteria met)",
+      "source_url": "",
+      "evidence": "User explicitly reported successful combined ticket: FT goals Over1.5 and corners Over8.5. Frozen LV4 corners line Over9.5, so LV4 corners remain ND; no final score independently verified.",
+      "source_class": "user_report_only",
+      "results": {
+        "hits": 1,
+        "misses": 0,
+        "ND": 10,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 24.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "HIT",
+          "evidence_quality": "user_reported_winning_bet_same_exact_market_and_line"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 5.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND",
+          "evidence_quality": "unverified"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "markets": [
+      {
+        "group": "shots",
+        "hits": 7,
+        "misses": 8,
+        "evaluated": 15,
+        "rate_pct": 46.67,
+        "not_audited": 39
+      },
+      {
+        "group": "corners",
+        "hits": 8,
+        "misses": 8,
+        "evaluated": 16,
+        "rate_pct": 50,
+        "not_audited": 38
+      },
+      {
+        "group": "target",
+        "hits": 6,
+        "misses": 10,
+        "evaluated": 16,
+        "rate_pct": 37.5,
+        "not_audited": 36
+      },
+      {
+        "group": "goals",
+        "hits": 26,
+        "misses": 12,
+        "evaluated": 38,
+        "rate_pct": 68.42,
+        "not_audited": 2
+      }
+    ],
+    "periods": [
+      {
+        "group": "full",
+        "hits": 30,
+        "misses": 26,
+        "evaluated": 56,
+        "rate_pct": 53.57,
+        "not_audited": 13
+      },
+      {
+        "group": "first",
+        "hits": 7,
+        "misses": 4,
+        "evaluated": 11,
+        "rate_pct": 63.64,
+        "not_audited": 48
+      },
+      {
+        "group": "second",
+        "hits": 10,
+        "misses": 8,
+        "evaluated": 18,
+        "rate_pct": 55.56,
+        "not_audited": 54
+      }
+    ],
+    "leagues": [
+      {
+        "group": "Premier League inglesa 2026/27",
+        "hits": 1,
+        "misses": 3,
+        "evaluated": 4,
+        "rate_pct": 25,
+        "not_audited": 5
+      },
+      {
+        "group": "La Liga espanhola 2026/27",
+        "hits": 11,
+        "misses": 7,
+        "evaluated": 18,
+        "rate_pct": 61.11,
+        "not_audited": 26
+      },
+      {
+        "group": "Bundesliga 2026/27",
+        "hits": 7,
+        "misses": 7,
+        "evaluated": 14,
+        "rate_pct": 50,
+        "not_audited": 6
+      },
+      {
+        "group": "Serie A italiana 2026/27",
+        "hits": 12,
+        "misses": 10,
+        "evaluated": 22,
+        "rate_pct": 54.55,
+        "not_audited": 33
+      },
+      {
+        "group": "Ligue 1 francesa 2026/27",
+        "hits": 10,
+        "misses": 6,
+        "evaluated": 16,
+        "rate_pct": 62.5,
+        "not_audited": 24
+      },
+      {
+        "group": "Liga Portugal 2026/27",
+        "hits": 6,
+        "misses": 5,
+        "evaluated": 11,
+        "rate_pct": 54.55,
+        "not_audited": 21
+      }
+    ]
+  },
+  "caveats": [
+    "Per-event historical 7/10 not calibrated future probability",
+    "Not all 20 fixtures completed or externally audited",
+    "Statistical signals from same match are dependent; 85 evaluated decisions is not 85 independent events",
+    "Stake screenshots may be live during game, no original pre-kickoff odds timestamps",
+    "Juventus market was not the original LV4 corners line: Over8.5 vs frozen Over9.5; original corners remains ND",
+    "Marseille final 2-0 from user's message; external live page was outdated",
+    "Marítimo corners no exact count but ticket definitively lost per screenshot"
+  ]
+}

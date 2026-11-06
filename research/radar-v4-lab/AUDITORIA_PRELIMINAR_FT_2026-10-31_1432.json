@@ -1,0 +1,183 @@
+{
+  "format": "futstats-radar-v4-auditoria-ft-parcial-2026-10-31-v1",
+  "observation_cutoff": "2026-10-31T14:32:04-03:00",
+  "original_forecasts_commit": "a5964b45814bd2dbcba830dd5e20148724b8b1a2",
+  "scope": "15 matches with FT scores confirmed by 14:32 Brazil time. Full-match metrics only; separately compare 2nd-half goals using verified half-time scores.",
+  "summary": {
+    "matches_confirmed": 15,
+    "full_signals_scored": 57,
+    "full_hits": 37,
+    "full_misses": 20,
+    "full_pending": 1,
+    "full_abstentions": 2,
+    "second_half_goal_signals_scored": 15,
+    "second_half_goals_hits": 11,
+    "second_half_goals_misses": 4
+  },
+  "by_market": {
+    "shots": {
+      "hit": 10,
+      "miss": 5
+    },
+    "corners": {
+      "hit": 9,
+      "miss": 3,
+      "pending": 1,
+      "abstentions": 2
+    },
+    "target": {
+      "hit": 8,
+      "miss": 7
+    },
+    "goals": {
+      "hit": 10,
+      "miss": 5
+    }
+  },
+  "fixtures": [
+    {
+      "home": "Chelsea",
+      "away": "Manchester Utd",
+      "score": "2-0",
+      "full_hits": 4,
+      "full_misses": 0,
+      "full_pending": 0
+    },
+    {
+      "home": "Levante",
+      "away": "Atl. Madrid",
+      "score": "0-2",
+      "full_hits": 3,
+      "full_misses": 1,
+      "full_pending": 0
+    },
+    {
+      "home": "Al-Taawon",
+      "away": "Al Ettifaq",
+      "score": "1-1",
+      "full_hits": 1,
+      "full_misses": 2,
+      "full_pending": 0
+    },
+    {
+      "home": "Bologna",
+      "away": "Monza",
+      "score": "2-1",
+      "full_hits": 2,
+      "full_misses": 2,
+      "full_pending": 0
+    },
+    {
+      "home": "Augsburg",
+      "away": "Freiburg",
+      "score": "1-2",
+      "full_hits": 0,
+      "full_misses": 4,
+      "full_pending": 0
+    },
+    {
+      "home": "Leverkusen",
+      "away": "Stuttgart",
+      "score": "2-4",
+      "full_hits": 4,
+      "full_misses": 0,
+      "full_pending": 0
+    },
+    {
+      "home": "Monchengladbach",
+      "away": "Paderborn",
+      "score": "0-0",
+      "full_hits": 2,
+      "full_misses": 2,
+      "full_pending": 0
+    },
+    {
+      "home": "Schalke",
+      "away": "RB Leipzig",
+      "score": "0-2",
+      "full_hits": 4,
+      "full_misses": 0,
+      "full_pending": 0
+    },
+    {
+      "home": "Bremen",
+      "away": "Hoffenheim",
+      "score": "2-0",
+      "full_hits": 2,
+      "full_misses": 2,
+      "full_pending": 0
+    },
+    {
+      "home": "Al-Fayha",
+      "away": "Al Faysaly",
+      "score": "4-1",
+      "full_hits": 3,
+      "full_misses": 1,
+      "full_pending": 0
+    },
+    {
+      "home": "Bournemouth",
+      "away": "Leeds",
+      "score": "2-0",
+      "full_hits": 1,
+      "full_misses": 2,
+      "full_pending": 0
+    },
+    {
+      "home": "Brentford",
+      "away": "Nottingham",
+      "score": "2-0",
+      "full_hits": 1,
+      "full_misses": 2,
+      "full_pending": 1
+    },
+    {
+      "home": "Coventry",
+      "away": "Sunderland",
+      "score": "3-1",
+      "full_hits": 4,
+      "full_misses": 0,
+      "full_pending": 0
+    },
+    {
+      "home": "Hull",
+      "away": "Ipswich",
+      "score": "2-2",
+      "full_hits": 3,
+      "full_misses": 1,
+      "full_pending": 0
+    },
+    {
+      "home": "Manchester City",
+      "away": "Brighton",
+      "score": "0-1",
+      "full_hits": 3,
+      "full_misses": 1,
+      "full_pending": 0
+    }
+  ],
+  "missing_reliable_ft_at_cutoff": [
+    "Rayo Vallecano × Celta de Vigo",
+    "Moreirense × Estrela da Amadora"
+  ],
+  "source_discrepancy": "Brentford × Nottingham corners: zerozero/ogol displayed 3-3 (total 6); other match feed thefishy 3-4 (total 7). Excluded from denominator until same-source FT validation.",
+  "calculation": "Over strict > threshold from frozen original picks, one stake of R$ 2 per evaluated signal at hypothetical 1.50 decimal odds: 37 × 1 - 20 × 2 = -R$ 3 on 57 stakes (R$ 114). Not actual wagering.",
+  "warning": "Do not call this a final 12-market audit. First and second half shots/target/corners await matching-source verification. No odds confirmed. No rewriting original predictions.",
+  "sources": [
+    "https://www.skysports.com/football/chelsea-vs-man-utd/stats/6645287564929404232",
+    "https://www.skysports.com/football/levante-vs-atletico-madrid/stats/563029",
+    "https://www.tntsports.co.uk/football/premier-league/2026-2027/live-coventry-city-sunderland_mtc21883184/live-stats.shtml",
+    "https://www.tntsports.co.uk/football/premier-league/2026-2027/live-hull-city-ipswich-town_mtc21883095/live-stats.shtml",
+    "https://www.skysports.com/football/man-city-vs-brighton/stats/6434047315977789232",
+    "https://www.skysports.com/football/schalke-vs-rb-leipzig/563378",
+    "https://sport.sky.de/fussball/leverkusen-vs-stuttgart/daten/563373",
+    "https://www.skysports.com/football/werder-bremen-vs-tsg-hoffenheim/stats/563380",
+    "https://www.tntsports.co.uk/football/bundesliga/2026-2027/live-fc-augsburg-sc-freiburg_mtc21893553/live-stats.shtml",
+    "https://tribuna.com/en/match/102851586/",
+    "https://www.ogol.com.br/ao-vivo/2026-10-31-bologna-monza/12240800?all_comments=1",
+    "https://once90.com/partido/af-1603079",
+    "https://kickmetrics.io/en/soccer/match/al-fayha-al-faisaly/019fa689-3987-72f8-921d-15b4e3096e49",
+    "https://www.theguardian.com/football/live/2026/oct/31/manchester-city-v-brighton-bournemouth-v-leeds-and-more-clockwatch-live",
+    "https://partidos-de-hoy.es/partido/bournemouth-vs-leeds-2026-10-31/"
+  ]
+}

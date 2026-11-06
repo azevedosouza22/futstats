@@ -1,0 +1,243 @@
+{
+  "date": "2026-11-04",
+  "source": "User-provided three Flashscore full/first/second period screenshots at 21:29 BRT; halftime score separately corroborated by Netvasco news",
+  "screenshot_files": [
+    "1000062730.jpg",
+    "1000062729.jpg",
+    "1000062728.jpg"
+  ],
+  "first_half_score_source": "https://www.netvasco.com.br/n/395615/intervalo-na-arena-da-baixada-vasco-vai-perdendo-para-o-athletico-pr-por-1-a-0",
+  "fixture": "Athletico-PR × Vasco",
+  "competition": "Brasileirão Série A 2026",
+  "round": 34,
+  "score": {
+    "full": "1-3",
+    "first": "1-0",
+    "second": "0-3"
+  },
+  "observation": {
+    "full": {
+      "home": {
+        "goals": 1,
+        "shots": 15,
+        "target": 4,
+        "corners": 7,
+        "xg": 0.38
+      },
+      "away": {
+        "goals": 3,
+        "shots": 7,
+        "target": 3,
+        "corners": 0,
+        "xg": 0.71
+      }
+    },
+    "first": {
+      "home": {
+        "goals": 1,
+        "shots": 8,
+        "target": 3,
+        "corners": 2,
+        "xg": 0.22
+      },
+      "away": {
+        "goals": 0,
+        "shots": 3,
+        "target": 1,
+        "corners": 0,
+        "xg": 0.13
+      }
+    },
+    "second": {
+      "home": {
+        "goals": 0,
+        "shots": 7,
+        "target": 1,
+        "corners": 5,
+        "xg": 0.16
+      },
+      "away": {
+        "goals": 3,
+        "shots": 4,
+        "target": 2,
+        "corners": 0,
+        "xg": 0.58
+      }
+    }
+  },
+  "totals": {
+    "full": {
+      "goals": 4,
+      "shots": 22,
+      "target": 7,
+      "corners": 7,
+      "xg": 1.09
+    },
+    "first": {
+      "goals": 1,
+      "shots": 11,
+      "target": 4,
+      "corners": 2,
+      "xg": 0.35
+    },
+    "second": {
+      "goals": 3,
+      "shots": 11,
+      "target": 3,
+      "corners": 5,
+      "xg": 0.74
+    }
+  },
+  "frozen_lv4_source": {
+    "path": "research/radar-v4-lab/LV4_2026-11-04_CHECKPOINT_PREJOGO_VERIFICADO.json",
+    "sha": "bf232d86a00b3104782e91561f25d7d7d6758b38"
+  },
+  "frozen_elite_source": {
+    "path": "research/radar-v4-lab/LV4_ELITE_2026-11-04_TRIAGEM_BRASILEIRAO.json",
+    "sha": "79d5d8c2764ea154032835f79cbb34af6ce07ea1"
+  },
+  "outcomes": [
+    {
+      "period": "full",
+      "market": "goals",
+      "original_line": 1.5,
+      "frequency": "8/10",
+      "actual": 4,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "first",
+      "market": "goals",
+      "original_line": 0.5,
+      "frequency": "8/10",
+      "actual": 1,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "second",
+      "market": "goals",
+      "original_line": 0.5,
+      "frequency": "7/10",
+      "actual": 3,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "full",
+      "market": "shots",
+      "original_line": 26.5,
+      "frequency": "7/10",
+      "actual": 22,
+      "result": "MISS",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "first",
+      "market": "shots",
+      "original_line": 10.5,
+      "frequency": "8/9",
+      "actual": 11,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "second",
+      "market": "shots",
+      "original_line": 13.5,
+      "frequency": "8/9",
+      "actual": 11,
+      "result": "MISS",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "full",
+      "market": "target",
+      "original_line": 7.5,
+      "frequency": "8/10",
+      "actual": 7,
+      "result": "MISS",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "first",
+      "market": "target",
+      "original_line": 3.5,
+      "frequency": "7/9",
+      "actual": 4,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "second",
+      "market": "target",
+      "original_line": 2.5,
+      "frequency": "8/9",
+      "actual": 3,
+      "result": "HIT",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "full",
+      "market": "corners",
+      "original_line": 9.5,
+      "frequency": "7/10",
+      "actual": 7,
+      "result": "MISS",
+      "elite_status": "LV4_CONVENTIONAL"
+    },
+    {
+      "period": "first",
+      "market": "corners",
+      "original_line": 3.5,
+      "frequency": "9/10",
+      "actual": 2,
+      "result": "MISS",
+      "elite_status": "ELITE_REVIEW"
+    },
+    {
+      "period": "second",
+      "market": "corners",
+      "original_line": 3.5,
+      "frequency": "9/10",
+      "actual": 5,
+      "result": "HIT",
+      "elite_status": "ELITE_CANDIDATE"
+    }
+  ],
+  "audit": {
+    "hits": 7,
+    "misses": 5,
+    "abstentions": 0,
+    "precision_pct": 58.33,
+    "by_grade": {
+      "ELITE_CANDIDATE": {
+        "hits": 1,
+        "misses": 0
+      },
+      "ELITE_REVIEW": {
+        "hits": 0,
+        "misses": 1
+      },
+      "LV4_CONVENTIONAL": {
+        "hits": 6,
+        "misses": 4
+      }
+    }
+  },
+  "insights": [
+    "Elite 2nd-half corners Over 3.5 hit with 5 corners; all five were Athletico-PR corners, Vasco none.",
+    "Review 1st-half corners Over 3.5 missed with only 2; despite combined FT 7, half splits differ.",
+    "FT Over 1.5 goals hit as 4 goals despite xG total just 1.09; quality model discrepancy or finishing variance, verify xG source before higher confidence.",
+    "FT shots Over26.5 missed (22), while first-half Over10.5 shots hit (11).",
+    "FT target Over7.5 missed (7), whereas first half Over3.5 hit (4), second half Over2.5 hit (3).",
+    "No bets reported for this fixture; do not infer bets or profitability."
+  ],
+  "safeguards": [
+    "Preserve original locked LV4 forecasts and provisional Elite thresholds",
+    "No production merge or alterations to historical 659 games, V2/V3, backups",
+    "Do not conflate Elite historical consistency with financial value",
+    "This audit only covers Athletico-PR × Vasco among Wednesday's matches"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "fixture": "Internacional × Coritiba",
+  "date": "2026-11-03",
+  "phase": "LIVE",
+  "audit_update": "User explicitly confirms goal was scored in the second half",
+  "source": "user conversation report",
+  "timestamp_precision": "not provided",
+  "original_prediction": {
+    "market": "goals",
+    "period": "second",
+    "line": "Over 0.5",
+    "history": "9/10",
+    "status": "HIT_CONFIRMED_BY_USER"
+  },
+  "ticket": {
+    "stake_brl": 1,
+    "odds_decimal": 1.75,
+    "winning_condition": "at least one valid second-half goal",
+    "match_event_satisfied": true,
+    "potential_payout_brl": 1.75,
+    "potential_profit_brl": 0.75,
+    "platform_settlement": "NOT_EXPLICITLY_CONFIRMED",
+    "bet_acceptance_pre_goal": "NOT_EXPLICITLY_CONFIRMED"
+  },
+  "other_tickets": [
+    {
+      "market": "Chapecoense × Mirassol corners FT Over 7.5",
+      "stake_brl": 1,
+      "odd": 1.74,
+      "status": "WIN"
+    },
+    {
+      "market": "Internacional × Coritiba corners FT Over 9.5",
+      "stake_brl": 1,
+      "odd": 1.7,
+      "status": "WIN"
+    },
+    {
+      "market": "Internacional × Coritiba goals FT Over 1.5",
+      "stake_brl": 1,
+      "odd": 2.14,
+      "status": "PENDING"
+    }
+  ],
+  "caution": "Do not conflate statistical signal success with confirmed ticket settlement; user did not explicitly supply proof of platform liquidation. Do not alter frozen models or production."
+}

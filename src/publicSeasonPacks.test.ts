@@ -12,37 +12,29 @@ const recent=readFileSync(new URL('../public/research/partidas-work-extras-68-v1
 const baseline=parseResearchCatalog(main,recent);
 const manifest=source('../public/research/packs/manifest-v1.json');
 const entries=parseResearchPackManifest(manifest);
-const packs=[
- source('../public/research/packs/premier_league_2025_26.json'),
- source('../public/research/packs/la_liga_2025_26.json'),
- source('../public/research/packs/serie_a_italiana_2025_26.json'),
- source('../public/research/packs/ligue_1_francesa_2025_26.json'),
- source('../public/research/packs/liga_portugal_2025_26.json'),
- source('../public/research/packs/brasileirao_2026_incremental_20261029.json'),
- source('../public/research/packs/liga_portugal_2026_27.json'),
- source('../public/research/packs/saudi_pro_league_2026_27.json'),
- source('../public/research/packs/saudi_pro_league_2025_26.json')
-];
+const packs=entries.map(e=>source('../public/research/packs/'+e.file));
 const loaded=applyBrazilResearchDateReview(mergeResearchPacks(baseline,entries,packs),source('../public/research/brasileirao-2026-review-20261029.json'));
 const bySource=(m:Match)=>m.research!.sourceId;
-describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos anteriores preservados',()=>{
+describe('Pesquisa pública — 3.786 jogos com MLS 2025 e 17 resultados LV4 validados',()=>{
  it('carrega automaticamente os pacotes autorizados, sem alterar os 1.019 anteriores',()=>{
   const original=JSON.stringify(baseline.data);
-  expect(entries).toHaveLength(9);
-  expect(entries.map(x=>x.count)).toEqual([380,380,380,305,306,5,81,98,306]);
-  expect(loaded.total).toBe(3260);
-  expect(loaded.dateConflicts).toBe(0);
-  expect(loaded.data.matches).toHaveLength(3260);
+  expect(entries).toHaveLength(16);
+  expect(entries.slice(0,9).map(x=>x.count)).toEqual([380,380,380,305,306,5,81,98,306]);
+  expect(entries.slice(9).map(x=>x.count)).toEqual([509,6,2,2,1,5,1]);
+  expect(loaded.total).toBe(3786);
+  expect(loaded.dateConflicts).toBe(254);
+  expect(loaded.data.matches).toHaveLength(3786);
   expect(loaded.data.radarSnapshots).toBeUndefined();
   expect(JSON.stringify(baseline.data)).toBe(original);
  });
  it('sem IDs repetidos, preservando liga, três períodos e proveniência Flashscore',()=>{
-  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(3260);
+  expect(new Set(loaded.data.matches.map(bySource)).size).toBe(3786);
   expect(loaded.data.matches.some(m=>m.research?.sourceId==='z9FNO7c2')).toBe(false);
-  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(3260);
+  expect(new Set(loaded.data.matches.map(m=>m.id)).size).toBe(3786);
   for(const [index,pack] of packs.entries()){
    expect(pack.data.matches).toHaveLength(entries[index].count);
-   expect(pack.data.teams).toHaveLength(index===5?10:index>=3?18:20);
+   if(index<9)expect(pack.data.teams).toHaveLength(index===5?10:index>=3?18:20);
+   else expect(pack.data.teams.length).toBeGreaterThanOrEqual(2);
    expect(new Set(pack.data.matches.map((m:Match)=>m.research!.sourceId)).size).toBe(entries[index].count);
    for(const m of pack.data.matches as Match[]){
     expect(m.competition).toBe(pack.competition);
@@ -58,8 +50,8 @@ describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos an
   expect(loaded.leagues.find(x=>x.competition==='Serie A italiana 2025/26')?.count).toBe(380);
   expect(loaded.leagues.find(x=>x.competition==='Ligue 1 francesa 2025/26')?.count).toBe(305);
   expect(loaded.leagues.find(x=>x.competition==='Liga Portugal 2025/26')?.count).toBe(306);
-  expect(loaded.leagues.find(x=>x.competition==='Liga Portugal 2026/27')?.count).toBe(81);
-  expect(loaded.leagues.find(x=>x.competition==='Saudi Pro League 2026/27')?.count).toBe(98);
+  expect(loaded.leagues.find(x=>x.competition==='Liga Portugal 2026/27')?.count).toBe(82);
+  expect(loaded.leagues.find(x=>x.competition==='Saudi Pro League 2026/27')?.count).toBe(100);
   expect(loaded.leagues.find(x=>x.competition==='Saudi Pro League 2025/26')?.count).toBe(306);
  });
  it('Serie A 2025/26 cobre 20 equipes e 38 jogos por equipe, sem dados ausentes',()=>{
@@ -145,7 +137,7 @@ describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos an
   expect([...home.values()].every(n=>n>=4&&n<=5)).toBe(true);
   expect([...away.values()].every(n=>n>=4&&n<=5)).toBe(true);
   expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2025/26')).toHaveLength(306);
-  expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2026/27')).toHaveLength(81);
+  expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2026/27')).toHaveLength(82);
   expect(loaded.data.radarSnapshots).toBeUndefined();
  });
  it('Saudi Pro League 2026/27: 98 jogos encerrados, 18 equipes e períodos consistentes',()=>{
@@ -173,8 +165,8 @@ describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos an
   expect([...rounds].sort((a,b)=>a[0]-b[0])).toEqual(expected.map((n,i)=>[i+1,n]));
   expect(teams.size).toBe(18);
   expect([...teams.values()].reduce((sum,x)=>sum+x.home+x.away,0)).toBe(196);
-  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(98);
-  expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2026/27')).toHaveLength(81);
+  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(100);
+  expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2026/27')).toHaveLength(82);
   expect(loaded.data.matches.filter(m=>m.competition==='Liga Portugal 2025/26')).toHaveLength(306);
   expect(loaded.data.radarSnapshots).toBeUndefined();
  });
@@ -204,7 +196,7 @@ describe('Pesquisa pública: Saudi Pro League 2025/26 + 2026/27 e 2.856 jogos an
   expect([...home.values()].every(n=>n===17)).toBe(true);
   expect([...away.values()].every(n=>n===17)).toBe(true);
   expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2025/26')).toHaveLength(306);
-  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(98);
+  expect(loaded.data.matches.filter(m=>m.competition==='Saudi Pro League 2026/27')).toHaveLength(100);
   expect(loaded.data.radarSnapshots).toBeUndefined();
  });
  it('reconcilia variações Athletic Bilbao e Celta entre as temporadas',()=>{

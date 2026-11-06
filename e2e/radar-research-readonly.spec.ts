@@ -1,13 +1,14 @@
 import {expect,test} from '@playwright/test';
+import {RESEARCH_TOTAL,RESEARCH_TOTAL_LABEL} from './research-total';
 
-/** A clean experimental browser reads the 3,260 published research games.
+/** A clean experimental browser reads the full published research catalog.
  * Never imports them into 'futstats:v1' or recalculates saved predictions.
  */
 test.use({serviceWorkers:'block'});
 test('Radar e As Boas consultam pesquisa quando a base pessoal está vazia',async({page})=>{
  await page.route('**/raw.githubusercontent.com/**',r=>r.abort());
  await page.goto('/');
- await expect(page.getByText('3.260',{exact:true})).toBeVisible({timeout:45000});
+ await expect(page.getByText(RESEARCH_TOTAL_LABEL,{exact:true})).toBeVisible({timeout:45000});
  await expect(page.getByText('V2/V3 · pesquisa histórica')).toBeVisible();
  const native=await page.evaluate(()=>localStorage.getItem('futstats:v1'));
  expect(native).toBeNull();
@@ -15,7 +16,7 @@ test('Radar e As Boas consultam pesquisa quando a base pessoal está vazia',asyn
  await shortcut.click();
  await expect(page.getByText(/3.260 jogos de pesquisa/)).toBeVisible({timeout:45000});
  await page.getByRole('button',{name:/Ver previsões já registradas/}).click();
- await expect(page.locator('.radar-hero-stats')).toContainText('3260');
+ await expect(page.locator('.radar-hero-stats')).toContainText(String(RESEARCH_TOTAL));
  expect(await page.evaluate(()=>localStorage.getItem('futstats:v1'))).toBeNull();
  expect(await page.evaluate(()=>localStorage.getItem('futstats-radar-previews-v1'))).toBeNull();
 });

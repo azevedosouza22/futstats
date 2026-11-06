@@ -1,0 +1,64 @@
+{
+  "fixture": "Internacional × Coritiba",
+  "date": "2026-11-03",
+  "source": "User statement in live ChatGPT conversation",
+  "status": "USER_REPORTED_ENTRY_NO_SETTLEMENT_SCREEN",
+  "entry": {
+    "market": "2H total goals",
+    "selection": "Over 0.5 goal",
+    "stake_brl": 1,
+    "decimal_odds": 1.75,
+    "market_matches_original_lv4": true,
+    "placed_before_goal": "NOT_EXPLICITLY_CONFIRMED",
+    "reported_settlement": "NOT_EXPLICITLY_CONFIRMED",
+    "would_win_if_placed_before_valid_2H_goal": true,
+    "payout_if_won_brl": 1.75,
+    "profit_if_won_brl": 0.75
+  },
+  "original_lv4": {
+    "market": "goals",
+    "period": "second",
+    "over_line": 0.5,
+    "historical_hits": 9,
+    "historical_n": 10,
+    "reference": "research/radar-v4-lab/LV4_2026-11-03_CHECKPOINT_PREJOGO_11_CONFRONTOS.json"
+  },
+  "live_match_info": {
+    "at_least_one_second_half_goal": "USER_REPORTED_IN_PREVIOUS_MESSAGE",
+    "source_verified": false
+  },
+  "other_reported_entries": [
+    {
+      "fixture": "Chapecoense × Mirassol",
+      "market": "FT corners Over7.5",
+      "stake_brl": 1,
+      "odds": 1.74,
+      "settlement": "WIN_SCREENSHOT"
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "FT corners Over9.5",
+      "stake_brl": 1,
+      "odds": 1.7,
+      "settlement": "WIN_USER_REPORTED"
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "FT goals Over1.5",
+      "stake_brl": 1,
+      "odds": 2.14,
+      "settlement": "NOT_CONFIRMED"
+    }
+  ],
+  "projection_if_confirmed": {
+    "three_winning_bets_total_stake_brl": 3,
+    "total_returns_brl": 5.19,
+    "net_profit_brl": 2.19,
+    "does_not_include_pending_full_goals_bet": true
+  },
+  "safeguards": [
+    "No claim of settlement without proof of entry before goal and ticket outcome",
+    "Do not alter frozen forecasts, 659 personal games, Radar V2/V3, or production",
+    "Do not recommend further real money bets"
+  ]
+}

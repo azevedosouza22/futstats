@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-03",
+  "fixture": "Internacional × Coritiba",
+  "source": "user live match report, unverified externally",
+  "event": "at approximately minute 55, 10th match corner reached",
+  "prediction": {
+    "market": "corners",
+    "period": "full",
+    "over_line": 9.5,
+    "historical_over": 8,
+    "historical_n": 10,
+    "original_lv4_checkpoint": "research/radar-v4-lab/LV4_2026-11-03_CHECKPOINT_PREJOGO_11_CONFRONTOS.json",
+    "status": "HIT_REPORTED"
+  },
+  "ticket": {
+    "stake_brl": 1,
+    "decimal_odds": 1.7,
+    "potential_return_brl": 1.7,
+    "potential_net_brl": 0.7,
+    "status": "USER_REPORTED_WIN",
+    "settlement_screen": "N/D"
+  },
+  "related_tickets": [
+    {
+      "fixture": "Chapecoense × Mirassol",
+      "line": "FT corners over 7.5",
+      "odd": 1.74,
+      "stake_brl": 1,
+      "status": "USER_SCREENSHOT_WON",
+      "return_brl": 1.74
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "line": "FT goals over 1.5",
+      "odd": 2.14,
+      "stake_brl": 1,
+      "status": "PENDING_NO_SETTLEMENT_REPORTED"
+    }
+  ],
+  "closed_two_corner_winners": {
+    "stakes_brl": 2,
+    "returns_brl": 3.44,
+    "net_brl": 1.44
+  },
+  "note": "No other bets or forecasts altered; do not infer outcome of full-time goals from corner settlement. Keep source qualifiers. No real bets recommended.",
+  "safeguards": [
+    "preserve production",
+    "preserve original frozen predictions",
+    "preserve personal 659 matches",
+    "preserve Radar V2/V3"
+  ]
+}

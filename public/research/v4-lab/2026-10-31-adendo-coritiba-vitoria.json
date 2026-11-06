@@ -1,0 +1,227 @@
+{
+  "format": "futstats-radar-v4-prospectiva-experimental-v1",
+  "archive_id": "2026-10-31-adendo-coritiba-vitoria",
+  "date": "2026-10-31",
+  "timezone": "America/Sao_Paulo",
+  "generated_at_utc": "2026-10-31T13:00:44.063Z",
+  "experiment_status": "late-added-pregame-correction-not-part-of-original-29",
+  "repository": "azevedosouza22/futstats",
+  "branch": "feat/v4-laboratorio-analisar-jogos-hoje",
+  "methodology": {
+    "historical_last_team_matches": 5,
+    "historical_unique_min": 8,
+    "cutoff_exclusive_date": "2026-10-31",
+    "qualifying_frequency_min": 0.7,
+    "selection": "highest qualifying Over from fixed V4 line list",
+    "odds": "not verified",
+    "future_probability": "not calibrated"
+  },
+  "source_files": [
+    {
+      "path": "public/research/partidas-work-951-v1.json",
+      "blob_sha": "0f8af057fcf75b39f7c04f10c8855dd9476a11b4"
+    },
+    {
+      "path": "public/research/partidas-work-extras-68-v1.txt",
+      "blob_sha": "490d9233ca9f1b550c620522c0c641dc3b7f0d3f"
+    },
+    {
+      "path": "public/research/packs/brasileirao_2026_incremental_20261029.json",
+      "blob_sha": "ad90dd97881c1d05097fe9552f6733162ede0d82"
+    },
+    {
+      "path": "public/research/brasileirao-2026-review-20261029.json",
+      "blob_sha": "c2887deba240006f6837d720b7db8997dcd5ef17"
+    }
+  ],
+  "sources_external_fixtures": [
+    "https://federacaopr.com.br/campeonato/profissional/2026/48/jogo/2509/",
+    "https://ge.globo.com/pr/futebol/brasileirao-serie-a/noticia/2026/10/16/coritiba-x-vitoria-pelo-brasileirao-tem-mudanca-de-data-e-horario-veja-detalhes.ghtml"
+  ],
+  "universe_current_seasons": [
+    "Brasileirão Série A 2026"
+  ],
+  "fixtures_count": 1,
+  "signal_count": 12,
+  "abstention_count": 0,
+  "signals_by_period": {
+    "full": 4,
+    "first": 4,
+    "second": 4
+  },
+  "notes": [
+    "Adendo motivado por correção da agenda: Coritiba x Vitória foi transferido de 29/10 para 31/10, 16h Brasília.",
+    "Não pertence ao arquivo original de 29 jogos de 31/10, que permanece intocado.",
+    "Gerado antes do pontapé inicial; nenhum resultado real do dia consultado.",
+    "Os dez IDs históricos pertencem às últimas cinco partidas anteriores por equipe, sem reutilizar a partida atual.",
+    "Sem odds verificadas, não representa recomendação de aposta nem probabilidade futura calibrada.",
+    "A diferença de horário usada no sistema de calendário antigo foi comprovada em fonte de 16/10 e pela federação local."
+  ],
+  "fixtures": [
+    {
+      "competition": "Brasileirão Série A 2026",
+      "date": "2026-10-31",
+      "home": "Coritiba",
+      "away": "Vitória",
+      "time_brasilia": "16:00",
+      "fixture_source": "https://federacaopr.com.br/campeonato/profissional/2026/48/jogo/2509/",
+      "source_category": "verified-federation-schedule",
+      "round": "33",
+      "home_history": [
+        {
+          "id": "AFN2tZED",
+          "date": "2026-09-19"
+        },
+        {
+          "id": "EmpIvY0N",
+          "date": "2026-10-08"
+        },
+        {
+          "id": "OKIyMMkK",
+          "date": "2026-10-12"
+        },
+        {
+          "id": "MyxaPedC",
+          "date": "2026-10-17"
+        },
+        {
+          "id": "UJYsf713",
+          "date": "2026-10-26"
+        }
+      ],
+      "away_history": [
+        {
+          "id": "QDY1rG1b",
+          "date": "2026-09-20"
+        },
+        {
+          "id": "YDhJ7WU9",
+          "date": "2026-10-07"
+        },
+        {
+          "id": "nHIhMVq3",
+          "date": "2026-10-10"
+        },
+        {
+          "id": "hdprTwcm",
+          "date": "2026-10-19"
+        },
+        {
+          "id": "xpxjhoWF",
+          "date": "2026-10-24"
+        }
+      ],
+      "unique_history_count": 10,
+      "picks": [
+        {
+          "period": "full",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 26.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 30.8
+        },
+        {
+          "period": "full",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 10.9
+        },
+        {
+          "period": "full",
+          "metric": "target",
+          "status": "sinal",
+          "line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 10.1
+        },
+        {
+          "period": "full",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 2.8
+        },
+        {
+          "period": "first",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 12.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "mean": 14.5
+        },
+        {
+          "period": "first",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 5
+        },
+        {
+          "period": "first",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "mean": 5.1
+        },
+        {
+          "period": "first",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.2
+        },
+        {
+          "period": "second",
+          "metric": "shots",
+          "status": "sinal",
+          "line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 16.3
+        },
+        {
+          "period": "second",
+          "metric": "corners",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 5.9
+        },
+        {
+          "period": "second",
+          "metric": "target",
+          "status": "sinal",
+          "line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "mean": 5
+        },
+        {
+          "period": "second",
+          "metric": "goals",
+          "status": "sinal",
+          "line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "mean": 1.6
+        }
+      ]
+    }
+  ]
+}

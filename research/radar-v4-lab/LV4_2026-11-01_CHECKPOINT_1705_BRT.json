@@ -1,0 +1,1913 @@
+{
+  "format": "futstats-lv4-midday-audit",
+  "date": "2026-11-01",
+  "cutoff_local": "2026-11-01T17:05:00-03:00",
+  "timezone": "America/Sao_Paulo",
+  "status": "PROVISIONAL_MIXED_SOURCES",
+  "frozen_commit": "9e50531db0c18f7603df601e007ee20022de4c19",
+  "frozen_file": "research/radar-v4-lab/PREVISOES_PROSPECTIVAS_2026-11-01.json",
+  "method": "Only verified FT metrics, halftime goals; no invented 1T/2T shots/targets/corners; no frozen prediction mutation.",
+  "summary": {
+    "finished_matches": 14,
+    "decisions": 168,
+    "hits": 38,
+    "misses": 26,
+    "ND": 81,
+    "abstentions": 23,
+    "evaluated": 64,
+    "rate_pct": 59.38,
+    "remaining_fixtures_not_yet_certified": 6
+  },
+  "by_market": [
+    {
+      "name": "goals",
+      "hits": 19,
+      "misses": 8,
+      "ND": 0,
+      "evaluated": 27,
+      "rate": 70.37
+    },
+    {
+      "name": "shots",
+      "hits": 7,
+      "misses": 5,
+      "ND": 28,
+      "evaluated": 12,
+      "rate": 58.33
+    },
+    {
+      "name": "corners",
+      "hits": 6,
+      "misses": 6,
+      "ND": 27,
+      "evaluated": 12,
+      "rate": 50
+    },
+    {
+      "name": "target",
+      "hits": 6,
+      "misses": 7,
+      "ND": 26,
+      "evaluated": 13,
+      "rate": 46.15
+    }
+  ],
+  "by_period": [
+    {
+      "name": "full",
+      "hits": 27,
+      "misses": 20,
+      "ND": 4,
+      "evaluated": 47,
+      "rate": 57.45
+    },
+    {
+      "name": "first",
+      "hits": 4,
+      "misses": 2,
+      "ND": 36,
+      "evaluated": 6,
+      "rate": 66.67
+    },
+    {
+      "name": "second",
+      "hits": 7,
+      "misses": 4,
+      "ND": 41,
+      "evaluated": 11,
+      "rate": 63.64
+    }
+  ],
+  "by_league": [
+    {
+      "name": "Premier League inglesa 2026/27",
+      "hits": 1,
+      "misses": 3,
+      "ND": 5,
+      "evaluated": 4,
+      "rate": 25
+    },
+    {
+      "name": "La Liga espanhola 2026/27",
+      "hits": 10,
+      "misses": 6,
+      "ND": 18,
+      "evaluated": 16,
+      "rate": 62.5
+    },
+    {
+      "name": "Bundesliga 2026/27",
+      "hits": 5,
+      "misses": 0,
+      "ND": 15,
+      "evaluated": 5,
+      "rate": 100
+    },
+    {
+      "name": "Serie A italiana 2026/27",
+      "hits": 11,
+      "misses": 10,
+      "ND": 23,
+      "evaluated": 21,
+      "rate": 52.38
+    },
+    {
+      "name": "Ligue 1 francesa 2026/27",
+      "hits": 10,
+      "misses": 4,
+      "ND": 15,
+      "evaluated": 14,
+      "rate": 71.43
+    },
+    {
+      "name": "Liga Portugal 2026/27",
+      "hits": 1,
+      "misses": 3,
+      "ND": 5,
+      "evaluated": 4,
+      "rate": 25
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture": "Liverpool x Arsenal",
+      "league": "Premier League inglesa 2026/27",
+      "date": "2026-11-01",
+      "score": "0-1",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.skysports.com/football/liverpool-vs-arsenal/stats/559530"
+      ],
+      "source_notes": "shots 27, corners 11; provider discrepancy SOT 3-4 but below signal line 6.5",
+      "results": {
+        "hits": 1,
+        "misses": 3,
+        "ND": 5,
+        "abstentions": 3
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 27,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 11,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "MISS"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 11.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS"
+        }
+      ]
+    },
+    {
+      "fixture": "Getafe x Sevilla",
+      "league": "La Liga espanhola 2026/27",
+      "date": "2026-11-01",
+      "score": "3-1",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.agatetypes.com/soccer/november-1-2026"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 4,
+        "misses": 2,
+        "ND": 6,
+        "abstentions": 0
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 23,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 8.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 9,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Racing Santander x Real Madrid",
+      "league": "La Liga espanhola 2026/27",
+      "date": "2026-11-01",
+      "score": "0-3",
+      "halftime_total_goals": 3,
+      "source_urls": [
+        "https://www.skysports.com/football/racing-santander-vs-real-madrid/stats/563030"
+      ],
+      "source_notes": "some sources differ in shot and corner totals; all compared outcomes stable",
+      "results": {
+        "hits": 4,
+        "misses": 2,
+        "ND": 6,
+        "abstentions": 0
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 24.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 32,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 10,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 8,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS"
+        }
+      ]
+    },
+    {
+      "fixture": "Elche x Valencia",
+      "league": "La Liga espanhola 2026/27",
+      "date": "2026-11-01",
+      "score": "0-1",
+      "halftime_total_goals": 0,
+      "source_urls": [
+        "https://www.europapress.es/deportes/estadisticas-deportivas/noticia-elche-valencia-resumen-goles-resultado-partido-hoy-20261101202917.html",
+        "https://ofstats.com/matches/view/elche-valencia-2026-11-01"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 2,
+        "misses": 2,
+        "ND": 6,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 20,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 8,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 6,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 11.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Union Berlin x Köln",
+      "league": "Bundesliga 2026/27",
+      "date": "2026-11-01",
+      "score": "1-1",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.livescore.mobi/football/2026-11-01/"
+      ],
+      "source_notes": "period shots, corners, SOT and full totals N/D",
+      "results": {
+        "hits": 1,
+        "misses": 0,
+        "ND": 9,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 24.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Frankfurt x Hamburger SV",
+      "league": "Bundesliga 2026/27",
+      "date": "2026-11-01",
+      "score": "3-1",
+      "halftime_total_goals": 2,
+      "source_urls": [
+        "https://cornerflick.com/football/bundesliga/matches/eintracht-frankfurt-vs-hamburger-sv-bundesliga-2026-11-01",
+        "https://www.thefishy.net/livematch2/eintracht-frankfurt-v-hamburger-1575205"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 4,
+        "misses": 0,
+        "ND": 6,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 27,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 8.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 12,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 13,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 12.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Como x Venezia",
+      "league": "Serie A italiana 2026/27",
+      "date": "2026-11-01",
+      "score": "1-0",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.agatetypes.com/soccer/november-1-2026"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 0,
+        "misses": 4,
+        "ND": 6,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 26.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 26,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 9,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 5,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "MISS"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 12.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "SEM_SINAL"
+        }
+      ]
+    },
+    {
+      "fixture": "Frosinone x Torino",
+      "league": "Serie A italiana 2026/27",
+      "date": "2026-11-01",
+      "score": "2-0",
+      "halftime_total_goals": 0,
+      "source_urls": [
+        "https://www.agatetypes.com/soccer/november-1-2026"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 5,
+        "misses": 1,
+        "ND": 6,
+        "abstentions": 0
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 26.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 32,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 14,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 11,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 12.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 10,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Lazio x Cagliari",
+      "league": "Serie A italiana 2026/27",
+      "date": "2026-11-01",
+      "score": "2-1",
+      "halftime_total_goals": 2,
+      "source_urls": [
+        "https://www.agatetypes.com/soccer/november-1-2026"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 1,
+        "misses": 4,
+        "ND": 6,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 24.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 20,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 7,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 13.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "MISS"
+        }
+      ]
+    },
+    {
+      "fixture": "Lecce x Genoa",
+      "league": "Serie A italiana 2026/27",
+      "date": "2026-11-01",
+      "score": "1-2",
+      "halftime_total_goals": 3,
+      "source_urls": [
+        "https://www.livescore.com/en/news/football/serie-a/serie-a-lecce-1-2-genoa-messias-inspiration-for-strong-victory-football-italia/"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 5,
+        "misses": 1,
+        "ND": 5,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 31,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 9,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 10,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 3,
+          "status": "HIT"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS"
+        }
+      ]
+    },
+    {
+      "fixture": "Strasbourg x Auxerre",
+      "league": "Ligue 1 francesa 2026/27",
+      "date": "2026-11-01",
+      "score": "5-1",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.agatetypes.com/soccer/november-1-2026"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 5,
+        "misses": 1,
+        "ND": 5,
+        "abstentions": 1
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 25,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 5,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 8,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 6,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 8.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "HIT"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 5,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Lyon x Angers",
+      "league": "Ligue 1 francesa 2026/27",
+      "date": "2026-11-01",
+      "score": "2-0",
+      "halftime_total_goals": 1,
+      "source_urls": [
+        "https://www.maxifoot.fr/match/lyon-angers-20261101.htm"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 2,
+        "misses": 2,
+        "ND": 6,
+        "abstentions": 2
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 25,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 9.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 6,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 5,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        }
+      ]
+    },
+    {
+      "fixture": "Paris FC x Monaco",
+      "league": "Ligue 1 francesa 2026/27",
+      "date": "2026-11-01",
+      "score": "3-1",
+      "halftime_total_goals": 2,
+      "source_urls": [
+        "https://ofstats.com/matches/view/paris-monaco-2026-11-01"
+      ],
+      "source_notes": "full shots not fully verified",
+      "results": {
+        "hits": 3,
+        "misses": 1,
+        "ND": 4,
+        "abstentions": 4
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 20.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 5,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 12,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": 1.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 4,
+          "status": "HIT"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 9.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 4.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 2,
+          "status": "HIT"
+        }
+      ]
+    },
+    {
+      "fixture": "Arouca x Nacional",
+      "league": "Liga Portugal 2026/27",
+      "date": "2026-11-01",
+      "score": "1-0",
+      "halftime_total_goals": 0,
+      "source_urls": [
+        "https://matchcalendar.football/competition/primeira-liga/match/arouca-vs-nacional/"
+      ],
+      "source_notes": null,
+      "results": {
+        "hits": 1,
+        "misses": 3,
+        "ND": 5,
+        "abstentions": 3
+      },
+      "decisions": [
+        {
+          "period": "full",
+          "market": "shots",
+          "over_line": 22.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 17,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "corners",
+          "over_line": 6.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 10,
+          "status": "HIT"
+        },
+        {
+          "period": "full",
+          "market": "target",
+          "over_line": 7.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": 6,
+          "status": "MISS"
+        },
+        {
+          "period": "full",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "first",
+          "market": "shots",
+          "over_line": 10.5,
+          "frequency_hits": 8,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "corners",
+          "over_line": 3.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "target",
+          "over_line": 2.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "first",
+          "market": "goals",
+          "over_line": 0.5,
+          "frequency_hits": 9,
+          "frequency_n": 10,
+          "observed_total": 0,
+          "status": "MISS"
+        },
+        {
+          "period": "second",
+          "market": "shots",
+          "over_line": 11.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "corners",
+          "over_line": 2.5,
+          "frequency_hits": 7,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "ND"
+        },
+        {
+          "period": "second",
+          "market": "target",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": null,
+          "status": "SEM_SINAL"
+        },
+        {
+          "period": "second",
+          "market": "goals",
+          "over_line": null,
+          "frequency_hits": null,
+          "frequency_n": 10,
+          "observed_total": 1,
+          "status": "SEM_SINAL"
+        }
+      ]
+    }
+  ]
+}

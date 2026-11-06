@@ -1,0 +1,242 @@
+{
+  "date": "2026-11-04",
+  "recorded_at": "2026-11-03 ~18:00 BRT",
+  "state": "EXPERIMENTAL_HISTORICAL_ODDS_ONLY_NO_BET",
+  "note": "All displayed screenshot prices are observational only, not user authorizations or bets, and no timestamps of bet placements exist.",
+  "source_lv4_elite": "research/radar-v4-lab/LV4_ELITE_2026-11-04_TRIAGEM_BRASILEIRAO.json",
+  "source_lv4_original": "research/radar-v4-lab/LV4_2026-11-04_CHECKPOINT_PREJOGO_VERIFICADO.json",
+  "source_blob_sha": "bf232d86a00b3104782e91561f25d7d7d6758b38",
+  "games": [
+    {
+      "game": "São Paulo × Corinthians",
+      "source_images": [
+        "1000062381.jpg",
+        "1000062380.jpg"
+      ],
+      "observed_at": [
+        "2026-11-03 17:58 BRT",
+        "2026-11-03 17:57 BRT"
+      ],
+      "source": "Stake screenshot provided by user",
+      "identification": "user identifies first two screenshots as São Paulo × Corinthians",
+      "odds": [
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 1.75,
+          "odd": 1.5,
+          "kind": "asian split 1.5/2.0"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 2,
+          "odd": 1.68,
+          "kind": "asian 2.0 with push"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 2.25,
+          "odd": 1.96,
+          "kind": "asian split 2.0/2.5"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 2.5,
+          "odd": 2.23,
+          "kind": "binary"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 2.75,
+          "odd": 2.6,
+          "kind": "asian split 2.5/3.0"
+        },
+        {
+          "market": "total goals",
+          "period": "second",
+          "asian_over_line": 1.5,
+          "odd": 2.45,
+          "kind": "binary"
+        },
+        {
+          "market": "team São Paulo goals",
+          "period": "full",
+          "asian_over_line": 1.5,
+          "odd": 2.46,
+          "kind": "team-specific"
+        },
+        {
+          "market": "most goals in half",
+          "period": "first",
+          "odd": 3.25,
+          "kind": "which half"
+        },
+        {
+          "market": "most goals in half",
+          "period": "second",
+          "odd": 2.19,
+          "kind": "which half"
+        }
+      ],
+      "original_elite": [
+        {
+          "market": "total goals",
+          "period": "full",
+          "over_line": 1.5,
+          "hits": 9,
+          "n": 10,
+          "mean": 3,
+          "exact_market_cotations_observed": 0
+        },
+        {
+          "market": "total goals",
+          "period": "second",
+          "over_line": 0.5,
+          "hits": 9,
+          "n": 10,
+          "mean": 1.6,
+          "exact_market_cotations_observed": 0
+        }
+      ]
+    },
+    {
+      "game": "Flamengo × Grêmio",
+      "source_images": [
+        "1000062378.jpg",
+        "1000062377.jpg"
+      ],
+      "observed_at": [
+        "2026-11-03 17:54 BRT",
+        "2026-11-03 17:54 BRT"
+      ],
+      "source": "Stake screenshot provided by user",
+      "identification": "user identifies last two screenshots as Flamengo × Grêmio",
+      "odds": [
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 3,
+          "odd": 1.54,
+          "kind": "asian 3.0 with push"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 3.25,
+          "odd": 1.73,
+          "kind": "asian split 3.0/3.5"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 3.5,
+          "odd": 1.92,
+          "kind": "binary"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 3.75,
+          "odd": 2.15,
+          "kind": "asian split 3.5/4.0"
+        },
+        {
+          "market": "total goals",
+          "period": "full",
+          "asian_over_line": 4,
+          "odd": 2.5,
+          "kind": "asian 4.0 with push"
+        },
+        {
+          "market": "total goals",
+          "period": "second",
+          "asian_over_line": 1.5,
+          "odd": 1.63,
+          "kind": "binary"
+        },
+        {
+          "market": "team Flamengo goals",
+          "period": "full",
+          "asian_over_line": 2.5,
+          "odd": 1.7,
+          "kind": "team-specific"
+        },
+        {
+          "market": "most goals in half",
+          "period": "first",
+          "odd": 2.85,
+          "kind": "which half"
+        },
+        {
+          "market": "most goals in half",
+          "period": "second",
+          "odd": 2.07,
+          "kind": "which half"
+        }
+      ],
+      "original_elite": [
+        {
+          "market": "total goals",
+          "period": "second",
+          "over_line": 0.5,
+          "hits": 10,
+          "n": 10,
+          "mean": 1.7,
+          "exact_market_cotations_observed": 0
+        },
+        {
+          "market": "total corners",
+          "period": "full",
+          "over_line": 9.5,
+          "hits": 9,
+          "n": 10,
+          "mean": 12.8,
+          "exact_market_cotations_observed": 0
+        },
+        {
+          "market": "total corners",
+          "period": "first",
+          "over_line": 4.5,
+          "hits": 9,
+          "n": 10,
+          "mean": 6.7,
+          "exact_market_cotations_observed": 0
+        },
+        {
+          "market": "total shots",
+          "period": "full",
+          "over_line": 26.5,
+          "hits": 9,
+          "n": 10,
+          "mean": 31.1,
+          "exact_market_cotations_observed": 0
+        }
+      ]
+    }
+  ],
+  "reported_unavailable": [
+    {
+      "game": "Botafogo × Atlético-MG",
+      "status": "NO_MARKET_FOUND_BY_USER",
+      "note": "user reports not finding market availability; not independent confirmation of all possible markets"
+    }
+  ],
+  "other_games": [
+    {
+      "game": "Athletico-PR × Vasco",
+      "status": "ODDS_NOT_PROVIDED_IN_CURRENT_TURN"
+    }
+  ],
+  "conclusions": [
+    "No exact matching goals market/period/Over-line quote in these four screenshots for selected original Elite goals signals.",
+    "Asian lines 1.75,2.0,2.25,3.0,3.25,3.75,4.0 have half-win/half-loss/push structures and cannot be treated as normal 2-outcome odds.",
+    "Team goals and which-half-higher markets are different categories; no recombination into model lines.",
+    "Corners are not shown in screenshots; availability must remain unknown, not categorically absent.",
+    "Missing market data != wrong original LV4 forecast; no approved financial entries.",
+    "Keep all 48 original LV4 forecasts and Elite groups frozen; no change to production, V2/V3, backups, 659 personal matches."
+  ]
+}

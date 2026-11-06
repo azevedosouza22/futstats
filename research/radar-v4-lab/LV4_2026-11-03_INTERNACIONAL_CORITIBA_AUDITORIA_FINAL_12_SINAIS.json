@@ -1,0 +1,302 @@
+{
+  "fixture": "Internacional × Coritiba",
+  "date": "2026-11-03",
+  "competition": "Brasileirão Série A 2026",
+  "round": 34,
+  "final_score": "Internacional 1–0 Coritiba",
+  "stage": "FINAL",
+  "status": "COMPLETE_WITH_USER_FLASH_SCORE_SCREENSHOTS",
+  "source": "3 screenshots of Flashscore results and statistics supplied by user at 23:41–23:42 BRT",
+  "files_provided": [
+    "1000062500.jpg",
+    "1000062501.jpg",
+    "1000062502.jpg"
+  ],
+  "frozen_forecast_ref": "research/radar-v4-lab/LV4_2026-11-03_CHECKPOINT_PREJOGO_11_CONFRONTOS.json",
+  "forecast_blob_sha": "124624db563a00f0e6fcd21056e990ea8d2ccf04",
+  "independent_evaluation": "twelve original predictions scored only by the provided screenshots; no changes to the forecast lines",
+  "observed_stats": {
+    "full": {
+      "goals": 1,
+      "shots": 25,
+      "target": 7,
+      "corners": 17,
+      "xg": 2.25,
+      "home": {
+        "goals": 1,
+        "shots": 19,
+        "target": 6,
+        "corners": 15,
+        "xg": 1.6
+      },
+      "away": {
+        "goals": 0,
+        "shots": 6,
+        "target": 1,
+        "corners": 2,
+        "xg": 0.65
+      }
+    },
+    "first": {
+      "goals": 0,
+      "shots": 10,
+      "target": 3,
+      "corners": 6,
+      "xg": 0.85,
+      "home": {
+        "goals": 0,
+        "shots": 5,
+        "target": 2,
+        "corners": 5,
+        "xg": 0.42
+      },
+      "away": {
+        "goals": 0,
+        "shots": 5,
+        "target": 1,
+        "corners": 1,
+        "xg": 0.43
+      }
+    },
+    "second": {
+      "goals": 1,
+      "shots": 15,
+      "target": 4,
+      "corners": 11,
+      "xg": 1.4,
+      "home": {
+        "goals": 1,
+        "shots": 14,
+        "target": 4,
+        "corners": 10,
+        "xg": 1.18
+      },
+      "away": {
+        "goals": 0,
+        "shots": 1,
+        "target": 0,
+        "corners": 1,
+        "xg": 0.22
+      }
+    }
+  },
+  "decisions": [
+    {
+      "period": "full",
+      "market": "shots",
+      "over_line": 26.5,
+      "historical_overs": 9,
+      "historical_observed": 10,
+      "historical_mean": 32.2,
+      "actual_total": 25,
+      "status": "MISS"
+    },
+    {
+      "period": "full",
+      "market": "corners",
+      "over_line": 9.5,
+      "historical_overs": 8,
+      "historical_observed": 10,
+      "historical_mean": 12.6,
+      "actual_total": 17,
+      "status": "HIT"
+    },
+    {
+      "period": "full",
+      "market": "target",
+      "over_line": 8.5,
+      "historical_overs": 8,
+      "historical_observed": 10,
+      "historical_mean": 10.6,
+      "actual_total": 7,
+      "status": "MISS"
+    },
+    {
+      "period": "full",
+      "market": "goals",
+      "over_line": 1.5,
+      "historical_overs": 8,
+      "historical_observed": 10,
+      "historical_mean": 2.6,
+      "actual_total": 1,
+      "status": "MISS"
+    },
+    {
+      "period": "first",
+      "market": "shots",
+      "over_line": 12.5,
+      "historical_overs": 8,
+      "historical_observed": 10,
+      "historical_mean": 14,
+      "actual_total": 10,
+      "status": "MISS"
+    },
+    {
+      "period": "first",
+      "market": "corners",
+      "over_line": 3.5,
+      "historical_overs": 7,
+      "historical_observed": 10,
+      "historical_mean": 5.4,
+      "actual_total": 6,
+      "status": "HIT"
+    },
+    {
+      "period": "first",
+      "market": "target",
+      "over_line": 3.5,
+      "historical_overs": 7,
+      "historical_observed": 10,
+      "historical_mean": 4.8,
+      "actual_total": 3,
+      "status": "MISS"
+    },
+    {
+      "period": "first",
+      "market": "goals",
+      "over_line": null,
+      "historical_overs": null,
+      "historical_observed": 10,
+      "historical_mean": 0.9,
+      "actual_total": 0,
+      "status": "ABSTENTION"
+    },
+    {
+      "period": "second",
+      "market": "shots",
+      "over_line": 13.5,
+      "historical_overs": 10,
+      "historical_observed": 10,
+      "historical_mean": 18.2,
+      "actual_total": 15,
+      "status": "HIT"
+    },
+    {
+      "period": "second",
+      "market": "corners",
+      "over_line": 5.5,
+      "historical_overs": 7,
+      "historical_observed": 10,
+      "historical_mean": 7.2,
+      "actual_total": 11,
+      "status": "HIT"
+    },
+    {
+      "period": "second",
+      "market": "target",
+      "over_line": 4.5,
+      "historical_overs": 7,
+      "historical_observed": 10,
+      "historical_mean": 5.8,
+      "actual_total": 4,
+      "status": "MISS"
+    },
+    {
+      "period": "second",
+      "market": "goals",
+      "over_line": 0.5,
+      "historical_overs": 9,
+      "historical_observed": 10,
+      "historical_mean": 1.7,
+      "actual_total": 1,
+      "status": "HIT"
+    }
+  ],
+  "audit": {
+    "hit": 5,
+    "miss": 6,
+    "abstention": 1,
+    "emitted": 11,
+    "total": 12,
+    "success_rate_pct": 45.45,
+    "by_period": {
+      "full": {
+        "hits": 1,
+        "misses": 3,
+        "abstentions": 0
+      },
+      "first": {
+        "hits": 1,
+        "misses": 2,
+        "abstentions": 1
+      },
+      "second": {
+        "hits": 3,
+        "misses": 1,
+        "abstentions": 0
+      }
+    },
+    "by_market": {
+      "goals": {
+        "hits": 1,
+        "misses": 1,
+        "abstentions": 1
+      },
+      "shots": {
+        "hits": 1,
+        "misses": 2,
+        "abstentions": 0
+      },
+      "target": {
+        "hits": 0,
+        "misses": 3,
+        "abstentions": 0
+      },
+      "corners": {
+        "hits": 3,
+        "misses": 0,
+        "abstentions": 0
+      }
+    }
+  },
+  "transactions": [
+    {
+      "fixture": "Chapecoense × Mirassol",
+      "market": "full corners Over7.5",
+      "stake_brl": 1,
+      "odd": 1.74,
+      "outcome": "WIN_SCREENSHOT",
+      "return_brl": 1.74
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "full corners Over9.5",
+      "stake_brl": 1,
+      "odd": 1.7,
+      "outcome": "WIN_REPORTED",
+      "return_brl": 1.7
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "second-half goals Over0.5",
+      "stake_brl": 1,
+      "odd": 1.75,
+      "outcome": "WON_BY_MATCH_RESULT_PLATFORM_SETTLEMENT_NOT_SHOWN",
+      "return_if_settled_brl": 1.75
+    },
+    {
+      "fixture": "Internacional × Coritiba",
+      "market": "full goals Over1.5",
+      "stake_brl": 1,
+      "odd": 2.14,
+      "outcome": "LOSS_CONFIRMED_BY_USER_AND_SCORE",
+      "return_brl": 0
+    }
+  ],
+  "financial_if_third_ticket_settled": {
+    "stakes_total_brl": 4,
+    "returns_total_brl": 5.19,
+    "net_brl": 1.19,
+    "roi_pct": 29.75,
+    "wins": 3,
+    "losses": 1,
+    "settlement_qualification": "Outcome on field validated; second-half goal ticket must have been accepted before goal and settled as win."
+  },
+  "interpretation": [
+    "Escanteios 3/3, shots-on-target 0/3 in one fixture, not enough for reliable market ranking.",
+    "High second-half attacking volume but one goal; xG whole-match 2.25 is not promise of 2 goals.",
+    "First half lack of goals = abstention from Over0.5, not original Under0.5 prediction.",
+    "Single match signals correlated and historical 8/10/9/10 frequencies not calibrated probabilities.",
+    "No further real betting recommendations; preserve production, original predictions, backups, 659 personal records, Radar V2/V3."
+  ]
+}

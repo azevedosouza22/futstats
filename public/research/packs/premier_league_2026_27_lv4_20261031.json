@@ -1,0 +1,491 @@
+{
+  "format": "futstats-research-season-v1",
+  "version": 1,
+  "competition": "Premier League inglesa 2026/27",
+  "data": {
+    "teams": [
+      {
+        "id": "lv4-work-team-1",
+        "name": "Chelsea",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-2",
+        "name": "Manchester Utd",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-3",
+        "name": "Hull",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-4",
+        "name": "Ipswich",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-5",
+        "name": "Brentford",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-6",
+        "name": "Nottingham",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-7",
+        "name": "Manchester City",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-8",
+        "name": "Brighton",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-9",
+        "name": "Coventry",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-10",
+        "name": "Sunderland",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-11",
+        "name": "Bournemouth",
+        "color": "#557e8d"
+      },
+      {
+        "id": "lv4-work-team-12",
+        "name": "Leeds",
+        "color": "#557e8d"
+      }
+    ],
+    "matches": [
+      {
+        "id": "research-private-OWc65atm",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-1",
+        "away": "lv4-work-team-2",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 3,
+            "corners": 6,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 12,
+            "target": 7,
+            "corners": 5,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "OWc65atm",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/chelsea-4fGZN2oK/manchester-utd-ppjDR086/resumo/estatisticas/total/?mid=OWc65atm",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 19,
+              "target": 10,
+              "corners": 8,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 12,
+              "target": 5,
+              "corners": 7,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-4OEL1HuC",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-3",
+        "away": "lv4-work-team-4",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 2,
+            "target": 0,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 2,
+            "shots": 7,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 10,
+            "target": 1,
+            "corners": 0,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "4OEL1HuC",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/hull-S66R0t75/ipswich-thqhB2MB/resumo/estatisticas/total/?mid=4OEL1HuC",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 9,
+              "target": 3,
+              "corners": 6,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 2,
+              "shots": 15,
+              "target": 3,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-S0CzBLIP",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-5",
+        "away": "lv4-work-team-6",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 4,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 9,
+            "target": 0,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 6,
+            "target": 1,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "S0CzBLIP",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/brentford-xYe7DwID/nottingham-UsushcZr/resumo/estatisticas/total/?mid=S0CzBLIP",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 7,
+              "target": 1,
+              "corners": 3,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 15,
+              "target": 1,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-S0hwKbet",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-7",
+        "away": "lv4-work-team-8",
+        "first": [
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 1,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 3,
+            "target": 2,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 0,
+            "shots": 14,
+            "target": 5,
+            "corners": 5,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 4,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "S0hwKbet",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/brighton-2XrRecc3/manchester-city-Wtn9Stg0/resumo/estatisticas/total/?mid=S0hwKbet",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 0,
+              "shots": 21,
+              "target": 6,
+              "corners": 8,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 7,
+              "target": 3,
+              "corners": 2,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-dbBD3wBa",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-9",
+        "away": "lv4-work-team-10",
+        "first": [
+          {
+            "goals": 2,
+            "shots": 6,
+            "target": 3,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 5,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 1,
+            "shots": 12,
+            "target": 1,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "dbBD3wBa",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/coventry-GOvB22xg/sunderland-WSzc94ws/resumo/estatisticas/total/?mid=dbBD3wBa",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 3,
+              "shots": 12,
+              "target": 4,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 1,
+              "shots": 17,
+              "target": 2,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      },
+      {
+        "id": "research-private-j1Ur5VU6",
+        "competition": "Premier League inglesa 2026/27",
+        "date": "2026-10-31",
+        "home": "lv4-work-team-11",
+        "away": "lv4-work-team-12",
+        "first": [
+          {
+            "goals": 1,
+            "shots": 5,
+            "target": 2,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 3,
+            "target": 1,
+            "corners": 1,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "second": [
+          {
+            "goals": 1,
+            "shots": 6,
+            "target": 3,
+            "corners": 2,
+            "yellow": null,
+            "red": null
+          },
+          {
+            "goals": 0,
+            "shots": 7,
+            "target": 0,
+            "corners": 3,
+            "yellow": null,
+            "red": null
+          }
+        ],
+        "research": {
+          "provider": "work-csv",
+          "source": "Flashscore",
+          "sourceId": "j1Ur5VU6",
+          "sourceUrl": "https://www.flashscore.com.br/jogo/futebol/bournemouth-OtpNdwrc/leeds-tUxUbLR2/resumo/estatisticas/total/?mid=j1Ur5VU6",
+          "importedAt": "2026-10-31T18:03:17Z",
+          "full": [
+            {
+              "goals": 2,
+              "shots": 11,
+              "target": 5,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            },
+            {
+              "goals": 0,
+              "shots": 10,
+              "target": 1,
+              "corners": 4,
+              "yellow": null,
+              "red": null
+            }
+          ],
+          "titleDate": "2026-10-31",
+          "dateDiscrepancy": false
+        }
+      }
+    ]
+  }
+}

@@ -12,7 +12,7 @@ import {homeHistoricalMarkets,homeLeagueCount} from './homeDashboardModel';
 import {PRIVATE_PACK_EVENT} from './privateSeasonPacks';
 import PrivateSeasonCsvImport from './PrivateSeasonCsvImport';
 
-type Focus='agenda'|'picks';
+type Focus='agenda'|'picks'|'v4';
 type Props={
  data:Data;onNavigate:(page:number,focus?:Focus)=>void;
  onNewMatch:()=>void;
@@ -89,6 +89,17 @@ export default function HomeDashboard({data,onNavigate,onNewMatch}:Props){
       <span>{item.label}</span><strong>{item.value}</strong><small>{item.note}</small>
     </div>)}
    </div>
+  </section>
+
+  <section className="fs-home-panel" aria-label="Laboratório Radar V4">
+   <div className="fs-home-section-heading"><div>
+    <h2><Activity size={23}/> Radar V4 · Laboratório</h2>
+    <p>Teste experimental de linhas Over nos jogos de hoje, com histórico, 1º e 2º tempo, e abstenções.</p>
+   </div></div>
+   <button type="button" className="primary" onClick={()=>onNavigate(6,'v4')}>
+    Analisar jogos de hoje <ArrowUpRight size={17}/>
+   </button>
+   <p className="fs-home-disclaimer">Somente pesquisa. A agenda não é um serviço ao vivo e os sinais não modificam o Radar V2/V3.</p>
   </section>
 
   <section className="fs-home-panel fs-home-market" aria-label="Frequências históricas de mercados">
