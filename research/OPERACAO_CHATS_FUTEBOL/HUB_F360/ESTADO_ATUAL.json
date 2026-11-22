@@ -21,6 +21,7 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
+    "Coleta/Work: liquidar os 139 N/D do registro F360-POS-20261121-PREL (17 jogos; Flashscore FT, 1T e 2T) com checkpoints por confronto e confronto de fontes.",
     "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
     "Work: qualidade e replay 19/20 concluídos; teste temporal de melhoria continua bloqueado até candidato, coorte independente e protocolo fixados. Não promover filtros ou Shadow V1 retroativa.",
@@ -48,7 +49,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261120-COND",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261121-PREL",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -97,6 +98,21 @@
       "abstencoes": 15,
       "nd": 0,
       "arquivo": "POSJOGO/F360-POS-V4-20261030-AUDIT09.md",
+      "shadow_v1": false
+    },
+    {
+      "registro_id": "F360-POS-20261121-PREL",
+      "prejogo_id": null,
+      "prejogo_reference": "F360-REF-ANALISE-20261121",
+      "status": "DOCUMENTAL_CONDICIONADA_PARCIAL",
+      "jogos": 17,
+      "celulas": 204,
+      "sinais_com_linha": 177,
+      "acertos_confirmados": 26,
+      "erros_confirmados": 12,
+      "nd": 139,
+      "abstencoes": 27,
+      "arquivo": "REGISTROS/POSJOGO_2026-11-21_PRELIMINAR.md",
       "shadow_v1": false
     }
   ],
