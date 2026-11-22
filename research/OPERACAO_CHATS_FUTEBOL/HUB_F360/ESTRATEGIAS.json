@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "as_of_date_brt": "2026-11-21",
+  "approved_strategies": [],
+  "research_references": [
+    {
+      "id": "V4_RADAR_DIARIO_20261030",
+      "pr": 103,
+      "status": "experimental_sem_promocao",
+      "objective": "preservar sinais de agenda completa sem retroprojecao"
+    }
+  ],
+  "promotion_gate": [
+    "snapshots_prejogo_com_timestamp_e_codigo",
+    "resultados_reais_com_fontes_e_divergencias",
+    "amostras_suficientes_por_mercado_e_periodo",
+    "backtest_temporal_sem_vazamento",
+    "comparacao_com_metodo_anterior",
+    "aprovacao_explicita_do_usuario"
+  ],
+  "automatic_promotion": false
+}
