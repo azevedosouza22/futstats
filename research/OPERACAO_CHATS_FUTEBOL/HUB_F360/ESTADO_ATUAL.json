@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "project": "FUTSTATS FUTEBOL F360",
+  "as_of_date_brt": "2026-11-21",
+  "repository": "azevedosouza22/futstats",
+  "ref": "research/f360-hub-chats-2026-11-21",
+  "hub_root": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360",
+  "deployment": "research_draft_docs_only",
+  "main_modified": false,
+  "automatic_chat_sync": false,
+  "control_issue": 29,
+  "reference_prs": [
+    {
+      "pr": 103,
+      "type": "PREJOGO_EXPERIMENTAL_RADAR_V4",
+      "event_date": "2026-10-30",
+      "verified": "PR_DRAFT"
+    }
+  ],
+  "latest_verified_postgame_imported_to_hub": null,
+  "latest_approved_strategy_version": null,
+  "approved_strategy_changes": 0,
+  "pending": [
+    "Localizar fechamento LV4/Elite recente e vinculá-lo aos snapshots originais (sem regravar).",
+    "Coleta publicar POSJOGO verificado e índices por mercado/FT/1T/2T.",
+    "Work consolidar erros e testar hipóteses sem alterar champion.",
+    "F360 usar apenas regras aprovadas e registrar novas previsões por IDs."
+  ],
+  "safety": {
+    "protected": [
+      "659 partidas pessoais",
+      "Radar V2/V3",
+      "V4 experimental e snapshots",
+      "produção/app"
+    ],
+    "allow_merge": false
+  }
+}
