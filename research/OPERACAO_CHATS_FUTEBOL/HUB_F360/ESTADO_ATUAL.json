@@ -34,5 +34,16 @@
       "produção/app"
     ],
     "allow_merge": false
+  },
+  "integration_pr": {
+    "number": 104,
+    "url": "https://github.com/azevedosouza22/futstats/pull/104",
+    "draft": true,
+    "merged": false
+  },
+  "reconciliation_issue": {
+    "number": 105,
+    "url": "https://github.com/azevedosouza22/futstats/issues/105",
+    "status": "aberta"
   }
 }
