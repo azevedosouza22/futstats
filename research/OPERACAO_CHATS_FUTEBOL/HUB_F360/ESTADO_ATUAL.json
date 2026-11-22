@@ -25,7 +25,8 @@
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
     "Work: auditar qualidade e executar EXPERIMENTO com corte temporal; não promover filtros nem usar Shadow V1 retroativamente.",
     "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
-    "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente."
+    "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
+    "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 e documentar dados pendentes de 21/11; nao homologar retrospectivamente."
   ],
   "safety": {
     "protected": [
@@ -84,6 +85,18 @@
       "abstencoes": 5,
       "nd": 0,
       "arquivo": "REGISTROS/POSJOGO_2026-11-20.md",
+      "shadow_v1": false
+    },
+    {
+      "registro_id": "F360-POS-V4-20261030-AUDIT09",
+      "prejogo_id": "F360-PRE-V4-20261030",
+      "status": "RECONCILIADO_PARCIAL_9_DE_10",
+      "jogos": 9,
+      "acertos": 71,
+      "erros": 22,
+      "abstencoes": 15,
+      "nd": 0,
+      "arquivo": "POSJOGO/F360-POS-V4-20261030-AUDIT09.md",
       "shadow_v1": false
     }
   ]
