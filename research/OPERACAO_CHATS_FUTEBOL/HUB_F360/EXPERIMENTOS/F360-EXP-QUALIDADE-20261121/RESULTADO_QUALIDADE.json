@@ -1,0 +1,68 @@
+{
+  "registro_id": "F360-EXP-QUALIDADE-20261121",
+  "tipo": "EXPERIMENTO",
+  "status": "AUDITORIA_DE_QUALIDADE_EXECUTADA; TESTE_DE_MELHORIA_TEMPORAL_BLOQUEADO",
+  "conferido_utc": "2026-11-22T02:29:23.419599+00:00",
+  "event_dates": [
+    "2026-11-19",
+    "2026-11-20"
+  ],
+  "replay": {
+    "celulas": 120,
+    "sinais_com_linha": 100,
+    "liquidacoes_reproduzidas": 100,
+    "divergencias": 0,
+    "sem_linha_preservadas": 13,
+    "abstencoes_preservadas": 7,
+    "jogos_distintos": 10,
+    "resultado": {
+      "celulas": 120,
+      "acertos": 79,
+      "erros": 21,
+      "nd_sem_linha": 13,
+      "abstencoes": 7,
+      "denominador": 100,
+      "taxa_acerto": 0.79
+    }
+  },
+  "temporal": {
+    "elegiveis_prospectivos_homologados_neste_recorte": 0,
+    "previsoes_nativas_ids_recuperados": 0,
+    "codigo_20nov_executado": false,
+    "train": null,
+    "test": null,
+    "mae": null,
+    "vies": null,
+    "melhora_piora_modelo": null,
+    "motivo": "Os lotes 19/20 são documentais condicionados. Replay da liquidação não é backtest temporal nem teste de hipótese preditiva."
+  },
+  "fontes": [
+    {
+      "data_evento": "2026-11-19",
+      "consolidado_url": "https://drive.google.com/file/d/18KxKu6Va61to1O8QL3I7mpM228-YhsLX/view",
+      "consolidado_sha256": "e7f6202833f91557bf8c4ed4cedbd93dcbed4c124dd97ea31c4617f6ccaf7c43",
+      "bytes": 192304,
+      "arquivo_original_sha256": "83fa7da0b24b4175d575d921f52a5a81c1fa38c12954eb3b4b4cc10874ebc745",
+      "celulas": 36,
+      "valores_individuais_observados": 72,
+      "valores_individuais_calculados": 0,
+      "zip_url": "https://drive.google.com/file/d/1va0-zq7vvrvuJJjdgrB6zZ_5-VG8XFiW/view",
+      "congelamento_nativo_autenticado": false
+    },
+    {
+      "data_evento": "2026-11-20",
+      "consolidado_url": "https://drive.google.com/file/d/1_UquiA7Lvxvcj3wvVTUtjsStoQSPAnf8/view",
+      "consolidado_sha256": "130bb4577dfb9e2d96166c70850f715f8deacc49f9904c56d35fed751bf75bac",
+      "bytes": 479530,
+      "arquivo_original_sha256": "f80f63b38f911dcd547795c9e7e9570bc876ab069b159ef8bd9bf2d6a87d03ac",
+      "celulas": 84,
+      "valores_individuais_observados": 160,
+      "valores_individuais_calculados": 8,
+      "zip_url": "https://drive.google.com/file/d/1YTD7yz2z29E1tYQRXLRPPRqs55ZT3oBo/view",
+      "congelamento_nativo_autenticado": false
+    }
+  ],
+  "shadow_v1_alterada": false,
+  "approved_strategy_changes": 0,
+  "pode_treinar": false
+}

@@ -21,9 +21,9 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
-    "Coleta/Work: reconciliar IDs e horários por célula dos fechamentos 19 e 20/11; manter status documental condicionado.",
+    "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
-    "Work: auditar qualidade e executar EXPERIMENTO com corte temporal; não promover filtros nem usar Shadow V1 retroativamente.",
+    "Work: qualidade e replay 19/20 concluídos; teste temporal de melhoria continua bloqueado até candidato, coorte independente e protocolo fixados. Não promover filtros ou Shadow V1 retroativa.",
     "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
     "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
     "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 e documentar dados pendentes de 21/11; nao homologar retrospectivamente."
@@ -99,5 +99,27 @@
       "arquivo": "POSJOGO/F360-POS-V4-20261030-AUDIT09.md",
       "shadow_v1": false
     }
-  ]
+  ],
+  "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
+  "work_continuity": {
+    "adopted": true,
+    "role": "Coleta extensa autorizada, reconciliação, qualidade e experimentação temporal",
+    "last_record": "F360-CTRL-WORK-20261121",
+    "reviewed_shared_postgames": [
+      "F360-POS-20261118",
+      "F360-POS-20261119-COND",
+      "F360-POS-20261120-COND",
+      "F360-POS-V4-20261030-AUDIT09"
+    ],
+    "reconciled_19_20": {
+      "celulas": 120,
+      "jogos": 10,
+      "sinais": 100,
+      "replay_divergencias": 0,
+      "predictive_temporal_test_executed": false,
+      "official_prospective_eligible_in_this_subset": 0
+    },
+    "next_owner": "Work + Coleta",
+    "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo."
+  }
 }

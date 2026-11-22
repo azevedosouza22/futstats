@@ -1,0 +1,29 @@
+{
+  "registro_id": "F360-EXP-PROTOCOLO-20261121",
+  "tipo": "EXPERIMENTO",
+  "status": "PROTOCOLO_PENDENTE_DE_COORTE_NATIVA_FUTURA",
+  "pre_registered_at_utc": "2026-11-22T02:29:23.419599+00:00",
+  "baseline": "LV4 original versionado; fonte commit/blob/inputs congelados por previsão",
+  "candidate": "N_D - candidato ainda não especificado; nenhuma fórmula alternativa implementada",
+  "inclusao": [
+    "Somente partidas futuras cuja identidade e início sejam verificados antes da previsão",
+    "Snapshot nativo anterior ao início com ID do jogo, linha, período, código e histórico/hash",
+    "Candidato e baseline congelados antes do mesmo jogo; registrar abstenções e N/D",
+    "Separar pesquisa documental de 19/20 e Shadow V1, sem importação retroativa"
+  ],
+  "comparacao": [
+    "Parear confronto, mercado, período e linha exata quando iguais",
+    "Comparar linhas diferentes em análise separada; não chamar de ganho pareado na mesma linha",
+    "Reportar acertos/erros/ND/abstenções e cobertura; erros agrupados por jogo",
+    "MAE/viés apenas com projeções numéricas comparáveis; calibração só com probabilidades declaradas",
+    "Retorno e ROI apenas com odds e entradas reais comprovadas"
+  ],
+  "gate_antes_execucao": [
+    "Especificar candidato e hipótese",
+    "Fixar tamanho/corte da amostra e critério de aceitação antes de avaliar resultados",
+    "Identificar dados independentes de teste e congelar protocolo",
+    "Executar apenas modo observação; nenhuma promoção automática"
+  ],
+  "executed_predictive_experiment": false,
+  "automatic_promotion": false
+}
