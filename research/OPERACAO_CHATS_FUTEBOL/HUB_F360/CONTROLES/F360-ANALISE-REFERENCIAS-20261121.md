@@ -27,3 +27,17 @@ Os links abaixo são **artefatos de pesquisa publicados em sessões anteriores**
 3. **F360/Análise:** ler `ESTRATEGIAS.json` e último `POSJOGO` antes de emitir novas indicações; registrar futuros `PREJOGO` com timestamp, versão, fonte, ID de jogo e SDD. Não declarar previsão pré-jogo se o evento já começou.
 
 **Protegidos:** 659 partidas pessoais, Radar V2/V3/V4, modelos LV4/Elite, snapshots, `main`, Android e produção. **Sem merge, deploy, promoção de estratégia ou apostas inferidas.**
+
+
+## Atualização por sincronização documental do HUB (21/11)
+Após a criação deste controle, o chat Coleta publicou e indexou três fechamentos adicionais. Estes são **as referências de pós-jogo mais recentes encontradas no HUB** e devem ser lidos pelo F360 antes de novos sinais:
+
+| Registro do Coleta | Situação | Resultado publicado | Uso autorizado |
+|---|---|---|---|
+| [F360-POS-20261118](../REGISTROS/POSJOGO_2026-11-18.md) | Piloto com snapshots anteriores / 3 jogos | 21 acertos, 13 erros, 2 abstenções | Auditoria documental vinculada; ainda sem EXPERIMENTO |
+| [F360-POS-20261119-COND](../REGISTROS/POSJOGO_2026-11-19.md) | Documental condicionada / 3 jogos | 18 acertos, 3 erros, 13 sem linha, 2 abstenções | Fora da série prospectiva homologada |
+| [F360-POS-20261120-COND](../REGISTROS/POSJOGO_2026-11-20.md) | Documental condicionada / 7 jogos | 61 acertos, 18 erros, 5 abstenções | Fora da série prospectiva homologada |
+
+O estado `latest_verified_postgame_imported_to_hub` pertence ao piloto de 18/11; `latest_documental_postgame_imported_to_hub` pertence a 20/11. A reconciliação de 30/10 foi adicionada à lista histórica **sem substituir esses apontadores mais recentes**.
+
+**Não somar indiscriminadamente** os 30/10 e 18–20/11 a outros totais antes de deduplicar partidas/indicadores e classificar o nível de evidência. Zero mudanças em `ESTRATEGIAS.json`; nenhuma regra nova aprovada.
