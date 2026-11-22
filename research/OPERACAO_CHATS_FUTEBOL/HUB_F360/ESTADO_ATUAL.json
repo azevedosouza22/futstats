@@ -17,14 +17,15 @@
       "verified": "PR_DRAFT"
     }
   ],
-  "latest_verified_postgame_imported_to_hub": null,
+  "latest_verified_postgame_imported_to_hub": "F360-POS-20261118",
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
-    "Localizar fechamento LV4/Elite recente e vinculá-lo aos snapshots originais (sem regravar).",
-    "Coleta publicar POSJOGO verificado e índices por mercado/FT/1T/2T.",
-    "Work consolidar erros e testar hipóteses sem alterar champion.",
-    "F360 usar apenas regras aprovadas e registrar novas previsões por IDs."
+    "Coleta/Work: reconciliar IDs e horários por célula dos fechamentos 19 e 20/11; manter status documental condicionado.",
+    "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
+    "Work: auditar qualidade e executar EXPERIMENTO com corte temporal; não promover filtros nem usar Shadow V1 retroativamente.",
+    "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
+    "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente."
   ],
   "safety": {
     "protected": [
@@ -45,5 +46,45 @@
     "number": 105,
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
-  }
+  },
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261120-COND",
+  "postgame_records": [
+    {
+      "registro_id": "F360-POS-20261118",
+      "prejogo_id": "F360-PRE-20261118-PILOTO",
+      "status": "PILOTO_COM_SNAPSHOTS_ANTERIORES",
+      "jogos": 3,
+      "acertos": 21,
+      "erros": 13,
+      "abstencoes": 2,
+      "nd": 0,
+      "arquivo": "REGISTROS/POSJOGO_2026-11-18.md",
+      "shadow_v1": false
+    },
+    {
+      "registro_id": "F360-POS-20261119-COND",
+      "prejogo_id": "F360-PRE-20261119-COND",
+      "status": "DOCUMENTAL_CONDICIONADA",
+      "jogos": 3,
+      "acertos": 18,
+      "erros": 3,
+      "sem_linha": 13,
+      "abstencoes": 2,
+      "nd": 0,
+      "arquivo": "REGISTROS/POSJOGO_2026-11-19.md",
+      "shadow_v1": false
+    },
+    {
+      "registro_id": "F360-POS-20261120-COND",
+      "prejogo_id": "F360-PRE-20261120-COND",
+      "status": "DOCUMENTAL_CONDICIONADA",
+      "jogos": 7,
+      "acertos": 61,
+      "erros": 18,
+      "abstencoes": 5,
+      "nd": 0,
+      "arquivo": "REGISTROS/POSJOGO_2026-11-20.md",
+      "shadow_v1": false
+    }
+  ]
 }
