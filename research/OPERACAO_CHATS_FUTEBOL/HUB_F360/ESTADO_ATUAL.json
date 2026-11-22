@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "project": "FUTSTATS FUTEBOL F360",
-  "as_of_date_brt": "2026-11-21",
+  "as_of_date_brt": "2026-11-22",
   "repository": "azevedosouza22/futstats",
   "ref": "research/f360-hub-chats-2026-11-21",
   "hub_root": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360",
@@ -21,13 +21,13 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
-    "Coleta/Work: liquidar os 139 N/D do registro F360-POS-20261121-PREL (17 jogos; Flashscore FT, 1T e 2T) com checkpoints por confronto e confronto de fontes.",
+    "Coleta/Work: 21/11 concluído em F360-POS-20261121-FINAL-COND: 134 acertos, 43 erros, 0 N/D e 27 abstenções; prova nativa/congelamento autenticado insuficientes. Manter documental condicionada e fora da Shadow V1.",
     "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
     "Work: qualidade e replay 19/20 concluídos; teste temporal de melhoria continua bloqueado até candidato, coorte independente e protocolo fixados. Não promover filtros ou Shadow V1 retroativa.",
     "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
     "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
-    "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 e documentar dados pendentes de 21/11; nao homologar retrospectivamente."
+    "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 ; 21/11 liquidado integralmente com classe documental condicionada; nao homologar retrospectivamente."
   ],
   "safety": {
     "protected": [
@@ -49,7 +49,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261121-PREL",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261121-FINAL-COND",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -114,6 +114,31 @@
       "abstencoes": 27,
       "arquivo": "REGISTROS/POSJOGO_2026-11-21_PRELIMINAR.md",
       "shadow_v1": false
+    },
+    {
+      "registro_id": "F360-POS-20261121-FINAL-COND",
+      "prejogo_id": null,
+      "prejogo_reference": "F360-REF-ANALISE-20261121",
+      "supersedes_for_aggregation": "F360-POS-20261121-PREL",
+      "status": "DOCUMENTAL_CONDICIONADA_LIQUIDADA",
+      "jogos": 17,
+      "celulas": 204,
+      "sinais_com_linha": 177,
+      "acertos": 134,
+      "erros": 43,
+      "nd": 0,
+      "abstencoes": 27,
+      "elite_documental": {
+        "n": 20,
+        "acertos": 16,
+        "erros": 4,
+        "brasileiros_bloqueados": 5,
+        "mls_playoffs": 3
+      },
+      "arquivo": "REGISTROS/POSJOGO_2026-11-21_FINAL.md",
+      "drive_folder": "https://drive.google.com/drive/folders/1tKsn10wjlHuYfd9RfeGzELUoBJ4K7Btk",
+      "shadow_v1": false,
+      "official_prospective": false
     }
   ],
   "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
@@ -136,6 +161,7 @@
       "official_prospective_eligible_in_this_subset": 0
     },
     "next_owner": "Work + Coleta",
-    "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo."
+    "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
+    "latest_postgame": "F360-POS-20261121-FINAL-COND"
   }
 }

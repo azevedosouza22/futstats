@@ -1,0 +1,4 @@
+grupo,acertos,erros,nd,abstencoes,liquidados,celulas,taxa_acerto,taxa_erro
+ELITE_BR_BLOQUEADO,4,1,0,0,5,5,0.8,0.2
+ELITE_DOCUMENTAL,9,3,0,0,12,12,0.75,0.25
+ELITE_MLS_PLAYOFF,3,0,0,0,3,3,1.0,0.0
