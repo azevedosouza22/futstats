@@ -21,6 +21,7 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
+    "Coleta/Work: liquidar 92 N/D de finalizacoes, chutes no gol e escanteios FT/1T/2T dos 11 jogos de 22/11 em F360-POS-20261122-PREL-COND; manter 13 ABSTER e 6 Elite Brasil bloqueados.",
     "Coleta/Work: 21/11 concluído em F360-POS-20261121-FINAL-COND: 134 acertos, 43 erros, 0 N/D e 27 abstenções; prova nativa/congelamento autenticado insuficientes. Manter documental condicionada e fora da Shadow V1.",
     "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
@@ -50,7 +51,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261121-FINAL-COND",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261122-PREL-COND",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -138,6 +139,29 @@
       },
       "arquivo": "REGISTROS/POSJOGO_2026-11-21_FINAL.md",
       "drive_folder": "https://drive.google.com/drive/folders/1tKsn10wjlHuYfd9RfeGzELUoBJ4K7Btk",
+      "shadow_v1": false,
+      "official_prospective": false
+    },
+    {
+      "registro_id": "F360-POS-20261122-PREL-COND",
+      "prejogo_id": null,
+      "prejogo_reference": "F360-ESTUDO-20261122",
+      "status": "DOCUMENTAL_CONDICIONADA_PARCIAL",
+      "jogos": 11,
+      "celulas": 132,
+      "sinais_com_linha": 119,
+      "acertos_confirmados_apenas_gols": 17,
+      "erros_confirmados_apenas_gols": 10,
+      "nd": 92,
+      "abstencoes": 13,
+      "elite_documental": {
+        "n": 21,
+        "acertos_confirmados_gols": 7,
+        "erros_confirmados_gols": 5,
+        "nd": 9,
+        "brasileiros_bloqueados": 6
+      },
+      "arquivo": "REGISTROS/POSJOGO_2026-11-22_PRELIMINAR.md",
       "shadow_v1": false,
       "official_prospective": false
     }
