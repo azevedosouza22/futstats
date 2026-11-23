@@ -34,7 +34,8 @@
     "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 ; 21/11 liquidado integralmente com classe documental condicionada; nao homologar retrospectivamente.",
     "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas.",
     "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal.",
-    "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas."
+    "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas.",
+    "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados."
   ],
   "safety": {
     "protected": [
@@ -270,17 +271,23 @@
     "allow_production_write": false
   },
   "latest_experimental_data_update": {
-    "registro_id": "F360-COLETA-TOTAL-20261123-CP01",
-    "status": "PARCIAL_CALENDARIOS_NAO_HOMOLOGADOS",
+    "registro_id": "F360-COLETA-TOTAL-20261123-CP02",
+    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP01",
+    "status": "PARCIAL_BLOQUEIO_NAVEGADOR_VISUAL_CALENDARIOS_NAO_EXAUSTIVOS",
     "cutoff_brt": "2026-11-22T23:59:59-03:00",
     "base_original": 5620,
     "experimental": 5671,
     "reused_postgame": 41,
     "reconciled_existing": 10,
-    "new_visual_collections": 0,
+    "new_visual_complete_collections": 0,
+    "partial_textual_records": 29,
+    "partial_stat_values": 58,
+    "catalog_candidates_remaining": 40,
+    "external_candidates_no_id": 22,
     "drive_folder": "https://drive.google.com/drive/folders/1qJX81oYkfxuThM_gluvuUEEK6_Sq3LRd",
-    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP01/RELATORIO_CP01.md",
-    "all_current_leagues_up_to_date": false,
+    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP02/RELATORIO_GERAL_CP02.md",
+    "calendar_coverage_percent": null,
+    "leagues_homologated_updated": 0,
     "model_changed": false
   }
 }

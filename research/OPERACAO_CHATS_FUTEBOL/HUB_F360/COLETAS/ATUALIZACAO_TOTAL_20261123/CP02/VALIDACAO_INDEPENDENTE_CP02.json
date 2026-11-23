@@ -1,0 +1,8 @@
+{
+  "csv55_rows": 5671,
+  "csv55_columns": 55,
+  "combined_totals_checks": 68052,
+  "partial_rows_not_merged": 29,
+  "partial_nd_not_zero": true,
+  "original_index_sha256": "4a9c232e7fb63f91338bc63b64cf59726a1de907865e559f8d5f928961c0a7f2"
+}

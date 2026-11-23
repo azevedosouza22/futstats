@@ -1,0 +1,19 @@
+{
+  "liga": "La Liga",
+  "temporada": "2026/27",
+  "catalogo_original": "118",
+  "antes": "117",
+  "reaproveitados_posjogo": "5",
+  "reconciliados_preexistentes": "1",
+  "novas_coletas_24": "0",
+  "total_estrutural_validado": "123",
+  "fila_catalogada_residual_ate_corte": "0",
+  "encerrados_calendario_exaustivo": "N/D",
+  "faltantes_totais": "N/D",
+  "cobertura_real_percentual": "N/D",
+  "situacao": "INVENTARIO_RECONCILIADO_CALENDARIO_NAO_HOMOLOGADO",
+  "resultados_parciais_textuais": "4",
+  "checkpoint": "F360-COLETA-TOTAL-20261123-CP02",
+  "calendario_exaustivo": false,
+  "homologada_atualizada": false
+}
