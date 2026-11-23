@@ -54,3 +54,9 @@ Dos 21 candidatos Elite, houve 7 ACERTO, 5 ERRO e 9 N_D. Seis candidatos Elite d
 ## Pendencias e proxima acao
 
 Coleta/Work: verificar no Flashscore **92 sinais N_D** referentes a finalizacoes, chutes no gol e escanteios FT/1T/2T nos 11 confrontos, com IDs, estatisticas por equipe, fontes e checkpoints individuais. Preservar todos os 132 indicadores originais, 13 abstencoes e candidatos Elite bloqueados. Ao concluir, publicar novo registro FINAL e substituir este apenas na agregacao, sem apagar o historico. Preservar Controle Mestre #29, 659 jogos pessoais, Radar V2/V3/V4, LV4/Elite, app e producao. Sem merge/deploy.
+
+## Relatório visual no Drive
+
+- [PDF infográfico preliminar - 22/11/2026](https://drive.google.com/file/d/1H6-B2iwRVdLotAU2WARlpUh0OFU4pxIL/view)
+- SHA-256 do PDF: `3a650f0c3e6b84e29244a7302d606a7c71e829fcccf2e5957431fecd8eb38e0b`.
+- Gráficos do PDF abrangem apenas gols com linha liquidada e o status documental de todas as 132 células, nunca uma taxa geral de acerto.
