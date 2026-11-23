@@ -21,6 +21,7 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
+    "Coleta 23/11: 12 jogos Brasileirão extraídos dos CSVs 18/19/21/22 (288 valores; 24/24 cada, 96 somas e 72 limites OK); 10 IDs informados, faltam IDs Vasco x Internacional e São Paulo x Fluminense. Staging em COLETAS/BRASILEIRAO_2026 sem integração do índice 5620/produção; recuperar quatro jogos da 35a rodada ainda não auditados.",
     "Coleta/Work: P0 atualizar Brasileirão 2026 em copia experimental; reconciliar 12 jogos auditados 18-22/11, lacunas rodadas 35-36, e normalizar alias RB Bragantino/Red Bull Bragantino sem alterar origem.",
     "Coleta/Work: P1 auditar La Liga 2026/27 e 2025/26 371/380; MLS 2026 separar All-Stars e playoffs; Argentina 2026 revisar 145 alertas de data; Serie A 2026/27 revisar Fiorentina/Juventus; Ligue1 recencia.",
     "Coleta/Work: 22/11 liquidado em F360-POS-20261122-FINAL-COND: 84 acertos, 35 erros, 0 N/D, 13 ABSTER; seis Elite BR bloqueados, Argentina/MLS exploratórios. Prova nativa/congelamento autenticado insuficientes; manter documental condicionada.",
@@ -230,5 +231,23 @@
     "top_priority": "Brasileirão 2026",
     "path": "AUDITORIAS/F360_AUDITORIA_RECENCIA_LIGAS_2026-11-23.md",
     "no_model_change": true
+  },
+  "latest_brasileirao_recovery": {
+    "registro_id": "F360-BR-RECUP-12-20261123",
+    "as_of_date_brt": "2026-11-23",
+    "status": "STAGING_DOCUMENTAL_NAO_INTEGRADO",
+    "existing_index_brasileirao_2026": 336,
+    "latest_index_date": "2026-11-06",
+    "recovered_games": 12,
+    "with_flashscore_id_reported": 10,
+    "missing_flashscore_id": 2,
+    "statistical_values": 288,
+    "verified_24_of_24_games": 12,
+    "sum_checks_passed": "96/96",
+    "shots_on_target_checks_passed": "72/72",
+    "collisions_with_source_index": 0,
+    "path": "COLETAS/BRASILEIRAO_2026/BR_2026_RECUPERACAO_12_20261123.csv",
+    "report_path": "COLETAS/BRASILEIRAO_2026/RELATORIO_RECUPERACAO_12_20261123.md",
+    "production_write": false
   }
 }
