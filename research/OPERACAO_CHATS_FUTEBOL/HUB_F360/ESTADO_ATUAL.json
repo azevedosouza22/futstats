@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "project": "FUTSTATS FUTEBOL F360",
-  "as_of_date_brt": "2026-11-22",
+  "as_of_date_brt": "2026-11-23",
   "repository": "azevedosouza22/futstats",
   "ref": "research/f360-hub-chats-2026-11-21",
   "hub_root": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360",
@@ -21,7 +21,7 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
-    "Coleta/Work: liquidar 92 N/D de finalizacoes, chutes no gol e escanteios FT/1T/2T dos 11 jogos de 22/11 em F360-POS-20261122-PREL-COND; manter 13 ABSTER e 6 Elite Brasil bloqueados.",
+    "Coleta/Work: 22/11 liquidado em F360-POS-20261122-FINAL-COND: 84 acertos, 35 erros, 0 N/D, 13 ABSTER; seis Elite BR bloqueados, Argentina/MLS exploratórios. Prova nativa/congelamento autenticado insuficientes; manter documental condicionada.",
     "Coleta/Work: 21/11 concluído em F360-POS-20261121-FINAL-COND: 134 acertos, 43 erros, 0 N/D e 27 abstenções; prova nativa/congelamento autenticado insuficientes. Manter documental condicionada e fora da Shadow V1.",
     "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
     "Coleta: distinguir apostas reais comprovadas de sinais SDD; odds e ROI permanecem N/D nos fechamentos indexados.",
@@ -29,7 +29,7 @@
     "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
     "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
     "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 ; 21/11 liquidado integralmente com classe documental condicionada; nao homologar retrospectivamente.",
-    "F360 Análise 22/11: estudo 11 jogos/132 células/119 LV4/21 Elite documentais/13 abstenções; recência incompleta do Brasileirão (6 Elite bloqueados); 0 entradas autorizadas sem odds/ID/prova nativa; Coleta/Work validar antes de POSJOGO homologado."
+    "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas."
   ],
   "safety": {
     "protected": [
@@ -51,7 +51,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261122-PREL-COND",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261122-FINAL-COND",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -164,6 +164,32 @@
       "arquivo": "REGISTROS/POSJOGO_2026-11-22_PRELIMINAR.md",
       "shadow_v1": false,
       "official_prospective": false
+    },
+    {
+      "registro_id": "F360-POS-20261122-FINAL-COND",
+      "prejogo_id": null,
+      "prejogo_reference": "F360-ESTUDO-20261122",
+      "supersedes_for_aggregation": "F360-POS-20261122-PREL-COND",
+      "status": "DOCUMENTAL_CONDICIONADA_LIQUIDADA",
+      "jogos": 11,
+      "celulas": 132,
+      "sinais_com_linha": 119,
+      "acertos": 84,
+      "erros": 35,
+      "nd": 0,
+      "abstencoes": 13,
+      "elite_documental": {
+        "n": 21,
+        "acertos": 12,
+        "erros": 9,
+        "brasileiros_bloqueados": 6,
+        "argentina_playoff": 1,
+        "mls_playoffs": 4
+      },
+      "arquivo": "REGISTROS/POSJOGO_2026-11-22_FINAL.md",
+      "drive_folder": "https://drive.google.com/drive/folders/1cUa09ULs3ONueJW-j9M1XSoit0QPPeRz",
+      "shadow_v1": false,
+      "official_prospective": false
     }
   ],
   "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
@@ -187,7 +213,7 @@
     },
     "next_owner": "Work + Coleta",
     "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
-    "latest_postgame": "F360-POS-20261121-FINAL-COND"
+    "latest_postgame": "F360-POS-20261122-FINAL-COND"
   },
   "latest_analysis_study": "F360-ESTUDO-20261122",
   "analysis_study_status": "DOCUMENTAL_CONDICIONADA_NAO_HOMOLOGADA",

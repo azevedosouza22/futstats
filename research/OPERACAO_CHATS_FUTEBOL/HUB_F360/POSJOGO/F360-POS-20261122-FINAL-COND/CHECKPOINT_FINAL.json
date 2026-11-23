@@ -1,0 +1,92 @@
+{
+  "registro_id": "F360-POS-20261122-FINAL-COND",
+  "supersedes_for_aggregation": "F360-POS-20261122-PREL-COND",
+  "prejogo_id": null,
+  "prejogo_reference": "F360-ESTUDO-20261122",
+  "original_github": "https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/PREJOGO_ESTUDOS/F360-ESTUDO-20261122-INDICADORES-132.csv",
+  "original_sha256": "c634b1fc116f95e2ce8331abc10313551c14a2d6deddaabc704f833ee3f87553",
+  "data_evento_brt": "2026-11-22",
+  "consulta_data_brt": "2026-11-23",
+  "classe_temporal": "DOCUMENTAL_CONDICIONADA",
+  "official_prospective": false,
+  "shadow_v1": false,
+  "nd_iniciais": 92,
+  "nd_resolvidos": 92,
+  "nd_residuais": 0,
+  "drive_folder": "https://drive.google.com/drive/folders/1cUa09ULs3ONueJW-j9M1XSoit0QPPeRz",
+  "status": "CONCLUIDO_DADOS_RELATORIOS",
+  "gerado_utc": "2026-11-23T11:04:35.655591+00:00",
+  "jogos": 11,
+  "decisoes": 132,
+  "linhas": 119,
+  "acertos": 84,
+  "erros": 35,
+  "abstencoes": 13,
+  "elite": {
+    "grupo": "Elite documental",
+    "acertos": 12,
+    "erros": 9,
+    "nd": 0,
+    "abstencoes": 0,
+    "liquidados": 21,
+    "celulas": 21,
+    "taxa_acerto": 0.5714285714285714,
+    "taxa_erro": 0.42857142857142855
+  },
+  "grupos_elite": [
+    {
+      "grupo": "ELITE_BR_BLOQUEADO",
+      "acertos": 4,
+      "erros": 2,
+      "nd": 0,
+      "abstencoes": 0,
+      "liquidados": 6,
+      "celulas": 6,
+      "taxa_acerto": 0.6666666666666666,
+      "taxa_erro": 0.3333333333333333
+    },
+    {
+      "grupo": "ELITE_DOCUMENTAL",
+      "acertos": 5,
+      "erros": 5,
+      "nd": 0,
+      "abstencoes": 0,
+      "liquidados": 10,
+      "celulas": 10,
+      "taxa_acerto": 0.5,
+      "taxa_erro": 0.5
+    },
+    {
+      "grupo": "ELITE_ARG_PLAYOFF",
+      "acertos": 1,
+      "erros": 0,
+      "nd": 0,
+      "abstencoes": 0,
+      "liquidados": 1,
+      "celulas": 1,
+      "taxa_acerto": 1.0,
+      "taxa_erro": 0.0
+    },
+    {
+      "grupo": "ELITE_MLS_PLAYOFF",
+      "acertos": 2,
+      "erros": 2,
+      "nd": 0,
+      "abstencoes": 0,
+      "liquidados": 4,
+      "celulas": 4,
+      "taxa_acerto": 0.5,
+      "taxa_erro": 0.5
+    }
+  ],
+  "valores_observados": 264,
+  "totais_calculados": 132,
+  "proximo_confronto": null,
+  "pendencias_estatisticas": [],
+  "pendencias_origem": [
+    "Execução nativa e congelamento autenticado não comprovados",
+    "Odds, apostas e ROI N/D"
+  ],
+  "github_branch": "research/f360-hub-chats-2026-11-21",
+  "github_publicacao": "Ver recibo de publicação posterior e issue #105"
+}
