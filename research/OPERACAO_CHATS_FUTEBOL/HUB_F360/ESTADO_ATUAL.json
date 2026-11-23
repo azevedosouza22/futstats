@@ -33,7 +33,8 @@
     "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
     "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 ; 21/11 liquidado integralmente com classe documental condicionada; nao homologar retrospectivamente.",
     "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas.",
-    "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal."
+    "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal.",
+    "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas."
   ],
   "safety": {
     "protected": [
@@ -267,5 +268,19 @@
     "former_brasileirao_12_scope": "EXEMPLO_DE_SUBCONJUNTO_NAO_SUFFICIENTE_PARA_ATUALIZACAO",
     "not_done": "Consulta exaustiva de todos os calendarios e atualizacao de jogos faltantes",
     "allow_production_write": false
+  },
+  "latest_experimental_data_update": {
+    "registro_id": "F360-COLETA-TOTAL-20261123-CP01",
+    "status": "PARCIAL_CALENDARIOS_NAO_HOMOLOGADOS",
+    "cutoff_brt": "2026-11-22T23:59:59-03:00",
+    "base_original": 5620,
+    "experimental": 5671,
+    "reused_postgame": 41,
+    "reconciled_existing": 10,
+    "new_visual_collections": 0,
+    "drive_folder": "https://drive.google.com/drive/folders/1qJX81oYkfxuThM_gluvuUEEK6_Sq3LRd",
+    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP01/RELATORIO_CP01.md",
+    "all_current_leagues_up_to_date": false,
+    "model_changed": false
   }
 }
