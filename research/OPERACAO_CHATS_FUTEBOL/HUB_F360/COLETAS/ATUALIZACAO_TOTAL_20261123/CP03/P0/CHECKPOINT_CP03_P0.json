@@ -1,0 +1,31 @@
+{
+  "registro_id": "F360-COLETA-TOTAL-20261123-CP03-P0",
+  "previous_checkpoint": "F360-COLETA-TOTAL-20261123-CP02",
+  "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP02",
+  "consulta_utc": "2026-11-23T22:52:34.463650+00:00",
+  "corte_brt": "2026-11-22T23:59:59-03:00",
+  "base_anterior": 5671,
+  "novos_completos_documentais_derivados": 3,
+  "novos_completos_24_observados_diretamente": 0,
+  "base_posterior_experimental": 5674,
+  "ids_novos": [
+    "6JIGDDFj",
+    "6ezUMHh4",
+    "zySpJZiT"
+  ],
+  "id_chapecoense_vasco_resolvido": "ARJ356Ua",
+  "p0_pendentes": 5,
+  "valores_disponiveis_p0": 161,
+  "valores_nd_p0": 31,
+  "status": "PARCIAL_FONTES_ALTERNATIVAS_COM_DERIVACAO_EXPLICITA",
+  "originais_preservados": true,
+  "base_anterior_sha256": "c6e62bdcdc0354d77d97d6d421f5dcf4f281e00f25e8652ef75f29b5482b60e6",
+  "base_posterior_sha256": "1340479e0243ffd98419e2f87ad8ea9ab441e0dd1b0bbd6bd7c249e80f2d1a28",
+  "browser_visual_disponivel": false,
+  "ligas_atualizadas": 0,
+  "proximo_id": "6NbvG9uK",
+  "proximo_bloqueio": "Finalizações por tempo ausentes; FT divergente entre versões; não inventar bloqueios por período.",
+  "modelos_alterados": false,
+  "merge": false,
+  "deploy": false
+}
