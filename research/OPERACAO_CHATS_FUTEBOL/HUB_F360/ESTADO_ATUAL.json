@@ -21,6 +21,8 @@
   "latest_approved_strategy_version": null,
   "approved_strategy_changes": 0,
   "pending": [
+    "Coleta/Work: P0 atualizar Brasileirão 2026 em copia experimental; reconciliar 12 jogos auditados 18-22/11, lacunas rodadas 35-36, e normalizar alias RB Bragantino/Red Bull Bragantino sem alterar origem.",
+    "Coleta/Work: P1 auditar La Liga 2026/27 e 2025/26 371/380; MLS 2026 separar All-Stars e playoffs; Argentina 2026 revisar 145 alertas de data; Serie A 2026/27 revisar Fiorentina/Juventus; Ligue1 recencia.",
     "Coleta/Work: 22/11 liquidado em F360-POS-20261122-FINAL-COND: 84 acertos, 35 erros, 0 N/D, 13 ABSTER; seis Elite BR bloqueados, Argentina/MLS exploratórios. Prova nativa/congelamento autenticado insuficientes; manter documental condicionada.",
     "Coleta/Work: 21/11 concluído em F360-POS-20261121-FINAL-COND: 134 acertos, 43 erros, 0 N/D e 27 abstenções; prova nativa/congelamento autenticado insuficientes. Manter documental condicionada e fora da Shadow V1.",
     "Coleta/Work: prova nativa de congelamento/execução dos lotes 19/20 continua insuficiente. IDs/células reconciliados em F360-EXP-QUALIDADE-20261121; manter classificação documental.",
@@ -218,5 +220,15 @@
   },
   "latest_analysis_study": "F360-ESTUDO-20261123",
   "analysis_study_status": "DOCUMENTAL_CONDICIONADA_NAO_HOMOLOGADA",
-  "analysis_study_path": "PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md"
+  "analysis_study_path": "PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md",
+  "latest_data_freshness_audit": {
+    "registro_id": "F360-CTRL-RECENCIA-LIGAS-20261123",
+    "as_of_date_brt": "2026-11-23",
+    "source_index_eligible": 5620,
+    "max_date_source_index": "2026-11-09",
+    "audited_games_outside_cutoff_18to22": 41,
+    "top_priority": "Brasileirão 2026",
+    "path": "AUDITORIAS/F360_AUDITORIA_RECENCIA_LIGAS_2026-11-23.md",
+    "no_model_change": true
+  }
 }
