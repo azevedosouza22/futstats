@@ -1,0 +1,18 @@
+{
+  "ids_antes": 5671,
+  "ids_depois": 5675,
+  "novos_unicos": 4,
+  "duplicatas": 0,
+  "colunas_csv": 55,
+  "base_anterior_linhas_inalteradas": true,
+  "nenhum_dos51_repetido": true,
+  "valores_base_completa": 136200,
+  "aditividades_verificadas": 45400,
+  "sot_le_shots_verificadas": 34050,
+  "totais_home_away_verificados": 68100,
+  "nova_coleta_visual_realizada": false,
+  "novos_documentais_derivados": 4,
+  "aditividade_calculada_nao_e_validacao_independente_do_fornecedor": true,
+  "indice_original5620_sha256": "4a9c232e7fb63f91338bc63b64cf59726a1de907865e559f8d5f928961c0a7f2",
+  "catalogo_original6123_sha256": "c7ea0b72d35a442c94ebac5f9ce975384921afb63a8290cb666439bc6064e059"
+}

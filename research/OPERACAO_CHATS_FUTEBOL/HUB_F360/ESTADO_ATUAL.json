@@ -35,7 +35,8 @@
     "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas.",
     "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal.",
     "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas.",
-    "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados."
+    "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados.",
+    "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes."
   ],
   "safety": {
     "protected": [
@@ -271,23 +272,45 @@
     "allow_production_write": false
   },
   "latest_experimental_data_update": {
-    "registro_id": "F360-COLETA-TOTAL-20261123-CP02",
-    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP01",
-    "status": "PARCIAL_BLOQUEIO_NAVEGADOR_VISUAL_CALENDARIOS_NAO_EXAUSTIVOS",
+    "registro_id": "F360-COLETA-TOTAL-20261123-CP03",
+    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP02",
+    "status": "PARCIAL_DOCUMENTAL_DERIVADA_CALENDARIOS_NAO_EXAUSTIVOS",
     "cutoff_brt": "2026-11-22T23:59:59-03:00",
     "base_original": 5620,
-    "experimental": 5671,
+    "experimental_before": 5671,
+    "experimental": 5675,
     "reused_postgame": 41,
     "reconciled_existing": 10,
+    "new_documental_derived_records": 4,
+    "ids_added": [
+      "6JIGDDFj",
+      "6ezUMHh4",
+      "ADcmpkS8",
+      "zySpJZiT"
+    ],
     "new_visual_complete_collections": 0,
-    "partial_textual_records": 29,
-    "partial_stat_values": 58,
-    "catalog_candidates_remaining": 40,
-    "external_candidates_no_id": 22,
-    "drive_folder": "https://drive.google.com/drive/folders/1qJX81oYkfxuThM_gluvuUEEK6_Sq3LRd",
-    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP02/RELATORIO_GERAL_CP02.md",
+    "new_records_all24_directly_observed": 0,
+    "eligibility": "COPIA_DE_PESQUISA_DOCUMENTAL; SEM_LIBERACAO_AUTOMATICA_LV4",
+    "p0_games_examined": 8,
+    "p0_numeric_values": 161,
+    "p0_nd_values": 31,
+    "p0_games_partial": 5,
+    "catalog_candidates_remaining": 36,
+    "external_cp02_candidates_no_id": 21,
+    "additional_candidates_not_in_cp02_lists": 7,
+    "identified_chapecoense_vasco_id": "ARJ356Ua",
+    "portugal_enumerated_alternative_calendar": {
+      "identified": 98,
+      "present": 97,
+      "official_complete_calendar": false
+    },
+    "drive_folder": "https://drive.google.com/drive/folders/1BgUOYV28pljvBQfbkbmMLJ2nEzDg4tr2",
+    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP03/FINAL/RELATORIO_CP03.md",
+    "checkpoint": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP03/FINAL/CHECKPOINT_CP03_FINAL.json",
     "calendar_coverage_percent": null,
     "leagues_homologated_updated": 0,
-    "model_changed": false
+    "model_changed": false,
+    "original_data_modified": false,
+    "full_11_calendars_verified": false
   }
 }
