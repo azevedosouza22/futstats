@@ -29,7 +29,8 @@
     "F360 Análise: ler POSJOGO/ESTRATEGIAS antes de novos sinais; emitir PREJOGO prospectivo congelado com timestamp e fonte.",
     "Validar ciclo completo PREJOGO -> POSJOGO -> EXPERIMENTO para pelo menos um ID fonte; etapa experimental ainda pendente.",
     "Coleta/Work: conferir 12 sinais excluidos de Corinthians x Mirassol em 30/10 ; 21/11 liquidado integralmente com classe documental condicionada; nao homologar retrospectivamente.",
-    "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas."
+    "F360 Análise 22/11: estudo preservado, 132 células e 119 linhas auditadas em F360-POS-20261122-FINAL-COND; seis Elite brasileiros bloqueados e zero entradas autorizadas.",
+    "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal."
   ],
   "safety": {
     "protected": [
@@ -215,7 +216,7 @@
     "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
     "latest_postgame": "F360-POS-20261122-FINAL-COND"
   },
-  "latest_analysis_study": "F360-ESTUDO-20261122",
+  "latest_analysis_study": "F360-ESTUDO-20261123",
   "analysis_study_status": "DOCUMENTAL_CONDICIONADA_NAO_HOMOLOGADA",
-  "analysis_study_path": "PREJOGO_ESTUDOS/F360-ESTUDO-20261122-RELATORIO.md"
+  "analysis_study_path": "PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md"
 }
