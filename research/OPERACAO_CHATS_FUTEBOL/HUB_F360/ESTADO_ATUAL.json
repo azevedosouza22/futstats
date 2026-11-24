@@ -38,7 +38,8 @@
     "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados.",
     "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes.",
     "CP16 supersede somente agregação CP01–CP15: 5732 IDs; cinco CP04 recuperados sem recoleta e 52 novas coletas; 243 IDs de novembro das 11 ligas confrontados, zero ausências nesse recorte. Temporadas integrais e qualidade histórica prévia não homologadas. Dados experimentais, sem liberação automática LV4 e sem promoção de modelos.",
-    "F360 POSJOGO 23/11 final documental: 8 jogos, 96 celulas; OBSERVAR 53A/10E (84,13%); Elite documental 9A/1E; 10 DESCARTAR ultrapassaram linha mas excluidas; 23 ABSTER. Odds/bilhetes/ROI N/D; fora de prospectiva oficial, Shadow V1 e apostas comprovadas."
+    "F360 POSJOGO 23/11 final documental: 8 jogos, 96 celulas; OBSERVAR 53A/10E (84,13%); Elite documental 9A/1E; 10 DESCARTAR ultrapassaram linha mas excluidas; 23 ABSTER. Odds/bilhetes/ROI N/D; fora de prospectiva oficial, Shadow V1 e apostas comprovadas.",
+    "F360 Análise 24/11: Chapecoense x Palmeiras calculado na base CP16 5732, 12 linhas LV4 (1 Elite provisório), 12 OBSERVAR e 0 SELECIONAR; nove Champions League ABSTER porque UCL 2026/27 não consta na base; Coleta vincular resultado por OzJP5JI5, Work auditar paridade nativa e efeito de escalação."
   ],
   "safety": {
     "protected": [
@@ -254,9 +255,9 @@
     "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
     "latest_postgame": "F360-POS-20261123-FINAL-COND"
   },
-  "latest_analysis_study": "F360-ESTUDO-20261123",
-  "analysis_study_status": "DOCUMENTAL_CONDICIONADA_NAO_HOMOLOGADA",
-  "analysis_study_path": "PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md",
+  "latest_analysis_study": "F360-PRE-20261124-CHA-PAL",
+  "analysis_study_status": "DOCUMENTAL_PREKICKOFF_NAO_HOMOLOGADA",
+  "analysis_study_path": "PREJOGO_ESTUDOS/F360-PRE-20261124-CHA-PAL-RELATORIO.md",
   "latest_data_freshness_audit": {
     "registro_id": "F360-CTRL-RECENCIA-LIGAS-20261123",
     "as_of_date_brt": "2026-11-23",
