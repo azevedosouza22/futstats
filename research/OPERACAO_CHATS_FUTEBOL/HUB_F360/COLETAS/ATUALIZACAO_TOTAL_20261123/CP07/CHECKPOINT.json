@@ -1,0 +1,45 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP07",
+  "experimental_before": 5686,
+  "experimental": 5691,
+  "new_ids": [
+    "YqZqlfi3",
+    "86sbQjad",
+    "fN5uwUr2",
+    "K2q8Ytr2",
+    "Cxt0z3Dk"
+  ],
+  "validated_values": 120,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "previous_base": "BASE_EXPERIMENTAL_CP06_5686_55COL.csv",
+  "sha256": "66730ba5197d74ece4e90039214f458de5e8ccb8f9d153f0a90e23ff1d80d332",
+  "last_league": "Alemanha",
+  "last_id": "Cxt0z3Dk",
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false,
+  "drive_files": [
+    {
+      "id": "1XYfQC4ghGBx2qBcqILS6havqXfyZqhXd",
+      "url": "https://drive.google.com/file/d/1XYfQC4ghGBx2qBcqILS6havqXfyZqhXd/view?usp=drivesdk",
+      "name": "BASE_EXPERIMENTAL_CP07_5691_55COL.csv"
+    },
+    {
+      "id": "15MdHvK3yRhBzBwAfi0HarK6jodMHG_NA",
+      "url": "https://drive.google.com/file/d/15MdHvK3yRhBzBwAfi0HarK6jodMHG_NA/view?usp=drivesdk",
+      "name": "INCREMENTAL_CP07_5_55COL.csv"
+    },
+    {
+      "id": "1m8oD-_pfyD6n6LxbjBxA5IyFVMTfCRuz",
+      "url": "https://drive.google.com/file/d/1m8oD-_pfyD6n6LxbjBxA5IyFVMTfCRuz/view?usp=drivesdk",
+      "name": "lot07.json"
+    },
+    {
+      "id": "17RtKoVf6858kqtYMHLoyThM0FJGFF7RQ",
+      "url": "https://drive.google.com/file/d/17RtKoVf6858kqtYMHLoyThM0FJGFF7RQ/view?usp=drivesdk",
+      "name": "CHECKPOINT_CP07.json"
+    }
+  ]
+}
