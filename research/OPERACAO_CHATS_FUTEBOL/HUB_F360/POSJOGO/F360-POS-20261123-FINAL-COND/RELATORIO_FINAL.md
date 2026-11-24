@@ -1,51 +1,51 @@
 # FUTSTATS F360 — Fechamento documental 23/11/2026 (BRT)
 
-**Registro:** F360-POS-20261123-FINAL-COND. **Fonte das linhas:** pré-jogo imutável F360-ESTUDO-20261123 (96 indicadores). **Fonte dos resultados:** BASE_EXPERIMENTAL_CP16_5732_55COL.csv, oito IDs confirmados no recorte 23/11. 
+**Registro:** `F360-POS-20261123-FINAL-COND`. Fonte das linhas: estudo pré-jogo imutável `F360-ESTUDO-20261123` (96 indicadores). Fonte dos resultados: `BASE_EXPERIMENTAL_CP16_5732_55COL.csv` com oito IDs vinculados.
 
-**Classificação:** DOCUMENTAL_CONDICIONADA, retrospectiva de linhas pré-existentes. Não homologado como execução do motor TypeScript original, Shadow V1 nem aposta comprovada. Previsões, linhas, SDD e Elite não modificados. Zero odds/bilhetes comprovados; ROI N/D.
+**Classificação:** DOCUMENTAL CONDICIONADA. Não homologado como execução nativa do motor TypeScript, Shadow V1 nem aposta comprovada. Nenhuma linha/SDD/Elite original foi modificada. Odds, bilhetes e ROI: N/D.
 
-## Resumo
+## Resultado principal
 
-- **8 jogos; 96 células:** 63 OBSERVAR, 10 DESCARTAR e 23 ABSTER.
-- **LV4 OBSERVAR (incluindo Elite): 53 ACERTO / 10 ERRO / 0 N/D = 84,13% (53/63).**
-- **Elite documental (subconjunto do LV4): 9 ACERTO / 1 ERRO = 90,00% (9/10).**
-- **10 DESCARTAR:** as linhas atingiram os Overs retrospectivamente (10/10), **não são entradas** nem integram o denominador 63; a decisão SDD original permanece preservada.
-- **23 ABSTER:** sem linha a avaliar, fora do denominador.
-- O total de 73 linhas históricas com linhas Over (63 OBSERVAR + 10 DESCARTAR) resultou matematicamente 63 acertos e 10 erros (86,30%). Este indicador é exclusivamente de controle de decisões, não uma taxa oficial de entradas.
+- 8 jogos, 96 células: **63 OBSERVAR, 10 DESCARTAR, 23 ABSTER**.
+- **OBSERVAR LV4 (Elite incluída): 53 acertos, 10 erros, taxa 84,13% (53/63).**
+- **Elite documental, subconjunto de OBSERVAR: 9 acertos, 1 erro, 90,00% (9/10).**
+- **DESCARTAR:** 10/10 linhas ultrapassaram o Over ex-post, mas são excluídas da taxa OBSERVAR e não são apostas.
+- **ABSTER:** 23 células sem linha, fora do denominador.
+- Entre todas as 73 linhas Over, incluindo as 10 descartadas, 63 acertos/10 erros (86,30%), apenas para análise de decisão SDD, não taxa de sinais autorizados.
 
-## Jogos — apenas OBSERVAR na taxa
+## Fechamento por jogo
 
-| Confronto | Placar 90 min | Acertos | Erros | Descartados | Abstenções | OBSERVAR |
+| Jogo | Placar | OBSERVAR A | OBSERVAR E | DESCARTAR | ABSTER | % OBSERVAR |
 |---|---:|---:|---:|---:|---:|---:|
-| Monza × Fiorentina | 3–0 | 0 | 0 | 0 | 0 | — |
-| Brentford × Everton | 4–0 | 0 | 0 | 0 | 1 | — |
-| Levante × Elche | 1–1 | 0 | 0 | 0 | 4 | — |
-| Gimnasia L.P. × Newell's Old Boys | 2–2 (90 min) | 0 | 0 | 0 | 2 | — |
-| Internacional × Vitória | 2–5 | 0 | 0 | 0 | 1 | — |
-| Botafogo × São Paulo | 1–1 | 0 | 0 | 0 | 12 | — |
-| Santos × Grêmio | 0–2 | 0 | 0 | 10 | 2 | — |
-| St. Louis City × Los Angeles FC | 3–2 | 0 | 0 | 0 | 1 | — |
+| Monza × Fiorentina | 3-0 | 11 | 1 | 0 | 0 | 91.67% |
+| Brentford × Everton | 4-0 | 9 | 2 | 0 | 1 | 81.82% |
+| Levante × Elche | 1-1 | 3 | 5 | 0 | 4 | 37.50% |
+| Gimnasia L.P. × Newell's Old Boys | 2-2 (90 min) | 10 | 0 | 0 | 2 | 100.00% |
+| Internacional × Vitória | 2-5 | 11 | 0 | 0 | 1 | 100.00% |
+| Botafogo × São Paulo | 1-1 | 0 | 0 | 0 | 12 | — |
+| Santos × Grêmio | 0-2 | 0 | 0 | 10 | 2 | — |
+| St. Louis City × Los Angeles FC | 3-2 | 9 | 2 | 0 | 1 | 81.82% |
 
-## Por mercado — OBSERVAR
+## OBSERVAR — desempenho por mercado
 
 | Mercado | Acertos | Erros | Taxa |
 |---|---:|---:|---:|
-| Finalizações | 0 | 0 | N/D% |
-| Escanteios | 0 | 0 | N/D% |
-| Chutes no gol | 0 | 0 | N/D% |
-| Gols | 0 | 0 | N/D% |
+| Finalizações | 15 | 3 | 83.33% |
+| Escanteios | 14 | 3 | 82.35% |
+| Chutes no gol | 13 | 3 | 81.25% |
+| Gols | 11 | 1 | 91.67% |
 
-## Por período — OBSERVAR
+## OBSERVAR — desempenho por período
 
 | Período | Acertos | Erros | Taxa |
 |---|---:|---:|---:|
-| Jogo completo | 0 | 0 | N/D% |
-| 1ºT | 0 | 0 | N/D% |
-| 2ºT | 0 | 0 | N/D% |
+| Jogo completo | 19 | 4 | 82.61% |
+| 1ºT | 16 | 1 | 94.12% |
+| 2ºT | 18 | 5 | 78.26% |
 
-## Elite documental — dez linhas congeladas
+## Elite documental — 10 sinais
 
-| Jogo | Mercado | Período | Linha | Real | Resultado |
+| Jogo | Mercado | Período | Linha original | Real | Resultado |
 |---|---|---|---|---:|---|
 | Monza × Fiorentina | Escanteios | Jogo completo | Over 6.5 | 10 | ACERTO |
 | Monza × Fiorentina | Chutes no gol | Jogo completo | Over 8.5 | 13 | ACERTO |
@@ -58,24 +58,36 @@
 | St. Louis City × Los Angeles FC | Chutes no gol | 2ºT | Over 4.5 | 4 | ERRO |
 | St. Louis City × Los Angeles FC | Gols | 2ºT | Over 0.5 | 4 | ACERTO |
 
-## Dez erros em OBSERVAR
+## Dez erros do conjunto OBSERVAR
 
-| Jogo | Mercado | Período | Linha | Real |
+| Jogo | Mercado | Período | Linha original | Real |
 |---|---|---|---|---:|
+| Monza × Fiorentina | Gols | Jogo completo | Over 3.5 | 3 |
+| Brentford × Everton | Finalizações | 2ºT | Over 11.5 | 9 |
+| Brentford × Everton | Chutes no gol | 2ºT | Over 4.5 | 2 |
+| Levante × Elche | Finalizações | Jogo completo | Over 22.5 | 22 |
+| Levante × Elche | Escanteios | Jogo completo | Over 6.5 | 6 |
+| Levante × Elche | Chutes no gol | Jogo completo | Over 7.5 | 4 |
+| Levante × Elche | Finalizações | 1ºT | Over 10.5 | 10 |
+| Levante × Elche | Escanteios | 2ºT | Over 3.5 | 2 |
+| St. Louis City × Los Angeles FC | Escanteios | 2ºT | Over 4.5 | 4 |
+| St. Louis City × Los Angeles FC | Chutes no gol | 2ºT | Over 4.5 | 4 |
 
+## Interpretação e restrições
 
-## Nota sobre os descartes e prorrogação
+1. **Santos × Grêmio:** 10 sinais classificados DESCARTAR por elegibilidade documental de recência do pré-jogo; todos os dez atingiram seus Overs nos resultados. Não reclassificar retrospectivamente. São oportunidades potenciais perdidas para estudo, não operações executadas.
+2. **Gimnasia L.P. × Newell's:** 90 minutos (placar 2–2 e métricas 1T+2T), sem incorporar a prorrogação ao mercado FT regulamentar. A base CP16 identifica valores FT90 derivados, não observação direta independente de FT90.
+3. **Levante × Elche:** pior conjunto OBSERVAR, 3/8 (37,50%); não concluir por uma única partida que o mercado é estruturalmente ruim.
+4. **Odds, bilhetes, staking, ROI:** não comprovados. Não existe taxa de acerto de apostas efetivamente executadas calculável para o dia.
+5. **Origem:** estudo pré-jogo foi uma reprodução documental Python, não um snapshot nativo validado; métricas são auditoria retrospectiva de linhas históricas imutáveis, fora de Shadow V1 e da prospectiva homologada.
+6. Todos os oito jogos possuem dados de gols, finalizações, alvo e escanteios para FT, 1T, 2T no CP16; sem N/D nos 96 resultados avaliados.
 
-Santos × Grêmio tinha 10 linhas DESCARTAR (vermelho) devido à elegibilidade documental de dados anteriores; 10 linhas ultrapassaram seus limites ex-post, mas **não foram sinalizações verdes nem entradas aprovadas**, e não podem ser promovidas retroativamente.
+## Fontes e auditoria
 
-Gimnasia L.P. × Newell's Old Boys usa **90 minutos**, não 120. Na base CP16 as estatísticas FT90 foram calculadas de 1T+2T e conferidas com FT120 menos prorrogação; o marcador de derivação deve acompanhar esta auditoria e não ser apresentado como leitura independente de FT90.
+- [Estudo pré-jogo imutável](https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md)
+- [CSV original de 96 indicadores](https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/PREJOGO_ESTUDOS/F360-ESTUDO-20261123-INDICADORES-96.csv)
+- [Base CP16 de 5.732 partidas](https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view)
+- [Relatório de coleta CP16](https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md)
+- `AUDITORIA_96.csv`: linha, ID de confronto resolvido, mercado/período, linha congelada, valor real, SDD, resultado e classe.
 
-## Rastreabilidade
-
-- Pré-jogo, reprodução Python documental LV4 (não execução nativa): https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/PREJOGO_ESTUDOS/F360-ESTUDO-20261123-RELATORIO.md
-- Predições originais: https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/PREJOGO_ESTUDOS/F360-ESTUDO-20261123-INDICADORES-96.csv
-- Base e resultados: https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view
-- CP16: https://github.com/azevedosouza22/futstats/blob/research/f360-hub-chats-2026-11-21/research/OPERACAO_CHATS_FUTEBOL/HUB_F360/COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md
-- Auditoria exata por célula: AUDITORIA_96.csv (nesta pasta), com linha original, SDD, Elite, ID, real FT/1T/2T e classificação.
-
-**Proteções:** originais, 659 jogos pessoais, LV4/Elite, Radar V2/V3/V4, app, forecasts, main, produção e Shadow V1 intactos. Sem merge ou deploy.
+**Proteções:** 659 pessoais, históricos, pregame, LV4/Elite, Radar V2/V3/V4, forecasts, Shadow V1, Android, main e produção intocados. Sem merge ou deploy.
