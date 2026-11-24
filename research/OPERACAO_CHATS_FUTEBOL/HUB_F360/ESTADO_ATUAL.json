@@ -37,7 +37,8 @@
     "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas.",
     "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados.",
     "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes.",
-    "CP16 supersede somente agregação CP01–CP15: 5732 IDs; cinco CP04 recuperados sem recoleta e 52 novas coletas; 243 IDs de novembro das 11 ligas confrontados, zero ausências nesse recorte. Temporadas integrais e qualidade histórica prévia não homologadas. Dados experimentais, sem liberação automática LV4 e sem promoção de modelos."
+    "CP16 supersede somente agregação CP01–CP15: 5732 IDs; cinco CP04 recuperados sem recoleta e 52 novas coletas; 243 IDs de novembro das 11 ligas confrontados, zero ausências nesse recorte. Temporadas integrais e qualidade histórica prévia não homologadas. Dados experimentais, sem liberação automática LV4 e sem promoção de modelos.",
+    "F360 POSJOGO 23/11 final documental: 8 jogos, 96 celulas; OBSERVAR 53A/10E (84,13%); Elite documental 9A/1E; 10 DESCARTAR ultrapassaram linha mas excluidas; 23 ABSTER. Odds/bilhetes/ROI N/D; fora de prospectiva oficial, Shadow V1 e apostas comprovadas."
   ],
   "safety": {
     "protected": [
@@ -59,7 +60,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261122-FINAL-COND",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261123-FINAL-COND",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -198,6 +199,36 @@
       "drive_folder": "https://drive.google.com/drive/folders/1cUa09ULs3ONueJW-j9M1XSoit0QPPeRz",
       "shadow_v1": false,
       "official_prospective": false
+    },
+    {
+      "registro_id": "F360-POS-20261123-FINAL-COND",
+      "prejogo_id": null,
+      "prejogo_reference": "F360-ESTUDO-20261123",
+      "status": "DOCUMENTAL_CONDICIONADA_LIQUIDADA",
+      "jogos": 8,
+      "celulas": 96,
+      "sinais_observar": 63,
+      "acertos_observar": 53,
+      "erros_observar": 10,
+      "descartados": 10,
+      "descartados_atingiram_linha": 10,
+      "abstencoes": 23,
+      "nd_resultado": 0,
+      "elite_documental": {
+        "n": 10,
+        "acertos": 9,
+        "erros": 1
+      },
+      "odds_verificadas": 0,
+      "apostas_executadas_comprovadas": 0,
+      "roi": "N/D",
+      "arquivo": "POSJOGO/F360-POS-20261123-FINAL-COND/RELATORIO_FINAL.md",
+      "auditoria": "POSJOGO/F360-POS-20261123-FINAL-COND/AUDITORIA_96.csv",
+      "resultados_base": "BASE_EXPERIMENTAL_CP16_5732_55COL.csv",
+      "percentual_observar": "84.13%",
+      "observacao": "10 descartadas ultrapassaram suas linhas em retrospectiva, fora da taxa OBSERVAR; FT90 da Argentina derivado 1T+2T e separado de prorrogacao",
+      "shadow_v1": false,
+      "official_prospective": false
     }
   ],
   "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
@@ -221,7 +252,7 @@
     },
     "next_owner": "Work + Coleta",
     "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
-    "latest_postgame": "F360-POS-20261122-FINAL-COND"
+    "latest_postgame": "F360-POS-20261123-FINAL-COND"
   },
   "latest_analysis_study": "F360-ESTUDO-20261123",
   "analysis_study_status": "DOCUMENTAL_CONDICIONADA_NAO_HOMOLOGADA",
