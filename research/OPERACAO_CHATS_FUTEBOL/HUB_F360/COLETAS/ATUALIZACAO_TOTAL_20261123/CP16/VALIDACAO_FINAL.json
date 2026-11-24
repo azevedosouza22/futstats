@@ -1,0 +1,29 @@
+{
+  "base_before": 5675,
+  "base_after": 5732,
+  "new_including_recovered": 57,
+  "new_collected_this_session": 52,
+  "cp04_5680_rows_unchanged": true,
+  "unique_ids": 5732,
+  "duplicates": 0,
+  "new_values": 1368,
+  "directly_observed_this_session": 1240,
+  "derived_regulation_values": 8,
+  "derived_game_id": "tMgLJeAF",
+  "november_ids_checked": 243,
+  "missing_november_after": {
+    "Portugal": [],
+    "Brasil": [],
+    "Espanha": [],
+    "Franca": [],
+    "Inglaterra": [],
+    "Italia": [],
+    "Alemanha": [],
+    "Saudi": [],
+    "Argentina": [],
+    "MLS": [],
+    "Noruega": []
+  },
+  "coverage_scope": "Resultados encerrados de novembro listados no Flashscore em 24/11/2026; não homologa temporadas integrais",
+  "sha256": "1982fbc1e074a6a722cc9947cc023ec2520a6df2321f31b366716590bbf35423"
+}

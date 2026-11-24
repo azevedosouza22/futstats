@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "project": "FUTSTATS FUTEBOL F360",
-  "as_of_date_brt": "2026-11-23",
+  "as_of_date_brt": "2026-11-24",
   "repository": "azevedosouza22/futstats",
   "ref": "research/f360-hub-chats-2026-11-21",
   "hub_root": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360",
@@ -36,7 +36,8 @@
     "F360 Análise 23/11: 8 jogos, 96 indicadores, 73 linhas históricas (63 OBSERVAR, 10 DESCARTAR por recência incompleta), 23 ABSTER, 10 Elite provisórios; nenhuma seleção com odds ou Shadow V1; Coleta validar IDs/estatísticas; Work avaliar paridade temporal.",
     "Work CP01: cópia experimental 5671 IDs validada estruturalmente; 41 pós-jogos e 10 conflitos já reconciliados reaproveitados. Calendários das 11 temporadas não homologados: navegador visual indisponível nesta sessão. Restam 42 candidatos catalogados e lacunas externas adicionais; não declarar temporadas atualizadas.",
     "Work CP02 substitui apenas a agregação do CP01: 5671 IDs estruturais;40 candidatos catalogados restantes +22 candidatos externos semID (listas não exaustivas). Estoril-Marítimo adiado04/01/2027. Calendários/novas estatísticas completas bloqueados por falta de navegador visual; não homologar cobertura ou usar partidos pós-corte. CP01 texto22/42 corrigido porIDs para23/41 antes de excluir Estoril; originais preservados.",
-    "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes."
+    "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes.",
+    "CP16 supersede somente agregação CP01–CP15: 5732 IDs; cinco CP04 recuperados sem recoleta e 52 novas coletas; 243 IDs de novembro das 11 ligas confrontados, zero ausências nesse recorte. Temporadas integrais e qualidade histórica prévia não homologadas. Dados experimentais, sem liberação automática LV4 e sem promoção de modelos."
   ],
   "safety": {
     "protected": [
@@ -272,45 +273,86 @@
     "allow_production_write": false
   },
   "latest_experimental_data_update": {
-    "registro_id": "F360-COLETA-TOTAL-20261123-CP03",
-    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP02",
-    "status": "PARCIAL_DOCUMENTAL_DERIVADA_CALENDARIOS_NAO_EXAUSTIVOS",
-    "cutoff_brt": "2026-11-22T23:59:59-03:00",
-    "base_original": 5620,
-    "experimental_before": 5671,
-    "experimental": 5675,
-    "reused_postgame": 41,
-    "reconciled_existing": 10,
-    "new_documental_derived_records": 4,
-    "ids_added": [
-      "6JIGDDFj",
-      "6ezUMHh4",
-      "ADcmpkS8",
-      "zySpJZiT"
+    "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP16",
+    "experimental_before": 5731,
+    "experimental": 5732,
+    "new_ids": [
+      "lz8KP5im"
     ],
-    "new_visual_complete_collections": 0,
-    "new_records_all24_directly_observed": 0,
-    "eligibility": "COPIA_DE_PESQUISA_DOCUMENTAL; SEM_LIBERACAO_AUTOMATICA_LV4",
-    "p0_games_examined": 8,
-    "p0_numeric_values": 161,
-    "p0_nd_values": 31,
-    "p0_games_partial": 5,
-    "catalog_candidates_remaining": 36,
-    "external_cp02_candidates_no_id": 21,
-    "additional_candidates_not_in_cp02_lists": 7,
-    "identified_chapecoense_vasco_id": "ARJ356Ua",
-    "portugal_enumerated_alternative_calendar": {
-      "identified": 98,
-      "present": 97,
-      "official_complete_calendar": false
+    "validated_values": 24,
+    "duplicate_ids": 0,
+    "columns": 55,
+    "previous_base": "BASE_EXPERIMENTAL_CP15_5731_55COL.csv",
+    "sha256": "1982fbc1e074a6a722cc9947cc023ec2520a6df2321f31b366716590bbf35423",
+    "last_league": "Noruega",
+    "last_id": "lz8KP5im",
+    "full_11_calendars_verified": false,
+    "merge": false,
+    "deploy": false,
+    "production_modified": false,
+    "title_metadata_corrections": 40,
+    "title_metadata_reason": "N/D para títulos não capturados individualmente; datas de evento exibidas BRT mantidas.",
+    "regulation_time_derived_game": "tMgLJeAF",
+    "november_results_11_leagues_checked": true,
+    "november_missing_after": 0,
+    "drive_files": [
+      {
+        "id": "1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue",
+        "url": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
+        "name": "BASE_EXPERIMENTAL_CP16_5732_55COL.csv"
+      },
+      {
+        "id": "183RlRg19S-EA7yqRZQawXQI7ZSZheAE2",
+        "url": "https://drive.google.com/file/d/183RlRg19S-EA7yqRZQawXQI7ZSZheAE2/view?usp=drivesdk",
+        "name": "INCREMENTAL_CP16_1_55COL.csv"
+      },
+      {
+        "id": "1O_wuiRw8AhWhwhw8Zf8CeaXGPrXbpu70",
+        "url": "https://drive.google.com/file/d/1O_wuiRw8AhWhwhw8Zf8CeaXGPrXbpu70/view?usp=drivesdk",
+        "name": "lot16.json"
+      },
+      {
+        "id": "1FXN5tA2V4gWGZ5iS9YJ4YU1YRZ85UcYt",
+        "url": "https://drive.google.com/file/d/1FXN5tA2V4gWGZ5iS9YJ4YU1YRZ85UcYt/view?usp=drivesdk",
+        "name": "CHECKPOINT_CP16.json"
+      },
+      {
+        "id": "128w6xw-cKlYgRTciqRsfmyJyn-VjZH7j",
+        "url": "https://drive.google.com/file/d/128w6xw-cKlYgRTciqRsfmyJyn-VjZH7j/view?usp=drivesdk",
+        "name": "CORRECOES_METADATA_CP16.json"
+      }
+    ],
+    "base_before": 5675,
+    "base_after": 5732,
+    "new_including_recovered": 57,
+    "new_collected_this_session": 52,
+    "cp04_5680_rows_unchanged": true,
+    "unique_ids": 5732,
+    "duplicates": 0,
+    "new_values": 1368,
+    "directly_observed_this_session": 1240,
+    "derived_regulation_values": 8,
+    "derived_game_id": "tMgLJeAF",
+    "november_ids_checked": 243,
+    "missing_november_after": {
+      "Portugal": [],
+      "Brasil": [],
+      "Espanha": [],
+      "Franca": [],
+      "Inglaterra": [],
+      "Italia": [],
+      "Alemanha": [],
+      "Saudi": [],
+      "Argentina": [],
+      "MLS": [],
+      "Noruega": []
     },
-    "drive_folder": "https://drive.google.com/drive/folders/1BgUOYV28pljvBQfbkbmMLJ2nEzDg4tr2",
-    "path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP03/FINAL/RELATORIO_CP03.md",
-    "checkpoint": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP03/FINAL/CHECKPOINT_CP03_FINAL.json",
-    "calendar_coverage_percent": null,
-    "leagues_homologated_updated": 0,
-    "model_changed": false,
-    "original_data_modified": false,
-    "full_11_calendars_verified": false
+    "coverage_scope": "Resultados encerrados de novembro listados no Flashscore em 24/11/2026; não homologa temporadas integrais",
+    "status": "NOVEMBRO_11_LIGAS_CONFERIDO_SEM_AUSENCIAS_DE_ID",
+    "as_of_date_brt": "2026-11-24",
+    "scope": "Resultados encerrados de novembro listados no Flashscore; temporadas integrais não homologadas",
+    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP03",
+    "drive_base": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
+    "report_path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md"
   }
 }
