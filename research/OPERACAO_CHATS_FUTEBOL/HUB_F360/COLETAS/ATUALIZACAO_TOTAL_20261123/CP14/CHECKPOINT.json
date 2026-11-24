@@ -1,0 +1,45 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP14",
+  "experimental_before": 5721,
+  "experimental": 5726,
+  "new_ids": [
+    "tMgLJeAF",
+    "hlwD4f2B",
+    "v1smwBSa",
+    "AHmOxWfB",
+    "d2jnrE7E"
+  ],
+  "validated_values": 120,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "previous_base": "BASE_EXPERIMENTAL_CP13_5721_55COL.csv",
+  "sha256": "395d279b06ba7d6e7a9f30c5b068cd314876612ea724768f095b22f9bc6685bc",
+  "last_league": "Noruega",
+  "last_id": "d2jnrE7E",
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false,
+  "drive_files": [
+    {
+      "id": "1OKaJnFd_gj_fLUDyEvY_DLzYZmfZfhoq",
+      "url": "https://drive.google.com/file/d/1OKaJnFd_gj_fLUDyEvY_DLzYZmfZfhoq/view?usp=drivesdk",
+      "name": "BASE_EXPERIMENTAL_CP14_5726_55COL.csv"
+    },
+    {
+      "id": "1W3p0U51Xr0LuVm0sL3LlBTdKjG5EhMs2",
+      "url": "https://drive.google.com/file/d/1W3p0U51Xr0LuVm0sL3LlBTdKjG5EhMs2/view?usp=drivesdk",
+      "name": "INCREMENTAL_CP14_5_55COL.csv"
+    },
+    {
+      "id": "1pxqHuKbAI49kFc1AZEYJsA1eD_m74Dlo",
+      "url": "https://drive.google.com/file/d/1pxqHuKbAI49kFc1AZEYJsA1eD_m74Dlo/view?usp=drivesdk",
+      "name": "lot14.json"
+    },
+    {
+      "id": "1kFy0Xk6L9GjsUuvaEfrfbORmG0IsDIuy",
+      "url": "https://drive.google.com/file/d/1kFy0Xk6L9GjsUuvaEfrfbORmG0IsDIuy/view?usp=drivesdk",
+      "name": "CHECKPOINT_CP14.json"
+    }
+  ]
+}
