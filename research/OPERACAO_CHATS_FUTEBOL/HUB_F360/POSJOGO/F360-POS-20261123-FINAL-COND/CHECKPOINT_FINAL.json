@@ -7,30 +7,30 @@
   "celulas": 96,
   "observar": {
     "n": 63,
-    "a": 0,
-    "e": 0,
+    "a": 53,
+    "e": 10,
     "abst": 0,
-    "rate": "N/D"
+    "rate": "84.13"
   },
   "elite_documental": {
     "n": 10,
-    "a": 0,
-    "e": 0,
+    "a": 9,
+    "e": 1,
     "abst": 0,
-    "rate": "N/D"
+    "rate": "90.00"
   },
   "descartar": {
     "n": 10,
-    "a": 0,
+    "a": 10,
     "e": 0,
     "abst": 0,
-    "rate": "N/D"
+    "rate": "100.00"
   },
   "abster": {
     "n": 23,
     "a": 0,
     "e": 0,
-    "abst": 0,
+    "abst": 23,
     "rate": "N/D"
   },
   "missing_stats": 0,
@@ -43,5 +43,9 @@
   "branch": "research/f360-hub-chats-2026-11-21",
   "has_regulation_time_derived_fixture": true,
   "regulation_derived_id": "tMgLJeAF",
-  "classification": "DOCUMENTAL_CONDICIONADA"
+  "classification": "DOCUMENTAL_CONDICIONADA",
+  "percent_observar": "84.13",
+  "percent_elite": "90.00",
+  "apostas_executadas_comprovadas": 0,
+  "no_retroactive_promotion": true
 }
