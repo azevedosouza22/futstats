@@ -39,7 +39,8 @@
     "Work CP03 substitui CP02 somente na agregação: 5671→5675 IDs, quatro novos registros documentais com valores por tempo calculados e rastreados; zero novas coletas visuais ou partidas com 24 valores todos observados. Cinco P0 parciais/31 N/D; Rio Ave-Braga 8fKrMxtJ SOT visitante 3 versus 2; Orlando-Cincinnati 24 valores sem ID Flashscore comprovado. Restam 36 candidatos catalogados, 21 externos CP02 sem ID e sete adicionais, listas não exaustivas; nenhuma liga atualizada. Próximo: 6NbvG9uK, 8fKrMxtJ e identidade Orlando; calendários integrais das 11 temporadas pendentes.",
     "CP16 supersede somente agregação CP01–CP15: 5732 IDs; cinco CP04 recuperados sem recoleta e 52 novas coletas; 243 IDs de novembro das 11 ligas confrontados, zero ausências nesse recorte. Temporadas integrais e qualidade histórica prévia não homologadas. Dados experimentais, sem liberação automática LV4 e sem promoção de modelos.",
     "F360 POSJOGO 23/11 final documental: 8 jogos, 96 celulas; OBSERVAR 53A/10E (84,13%); Elite documental 9A/1E; 10 DESCARTAR ultrapassaram linha mas excluidas; 23 ABSTER. Odds/bilhetes/ROI N/D; fora de prospectiva oficial, Shadow V1 e apostas comprovadas.",
-    "F360 Análise 24/11: Chapecoense x Palmeiras calculado na base CP16 5732, 12 linhas LV4 (1 Elite provisório), 12 OBSERVAR e 0 SELECIONAR; nove Champions League ABSTER porque UCL 2026/27 não consta na base; Coleta vincular resultado por OzJP5JI5, Work auditar paridade nativa e efeito de escalação."
+    "F360 Análise 24/11: Chapecoense x Palmeiras calculado na base CP16 5732, 12 linhas LV4 (1 Elite provisório), 12 OBSERVAR e 0 SELECIONAR; nove Champions League ABSTER porque UCL 2026/27 não consta na base; Coleta vincular resultado por OzJP5JI5, Work auditar paridade nativa e efeito de escalação.",
+    "F360 POSJOGO 24/11 PRELIMINAR: Chapecoense 3-0 Palmeiras; 12/12 linhas OBSERVAR ultrapassadas, 6 confirmadas FT/gols e 6 apenas provisórias via relato indexado do intervalo + FT-1T, aguardando 3 abas Flashscore. 1 Elite gol FT acertou; 9 Champions ABSTER. Sem odds, bilhetes, ROI ou homologação."
   ],
   "safety": {
     "protected": [
@@ -230,6 +231,30 @@
       "observacao": "10 descartadas ultrapassaram suas linhas em retrospectiva, fora da taxa OBSERVAR; FT90 da Argentina derivado 1T+2T e separado de prorrogacao",
       "shadow_v1": false,
       "official_prospective": false
+    },
+    {
+      "registro_id": "F360-POS-20261124-PRELIMINAR",
+      "status": "DOCUMENTAL_CONDICIONADA_PARCIAL_NAO_HOMOLOGADO",
+      "prejogo_reference": "F360-PRE-20261124-CHA-PAL",
+      "data_brt": "2026-11-24",
+      "jogos": 1,
+      "celulas": 12,
+      "acertos_confirmados": 6,
+      "acertos_provisorios": 6,
+      "erros_confirmados": 0,
+      "erros_provisorios": 0,
+      "elite_documental": {
+        "n": 1,
+        "acertos_confirmados": 1
+      },
+      "champions_abstencoes_jogos": 9,
+      "apostas_comprovadas": 0,
+      "roi": "N/D",
+      "arquivo": "POSJOGO/F360-POS-20261124-PRELIMINAR/RELATORIO_PRELIMINAR.md",
+      "fonte_periodos": "BOLETIM_INTERVALO_INDEXADO_MAIS_DERIVACAO_FT_MENOS_1T",
+      "flashscore_periods_verified": false,
+      "shadow_v1": false,
+      "official_prospective": false
     }
   ],
   "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
@@ -386,5 +411,6 @@
     "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP03",
     "drive_base": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
     "report_path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md"
-  }
+  },
+  "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261124-PRELIMINAR"
 }
