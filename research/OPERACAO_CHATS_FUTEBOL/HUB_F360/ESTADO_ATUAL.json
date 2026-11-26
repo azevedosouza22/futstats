@@ -41,7 +41,8 @@
     "F360 POSJOGO 23/11 final documental: 8 jogos, 96 celulas; OBSERVAR 53A/10E (84,13%); Elite documental 9A/1E; 10 DESCARTAR ultrapassaram linha mas excluidas; 23 ABSTER. Odds/bilhetes/ROI N/D; fora de prospectiva oficial, Shadow V1 e apostas comprovadas.",
     "F360 Análise 24/11: Chapecoense x Palmeiras calculado na base CP16 5732, 12 linhas LV4 (1 Elite provisório), 12 OBSERVAR e 0 SELECIONAR; nove Champions League ABSTER porque UCL 2026/27 não consta na base; Coleta vincular resultado por OzJP5JI5, Work auditar paridade nativa e efeito de escalação.",
     "F360 POSJOGO 24/11 PRELIMINAR: Chapecoense 3-0 Palmeiras; 12/12 linhas OBSERVAR ultrapassadas, 6 confirmadas FT/gols e 6 apenas provisórias via relato indexado do intervalo + FT-1T, aguardando 3 abas Flashscore. 1 Elite gol FT acertou; 9 Champions ABSTER. Sem odds, bilhetes, ROI ou homologação.",
-    "F360 26/11: Sao Paulo x Remo (Flashscore tlP20OtQ) 20h BRT, base CP16 5732, 10 historicos completos (2 aliases auditados 48/48), 12 celulas: 11 OBSERVAR 1 ABSTER e 1 Elite documental no gol 1T Over0.5 9/10; 36 jogos UEFA EL e Conference ABSTER. Sem odds, SELECIONAR 0, sem TS nativo/Shadow V1. Coleta fechar por ID apos o jogo; Work conferir paridade."
+    "F360 26/11: Sao Paulo x Remo (Flashscore tlP20OtQ) 20h BRT, base CP16 5732, 10 historicos completos (2 aliases auditados 48/48), 12 celulas: 11 OBSERVAR 1 ABSTER e 1 Elite documental no gol 1T Over0.5 9/10; 36 jogos UEFA EL e Conference ABSTER. Sem odds, SELECIONAR 0, sem TS nativo/Shadow V1. Coleta fechar por ID apos o jogo; Work conferir paridade.",
+    "Coleta F360 26/11: São Paulo x Remo por tlP20OtQ (20h BRT); Saudi Al Faysaly x Al Diriyah (14h30 BRT) verificar conflito SPL upcoming versus FotMob PP antes de qualquer POSJOGO; 24 celulas com 23 sinais historicos (4 Elite), 1 ABSTER BR gols 2T; 36 UEFA ABSTER. Nenhuma odd ou aposta executada comprovada; sem homologacao TS."
   ],
   "safety": {
     "protected": [
@@ -281,9 +282,9 @@
     "next_action": "Recuperar snapshot nativo elegível e especificar candidato/coorte/corte/aceite antes do experimento preditivo.",
     "latest_postgame": "F360-POS-20261123-FINAL-COND"
   },
-  "latest_analysis_study": "F360-PRE-20261126-SPFC-REMO",
-  "analysis_study_status": "DOCUMENTAL_PREJOGO_CONDICIONADO_NAO_HOMOLOGADO",
-  "analysis_study_path": "PREJOGO_ESTUDOS/F360-PRE-20261126-SPFC-REMO-RELATORIO.md",
+  "latest_analysis_study": "F360-CTRL-RESUMO-20261126",
+  "analysis_study_status": "DOCUMENTAL_CONDICIONADA_2_JOGOS_4_ELITE",
+  "analysis_study_path": "PREJOGO_ESTUDOS/F360-RESUMO-20261126-CONSOLIDADO.md",
   "latest_data_freshness_audit": {
     "registro_id": "F360-CTRL-RECENCIA-LIGAS-20261123",
     "as_of_date_brt": "2026-11-23",
@@ -413,5 +414,9 @@
     "drive_base": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
     "report_path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md"
   },
-  "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261124-PRELIMINAR"
+  "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261124-PRELIMINAR",
+  "analysis_prejogo_records": [
+    "F360-PRE-20261126-SPFC-REMO",
+    "F360-PRE-20261126-ALFAYSALY-DIRIYAH"
+  ]
 }
