@@ -1,0 +1,26 @@
+{
+  "id": "F360-EXP-20261127-ROBUSTEZ-AMOSTRA",
+  "created_utc": "2026-11-27T03:29:17.852Z",
+  "status": "PROTOCOLO_FIXADO_ANTES_DO_BACKTEST",
+  "purpose": "Investigar filtros experimentais sem alterar linhas ou modelos",
+  "baseline": "Reprodução documental da grade analyzeV4Fixture commit6ef66d14; maior linha Over com frequência>=70%, últimos5 por equipe, >=8IDs distintos e >=8valores",
+  "elite": "Documento congelado: frequência>=90%; margem>=0.8 gols; demais métricas conferir relatórios; proxy experimental com regras explicitadas",
+  "development": "2025-01-01 a 2026-09-30",
+  "validation": "2026-10-01 a 2026-11-17",
+  "secondary_validation": "2026-11-18 a 2026-11-23",
+  "excluded": "Partidas de26/11 e posteriores excluídas de desenvolvimento e validação; resultados26/11 usados somente diagnóstico",
+  "candidates": {
+    "H1_recencia": "último jogo de ambas equipes não mais de21dias antes do alvo",
+    "H2_suporte_equilibrado": "cada equipe >=3/5 acertos históricos na mesma linha; pool permanece original deduplicado",
+    "H3_margem_relativa": "(média arredondada a1decimal-linha)/linha>=0.10",
+    "H123": "Conjunção fixa H1&H2&H3, candidato principal; sem seleção posterior de limiar ou melhor variante"
+  },
+  "normalization": "Aliases de competição somente em memória, por temporada; ID exato; nomes sem aproximação. MLS All-Stars e jogos de prorrogação detectados excluídos do backtest se período regulamentar não rastreável",
+  "evaluation": "Contar jogos/células/sinais, acertos/erros/abstenções, cobertura e acurácia por mercado/período; bootstrap por jogo para diferença de taxa; reportar sinais corretos perdidos e erros evitados",
+  "limitations": [
+    "CP16 é snapshot posterior: split temporal por data não comprova disponibilidade vintage dos dados",
+    "Sinais reconstruídos retrospectivos, não nativos TS ou prospectivos",
+    "Múltiplos mercados por jogo dependentes; nenhuma probabilidade calibrada/ROI",
+    "Resultados não autorizam promoção automática; validação futura prospectiva necessária"
+  ]
+}
