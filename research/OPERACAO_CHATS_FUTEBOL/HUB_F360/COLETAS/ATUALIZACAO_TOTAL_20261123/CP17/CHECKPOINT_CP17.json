@@ -1,0 +1,24 @@
+{
+  "registro_id": "F360-COLETA-20261127-CP17",
+  "experimental_before": 5732,
+  "experimental": 5734,
+  "new_ids": [
+    "tlP20OtQ",
+    "Is9GaRcs"
+  ],
+  "direct_values": 48,
+  "derived_values": 0,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "previous_snapshot": "F360-COLETA-FLASHSCORE-20261124-CP16",
+  "cp16_preserved": true,
+  "drive_base": "https://drive.google.com/file/d/1dRG83vy3xeBrN8pihDthvq5tD30ajBlr/view?usp=drivesdk",
+  "drive_folder": "https://drive.google.com/drive/folders/1Wwagc3bTuK44QmpXumgc0JyJ3VCrhC-4",
+  "sha256": "5288c3a2fcb6eb36547631152683fa7fed15c8d03009cbc49e3f0d845f7f928c",
+  "full_11_calendars_verified": false,
+  "model_changed": false,
+  "production_modified": false,
+  "merge": false,
+  "deploy": false,
+  "report_path": "POSJOGO/F360-POS-20261126-FINAL-COND/RELATORIO_FINAL.md"
+}

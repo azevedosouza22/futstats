@@ -1,0 +1,120 @@
+{
+  "files": {
+    "APOSTAS_COMPROVADAS.jsonl": {
+      "sha256": "712fa86fe955375f6e5b63aae1d32e779805d176350114d95cc4a943743855f3",
+      "bytes": 859
+    },
+    "AUDITORIA_24_FINAL.csv": {
+      "sha256": "b16585fa2e4daba6c8dc662c8c8a0b4c97df15f8b1c97fa4e2c255a03b021ef7",
+      "bytes": 8406
+    },
+    "AUDITORIA_ERROS_E_AMOSTRA.csv": {
+      "sha256": "1fe12baaa5b6870aa1ef626417fdcf4d21c9354c0c104477c1233990ef7b66a8",
+      "bytes": 2898
+    },
+    "AUDITORIA_OITO_ERROS.md": {
+      "sha256": "28dec57367a4710c336c3f4cd159317ebd8959e53397865928d74122e8f6ca47",
+      "bytes": 4484
+    },
+    "BACKTEST_EXCLUSOES.csv": {
+      "sha256": "c0fb9bbd81923fbae9bf51dc3f716b951459cfa453c5a6704c1f14956afcdb81",
+      "bytes": 251
+    },
+    "BACKTEST_JOGOS_ELEGIVEIS.csv": {
+      "sha256": "022330ed284cd7fba3b4377ee5bfd39ad6ec0a8e62abd44e978d765badc6e1f6",
+      "bytes": 152855
+    },
+    "BACKTEST_MERCADO_PERIODO.csv": {
+      "sha256": "7b82077d8397a657e4c76259947aa1a92750a1a318b0d0e5af0bc97543f73d90",
+      "bytes": 9136
+    },
+    "BACKTEST_RESUMO.csv": {
+      "sha256": "878b79d9d01d1a09b7e6802a45e4e77dd36c4c272c01dda84454ca39f67429af",
+      "bytes": 1512
+    },
+    "BACKTEST_SINAIS.csv": {
+      "sha256": "280a332a2476985ac5b181bf50fc002a64fb7481a6b44f17c7eadba1ca9cf62f",
+      "bytes": 9372127
+    },
+    "BASE_EXPERIMENTAL_CP17_5734_55COL.csv": {
+      "sha256": "5288c3a2fcb6eb36547631152683fa7fed15c8d03009cbc49e3f0d845f7f928c",
+      "bytes": 2915334
+    },
+    "CHECKPOINT_FINAL.json": {
+      "sha256": "88ada1e2bc5b27f6fcaa97f298997cbc0292a163adac9776b665366017f27d99",
+      "bytes": 14303
+    },
+    "COMPARACAO_HISTORICA_ELITE_LV4.csv": {
+      "sha256": "3c93ef2bb413f1223498a83619d5595d17bdf20a1b720990839508659fddb9d1",
+      "bytes": 628
+    },
+    "COMPARACAO_HISTORICA_GRUPOS.csv": {
+      "sha256": "7a0b84fece0a603ff6892b63a64a6bd7835dc66bcb0666c0d0ebac67a9e34345",
+      "bytes": 239
+    },
+    "COMPARACAO_HISTORICA_MERCADO_PERIODO.csv": {
+      "sha256": "b44617a33b406ebde099fce5591c14e50fc57c1f4e748524d2b2830e9a4d149c",
+      "bytes": 1037
+    },
+    "DESEMPENHO_GRUPOS.csv": {
+      "sha256": "96b8dfa43d376e375ac2b111886be86a33df2a0f6b8859f02ba7f88e76341c18",
+      "bytes": 119
+    },
+    "DESEMPENHO_JOGOS.csv": {
+      "sha256": "c6dee1dde2563a031f738ee469da5371d243ba2c515c02af12414d3730bea47d",
+      "bytes": 131
+    },
+    "DESEMPENHO_MERCADOS.csv": {
+      "sha256": "e51356c2a91f28221e597bf5ef6faf25efdce471304f3d5c0d4aa310005a09de",
+      "bytes": 165
+    },
+    "DESEMPENHO_MERCADO_PERIODO.csv": {
+      "sha256": "1a6ce7e028eb8dcea08fbaca681e17e4e2a97072c7ccabe8018bcb9e1880625a",
+      "bytes": 423
+    },
+    "DESEMPENHO_PERIODOS.csv": {
+      "sha256": "6444303993f2676a527ed57f03ad2e3c645f297ec27ac2101109cd9cc97a659b",
+      "bytes": 109
+    },
+    "FECHAMENTOS_NORMALIZADOS.csv": {
+      "sha256": "3a298fd1ca6ead47e33bd2ea9cfda5bafeccbe88d322c1b93e6201916446a715",
+      "bytes": 52870
+    },
+    "FLASHScore_24x2_DIRETO.json": {
+      "sha256": "9ff5ccf1178c20fdf05a177373e101a77ad4a3afd3e23da39115c871bee73ed6",
+      "bytes": 2414
+    },
+    "HISTORICOS_10_DETALHADOS.csv": {
+      "sha256": "a259d709e468aa4a9470dfb3289bf74f8107a8e0d6ec35c8a62b5dbcd58923db",
+      "bytes": 9622
+    },
+    "INCREMENTAL_CP17_2_55COL.csv": {
+      "sha256": "2477b35091ee0ceec97caa20f9f2b0bc8a696a522bd504bd5101a06baba4b731",
+      "bytes": 3087
+    },
+    "PARIDADE_DOCUMENTAL_24.csv": {
+      "sha256": "385c5a8d0bad8924aecf6394654760b0301d3ed0d9e39f5c254baa04b4f6dfec",
+      "bytes": 1748
+    },
+    "PROTOCOLO_EXPERIMENTO.json": {
+      "sha256": "510ffbbe3ff85e95ff398d0e6ba5cf9f03f400e7baa15cd7261d223cae25a0d5",
+      "bytes": 2091
+    },
+    "RELATORIO_APRENDIZAGEM.md": {
+      "sha256": "50a64dc798794f6cec304a0bd52a7223adcb6e624abf51693024bb2f86e96b09",
+      "bytes": 5149
+    },
+    "RELATORIO_FINAL.md": {
+      "sha256": "2cb29a45be8235eaa4c4f4472136f6ca911d6d091979676cb33ad632c271a280",
+      "bytes": 5505
+    },
+    "RESULTADO_CHECKPOINT.json": {
+      "sha256": "be25b7161d8f86c2b81a7a4f1aa2b7f1f81cda2f701c4f5ce94888f2b8282049",
+      "bytes": 13742
+    }
+  },
+  "prejogo_hashes": {
+    "PREJOGO_ESTUDOS__F360-PRE-20261126-ALFAYSALY-DIRIYAH-12_INDICADORES.csv": "60bb90231ed3bb7aae49cf31972f2693f12a8bf71372a1bd30346618eafd5cd5",
+    "PREJOGO_ESTUDOS__F360-PRE-20261126-SPFC-REMO-12_INDICADORES.csv": "f613f7e34760375685e0bb503189c964723af4fdef604df41387ca4e507d4818"
+  }
+}

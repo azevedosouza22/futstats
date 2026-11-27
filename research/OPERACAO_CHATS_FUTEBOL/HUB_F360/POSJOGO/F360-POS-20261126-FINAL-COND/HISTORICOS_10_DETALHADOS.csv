@@ -1,0 +1,121 @@
+﻿equipe,id,data,mandante,visitante,mando,mercado,periodo,total,linha,acima_linha
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Gols,FT,2.0,1.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Gols,FT,5.0,1.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Gols,FT,0.0,1.5,False
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Gols,FT,1.0,1.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Gols,FT,2.0,1.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Gols,FT,1.0,1.5,False
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Gols,FT,3.0,1.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Gols,FT,7.0,1.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Gols,FT,2.0,1.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Gols,FT,6.0,1.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Finalizações,FT,31.0,26.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Finalizações,FT,27.0,26.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Finalizações,FT,39.0,26.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Finalizações,FT,21.0,26.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Finalizações,FT,36.0,26.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Finalizações,FT,18.0,26.5,False
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Finalizações,FT,26.0,26.5,False
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Finalizações,FT,30.0,26.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Finalizações,FT,29.0,26.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Finalizações,FT,28.0,26.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Chutes no gol,FT,7.0,6.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Chutes no gol,FT,10.0,6.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Chutes no gol,FT,9.0,6.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Chutes no gol,FT,4.0,6.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Chutes no gol,FT,14.0,6.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Chutes no gol,FT,7.0,6.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Chutes no gol,FT,6.0,6.5,False
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Chutes no gol,FT,14.0,6.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Chutes no gol,FT,12.0,6.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Chutes no gol,FT,15.0,6.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Escanteios,FT,14.0,8.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Escanteios,FT,18.0,8.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Escanteios,FT,14.0,8.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Escanteios,FT,14.0,8.5,True
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Escanteios,FT,9.0,8.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Escanteios,FT,13.0,8.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Escanteios,FT,11.0,8.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Escanteios,FT,8.0,8.5,False
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Escanteios,FT,9.0,8.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Escanteios,FT,8.0,8.5,False
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Gols,1T,2.0,0.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Gols,1T,4.0,0.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Gols,1T,0.0,0.5,False
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Gols,1T,1.0,0.5,True
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Gols,1T,1.0,0.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Gols,1T,1.0,0.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Gols,1T,1.0,0.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Gols,1T,5.0,0.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Gols,1T,2.0,0.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Gols,1T,2.0,0.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Finalizações,1T,14.0,12.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Finalizações,1T,15.0,12.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Finalizações,1T,24.0,12.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Finalizações,1T,9.0,12.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Finalizações,1T,20.0,12.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Finalizações,1T,13.0,12.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Finalizações,1T,11.0,12.5,False
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Finalizações,1T,14.0,12.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Finalizações,1T,15.0,12.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Finalizações,1T,14.0,12.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Chutes no gol,1T,4.0,4.5,False
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Chutes no gol,1T,6.0,4.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Chutes no gol,1T,6.0,4.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Chutes no gol,1T,2.0,4.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Chutes no gol,1T,8.0,4.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Chutes no gol,1T,5.0,4.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Chutes no gol,1T,2.0,4.5,False
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Chutes no gol,1T,8.0,4.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Chutes no gol,1T,7.0,4.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Chutes no gol,1T,7.0,4.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Escanteios,1T,9.0,3.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Escanteios,1T,12.0,3.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Escanteios,1T,12.0,3.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Escanteios,1T,8.0,3.5,True
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Escanteios,1T,2.0,3.5,False
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Escanteios,1T,8.0,3.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Escanteios,1T,3.0,3.5,False
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Escanteios,1T,4.0,3.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Escanteios,1T,2.0,3.5,False
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Escanteios,1T,4.0,3.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Gols,2T,0.0,,
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Gols,2T,1.0,,
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Gols,2T,0.0,,
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Gols,2T,0.0,,
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Gols,2T,1.0,,
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Gols,2T,0.0,,
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Gols,2T,2.0,,
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Gols,2T,2.0,,
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Gols,2T,0.0,,
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Gols,2T,4.0,,
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Finalizações,2T,17.0,13.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Finalizações,2T,12.0,13.5,False
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Finalizações,2T,15.0,13.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Finalizações,2T,12.0,13.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Finalizações,2T,16.0,13.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Finalizações,2T,5.0,13.5,False
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Finalizações,2T,15.0,13.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Finalizações,2T,16.0,13.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Finalizações,2T,14.0,13.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Finalizações,2T,14.0,13.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Chutes no gol,2T,3.0,2.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Chutes no gol,2T,4.0,2.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Chutes no gol,2T,3.0,2.5,True
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Chutes no gol,2T,2.0,2.5,False
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Chutes no gol,2T,6.0,2.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Chutes no gol,2T,2.0,2.5,False
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Chutes no gol,2T,4.0,2.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Chutes no gol,2T,6.0,2.5,True
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Chutes no gol,2T,5.0,2.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Chutes no gol,2T,8.0,2.5,True
+São Paulo,lQzFjYfB,2026-10-24,Mirassol,São Paulo,fora,Escanteios,2T,5.0,4.5,True
+São Paulo,nDr51AQQ,2026-10-28,Bahia,São Paulo,fora,Escanteios,2T,6.0,4.5,True
+São Paulo,6NbvG9uK,2026-11-04,São Paulo,Corinthians,casa,Escanteios,2T,2.0,4.5,False
+São Paulo,CdsLOwOi,2026-11-19,São Paulo,Fluminense,casa,Escanteios,2T,6.0,4.5,True
+São Paulo,86sbQjad,2026-11-23,Botafogo,São Paulo,fora,Escanteios,2T,7.0,4.5,True
+Remo,rRhmYPvp,2026-10-23,Cruzeiro,Remo,fora,Escanteios,2T,5.0,4.5,True
+Remo,WpKydlll,2026-10-28,Remo,Botafogo,casa,Escanteios,2T,8.0,4.5,True
+Remo,Q7uBAm3s,2026-11-05,Palmeiras,Remo,fora,Escanteios,2T,4.0,4.5,False
+Remo,G82JXY6M,2026-11-18,Remo,Chapecoense,casa,Escanteios,2T,7.0,4.5,True
+Remo,Y5AK0Xz9,2026-11-22,Athletico-PR,Remo,fora,Escanteios,2T,4.0,4.5,False

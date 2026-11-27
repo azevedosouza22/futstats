@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "project": "FUTSTATS FUTEBOL F360",
-  "as_of_date_brt": "2026-11-26",
+  "as_of_date_brt": "2026-11-27",
   "repository": "azevedosouza22/futstats",
   "ref": "research/f360-hub-chats-2026-11-21",
   "hub_root": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360",
@@ -43,7 +43,9 @@
     "F360 POSJOGO 24/11 PRELIMINAR: Chapecoense 3-0 Palmeiras; 12/12 linhas OBSERVAR ultrapassadas, 6 confirmadas FT/gols e 6 apenas provisórias via relato indexado do intervalo + FT-1T, aguardando 3 abas Flashscore. 1 Elite gol FT acertou; 9 Champions ABSTER. Sem odds, bilhetes, ROI ou homologação.",
     "F360 26/11: Sao Paulo x Remo (Flashscore tlP20OtQ) 20h BRT, base CP16 5732, 10 historicos completos (2 aliases auditados 48/48), 12 celulas: 11 OBSERVAR 1 ABSTER e 1 Elite documental no gol 1T Over0.5 9/10; 36 jogos UEFA EL e Conference ABSTER. Sem odds, SELECIONAR 0, sem TS nativo/Shadow V1. Coleta fechar por ID apos o jogo; Work conferir paridade.",
     "Coleta F360 26/11: São Paulo x Remo por tlP20OtQ (20h BRT); Saudi Al Faysaly x Al Diriyah (14h30 BRT) verificar conflito SPL upcoming versus FotMob PP antes de qualquer POSJOGO; 24 celulas com 23 sinais historicos (4 Elite), 1 ABSTER BR gols 2T; 36 UEFA ABSTER. Nenhuma odd ou aposta executada comprovada; sem homologacao TS.",
-    "F360 26/11 PRELIMINAR: Brasil São Paulo 3-1 Remo, 11 OBSERVAR 3A/8E, 1 ABSTER; Saudi Al Faysaly 2-2 Diriyah 12 OBSERVAR_CONDICIONADO 12A/0E com 2T derivado, fornecedor/ID Flashscore ainda a homologar. Total 15A/8E entre 23 linhas, 4 Elite documentais 4A. Bilhete Stake simples vencedor 1 unidade odd1.82 retorno1.82, lucro0.82; múltipla 2 seleções derrotada sem valor; ROI do dia N/D. Confirmar estatisticas por FT/1T/2T Flashscore e resultado Saudi antes de integrar bases; sem treino."
+    "F360 26/11 PRELIMINAR: Brasil São Paulo 3-1 Remo, 11 OBSERVAR 3A/8E, 1 ABSTER; Saudi Al Faysaly 2-2 Diriyah 12 OBSERVAR_CONDICIONADO 12A/0E com 2T derivado, fornecedor/ID Flashscore ainda a homologar. Total 15A/8E entre 23 linhas, 4 Elite documentais 4A. Bilhete Stake simples vencedor 1 unidade odd1.82 retorno1.82, lucro0.82; múltipla 2 seleções derrotada sem valor; ROI do dia N/D. Confirmar estatisticas por FT/1T/2T Flashscore e resultado Saudi antes de integrar bases; sem treino.",
+    "26NOV FINAL supersede PREL apenas na agregação:14A/9E/1ABSTER;Elite4/4. Saudi Is9GaRcs realização confirmada e finalizações1T12, linhaO12.5 ERRO.48valores diretos integrados CP17=5734. Sem pendência de coleta nesses2jogos; classes documentais das previsões preservadas.",
+    "Aprendizagem27NOV: protocolo antes da execução, backtest temporal617jogos;H123 +0.9433pp com81.7323% cobertura;recência isolada piorou. Manter experimental; exigir coorte prospectiva e dados vintage antes de promoção. Nenhuma alteração LV4/Elite."
   ],
   "safety": {
     "protected": [
@@ -65,7 +67,7 @@
     "url": "https://github.com/azevedosouza22/futstats/issues/105",
     "status": "aberta"
   },
-  "latest_documental_postgame_imported_to_hub": "F360-POS-20261123-FINAL-COND",
+  "latest_documental_postgame_imported_to_hub": "F360-POS-20261126-FINAL-COND",
   "postgame_records": [
     {
       "registro_id": "F360-POS-20261118",
@@ -299,7 +301,7 @@
       "official_prospective": false
     }
   ],
-  "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
+  "latest_quality_experiment": "F360-EXP-20261127-ROBUSTEZ-AMOSTRA",
   "work_continuity": {
     "adopted": true,
     "role": "Coleta extensa autorizada, reconciliação, qualidade e experimentação temporal",
@@ -372,91 +374,75 @@
     "allow_production_write": false
   },
   "latest_experimental_data_update": {
-    "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP16",
-    "experimental_before": 5731,
-    "experimental": 5732,
+    "registro_id": "F360-COLETA-20261127-CP17",
+    "experimental_before": 5732,
+    "experimental": 5734,
     "new_ids": [
-      "lz8KP5im"
+      "tlP20OtQ",
+      "Is9GaRcs"
     ],
-    "validated_values": 24,
+    "direct_values": 48,
+    "derived_values": 0,
     "duplicate_ids": 0,
     "columns": 55,
-    "previous_base": "BASE_EXPERIMENTAL_CP15_5731_55COL.csv",
-    "sha256": "1982fbc1e074a6a722cc9947cc023ec2520a6df2321f31b366716590bbf35423",
-    "last_league": "Noruega",
-    "last_id": "lz8KP5im",
+    "previous_snapshot": "F360-COLETA-FLASHSCORE-20261124-CP16",
+    "cp16_preserved": true,
+    "drive_base": "https://drive.google.com/file/d/1dRG83vy3xeBrN8pihDthvq5tD30ajBlr/view?usp=drivesdk",
+    "drive_folder": "https://drive.google.com/drive/folders/1Wwagc3bTuK44QmpXumgc0JyJ3VCrhC-4",
+    "sha256": "5288c3a2fcb6eb36547631152683fa7fed15c8d03009cbc49e3f0d845f7f928c",
     "full_11_calendars_verified": false,
+    "model_changed": false,
+    "production_modified": false,
     "merge": false,
     "deploy": false,
-    "production_modified": false,
-    "title_metadata_corrections": 40,
-    "title_metadata_reason": "N/D para títulos não capturados individualmente; datas de evento exibidas BRT mantidas.",
-    "regulation_time_derived_game": "tMgLJeAF",
-    "november_results_11_leagues_checked": true,
-    "november_missing_after": 0,
-    "drive_files": [
-      {
-        "id": "1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue",
-        "url": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
-        "name": "BASE_EXPERIMENTAL_CP16_5732_55COL.csv"
-      },
-      {
-        "id": "183RlRg19S-EA7yqRZQawXQI7ZSZheAE2",
-        "url": "https://drive.google.com/file/d/183RlRg19S-EA7yqRZQawXQI7ZSZheAE2/view?usp=drivesdk",
-        "name": "INCREMENTAL_CP16_1_55COL.csv"
-      },
-      {
-        "id": "1O_wuiRw8AhWhwhw8Zf8CeaXGPrXbpu70",
-        "url": "https://drive.google.com/file/d/1O_wuiRw8AhWhwhw8Zf8CeaXGPrXbpu70/view?usp=drivesdk",
-        "name": "lot16.json"
-      },
-      {
-        "id": "1FXN5tA2V4gWGZ5iS9YJ4YU1YRZ85UcYt",
-        "url": "https://drive.google.com/file/d/1FXN5tA2V4gWGZ5iS9YJ4YU1YRZ85UcYt/view?usp=drivesdk",
-        "name": "CHECKPOINT_CP16.json"
-      },
-      {
-        "id": "128w6xw-cKlYgRTciqRsfmyJyn-VjZH7j",
-        "url": "https://drive.google.com/file/d/128w6xw-cKlYgRTciqRsfmyJyn-VjZH7j/view?usp=drivesdk",
-        "name": "CORRECOES_METADATA_CP16.json"
-      }
-    ],
-    "base_before": 5675,
-    "base_after": 5732,
-    "new_including_recovered": 57,
-    "new_collected_this_session": 52,
-    "cp04_5680_rows_unchanged": true,
-    "unique_ids": 5732,
-    "duplicates": 0,
-    "new_values": 1368,
-    "directly_observed_this_session": 1240,
-    "derived_regulation_values": 8,
-    "derived_game_id": "tMgLJeAF",
-    "november_ids_checked": 243,
-    "missing_november_after": {
-      "Portugal": [],
-      "Brasil": [],
-      "Espanha": [],
-      "Franca": [],
-      "Inglaterra": [],
-      "Italia": [],
-      "Alemanha": [],
-      "Saudi": [],
-      "Argentina": [],
-      "MLS": [],
-      "Noruega": []
-    },
-    "coverage_scope": "Resultados encerrados de novembro listados no Flashscore em 24/11/2026; não homologa temporadas integrais",
-    "status": "NOVEMBRO_11_LIGAS_CONFERIDO_SEM_AUSENCIAS_DE_ID",
-    "as_of_date_brt": "2026-11-24",
-    "scope": "Resultados encerrados de novembro listados no Flashscore; temporadas integrais não homologadas",
-    "supersedes_for_aggregation": "F360-COLETA-TOTAL-20261123-CP03",
-    "drive_base": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
-    "report_path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md"
+    "report_path": "POSJOGO/F360-POS-20261126-FINAL-COND/RELATORIO_FINAL.md"
   },
   "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261126-PREL-COND",
   "analysis_prejogo_records": [
     "F360-PRE-20261126-SPFC-REMO",
     "F360-PRE-20261126-ALFAYSALY-DIRIYAH"
-  ]
+  ],
+  "latest_postgame_26nov": {
+    "id": "F360-POS-20261126-FINAL-COND",
+    "status": "RESULTADOS_FLASHScore_DIRETOS_PREVISOES_DOCUMENTAIS",
+    "acertos": 14,
+    "erros": 9,
+    "abster": 1,
+    "elite": {
+      "acertos": 4,
+      "erros": 0
+    },
+    "convencional": {
+      "acertos": 10,
+      "erros": 9
+    },
+    "supersedes_for_aggregation": "F360-POS-20261126-PREL-COND",
+    "path": "POSJOGO/F360-POS-20261126-FINAL-COND/RELATORIO_FINAL.md",
+    "source_ids": [
+      "tlP20OtQ",
+      "Is9GaRcs"
+    ],
+    "direct_values": 48,
+    "derived_values": 0,
+    "stake_day_roi": null,
+    "stake_simple_profit": 0.82
+  },
+  "latest_learning_experiment": {
+    "id": "F360-EXP-20261127-ROBUSTEZ-AMOSTRA",
+    "status": "RETROSPECTIVO_TEMPORAL_DOCUMENTAL_SEM_PROMOCAO",
+    "protocol_commit": "c337aa91d44ef30ee2b00f3a974a5a65b5a80fb1",
+    "validation_games": 617,
+    "baseline_signals": 6777,
+    "baseline_accuracy": 71.5066,
+    "candidate_signals": 5539,
+    "candidate_accuracy": 72.4499,
+    "coverage_pct": 81.7323,
+    "delta_pp": 0.9433,
+    "lost_hits": 833,
+    "avoided_errors": 405,
+    "path": "EXPERIMENTOS/F360-EXP-20261127-ROBUSTEZ-AMOSTRA/RELATORIO_APRENDIZAGEM.md",
+    "native_TS": false,
+    "vintage_verified": false,
+    "promoted": false
+  }
 }
