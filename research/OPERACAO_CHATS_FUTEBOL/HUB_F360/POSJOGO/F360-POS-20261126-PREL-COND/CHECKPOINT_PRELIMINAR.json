@@ -1,0 +1,55 @@
+{
+  "registro_id": "F360-POS-20261126-PREL-COND",
+  "data_brt": "2026-11-26",
+  "status": "AUDITORIA_DOCUMENTAL_PRELIMINAR_NAO_HOMOLOGADA",
+  "prejogos": [
+    "F360-PRE-20261126-SPFC-REMO",
+    "F360-PRE-20261126-ALFAYSALY-DIRIYAH"
+  ],
+  "jogos": 2,
+  "celulas": 24,
+  "sinais_com_linha": 23,
+  "acertos": 15,
+  "erros": 8,
+  "abstencoes": 1,
+  "elite_documental": {
+    "n": 4,
+    "a": 4,
+    "e": 0
+  },
+  "by_game": {
+    "br": {
+      "n": 11,
+      "a": 3,
+      "e": 8,
+      "abster": 1
+    },
+    "sa": {
+      "n": 12,
+      "a": 12,
+      "e": 0,
+      "abster": 0
+    }
+  },
+  "europa_jogos_abster": 36,
+  "apostas_comprovadas": {
+    "simples_vencedoras": 1,
+    "simples_odd": 1.82,
+    "simples_stake_unidades": 1,
+    "simples_retorno_unidades": 1.82,
+    "simples_lucro_unidades": 0.82,
+    "multiplas_derrotadas": 1,
+    "multipla_selecoes": "N/D",
+    "multipla_stake": "N/D"
+  },
+  "roi_diario": "N/D",
+  "dados_diretos_flashscore_periodos": false,
+  "id_brasil": "tlP20OtQ",
+  "id_saudita_flashscore": null,
+  "banco_experimental_modificado": false,
+  "banco_experimental_anterior": 5732,
+  "incorporacao_automatico_lv4": false,
+  "main_modified": false,
+  "merge": false,
+  "deploy": false
+}
