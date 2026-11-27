@@ -42,7 +42,8 @@
     "F360 Análise 24/11: Chapecoense x Palmeiras calculado na base CP16 5732, 12 linhas LV4 (1 Elite provisório), 12 OBSERVAR e 0 SELECIONAR; nove Champions League ABSTER porque UCL 2026/27 não consta na base; Coleta vincular resultado por OzJP5JI5, Work auditar paridade nativa e efeito de escalação.",
     "F360 POSJOGO 24/11 PRELIMINAR: Chapecoense 3-0 Palmeiras; 12/12 linhas OBSERVAR ultrapassadas, 6 confirmadas FT/gols e 6 apenas provisórias via relato indexado do intervalo + FT-1T, aguardando 3 abas Flashscore. 1 Elite gol FT acertou; 9 Champions ABSTER. Sem odds, bilhetes, ROI ou homologação.",
     "F360 26/11: Sao Paulo x Remo (Flashscore tlP20OtQ) 20h BRT, base CP16 5732, 10 historicos completos (2 aliases auditados 48/48), 12 celulas: 11 OBSERVAR 1 ABSTER e 1 Elite documental no gol 1T Over0.5 9/10; 36 jogos UEFA EL e Conference ABSTER. Sem odds, SELECIONAR 0, sem TS nativo/Shadow V1. Coleta fechar por ID apos o jogo; Work conferir paridade.",
-    "Coleta F360 26/11: São Paulo x Remo por tlP20OtQ (20h BRT); Saudi Al Faysaly x Al Diriyah (14h30 BRT) verificar conflito SPL upcoming versus FotMob PP antes de qualquer POSJOGO; 24 celulas com 23 sinais historicos (4 Elite), 1 ABSTER BR gols 2T; 36 UEFA ABSTER. Nenhuma odd ou aposta executada comprovada; sem homologacao TS."
+    "Coleta F360 26/11: São Paulo x Remo por tlP20OtQ (20h BRT); Saudi Al Faysaly x Al Diriyah (14h30 BRT) verificar conflito SPL upcoming versus FotMob PP antes de qualquer POSJOGO; 24 celulas com 23 sinais historicos (4 Elite), 1 ABSTER BR gols 2T; 36 UEFA ABSTER. Nenhuma odd ou aposta executada comprovada; sem homologacao TS.",
+    "F360 26/11 PRELIMINAR: Brasil São Paulo 3-1 Remo, 11 OBSERVAR 3A/8E, 1 ABSTER; Saudi Al Faysaly 2-2 Diriyah 12 OBSERVAR_CONDICIONADO 12A/0E com 2T derivado, fornecedor/ID Flashscore ainda a homologar. Total 15A/8E entre 23 linhas, 4 Elite documentais 4A. Bilhete Stake simples vencedor 1 unidade odd1.82 retorno1.82, lucro0.82; múltipla 2 seleções derrotada sem valor; ROI do dia N/D. Confirmar estatisticas por FT/1T/2T Flashscore e resultado Saudi antes de integrar bases; sem treino."
   ],
   "safety": {
     "protected": [
@@ -257,6 +258,45 @@
       "flashscore_periods_verified": false,
       "shadow_v1": false,
       "official_prospective": false
+    },
+    {
+      "registro_id": "F360-POS-20261126-PREL-COND",
+      "status": "AUDITORIA_DOCUMENTAL_PRELIMINAR_NAO_HOMOLOGADA",
+      "data_brt": "2026-11-26",
+      "prejogo_references": [
+        "F360-PRE-20261126-SPFC-REMO",
+        "F360-PRE-20261126-ALFAYSALY-DIRIYAH"
+      ],
+      "jogos": 2,
+      "celulas": 24,
+      "sinais_observar": 23,
+      "acertos": 15,
+      "erros": 8,
+      "abstencoes": 1,
+      "elite_documental": {
+        "n": 4,
+        "acertos": 4,
+        "erros": 0
+      },
+      "european_games_abstained": 36,
+      "bet_slip_evidence": {
+        "bet_win_count": 1,
+        "bet_win_line": "São Paulo × Remo Gols 1T Over 0,5",
+        "stake_units": 1,
+        "odds": 1.82,
+        "payout_units": 1.82,
+        "net_units": 0.82,
+        "multiple_2_leg_lost": true,
+        "multiple_amount": "N/D"
+      },
+      "roi_day": "N/D",
+      "id_brasil": "tlP20OtQ",
+      "id_saudi": "N/D",
+      "data_quality": "FONTES_EXTERNAS_COM_DERIVACAO_2T_E_DIVERGENCIAS_MENORES; FLASHScore_24CAMPOS_A_CONFIRMAR",
+      "arquivo": "POSJOGO/F360-POS-20261126-PREL-COND/RELATORIO_PRELIMINAR.md",
+      "auditoria": "POSJOGO/F360-POS-20261126-PREL-COND/AUDITORIA_24_PRELIMINAR.csv",
+      "shadow_v1": false,
+      "official_prospective": false
     }
   ],
   "latest_quality_experiment": "F360-EXP-QUALIDADE-20261121",
@@ -414,7 +454,7 @@
     "drive_base": "https://drive.google.com/file/d/1-FUmgwHUmiy6dUAJHqsY4uludBRjU3ue/view?usp=drivesdk",
     "report_path": "COLETAS/ATUALIZACAO_TOTAL_20261123/CP16/RELATORIO_FINAL.md"
   },
-  "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261124-PRELIMINAR",
+  "latest_preliminary_postgame_imported_to_hub": "F360-POS-20261126-PREL-COND",
   "analysis_prejogo_records": [
     "F360-PRE-20261126-SPFC-REMO",
     "F360-PRE-20261126-ALFAYSALY-DIRIYAH"
