@@ -1,0 +1,3 @@
+grupo,acertos,erros,nd,abstencoes,liquidados,celulas,taxa_acerto,taxa_erro
+Elite documental,12,9,0,0,21,21,0.5714285714285714,0.42857142857142855
+LV4 convencional,72,26,0,13,98,111,0.7346938775510204,0.2653061224489796

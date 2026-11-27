@@ -1,0 +1,19 @@
+{
+  "liga": "Brasileirão",
+  "temporada": "2026",
+  "catalogo_original": "379",
+  "antes": "336",
+  "reaproveitados_posjogo": "12",
+  "reconciliados_preexistentes": "0",
+  "novas_coletas_24": "0",
+  "total_estrutural_validado": "348",
+  "fila_catalogada_residual_ate_corte": "7",
+  "encerrados_calendario_exaustivo": "N/D",
+  "faltantes_totais": "N/D",
+  "cobertura_real_percentual": "N/D",
+  "situacao": "INVENTARIO_RECONCILIADO_CALENDARIO_NAO_HOMOLOGADO",
+  "resultados_parciais_textuais": "8",
+  "checkpoint": "F360-COLETA-TOTAL-20261123-CP02",
+  "calendario_exaustivo": false,
+  "homologada_atualizada": false
+}

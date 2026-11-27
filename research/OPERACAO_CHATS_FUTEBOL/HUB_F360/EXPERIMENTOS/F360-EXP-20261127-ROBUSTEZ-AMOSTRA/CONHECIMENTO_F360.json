@@ -1,0 +1,28 @@
+{
+  "registro_id": "F360-CONHECIMENTO-20261127",
+  "facts": [
+    {
+      "id": "RESULTADO_26NOV",
+      "conclusion": "Saudi shots1T12 muda um acerto preliminar para erro; total14A9E;Elite4/4",
+      "evidence": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360/POSJOGO/F360-POS-20261126-FINAL-COND/AUDITORIA_24_FINAL.csv"
+    },
+    {
+      "id": "ERROS_CORRELACIONADOS",
+      "conclusion": "8errosSPnão independentes; queda de volume com históricos pequenos e heterogêneos;paridade24/24",
+      "evidence": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360/POSJOGO/F360-POS-20261126-FINAL-COND/AUDITORIA_OITO_ERROS.md"
+    },
+    {
+      "id": "RECENCIA_ISOLADA",
+      "conclusion": "H1recencia21dias piorou validação; não adotar automaticamente",
+      "evidence": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360/EXPERIMENTOS/F360-EXP-20261127-ROBUSTEZ-AMOSTRA/BACKTEST_RESUMO.csv"
+    },
+    {
+      "id": "H123_PESQUISA",
+      "conclusion": "Aumento retrospectivo0.9433pp com perdas833acertos para405erros evitados; requer validação prospectiva",
+      "evidence": "research/OPERACAO_CHATS_FUTEBOL/HUB_F360/EXPERIMENTOS/F360-EXP-20261127-ROBUSTEZ-AMOSTRA/RELATORIO_APRENDIZAGEM.md"
+    }
+  ],
+  "production_change": false,
+  "approved_strategy": false,
+  "training_authorization": false
+}

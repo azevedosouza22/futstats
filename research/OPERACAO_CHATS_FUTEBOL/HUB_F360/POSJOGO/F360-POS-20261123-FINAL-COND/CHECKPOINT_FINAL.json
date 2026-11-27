@@ -1,0 +1,51 @@
+{
+  "registro_id": "F360-POS-20261123-FINAL-COND",
+  "data_brt": "2026-11-23",
+  "source_predictions": "F360-ESTUDO-20261123-INDICADORES-96.csv",
+  "source_results": "BASE_EXPERIMENTAL_CP16_5732_55COL.csv",
+  "jogos": 8,
+  "celulas": 96,
+  "observar": {
+    "n": 63,
+    "a": 53,
+    "e": 10,
+    "abst": 0,
+    "rate": "84.13"
+  },
+  "elite_documental": {
+    "n": 10,
+    "a": 9,
+    "e": 1,
+    "abst": 0,
+    "rate": "90.00"
+  },
+  "descartar": {
+    "n": 10,
+    "a": 10,
+    "e": 0,
+    "abst": 0,
+    "rate": "100.00"
+  },
+  "abster": {
+    "n": 23,
+    "a": 0,
+    "e": 0,
+    "abst": 23,
+    "rate": "N/D"
+  },
+  "missing_stats": 0,
+  "odds": "N/D",
+  "bilhetes": "N/D",
+  "roi": "N/D",
+  "official_prospective": false,
+  "shadow_v1": false,
+  "pr": 104,
+  "branch": "research/f360-hub-chats-2026-11-21",
+  "has_regulation_time_derived_fixture": true,
+  "regulation_derived_id": "tMgLJeAF",
+  "classification": "DOCUMENTAL_CONDICIONADA",
+  "percent_observar": "84.13",
+  "percent_elite": "90.00",
+  "apostas_executadas_comprovadas": 0,
+  "no_retroactive_promotion": true
+}

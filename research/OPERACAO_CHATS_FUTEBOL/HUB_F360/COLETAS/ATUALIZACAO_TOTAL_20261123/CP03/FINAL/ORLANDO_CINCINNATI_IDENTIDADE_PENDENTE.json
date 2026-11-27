@@ -1,0 +1,130 @@
+{
+  "id_flashscore": null,
+  "id_soccerway_candidato": "AHmOxWfB",
+  "id_soccerway_nao_promovido_a_id_flashscore": true,
+  "id_vault": "1916743",
+  "data_inicio_utc": "2026-11-20T00:30:00Z",
+  "data_brt": "2026-11-19",
+  "mandante": "Orlando City",
+  "visitante": "FC Cincinnati",
+  "liga": "MLS",
+  "temporada": "2026",
+  "fase": "Playoffs / Wild Card",
+  "stats": {
+    "full": {
+      "corners": [
+        3,
+        5
+      ],
+      "target": [
+        8,
+        8
+      ],
+      "goals": [
+        1,
+        3
+      ],
+      "shots": [
+        27,
+        10
+      ]
+    },
+    "first": {
+      "corners": [
+        1,
+        5
+      ],
+      "target": [
+        5,
+        2
+      ],
+      "goals": [
+        1,
+        1
+      ],
+      "shots": [
+        10,
+        4
+      ]
+    },
+    "second": {
+      "corners": [
+        2,
+        0
+      ],
+      "target": [
+        3,
+        6
+      ],
+      "goals": [
+        0,
+        2
+      ],
+      "shots": [
+        17,
+        6
+      ]
+    }
+  },
+  "raw_components": {
+    "ft": {
+      "corners": [
+        3,
+        5
+      ],
+      "target": [
+        8,
+        8
+      ],
+      "off": [
+        15,
+        1
+      ],
+      "blocked": [
+        4,
+        1
+      ]
+    },
+    "halves": {
+      "corners": [
+        1,
+        5,
+        2,
+        0
+      ],
+      "target": [
+        5,
+        2,
+        3,
+        6
+      ],
+      "off": [
+        5,
+        1,
+        10,
+        0
+      ],
+      "blocked": [
+        0,
+        1,
+        4,
+        0
+      ]
+    }
+  },
+  "campos": 24,
+  "origem_shots_tempos": "CALCULADO_ALVO_FORA_BLOQUEADAS",
+  "status": "ESTATISTICAS_DOCUMENTAIS_DERIVADAS_COMPLETAS_IDENTIDADE_PRINCIPAL_PENDENTE",
+  "integrado_base": false,
+  "fonte_vault": "https://sportsdatavault.com/en/football/match/1916743",
+  "fonte_fotmob": "https://www.fotmob.com/matches/orlando-city-vs-fc-cincinnati/695s1t43",
+  "fonte_soccerway": "https://www.soccerway.com/match/fc-cincinnati-8btog05R/orlando-city-rsHkUNCo/?mid=AHmOxWfB",
+  "evidencias": [
+    "turn349652986view0",
+    "turn828316828view0",
+    "turn828316828search3",
+    "turn729354854view0"
+  ],
+  "consulta_utc": "2026-11-23T23:00:30.326488+00:00",
+  "bloqueio": "Sem comprovação de equivalência entre ID Soccerway e ID Flashscore; não presumir nem importar como novo ID."
+}

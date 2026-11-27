@@ -1,0 +1,27 @@
+{
+  "registro_id": "F360-POS-20261124-PRELIMINAR",
+  "data_brt": "2026-11-24",
+  "ref_prejogo": "F360-PRE-20261124-CHA-PAL",
+  "jogos_lv4": 1,
+  "indicadores": 12,
+  "sdd_observar": 12,
+  "sdd_selecionar": 0,
+  "acertos_confirmados": 6,
+  "acertos_provisorios": 6,
+  "erros_confirmados": 0,
+  "erros_provisorios": 0,
+  "elite_documental": {
+    "confirmados": 1,
+    "erros": 0,
+    "mercado": "Gols JC Over 1,5"
+  },
+  "champions_abster_jogos": 9,
+  "source_first_half": "RELATO_INDEXADO_NO_INTERVALO_NAO_FLASHScore_PERIODOS",
+  "direct_flashscore_period_stats_confirmed": false,
+  "bet_proof": false,
+  "odds": "N/D",
+  "roi": "N/D",
+  "no_model_update": true,
+  "do_not_homologate": true,
+  "pending_id": "OzJP5JI5"
+}

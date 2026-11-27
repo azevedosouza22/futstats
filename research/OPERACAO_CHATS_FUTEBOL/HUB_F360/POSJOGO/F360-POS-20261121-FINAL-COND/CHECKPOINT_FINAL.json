@@ -1,0 +1,37 @@
+{
+  "registro_id": "F360-POS-20261121-FINAL-COND",
+  "data_evento_brt": "2026-11-21",
+  "gerado_utc": "2026-11-22T13:15:30.904270+00:00",
+  "status": "CONCLUIDO_DADOS_RELATORIOS",
+  "jogos": 17,
+  "decisoes": 204,
+  "linhas": 177,
+  "acertos": 134,
+  "erros": 43,
+  "nd": 0,
+  "abstencoes": 27,
+  "elite": {
+    "n": 20,
+    "acertos": 16,
+    "erros": 4,
+    "brasileiros_bloqueados": 5,
+    "mls_playoffs": 3
+  },
+  "nd_iniciais": 139,
+  "nd_resolvidos": 139,
+  "valores_observados": 408,
+  "totais_calculados": 204,
+  "classe_temporal": "DOCUMENTAL_CONDICIONADA",
+  "execucao_nativa_comprovada": false,
+  "congelamento_autenticado": false,
+  "proximo_confronto": null,
+  "pendencias": [
+    "Prova nativa de execução/congelamento não comprovada; fora da série oficial",
+    "Odds/bilhetes/ROI N/D"
+  ],
+  "shadow_v1": false,
+  "drive_folder": "https://drive.google.com/drive/folders/1tKsn10wjlHuYfd9RfeGzELUoBJ4K7Btk",
+  "github_branch": "research/f360-hub-chats-2026-11-21",
+  "github_publicacao": "Verificar recibo de publicação posterior na issue #105",
+  "original_sha256": "16e00b889f262a5abff4642884e713708459421725ca7ea087de8f55e64acbd1"
+}

@@ -1,0 +1,45 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP12",
+  "experimental_before": 5711,
+  "experimental": 5716,
+  "new_ids": [
+    "O2lZxD2B",
+    "6aFyjKcc",
+    "2BrDVUfo",
+    "WSisyiXN",
+    "dYHdwsEi"
+  ],
+  "validated_values": 120,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "previous_base": "BASE_EXPERIMENTAL_CP11_5711_55COL.csv",
+  "sha256": "d22a8ce6a52046d8d49fdefd6e80648efe8392fa2d23088902a22ec2c759cdac",
+  "last_league": "Italia",
+  "last_id": "dYHdwsEi",
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false,
+  "drive_files": [
+    {
+      "id": "1oM8wrcfeGu6PYVMsnar1MI801RtOx2KC",
+      "url": "https://drive.google.com/file/d/1oM8wrcfeGu6PYVMsnar1MI801RtOx2KC/view?usp=drivesdk",
+      "name": "BASE_EXPERIMENTAL_CP12_5716_55COL.csv"
+    },
+    {
+      "id": "1eeE4UWcrASg-nm6ZBjaURthpk-9GEs7Y",
+      "url": "https://drive.google.com/file/d/1eeE4UWcrASg-nm6ZBjaURthpk-9GEs7Y/view?usp=drivesdk",
+      "name": "INCREMENTAL_CP12_5_55COL.csv"
+    },
+    {
+      "id": "1-Nhz7T26onocfdO3l5TV1H0dCrfo_X4c",
+      "url": "https://drive.google.com/file/d/1-Nhz7T26onocfdO3l5TV1H0dCrfo_X4c/view?usp=drivesdk",
+      "name": "lot12.json"
+    },
+    {
+      "id": "1DLUDnOeBV6mnzpGyTgg3QvYnE9MiLF2F",
+      "url": "https://drive.google.com/file/d/1DLUDnOeBV6mnzpGyTgg3QvYnE9MiLF2F/view?usp=drivesdk",
+      "name": "CHECKPOINT_CP12.json"
+    }
+  ]
+}

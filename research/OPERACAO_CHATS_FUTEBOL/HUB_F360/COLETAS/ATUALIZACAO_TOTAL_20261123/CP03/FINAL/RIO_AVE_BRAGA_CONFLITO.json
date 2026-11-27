@@ -1,0 +1,83 @@
+{
+  "id_flashscore": "8fKrMxtJ",
+  "raw_components": {
+    "id_vault": "1816460",
+    "url": "https://sportsdatavault.com/en/football/match/1816460",
+    "ft": {
+      "corners": [
+        0,
+        8
+      ],
+      "target": [
+        3,
+        3
+      ],
+      "off": [
+        1,
+        7
+      ],
+      "blocked": [
+        0,
+        3
+      ]
+    },
+    "halves": {
+      "corners": [
+        0,
+        2,
+        0,
+        6
+      ],
+      "target": [
+        1,
+        2,
+        2,
+        1
+      ],
+      "off": [
+        0,
+        2,
+        1,
+        5
+      ],
+      "blocked": [
+        0,
+        1,
+        0,
+        2
+      ]
+    }
+  },
+  "conflito": {
+    "campo": "full_target_away",
+    "valor_vault": 3,
+    "valor_skysports": 2,
+    "fora_away_vault": 7,
+    "fora_away_skysports": 8
+  },
+  "fonte_skysports": "https://www.skysports.com/football/rio-ave-vs-braga/stats/564257",
+  "fonte_fotmob": "https://www.fotmob.com/pt-BR/matches/rio-ave-vs-braga/2pl7me",
+  "FTshots_concordantes": [
+    4,
+    13
+  ],
+  "gols_FT": [
+    0,
+    1
+  ],
+  "gols_1T": [
+    0,
+    0
+  ],
+  "gols_2T": [
+    0,
+    1
+  ],
+  "valor_homologado_full_target_away": null,
+  "incorporado": false,
+  "evidencias_refs": [
+    "turn829191301view0",
+    "turn855213658view0",
+    "turn855213658view2"
+  ]
+}

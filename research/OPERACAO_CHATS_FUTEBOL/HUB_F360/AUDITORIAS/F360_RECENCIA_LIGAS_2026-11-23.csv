@@ -1,0 +1,12 @@
+liga,temporada,ids_indice,ultima_data_indice,dias_sem_novo_registro_ate_23nov,jogos_auditados_18_22_fora_corte_indice,prioridade,observacao
+Brasileirão,2026,336,2026-11-06,17,12,P0,Recencia e bloqueios 22-23/11; alias RB Bragantino
+La Liga,2026/27,117,2026-11-08,15,5,P1,Osasuna 5/5 Elite ERR; 2025/26 371/380
+MLS,2026,511,2026-11-07,16,6,P1,Playoffs sem estrato; All-Stars 1 registro indevido para liga
+Argentina,2026,494,2026-11-07,16,3,P1,Clausura playoffs; 145 sinalizacoes de data
+Serie A italiana,2026/27,109,2026-11-08,15,3,P1,Fiorentina x Juventus 08/11 ausente no indice por campo
+Ligue 1,2026/27,89,2026-11-08,15,7,P1,Sete jogos auditados 20-22; 2025/26 305/306
+Bundesliga,2026/27,81,2026-11-08,15,2,P2,Bayern x Koln e Schalke x Stuttgart auditados
+Premier League,2026/27,100,2026-11-08,15,1,P2,Brentford x Everton 23/11; ultimos 5 ainda necessitam refresh
+Eliteserien,2026,208,2026-11-09,14,1,P2,Temporada em andamento ate fim de novembro
+Saudi Pro League,2026/27,104,2026-10-31,23,1,P2,"Pausa no calendario; retorno em 20/11, nao 23 dias de jogos perdidos"
+Liga Portugal,2026/27,96,2026-11-08,15,0,P2,Reconciliar calendario antes de atribuir falta de jogos

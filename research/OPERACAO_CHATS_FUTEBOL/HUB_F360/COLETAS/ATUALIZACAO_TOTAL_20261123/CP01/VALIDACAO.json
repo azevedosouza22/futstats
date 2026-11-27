@@ -1,0 +1,15 @@
+{
+  "ids_base": 5620,
+  "ids_incremental": 51,
+  "ids_experimental": 5671,
+  "duplicatas": 0,
+  "linhas_csv55": 5671,
+  "colunas_csv": 55,
+  "valores_numericos": 136104,
+  "aditividade_8_por_jogo": "45368/45368",
+  "sot_le_shots_6_por_jogo": "34026/34026",
+  "base_original_hash_inalterado": true,
+  "calendario_exaustivo_validado": false,
+  "data_nao_equivale_status_final": true,
+  "gates_temporais_preservados": 592
+}

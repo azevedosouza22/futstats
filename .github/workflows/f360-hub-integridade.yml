@@ -1,0 +1,22 @@
+name: F360 HUB - integridade documental
+on:
+  pull_request:
+    paths:
+      - 'research/OPERACAO_CHATS_FUTEBOL/HUB_F360/**'
+      - 'scripts/f360_hub_validar.py'
+      - '.github/workflows/f360-hub-integridade.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validar HUB sem escrita
+        run: python scripts/f360_hub_validar.py

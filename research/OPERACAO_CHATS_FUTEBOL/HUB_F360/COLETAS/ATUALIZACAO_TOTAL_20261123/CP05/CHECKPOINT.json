@@ -1,0 +1,24 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP05",
+  "experimental_before": 5680,
+  "experimental": 5681,
+  "new_ids": [
+    "8fKrMxtJ"
+  ],
+  "validated_values": 24,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "sha256": "eb2dc80e3fef9bd54668de1384b150be7867a06b19b82520ff931b3dd2bda826",
+  "drive_base": "https://drive.google.com/file/d/17wDCp_wyEM1KBy_hNRfLuiWjkOsxk4Lw/view?usp=drivesdk",
+  "drive_checkpoint": "https://drive.google.com/file/d/1uc3UyuV7P-LdRSTaL-ZPj2yWibmOi8Vp/view?usp=drivesdk",
+  "portugal": {
+    "listed_results": 98,
+    "present_before": 97,
+    "present_after": 98,
+    "last_date": "2026-11-08"
+  },
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false
+}

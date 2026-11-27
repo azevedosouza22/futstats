@@ -1,0 +1,21 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261123-CP04-CONSOLIDADO",
+  "experimental_before": 5675,
+  "experimental": 5680,
+  "new_ids": [
+    "6NbvG9uK",
+    "ETBhh6mD",
+    "vVoR6526",
+    "ARJ356Ua",
+    "v9YyLeNG"
+  ],
+  "validated_values": 120,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "sha256": "555d6b9ead878374a5ba51d96c118a8d58cae951aaa63000dfe25f81322b8f8a",
+  "drive_base": "https://drive.google.com/file/d/1ZnhCOu7dB4Wyg8O7Ueu_N8sYXpvA1gF3/view?usp=drivesdk",
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false
+}

@@ -1,0 +1,147 @@
+{
+  "folder": "https://drive.google.com/drive/folders/1BgUOYV28pljvBQfbkbmMLJ2nEzDg4tr2",
+  "files": {
+    "BASE_EXPERIMENTAL_CP03_5675_55COL.csv": {
+      "id": "1y43dXhZYkKytQ2niCAP3uhUa9ygCE3JJ",
+      "url": "https://drive.google.com/file/d/1y43dXhZYkKytQ2niCAP3uhUa9ygCE3JJ/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "INDICE_EXPERIMENTAL_CP03_5675.csv": {
+      "id": "17OSPTqhe_BfznTYRgPzrmpMz5hgMO_zK",
+      "url": "https://drive.google.com/file/d/17OSPTqhe_BfznTYRgPzrmpMz5hgMO_zK/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "INCREMENTAL_CP03_4_55COL.csv": {
+      "id": "1nQMbVZHo4v61fNxTcC145Cai-ef9JfTW",
+      "url": "https://drive.google.com/file/d/1nQMbVZHo4v61fNxTcC145Cai-ef9JfTW/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "MANIFESTO_INCLUSAO_4.csv": {
+      "id": "1BkjrJcw7lX6cfvuhxx1hHknbCoaojfRz",
+      "url": "https://drive.google.com/file/d/1BkjrJcw7lX6cfvuhxx1hHknbCoaojfRz/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "CHECKPOINT_CP03_FINAL.json": {
+      "id": "1ZOxv4trGwZ8NpVLLiA2qLXauYKT2zIO8",
+      "url": "https://drive.google.com/file/d/1ZOxv4trGwZ8NpVLLiA2qLXauYKT2zIO8/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "CHECKPOINT_CP03_PORTUGAL.json": {
+      "id": "1jGusv6gqXSZJWXqrIpEC0DodCxalPYEv",
+      "url": "https://drive.google.com/file/d/1jGusv6gqXSZJWXqrIpEC0DodCxalPYEv/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "RELATORIO_CP03.md": {
+      "id": "1vHiYuAEcm-B3dR_UWORPqYrcO-m73JIM",
+      "url": "https://docs.google.com/document/d/1vHiYuAEcm-B3dR_UWORPqYrcO-m73JIM/edit?usp=drivesdk&ouid=116165943672446633954&rtpof=true&sd=true",
+      "mime_type": "text/markdown"
+    },
+    "VALIDACAO_CP03.json": {
+      "id": "1uMp-P0VgzFM3noHg32UpwgMbjupQw6m1",
+      "url": "https://drive.google.com/file/d/1uMp-P0VgzFM3noHg32UpwgMbjupQw6m1/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "PENDENCIAS_CATALOGADAS_36.csv": {
+      "id": "1k4lljzF89Z8dW67Iv-pbRTe9m4g7zmqo",
+      "url": "https://drive.google.com/file/d/1k4lljzF89Z8dW67Iv-pbRTe9m4g7zmqo/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "PENDENCIAS_POR_LIGA_11.csv": {
+      "id": "1E4WQ_o5Yz7BZpZ-xvqlZ_lkrw3RujApO",
+      "url": "https://drive.google.com/file/d/1E4WQ_o5Yz7BZpZ-xvqlZ_lkrw3RujApO/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "PAINEL_23_GRUPOS_CP03.csv": {
+      "id": "1UHd5PMghmEbCiwfovCciQ7xOJeHz9OHm",
+      "url": "https://drive.google.com/file/d/1UHd5PMghmEbCiwfovCciQ7xOJeHz9OHm/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "PORTUGAL_CALENDARIO_ALTERNATIVO_X_BASE.csv": {
+      "id": "1Q1orVtU7TGv__l4OI2qr1bt7LPPWTMoo",
+      "url": "https://drive.google.com/file/d/1Q1orVtU7TGv__l4OI2qr1bt7LPPWTMoo/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "CANDIDATOS_ADICIONAIS_FORA_FILAS_CP02.csv": {
+      "id": "1GZPWEh4Rgou-INTEudOd9xzWGkj8WvAy",
+      "url": "https://drive.google.com/file/d/1GZPWEh4Rgou-INTEudOd9xzWGkj8WvAy/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "ORLANDO_CINCINNATI_IDENTIDADE_PENDENTE.json": {
+      "id": "18gYuu0y2Dhhs2M8-GdmgJURsO0adc55m",
+      "url": "https://drive.google.com/file/d/18gYuu0y2Dhhs2M8-GdmgJURsO0adc55m/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "RIO_AVE_BRAGA_CONFLITO.json": {
+      "id": "1XdUNWjAW64rDwl9AI3JJddCRXcuzxlZa",
+      "url": "https://drive.google.com/file/d/1XdUNWjAW64rDwl9AI3JJddCRXcuzxlZa/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "FONTES_CONSULTADAS.json": {
+      "id": "17H-_cIu7J7n-AB7Asu8zzt2YSZRuO7VJ",
+      "url": "https://drive.google.com/file/d/17H-_cIu7J7n-AB7Asu8zzt2YSZRuO7VJ/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "VALORES_P0_192.csv": {
+      "id": "152FbL3VWTzbIdmRLvQNA0xNWAd1FTYC0",
+      "url": "https://drive.google.com/file/d/152FbL3VWTzbIdmRLvQNA0xNWAd1FTYC0/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "PENDENCIAS_P0_5.csv": {
+      "id": "1qjgb-3rzH79RajxQrUe8tUkx7iEhng2H",
+      "url": "https://drive.google.com/file/d/1qjgb-3rzH79RajxQrUe8tUkx7iEhng2H/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "CONSOLIDADO_P0.json": {
+      "id": "1ihLclWYZLQJaJNgSlqP5-k80ZAU2sT77",
+      "url": "https://drive.google.com/file/d/1ihLclWYZLQJaJNgSlqP5-k80ZAU2sT77/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "CHECKPOINT_CP03_P0.json": {
+      "id": "1CWxrmvDiXPsrs0gWa1t3XO6axBpFD1DB",
+      "url": "https://drive.google.com/file/d/1CWxrmvDiXPsrs0gWa1t3XO6axBpFD1DB/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "BASE_EXPERIMENTAL_CP03_5674_55COL.csv": {
+      "id": "1vluZrAdrYo9QsoR7PK30WP323TXhmYln",
+      "url": "https://drive.google.com/file/d/1vluZrAdrYo9QsoR7PK30WP323TXhmYln/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "INCREMENTAL_P0_3_55COL.csv": {
+      "id": "1t_3ZyFRHhaCJuPYrSe9Bb57CwxtNxHYT",
+      "url": "https://drive.google.com/file/d/1t_3ZyFRHhaCJuPYrSe9Bb57CwxtNxHYT/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "INDICE_EXPERIMENTAL_CP03_5674.csv": {
+      "id": "19RzzdeHPQjFM3X-YwJbqS5o6osyjujgD",
+      "url": "https://drive.google.com/file/d/19RzzdeHPQjFM3X-YwJbqS5o6osyjujgD/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "MANIFESTO_INCLUSAO_3.csv": {
+      "id": "17ZW5KpYLaFmcoWuGK-q8ykQVvfwhHau0",
+      "url": "https://drive.google.com/file/d/17ZW5KpYLaFmcoWuGK-q8ykQVvfwhHau0/view?usp=drivesdk",
+      "mime_type": "text/csv"
+    },
+    "FUTSTATS_F360_CP03_20261123.zip": {
+      "id": "1kw1-xwWQ5XUH-GGMsv6kr50nm-mdHXIG",
+      "url": "https://drive.google.com/file/d/1kw1-xwWQ5XUH-GGMsv6kr50nm-mdHXIG/view?usp=drivesdk",
+      "mime_type": "application/zip"
+    },
+    "MANIFESTO_SHA256.json": {
+      "id": "124-gfjPYEysTnr4szUwuDqrKGO0-k-0I",
+      "url": "https://drive.google.com/file/d/124-gfjPYEysTnr4szUwuDqrKGO0-k-0I/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "ENTREGAS_DRIVE.json": {
+      "id": "1TJQ8OIJZaR0WBnsTJQcAczP-4fM_i5I3",
+      "url": "https://drive.google.com/file/d/1TJQ8OIJZaR0WBnsTJQcAczP-4fM_i5I3/view?usp=drivesdk",
+      "mime_type": "application/json"
+    },
+    "VERIFICACAO_PUBLICACAO_CP03.json": {
+      "id": "1HhJuaeTO2gaFaxD4Ujv_F1jRJpTR_REX",
+      "url": "https://drive.google.com/file/d/1HhJuaeTO2gaFaxD4Ujv_F1jRJpTR_REX/view?usp=drivesdk",
+      "mime_type": "application/json"
+    }
+  },
+  "zip_sha256": "79186266c6a553e8a4e1f88b4e202af9c27f1a8be81c0f841a5a29ff6543db68",
+  "csv5675_sha256": "67bab6c6aea80a3f3dcbf6985e73d85965a93d8c7af3fc7d52321ef4429dc79b"
+}

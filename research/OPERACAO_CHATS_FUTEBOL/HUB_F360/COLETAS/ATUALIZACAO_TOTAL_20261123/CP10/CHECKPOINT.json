@@ -1,0 +1,45 @@
+{
+  "registro_id": "F360-COLETA-FLASHSCORE-20261124-CP10",
+  "experimental_before": 5701,
+  "experimental": 5706,
+  "new_ids": [
+    "UorZXuM7",
+    "OluRZ1ie",
+    "6VagL2x2",
+    "YH1oNO7k",
+    "KhjmspaL"
+  ],
+  "validated_values": 120,
+  "duplicate_ids": 0,
+  "columns": 55,
+  "previous_base": "BASE_EXPERIMENTAL_CP09_5701_55COL.csv",
+  "sha256": "e95188e6abb0009b0e9fdbe2e5bf3e7648bdc1d1c1cd9d50867995c188be4c81",
+  "last_league": "Inglaterra",
+  "last_id": "KhjmspaL",
+  "full_11_calendars_verified": false,
+  "merge": false,
+  "deploy": false,
+  "production_modified": false,
+  "drive_files": [
+    {
+      "id": "1KWzqom0RgmUD8ZyycsAZ70Yaj4OQ_fB0",
+      "url": "https://drive.google.com/file/d/1KWzqom0RgmUD8ZyycsAZ70Yaj4OQ_fB0/view?usp=drivesdk",
+      "name": "BASE_EXPERIMENTAL_CP10_5706_55COL.csv"
+    },
+    {
+      "id": "1do5LeYQmXob8WdHEcS3YWUS12lPUDASm",
+      "url": "https://drive.google.com/file/d/1do5LeYQmXob8WdHEcS3YWUS12lPUDASm/view?usp=drivesdk",
+      "name": "INCREMENTAL_CP10_5_55COL.csv"
+    },
+    {
+      "id": "1idM_UJln601aFnQnNHq9P8MvoBDXLmnu",
+      "url": "https://drive.google.com/file/d/1idM_UJln601aFnQnNHq9P8MvoBDXLmnu/view?usp=drivesdk",
+      "name": "lot10.json"
+    },
+    {
+      "id": "1U2w89mVeA-lJk0W4E5LARXuMXaOt2WpX",
+      "url": "https://drive.google.com/file/d/1U2w89mVeA-lJk0W4E5LARXuMXaOt2WpX/view?usp=drivesdk",
+      "name": "CHECKPOINT_CP10.json"
+    }
+  ]
+}
